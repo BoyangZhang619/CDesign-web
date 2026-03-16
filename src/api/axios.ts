@@ -49,8 +49,8 @@ api.interceptors.response.use(
             error.response &&
             error.response.status === 401 &&
             !originalRequest._retry &&
-            !originalRequest.url.includes('/auth/refresh') &&
-            !originalRequest.url.includes('/auth/login')
+            !originalRequest.url.includes('auth/refresh') &&
+            !originalRequest.url.includes('auth/login')
         ) {
             originalRequest._retry = true;
 
@@ -69,7 +69,7 @@ api.interceptors.response.use(
             isRefreshing = true;
 
             try {
-                const res = await api.post('/auth/refresh');
+                const res = await api.post('auth/refresh');
                 const newToken = res.data.accessToken;
 
                 authStore.setAccessToken(newToken);
