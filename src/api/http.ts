@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { getToken, removeToken } from '../utils/token.js'
+import { getToken, setToken, removeToken } from '../utils/token.js'
 import { useAuthStore } from '../stores/auth'
 
 const http = axios.create({
@@ -91,6 +91,7 @@ http.interceptors.response.use(
         if (response.data?.success && response.data?.data?.accessToken) {
           const newToken = response.data.data.accessToken
           authStore.token = newToken
+          setToken(newToken)  // ✅ 保存到 localStorage
 
           // 通知所有等待的请求
           notifyRefreshed(newToken)
@@ -102,8 +103,9 @@ http.interceptors.response.use(
         } else {
           throw new Error('Token刷新失败')
         }
-      } catch (refreshError) {
+      } catch (refreshError: any) {
         // Token刷新失败，清除登录状态
+        console.error('Token刷新失败:', refreshError?.response?.data || refreshError?.message)
         authStore.token = ''
         authStore.userInfo = null
         removeToken()
@@ -169,6 +171,7 @@ export async function fetchWithRefresh(url: string, options: RequestInit = {}) {
       if (refreshResponse.data?.success && refreshResponse.data?.data?.accessToken) {
         const newToken = refreshResponse.data.data.accessToken
         authStore.token = newToken
+        setToken(newToken)  // ✅ 保存到 localStorage
 
         // 使用新 token 重试原始请求
         const newHeaders = {
@@ -184,8 +187,9 @@ export async function fetchWithRefresh(url: string, options: RequestInit = {}) {
       } else {
         throw new Error('Token 刷新失败')
       }
-    } catch (error) {
+    } catch (error: any) {
       // token 刷新失败，清除登录状态
+      console.error('Token刷新失败:', error?.response?.data || error?.message)
       authStore.token = ''
       authStore.userInfo = null
       removeToken()
