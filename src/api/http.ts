@@ -1,13 +1,39 @@
 import axios from 'axios'
 import { getToken, removeToken } from '../utils/token.js'
+import { useAuthStore } from '../stores/auth'
 
 const http = axios.create({
-  baseURL: '', // 这里留空，你自己填，比如 '/api'
-  timeout: 10000,
-  withCredentials: true // 如果你后端要 cookie，这里保留是安全的
+  baseURL: import.meta.env.VITE_API_URL || 'https://cda.api.zbyblq.xin',
+  timeout: 30000, // 根据API文档，请求超时为30秒
+  withCredentials: true // 自动发送Cookie中的refreshToken
 })
 
-// 请求拦截器：统一带 token
+// 标记是否正在刷新Token，避免多个请求同时刷新
+let isRefreshing = false
+// 等待刷新Token完成的请求队列
+let refreshSubscribers: ((token: string) => void)[] = []
+
+/**
+ * 订阅Token刷新完成事件
+ * @param callback 刷新完成后的回调
+ */
+function onRefreshed(callback: (token: string) => void) {
+  refreshSubscribers.push(callback)
+}
+
+/**
+ * 通知所有订阅者Token已刷新
+ * @param token 新的Token
+ */
+function notifyRefreshed(token: string) {
+  refreshSubscribers.forEach((callback) => callback(token))
+  refreshSubscribers = []
+}
+
+/**
+ * 请求拦截器：统一添加Authorization请求头和error处理
+ * 根据API文档，每个请求都需要在Authorization请求头中添加Bearer Token
+ */
 http.interceptors.request.use(
   (config) => {
     const token = getToken()
@@ -21,16 +47,85 @@ http.interceptors.request.use(
   (error) => Promise.reject(error)
 )
 
-// 响应拦截器：统一处理错误
+/**
+ * 响应拦截器：统一处理错误和Token刷新
+ * 
+ * 根据API文档：
+ * - 401错误：Token无效或过期，尝试用refreshToken刷新
+ * - 其他错误：根据状态码和错误信息提示用户
+ */
 http.interceptors.response.use(
   (response) => response,
-  (error) => {
+  async (error) => {
+    const config = error.config
     const status = error?.response?.status
+    const authStore = useAuthStore()
 
-    // 401 统一处理
-    if (status === 401) {
-      removeToken()
-      window.location.href = '/login'
+    // 处理401 Unauthorized错误
+    if (status === 401 && config && !config.__isRetry) {
+      // 如果已经在刷新Token，则等待刷新完成后重试
+      if (isRefreshing) {
+        return new Promise((resolve) => {
+          onRefreshed((token) => {
+            config.headers.Authorization = `Bearer ${token}`
+            resolve(http(config))
+          })
+        })
+      }
+
+      // 开始刷新Token
+      isRefreshing = true
+
+      try {
+        // 调用刷新Token接口
+        // 注意：刷新接口不需要传入参数，使用Cookie中的refreshToken
+        const response = await axios.post(
+          `${import.meta.env.VITE_API_URL || 'https://cda.api.zbyblq.xin'}/api/auth/refresh`,
+          {},
+          {
+            withCredentials: true,
+            timeout: 30000
+          }
+        )
+
+        if (response.data?.success && response.data?.data?.accessToken) {
+          const newToken = response.data.data.accessToken
+          authStore.token = newToken
+
+          // 通知所有等待的请求
+          notifyRefreshed(newToken)
+
+          // 使用新Token重试原始请求
+          config.headers.Authorization = `Bearer ${newToken}`
+          config.__isRetry = true
+          return http(config)
+        } else {
+          throw new Error('Token刷新失败')
+        }
+      } catch (refreshError) {
+        // Token刷新失败，清除登录状态
+        authStore.token = ''
+        authStore.userInfo = null
+        removeToken()
+        // 重定向到登录页
+        window.location.href = '/login'
+        return Promise.reject(refreshError)
+      } finally {
+        isRefreshing = false
+      }
+    }
+
+    // 其他错误处理
+    if (status === 403) {
+      console.error('没有权限访问此资源')
+    }
+
+    if (status === 404) {
+      console.error('请求的资源不存在')
+    }
+
+    if (status === 500) {
+      console.error('服务器错误，请稍后重试')
     }
 
     return Promise.reject(error)
