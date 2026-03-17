@@ -132,4 +132,69 @@ http.interceptors.response.use(
   }
 )
 
+/**
+ * 使用 fetch API 发送请求，支持自动 token 刷新
+ * @param url 请求 URL
+ * @param options fetch 选项
+ * @returns 响应对象
+ */
+export async function fetchWithRefresh(url: string, options: RequestInit = {}) {
+  const authStore = useAuthStore()
+  
+  // 添加 Authorization 请求头
+  const headers = {
+    ...options.headers,
+    'Authorization': `Bearer ${authStore.token}`
+  }
+
+  let response = await fetch(url, {
+    ...options,
+    headers,
+    credentials: 'include'
+  })
+
+  // 如果返回 401，尝试刷新 token
+  if (response.status === 401) {
+    try {
+      // 调用刷新 token 接口
+      const refreshResponse = await axios.post(
+        `${import.meta.env.VITE_API_URL || 'https://cda.api.zbyblq.xin'}/api/auth/refresh`,
+        {},
+        {
+          withCredentials: true,
+          timeout: 30000
+        }
+      )
+
+      if (refreshResponse.data?.success && refreshResponse.data?.data?.accessToken) {
+        const newToken = refreshResponse.data.data.accessToken
+        authStore.token = newToken
+
+        // 使用新 token 重试原始请求
+        const newHeaders = {
+          ...options.headers,
+          'Authorization': `Bearer ${newToken}`
+        }
+
+        response = await fetch(url, {
+          ...options,
+          headers: newHeaders,
+          credentials: 'include'
+        })
+      } else {
+        throw new Error('Token 刷新失败')
+      }
+    } catch (error) {
+      // token 刷新失败，清除登录状态
+      authStore.token = ''
+      authStore.userInfo = null
+      removeToken()
+      window.location.href = '/login'
+      throw error
+    }
+  }
+
+  return response
+}
+
 export default http

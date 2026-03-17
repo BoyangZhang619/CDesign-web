@@ -63,7 +63,7 @@
 import { ref, reactive, nextTick } from 'vue'
 import AppHeader from '../components/AppHeader.vue'
 import { useAuthStore } from '../stores/auth'
-import http from '../api/http'
+import { fetchWithRefresh } from '../api/http'
 
 const authStore = useAuthStore()
 
@@ -89,14 +89,30 @@ async function loadUserInfo() {
 // 发送非流式消息
 async function sendCommonMessage() {
   try {
-    const response = await http.post('/api/ai/ptio/common', {
-      message: inputMessage.value,
-      model: chatConfig.model,
-      response_language: 'Chinese'
-    })
+    const response = await fetchWithRefresh(
+      `${import.meta.env.VITE_API_URL || 'https://cda.api.zbyblq.xin'}/api/ai/ptio/common`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          message: inputMessage.value,
+          model: chatConfig.model,
+          response_language: 'Chinese'
+        })
+      }
+    )
 
-    if (response.data?.success) {
-      const aiMessage = response.data.data.content
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}))
+      throw new Error(errorData.message || `HTTP error! status: ${response.status}`)
+    }
+
+    const data = await response.json()
+
+    if (data?.success) {
+      const aiMessage = data.data.content
       messages.value.push({
         role: 'assistant',
         content: aiMessage
@@ -104,7 +120,7 @@ async function sendCommonMessage() {
 
       // 更新额度
       if (authStore.userInfo) {
-        authStore.userInfo.credits -= response.data.data.usage.total_tokens
+        authStore.userInfo.credits -= data.data.usage.total_tokens
       }
     }
   } catch (error) {
@@ -115,15 +131,13 @@ async function sendCommonMessage() {
 // 发送流式消息
 async function sendStreamMessage() {
   try {
-    const response = await fetch(
+    const response = await fetchWithRefresh(
       `${import.meta.env.VITE_API_URL || 'https://cda.api.zbyblq.xin'}/api/ai/ptio/stream`,
       {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${authStore.token}`
+          'Content-Type': 'application/json'
         },
-        credentials: 'include',
         body: JSON.stringify({
           message: inputMessage.value,
           model: chatConfig.model,
