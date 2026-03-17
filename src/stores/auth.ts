@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import { getToken, setToken, removeToken } from '../utils/token'
-import { loginApi, registerApi, getUserInfoApi, logoutApi, refreshTokenApi } from '../api/modules/auth'
+import { loginApi, registerApi, getUserInfoApi, logoutApi, refreshTokenApi, logoutAllApi } from '../api/modules/auth'
 
 export const useAuthStore = defineStore('auth', {
   state: () => ({
@@ -18,7 +18,7 @@ export const useAuthStore = defineStore('auth', {
      * 用户注册
      * 根据API文档，响应结构为: { success, message, data: { message } }
      */
-    async register(formData: { username: string; password: string }) {
+    async register(formData: { email: string; password: string }) {
       try {
         this.loading = true
         const res = await registerApi(formData)
@@ -35,10 +35,10 @@ export const useAuthStore = defineStore('auth', {
 
     /**
      * 用户登录
-     * 根据API文档，响应结构为: { success, message, data: { accessToken, user: { id, username } } }
+     * 根据API文档，响应结构为: { success, message, data: { accessToken, user: { id, email } } }
      * Refresh Token 自动在Cookie中设置
      */
-    async login(formData: { username: string; password: string }) {
+    async login(formData: { email: string; password: string }) {
       try {
         this.loading = true
         const res = await loginApi(formData)
@@ -127,6 +127,24 @@ export const useAuthStore = defineStore('auth', {
         await logoutApi()
       } catch (error) {
         console.warn('logout api error:', error)
+      } finally {
+        this.token = ''
+        this.userInfo = null
+        removeToken()
+        this.loading = false
+      }
+    },
+
+    /**
+     * 全设备登出
+     * 根据API文档，撤销所有设备的Refresh Token
+     */
+    async logoutAll() {
+      try {
+        this.loading = true
+        await logoutAllApi()
+      } catch (error) {
+        console.warn('logout all api error:', error)
       } finally {
         this.token = ''
         this.userInfo = null

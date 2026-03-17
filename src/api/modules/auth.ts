@@ -2,20 +2,20 @@ import http from '../http'
 
 /**
  * 用户注册
- * 请求体: { username: string, password: string }
+ * 请求体: { email: string, password: string }
  * 返回: { success, message, data: { message } }
  */
-export function registerApi(data: { username: string; password: string }) {
+export function registerApi(data: { email: string; password: string }) {
   return http.post('/api/auth/register', data)
 }
 
 /**
  * 用户登录
- * 请求体: { username: string, password: string }
- * 返回: { success, message, data: { accessToken, user: { id, username } } }
+ * 请求体: { email: string, password: string }
+ * 返回: { success, message, data: { accessToken, user: { id, email } } }
  * 同时在Cookie中设置refreshToken
  */
-export function loginApi(data: { username: string; password: string }) {
+export function loginApi(data: { email: string; password: string }) {
   return http.post('/api/auth/login', data)
 }
 
