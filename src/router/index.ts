@@ -1,13 +1,20 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
-import LoginView from '../views/LoginView.vue'
-import RegisterView from '../views/RegisterView.vue'
+import AuthView from '../views/AuthView.vue'
+import HealthSetupView from '../views/HealthSetupView.vue'
 import ProfileView from '../views/ProfileView.vue'
 import { useAuthStore } from '../stores/auth'
 
 const routes = [
   {
     path: '/',
+    redirect: () => {
+      const authStore = useAuthStore()
+      return authStore.isLoggedIn ? '/home' : '/auth'
+    }
+  },
+  {
+    path: '/home',
     name: 'home',
     component: HomeView,
     meta: {
@@ -16,19 +23,20 @@ const routes = [
     }
   },
   {
-    path: '/login',
-    name: 'login',
-    component: LoginView,
+    path: '/auth',
+    name: 'auth',
+    component: AuthView,
     meta: {
-      title: 'CDesign - 登录'
+      title: 'CDesign - 登录/注册'
     }
   },
   {
-    path: '/register',
-    name: 'register',
-    component: RegisterView,
+    path: '/health-setup',
+    name: 'health-setup',
+    component: HealthSetupView,
     meta: {
-      title: 'CDesign - 注册'
+      requiresAuth: true,
+      title: 'CDesign - 健康档案设置'
     }
   },
   {
@@ -47,28 +55,21 @@ const router = createRouter({
   routes
 })
 
-/**
- * 路由守卫
- * 1. 检查认证状态
- * 2. 如果需要认证但未登录，重定向到登录页
- * 3. 如果已登录且访问登录/注册页，重定向到首页
- * 4. 尝试刷新用户信息（如果已登录）
- */
 router.beforeEach(async (to, from) => {
   const authStore = useAuthStore()
 
   // 检查路由是否需要认证
   if (to.meta.requiresAuth && !authStore.isLoggedIn) {
-    return '/login'
+    return '/auth'
   }
 
-  // 如果已登录且访问登录/注册页，重定向到首页
-  if ((to.path === '/login' || to.path === '/register') && authStore.isLoggedIn) {
+  // 如果已登录且访问认证页，重定向到首页
+  if (to.path === '/auth' && authStore.isLoggedIn) {
     return '/'
   }
 
-  // 如果已登录，尝试获取最新的用户信息（仅在首次访问或从登录/注册页进来时）
-  if (authStore.isLoggedIn && (from.path === '/login' || from.path === '/register' || from.path === '')) {
+  // 如果已登录，尝试获取最新的用户信息（仅在首次访问或从认证页进来时）
+  if (authStore.isLoggedIn && (from.path === '/auth' || from.path === '')) {
     try {
       await authStore.fetchUserInfo()
     } catch (error) {

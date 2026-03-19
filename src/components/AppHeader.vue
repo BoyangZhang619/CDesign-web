@@ -38,7 +38,7 @@ async function handleLogout() {
   loading.value = true
   try {
     await authStore.logout()
-    router.push('/login')
+    router.push('/auth')
   } catch (error) {
     console.error('登出失败:', error)
   } finally {
