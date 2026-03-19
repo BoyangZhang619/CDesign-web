@@ -1,5 +1,12 @@
 <template>
   <div class="health-setup-page">
+    <!-- 页面背景装饰 -->
+    <div class="page-decorations">
+      <div class="deco deco-1"></div>
+      <div class="deco deco-2"></div>
+      <div class="deco deco-3"></div>
+    </div>
+
     <!-- 进度指示器 -->
     <div class="setup-progress">
       <div class="progress-header">
@@ -212,29 +219,31 @@
           <!-- 作息习惯 -->
           <div class="form-group full-width">
             <label class="form-label">作息习惯</label>
-            <div class="select-group">
+            <div class="select-wrapper">
               <select v-model="healthInfo.sleepHabit" class="form-select">
-                <option value="">请选择</option>
-                <option value="early-bird">早睡早起（22:00前就寝）</option>
-                <option value="moderate">中等规律（23:00-24:00就寝）</option>
-                <option value="night-owl">晚睡（24:00后就寝）</option>
-                <option value="irregular">不规律</option>
+                <option value="" disabled>请选择您的作息习惯</option>
+                <option value="early-bird">🌅 早睡早起（22:00前就寝）</option>
+                <option value="moderate">🕙 中等规律（23:00-24:00就寝）</option>
+                <option value="night-owl">🌙 晚睡（24:00后就寝）</option>
+                <option value="irregular">⏰ 不规律</option>
               </select>
+              <div class="select-icon"></div>
             </div>
           </div>
 
           <!-- 日常活动水平 -->
           <div class="form-group full-width">
             <label class="form-label">日常活动水平</label>
-            <div class="select-group">
+            <div class="select-wrapper">
               <select v-model="healthInfo.activityLevel" class="form-select">
-                <option value="">请选择</option>
-                <option value="sedentary">久坐（运动很少）</option>
-                <option value="light">轻度活跃（每周1-3次运动）</option>
-                <option value="moderate">中度活跃（每周3-5次运动）</option>
-                <option value="very-active">非常活跃（每周6-7次运动）</option>
-                <option value="extremely-active">极其活跃（每日高强度运动）</option>
+                <option value="" disabled>请选择您的日常活动水平</option>
+                <option value="sedentary">🪑 久坐（运动很少）</option>
+                <option value="light">🚶 轻度活跃（每周1-3次运动）</option>
+                <option value="moderate">🏃 中度活跃（每周3-5次运动）</option>
+                <option value="very-active">💪 非常活跃（每周6-7次运动）</option>
+                <option value="extremely-active">🔥 极其活跃（每日高强度运动）</option>
               </select>
+              <div class="select-icon"></div>
             </div>
           </div>
         </div>

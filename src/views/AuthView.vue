@@ -2,6 +2,17 @@
   <div class="auth-page">
     <!-- 左侧品牌区 -->
     <div class="auth-brand">
+      <!-- 装饰元素 -->
+      <div class="brand-decorations">
+        <div class="decoration decoration-1"></div>
+        <div class="decoration decoration-2"></div>
+        <div class="decoration decoration-3"></div>
+        <div class="decoration decoration-4"></div>
+        <div class="decoration decoration-5"></div>
+        <div class="decoration decoration-6"></div>
+        <div class="decoration decoration-7"></div>
+      </div>
+
       <div class="brand-content">
         <h1 class="brand-title">StuHeal</h1>
         <p class="brand-subtitle">个性化健康智能平台</p>

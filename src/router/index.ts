@@ -19,7 +19,7 @@ const routes = [
     component: HomeView,
     meta: {
       requiresAuth: true,
-      title: 'CDesign - AI对话'
+      title: 'StuHeal - AI对话'
     }
   },
   {
@@ -27,7 +27,7 @@ const routes = [
     name: 'auth',
     component: AuthView,
     meta: {
-      title: 'CDesign - 登录/注册'
+      title: 'StuHeal - 登录/注册'
     }
   },
   {
@@ -36,7 +36,7 @@ const routes = [
     component: HealthSetupView,
     meta: {
       requiresAuth: true,
-      title: 'CDesign - 健康档案设置'
+      title: 'StuHeal - 健康档案设置'
     }
   },
   {
@@ -45,7 +45,7 @@ const routes = [
     component: ProfileView,
     meta: {
       requiresAuth: true,
-      title: 'CDesign - 个人中心'
+      title: 'StuHeal - 个人中心'
     }
   }
 ]
