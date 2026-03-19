@@ -1,7 +1,7 @@
 <template>
   <header class="header">
     <div class="left">
-      <router-link to="/" class="logo">CDesign</router-link>
+      <router-link to="/" class="logo">StuHeal</router-link>
     </div>
 
     <div class="right">

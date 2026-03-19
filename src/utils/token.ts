@@ -13,7 +13,7 @@
  * 5. 继续请求
  */
 
-const TOKEN_KEY = 'cdesign_access_token'
+const TOKEN_KEY = 'StuHeal_access_token'
 
 /**
  * 获取本地存储的accessToken

@@ -1,0 +1,306 @@
+/* =============== 页面布局 =============== */
+.health-setup-page {
+  min-height: 100vh;
+  background: #fafaf8;
+  padding: 60px 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* =============== 进度指示器 =============== */
+.setup-progress {
+  width: 100%;
+  max-width: 720px;
+  margin-bottom: 48px;
+}
+
+.progress-header {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.progress-title {
+  margin: 0;
+  font-size: 32px;
+  font-weight: 400;
+  color: #2c2c2c;
+  letter-spacing: 0.5px;
+  margin-bottom: 8px;
+}
+
+.progress-subtitle {
+  margin: 0;
+  font-size: 14px;
+  color: #8a8a85;
+  font-weight: 300;
+}
+
+.progress-bar {
+  width: 100%;
+  height: 3px;
+  background: #e0dcd8;
+  border-radius: 2px;
+  overflow: hidden;
+  margin-bottom: 12px;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #2c2c2c 0%, #3a3a38 100%);
+  transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: 2px;
+}
+
+.progress-text {
+  margin: 0;
+  text-align: center;
+  font-size: 12px;
+  color: #8a8a85;
+  letter-spacing: 0.3px;
+}
+
+/* =============== 表单容器 =============== */
+.health-form {
+  width: 100%;
+  max-width: 720px;
+}
+
+/* =============== 表单区域 =============== */
+.form-section {
+  margin-bottom: 48px;
+  padding: 32px;
+  background: #ffffff;
+  border: 1px solid #e0dcd8;
+  border-radius: 6px;
+  transition: box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.form-section:hover {
+  box-shadow: 0 8px 24px rgba(44, 44, 44, 0.06);
+}
+
+.section-header {
+  margin-bottom: 28px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #e8e6e2;
+}
+
+.section-title {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 500;
+  color: #2c2c2c;
+  letter-spacing: 0.4px;
+  margin-bottom: 6px;
+}
+
+.section-description {
+  margin: 0;
+  font-size: 13px;
+  color: #8a8a85;
+  font-weight: 300;
+}
+
+/* =============== 网格布局 =============== */
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+}
+
+.form-group.full-width {
+  grid-column: 1 / -1;
+}
+
+/* =============== 表单元素 =============== */
+.form-label {
+  display: block;
+  font-size: 13px;
+  font-weight: 500;
+  color: #3a3a38;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+
+.form-input,
+.form-select,
+.form-textarea {
+  width: 100%;
+  padding: 12px 16px;
+  font-size: 14px;
+  border: 1px solid #e0dcd8;
+  background: #fdfdfb;
+  color: #2c2c2c;
+  border-radius: 4px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  font-family: inherit;
+  letter-spacing: 0.3px;
+  box-sizing: border-box;
+}
+
+.form-input:focus,
+.form-select:focus,
+.form-textarea:focus {
+  outline: none;
+  border-color: #8a8a85;
+  background: #ffffff;
+  box-shadow: inset 0 0 0 1px #e8e6e2, 0 0 0 3px rgba(138, 138, 133, 0.08);
+}
+
+.form-input::placeholder,
+.form-textarea::placeholder {
+  color: #a8a8a3;
+}
+
+.form-textarea {
+  resize: vertical;
+  min-height: 100px;
+  line-height: 1.6;
+}
+
+.form-select {
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%238a8a85' d='M1 1l5 5 5-5'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 36px;
+}
+
+/* =============== 单选框 =============== */
+.radio-group,
+.checkbox-group {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.radio-item,
+.checkbox-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.radio-input,
+.checkbox-input {
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+  accent-color: #2c2c2c;
+}
+
+.radio-label,
+.checkbox-label {
+  font-size: 13px;
+  color: #3a3a38;
+  letter-spacing: 0.3px;
+  line-height: 1.5;
+}
+
+.radio-item:hover .radio-label,
+.checkbox-item:hover .checkbox-label {
+  color: #2c2c2c;
+}
+
+/* =============== 错误提示 =============== */
+.form-error {
+  padding: 12px 16px;
+  margin-bottom: 24px;
+  font-size: 13px;
+  color: #7a3c3c;
+  background: #f5e6e6;
+  border: 1px solid #e8d4d4;
+  border-radius: 4px;
+  letter-spacing: 0.3px;
+}
+
+/* =============== 操作按钮 =============== */
+.form-actions {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  margin-top: 48px;
+}
+
+.btn {
+  padding: 13px 32px;
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  min-width: 180px;
+}
+
+.btn-primary {
+  color: #ffffff;
+  background: #2c2c2c;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: #3a3a38;
+  box-shadow: 0 8px 24px rgba(44, 44, 44, 0.15);
+  transform: translateY(-1px);
+}
+
+.btn-primary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.btn-secondary {
+  color: #8a8a85;
+  background: transparent;
+  border: 1px solid #e0dcd8;
+}
+
+.btn-secondary:hover {
+  border-color: #8a8a85;
+  background: rgba(138, 138, 133, 0.04);
+  color: #3a3a38;
+}
+
+/* =============== 响应式设计 =============== */
+@media (max-width: 768px) {
+  .health-setup-page {
+    padding: 40px 20px;
+  }
+
+  .setup-progress {
+    margin-bottom: 32px;
+  }
+
+  .progress-title {
+    font-size: 24px;
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .form-section {
+    padding: 24px;
+    margin-bottom: 32px;
+  }
+
+  .section-title {
+    font-size: 16px;
+  }
+
+  .form-actions {
+    flex-direction: column;
+  }
+
+  .btn {
+    min-width: 100%;
+  }
+}
