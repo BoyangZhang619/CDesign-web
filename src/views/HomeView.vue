@@ -3,79 +3,150 @@
     <AppHeader />
 
     <main class="content">
-      <div class="card">
-        <h2>AI 对话</h2>
-        <p class="subtitle">与AI助手交互，获取智能回复</p>
-
-        <div class="user-info" v-if="authStore.userInfo">
-          <span>用户: {{ authStore.userInfo.email || authStore.userInfo.username }}</span>
-          <span class="credits">额度: {{ authStore.userInfo.credits || 0 }}</span>
-        </div>
-
-        <!-- 对话历史 -->
-        <div class="chat-history">
-          <div 
-            v-for="(msg, index) in messages" 
-            :key="index"
-            :class="['message', msg.role]"
-          >
-            <div class="message-content">{{ msg.content }}</div>
-          </div>
-        </div>
-
-        <!-- 对话输入框 -->
-        <div class="chat-input-area">
-          <div class="model-selector">
-            <label>模型:</label>
-            <select v-model="chatConfig.model">
-              <option value="qwen3.5-flash">Qwen 3.5 Flash (快速)</option>
-              <option value="qwen3.5-max">Qwen 3.5 Max (高级)</option>
-            </select>
-          </div>
-
-          <div class="stream-toggle">
-            <label>
-              <input v-model="chatConfig.useStream" type="checkbox" />
-              使用流式对话
-            </label>
-          </div>
-
-          <div class="input-group">
-            <textarea
-              v-model="inputMessage"
-              placeholder="输入你的问题..."
-              @keydown.enter.ctrl="handleSendMessage"
-              :disabled="loading"
-            ></textarea>
-            <button @click="handleSendMessage" :disabled="loading || !inputMessage.trim()">
-              {{ loading ? '发送中...' : '发送 (Ctrl+Enter)' }}
-            </button>
-          </div>
-
-          <p v-if="errorMsg" class="error">{{ errorMsg }}</p>
-        </div>
+      <!-- 页面标题区 -->
+      <div class="header-section">
+        <h1 class="main-title">健康数字孪生系统</h1>
+        <p class="subtitle">以数据驱动个性化健康管理，构建您的专属数字模型</p>
       </div>
+
+      <!-- 核心功能区 -->
+      <section class="features-section">
+        <div class="section-label">核心功能</div>
+        
+        <div class="feature-grid">
+          <!-- 个人基础信息 -->
+          <router-link to="/profile/basic-info" class="feature-card">
+            <div class="card-icon">👤</div>
+            <h3 class="card-title">个人基础信息</h3>
+            <p class="card-description">配置健康模型初始参数，采集身体与目标数据</p>
+            <div class="card-badge">初始化</div>
+          </router-link>
+
+          <!-- 健康打卡 -->
+          <router-link to="/health/daily-checkin" class="feature-card">
+            <div class="card-icon">📝</div>
+            <h3 class="card-title">健康打卡</h3>
+            <p class="card-description">记录每日饮食、运动、体重、睡眠等实时数据</p>
+            <div class="card-badge">数据采集</div>
+          </router-link>
+
+          <!-- 历史记录 -->
+          <router-link to="/health/history" class="feature-card">
+            <div class="card-icon">📊</div>
+            <h3 class="card-title">历史记录</h3>
+            <p class="card-description">查询历史打卡详情，按类型和时间筛选</p>
+            <div class="card-badge">数据回溯</div>
+          </router-link>
+
+          <!-- 健康画像 -->
+          <router-link to="/analysis/portrait" class="feature-card">
+            <div class="card-icon">🎨</div>
+            <h3 class="card-title">健康画像</h3>
+            <p class="card-description">查看数字孪生模型，展示多维健康指标</p>
+            <div class="card-badge">模型展示</div>
+          </router-link>
+
+          <!-- 趋势分析 -->
+          <router-link to="/analysis/trends" class="feature-card">
+            <div class="card-icon">📈</div>
+            <h3 class="card-title">趋势分析</h3>
+            <p class="card-description">分析体重、摄入、运动等指标的变化趋势</p>
+            <div class="card-badge">演化过程</div>
+          </router-link>
+
+          <!-- 未来预测 -->
+          <router-link to="/analysis/forecast" class="feature-card">
+            <div class="card-icon">🔮</div>
+            <h3 class="card-title">未来预测</h3>
+            <p class="card-description">预测体重与健康评分变化，识别潜在风险</p>
+            <div class="card-badge">预测能力</div>
+          </router-link>
+
+          <!-- 情景模拟 -->
+          <router-link to="/analysis/simulation" class="feature-card">
+            <div class="card-icon">🧪</div>
+            <h3 class="card-title">情景模拟</h3>
+            <p class="card-description">调整变量查看不同生活方式的健康结果</p>
+            <div class="card-badge">可实验性</div>
+          </router-link>
+
+          <!-- 个性化建议 -->
+          <router-link to="/recommendations" class="feature-card">
+            <div class="card-icon">💡</div>
+            <h3 class="card-title">个性化建议</h3>
+            <p class="card-description">获取基于分析的饮食、运动、作息建议</p>
+            <div class="card-badge">干预指导</div>
+          </router-link>
+
+          <!-- 健康目标 -->
+          <router-link to="/goals" class="feature-card">
+            <div class="card-icon">🎯</div>
+            <h3 class="card-title">健康目标</h3>
+            <p class="card-description">设定和跟踪健康目标，展示完成进度</p>
+            <div class="card-badge">目标导向</div>
+          </router-link>
+
+          <!-- 校园饮食推荐 -->
+          <router-link to="/recommendations/campus-diet" class="feature-card">
+            <div class="card-icon">🍽️</div>
+            <h3 class="card-title">校园饮食推荐</h3>
+            <p class="card-description">提供食堂搭配、外卖选择和宿舍方案</p>
+            <div class="card-badge">落地方案</div>
+          </router-link>
+
+          <!-- 消息与提醒 -->
+          <router-link to="/notifications" class="feature-card">
+            <div class="card-icon">🔔</div>
+            <h3 class="card-title">消息与提醒</h3>
+            <p class="card-description">打卡提醒、健康警告和周期性总结推送</p>
+            <div class="card-badge">行为引导</div>
+          </router-link>
+
+          <!-- AI 对话 -->
+          <router-link to="/ai-chat" class="feature-card">
+            <div class="card-icon">🤖</div>
+            <h3 class="card-title">AI 对话</h3>
+            <p class="card-description">与AI助手交互获取个性化健康咨询</p>
+            <div class="card-badge">智能助手</div>
+          </router-link>
+        </div>
+      </section>
+
+      <!-- 快速开始 -->
+      <section class="quick-start">
+        <div class="section-label">快速开始</div>
+        <div class="quick-start-cards">
+          <div class="quick-card">
+            <span class="step">1</span>
+            <h4>完成基础信息</h4>
+            <p>设置初始健康参数</p>
+          </div>
+          <div class="quick-card">
+            <span class="step">2</span>
+            <h4>开始每日打卡</h4>
+            <p>持续记录健康数据</p>
+          </div>
+          <div class="quick-card">
+            <span class="step">3</span>
+            <h4>查看健康画像</h4>
+            <p>了解您的数字孪生</p>
+          </div>
+          <div class="quick-card">
+            <span class="step">4</span>
+            <h4>获取个性化建议</h4>
+            <p>执行健康行动方案</p>
+          </div>
+        </div>
+      </section>
     </main>
   </div>
 </template>
 
-<script setup>
-import { ref, reactive, nextTick } from 'vue'
+<script setup lang="ts">
 import AppHeader from '../components/AppHeader.vue'
 import { useAuthStore } from '../stores/auth'
-import { fetchWithRefresh } from '../api/http'
 
 const authStore = useAuthStore()
-
-const loading = ref(false)
-const errorMsg = ref('')
-const inputMessage = ref('')
-const messages = ref([])
-
-const chatConfig = reactive({
-  model: 'qwen3.5-flash',
-  useStream: false
-})
 
 // 加载用户信息
 async function loadUserInfo() {
@@ -86,325 +157,250 @@ async function loadUserInfo() {
   }
 }
 
-// 发送非流式消息
-async function sendCommonMessage() {
-  try {
-    const response = await fetchWithRefresh(
-      `${import.meta.env.VITE_API_URL || 'https://cda.api.zbyblq.xin'}/api/ai/ptio/common`,
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          message: inputMessage.value,
-          model: chatConfig.model,
-          response_language: 'Chinese'
-        })
-      }
-    )
-
-    if (!response.ok) {
-      const errorData = await response.json().catch(() => ({}))
-      throw new Error(errorData.message || `HTTP error! status: ${response.status}`)
-    }
-
-    const data = await response.json()
-
-    if (data?.success) {
-      const aiMessage = data.data.content
-      messages.value.push({
-        role: 'assistant',
-        content: aiMessage
-      })
-
-      // 更新额度
-      if (authStore.userInfo) {
-        authStore.userInfo.credits -= data.data.usage.total_tokens
-      }
-    }
-  } catch (error) {
-    throw error
-  }
-}
-
-// 发送流式消息
-async function sendStreamMessage() {
-  try {
-    const response = await fetchWithRefresh(
-      `${import.meta.env.VITE_API_URL || 'https://cda.api.zbyblq.xin'}/api/ai/ptio/stream`,
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          message: inputMessage.value,
-          model: chatConfig.model,
-          response_language: 'Chinese'
-        })
-      }
-    )
-
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`)
-    }
-
-    const reader = response.body.getReader()
-    const decoder = new TextDecoder()
-    let buffer = ''
-    let aiMessage = ''
-    let totalTokens = 0
-
-    // 添加AI消息占位符
-    const messageIndex = messages.value.length
-    messages.value.push({
-      role: 'assistant',
-      content: ''
-    })
-
-    while (true) {
-      const { done, value } = await reader.read()
-      if (done) break
-
-      buffer += decoder.decode(value, { stream: true })
-      const lines = buffer.split('\n')
-      buffer = lines.pop() || ''
-
-      for (const line of lines) {
-        if (line.startsWith('data: ')) {
-          try {
-            const message = JSON.parse(line.slice(6))
-
-            if (message.type === 'content') {
-              aiMessage += message.content
-              messages.value[messageIndex].content = aiMessage
-              await nextTick()
-            } else if (message.type === 'done') {
-              totalTokens = message.usage?.total_tokens || 0
-            }
-          } catch (e) {
-            console.error('解析消息失败:', e)
-          }
-        }
-      }
-    }
-
-    // 更新额度
-    if (authStore.userInfo && totalTokens > 0) {
-      authStore.userInfo.credits -= totalTokens
-    }
-  } catch (error) {
-    throw error
-  }
-}
-
-// 发送消息
-async function handleSendMessage() {
-  errorMsg.value = ''
-
-  if (!inputMessage.value.trim()) {
-    errorMsg.value = '请输入消息'
-    return
-  }
-
-  if (authStore.userInfo && authStore.userInfo.credits < 10) {
-    errorMsg.value = '额度不足，请充值'
-    return
-  }
-
-  loading.value = true
-
-  try {
-    // 添加用户消息
-    messages.value.push({
-      role: 'user',
-      content: inputMessage.value
-    })
-
-    if (chatConfig.useStream) {
-      await sendStreamMessage()
-    } else {
-      await sendCommonMessage()
-    }
-
-    inputMessage.value = ''
-  } catch (error) {
-    messages.value.pop() // 移除用户消息
-    errorMsg.value =
-      error?.response?.data?.message ||
-      error?.message ||
-      '发送失败'
-  } finally {
-    loading.value = false
-  }
-}
-
 // 初始化
 loadUserInfo()
 </script>
 
 <style scoped>
+.page {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #fafaf9 0%, #f5f4f0 100%);
+}
+
 .content {
-  padding: 24px;
-  max-width: 900px;
+  padding: 40px 20px;
+  max-width: 1200px;
   margin: 0 auto;
 }
 
-.card {
-  background: #fff;
-  border-radius: 10px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-  display: flex;
-  flex-direction: column;
-  height: calc(100vh - 120px);
+/* =============== 标题区 =============== */
+.header-section {
+  text-align: center;
+  margin-bottom: 60px;
+  animation: fadeInDown 0.6s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-h2 {
+.main-title {
   margin: 0;
-  padding: 24px 24px 8px;
-  font-size: 20px;
+  font-size: 40px;
+  font-weight: 400;
+  color: #2d2d2a;
+  letter-spacing: -0.5px;
+  margin-bottom: 12px;
 }
 
 .subtitle {
   margin: 0;
-  padding: 0 24px;
-  color: #6b7280;
+  font-size: 16px;
+  color: #6f6f6a;
+  font-weight: 300;
+  letter-spacing: 0px;
+}
+
+/* =============== 分类标签 =============== */
+.section-label {
   font-size: 12px;
+  font-weight: 600;
+  color: #d8a88f;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin-bottom: 24px;
 }
 
-.user-info {
-  padding: 12px 24px;
-  border-bottom: 1px solid #e5e7eb;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-size: 12px;
-  color: #6b7280;
+/* =============== 功能网格 =============== */
+.features-section {
+  margin-bottom: 80px;
 }
 
-.credits {
-  background: #f3f4f6;
-  padding: 4px 8px;
-  border-radius: 4px;
-  font-weight: 500;
+.feature-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 24px;
 }
 
-.chat-history {
-  flex: 1;
-  padding: 20px 24px;
-  overflow-y: auto;
+.feature-card {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  padding: 28px;
+  background: white;
+  border: 1px solid #f0ebe5;
+  border-radius: 16px;
+  text-decoration: none;
+  color: inherit;
+  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+  animation: cardFadeIn 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.message {
-  display: flex;
-  max-width: 80%;
+.feature-card:hover {
+  border-color: #d8a88f;
+  box-shadow: 0 12px 32px rgba(216, 168, 143, 0.15);
+  transform: translateY(-4px);
 }
 
-.message.user {
-  align-self: flex-end;
+.feature-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, rgba(216, 168, 143, 0.05) 0%, transparent 100%);
+  opacity: 0;
+  transition: opacity 0.35s ease;
+  pointer-events: none;
 }
 
-.message.assistant {
-  align-self: flex-start;
+.feature-card:hover::before {
+  opacity: 1;
 }
 
-.message-content {
-  padding: 12px 16px;
-  border-radius: 8px;
-  word-wrap: break-word;
-  line-height: 1.5;
+.card-icon {
+  font-size: 40px;
+  margin-bottom: 16px;
 }
 
-.message.user .message-content {
-  background: #111827;
-  color: white;
-}
-
-.message.assistant .message-content {
-  background: #f3f4f6;
-  color: #111827;
-}
-
-.chat-input-area {
-  padding: 20px 24px;
-  border-top: 1px solid #e5e7eb;
-  background: #f9fafb;
-}
-
-.model-selector,
-.stream-toggle {
-  margin-bottom: 12px;
-  font-size: 12px;
-}
-
-.model-selector label,
-.stream-toggle label {
-  margin-right: 8px;
-}
-
-.model-selector select {
-  padding: 6px 8px;
-  border: 1px solid #d1d5db;
-  border-radius: 4px;
-  font-size: 12px;
-}
-
-.input-group {
-  display: flex;
-  gap: 8px;
-}
-
-.input-group textarea {
-  flex: 1;
-  padding: 10px 12px;
-  border: 1px solid #d1d5db;
-  border-radius: 6px;
-  font-size: 14px;
-  resize: none;
-  max-height: 80px;
-  font-family: inherit;
-}
-
-.input-group textarea:focus {
-  outline: none;
-  border-color: #111827;
-}
-
-.input-group button {
-  padding: 10px 16px;
-  background: #111827;
-  color: white;
-  border: none;
-  border-radius: 6px;
-  font-size: 14px;
+.card-title {
+  margin: 0 0 8px 0;
+  font-size: 16px;
   font-weight: 500;
-  cursor: pointer;
-  white-space: nowrap;
-  transition: background 0.3s;
+  color: #2d2d2a;
+  letter-spacing: -0.3px;
 }
 
-.input-group button:hover:not(:disabled) {
-  background: #1f2937;
+.card-description {
+  margin: 0 0 16px 0;
+  font-size: 13px;
+  color: #6f6f6a;
+  line-height: 1.6;
+  flex: 1;
 }
 
-.input-group button:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
+.card-badge {
+  display: inline-block;
+  padding: 6px 12px;
+  background: rgba(216, 168, 143, 0.1);
+  color: #d8a88f;
+  border-radius: 8px;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.5px;
 }
 
-.error {
-  color: #dc2626;
+/* =============== 快速开始 =============== */
+.quick-start {
+  margin-top: 60px;
+}
+
+.quick-start-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 20px;
+}
+
+.quick-card {
+  padding: 28px;
+  background: white;
+  border: 1px solid #f0ebe5;
+  border-radius: 12px;
+  text-align: center;
+  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+}
+
+.quick-card:hover {
+  border-color: #d8a88f;
+  box-shadow: 0 8px 24px rgba(216, 168, 143, 0.12);
+  transform: translateY(-2px);
+}
+
+.step {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  background: linear-gradient(135deg, #d8a88f, #d09680);
+  color: white;
+  border-radius: 50%;
+  font-weight: 600;
+  margin-bottom: 16px;
+  font-size: 18px;
+}
+
+.quick-card h4 {
+  margin: 0 0 8px 0;
+  font-size: 15px;
+  font-weight: 500;
+  color: #2d2d2a;
+}
+
+.quick-card p {
+  margin: 0;
   font-size: 12px;
-  margin-top: 8px;
+  color: #6f6f6a;
 }
 
+/* =============== 动画 =============== */
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes cardFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.feature-card:nth-child(1) { animation-delay: 0.05s; }
+.feature-card:nth-child(2) { animation-delay: 0.1s; }
+.feature-card:nth-child(3) { animation-delay: 0.15s; }
+.feature-card:nth-child(4) { animation-delay: 0.2s; }
+.feature-card:nth-child(5) { animation-delay: 0.25s; }
+.feature-card:nth-child(6) { animation-delay: 0.3s; }
+.feature-card:nth-child(7) { animation-delay: 0.35s; }
+.feature-card:nth-child(8) { animation-delay: 0.4s; }
+.feature-card:nth-child(9) { animation-delay: 0.45s; }
+.feature-card:nth-child(10) { animation-delay: 0.5s; }
+.feature-card:nth-child(11) { animation-delay: 0.55s; }
+.feature-card:nth-child(12) { animation-delay: 0.6s; }
+
+/* =============== 响应式 =============== */
 @media (max-width: 768px) {
-  .message {
-    max-width: 100%;
+  .main-title {
+    font-size: 28px;
+  }
+
+  .subtitle {
+    font-size: 14px;
+  }
+
+  .feature-grid {
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 16px;
+  }
+
+  .feature-card {
+    padding: 20px;
+  }
+
+  .quick-start-cards {
+    grid-template-columns: 1fr;
   }
 }
 </style>
+

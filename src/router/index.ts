@@ -3,6 +3,10 @@ import HomeView from '../views/HomeView.vue'
 import AuthView from '../views/AuthView.vue'
 import HealthSetupView from '../views/HealthSetupView.vue'
 import ProfileView from '../views/ProfileView.vue'
+import AIChatView from '../views/AIChatView.vue'
+import BasicInfoView from '../views/BasicInfoView.vue'
+import DailyCheckinView from '../views/DailyCheckinView.vue'
+import HistoryView from '../views/HistoryView.vue'
 import { useAuthStore } from '../stores/auth'
 
 const routes = [
@@ -19,7 +23,7 @@ const routes = [
     component: HomeView,
     meta: {
       requiresAuth: true,
-      title: 'StuHeal - AI对话'
+      title: 'StuHeal - 导航中心'
     }
   },
   {
@@ -46,6 +50,42 @@ const routes = [
     meta: {
       requiresAuth: true,
       title: 'StuHeal - 个人中心'
+    }
+  },
+  {
+    path: '/ai-chat',
+    name: 'ai-chat',
+    component: AIChatView,
+    meta: {
+      requiresAuth: true,
+      title: 'StuHeal - AI健康助手'
+    }
+  },
+  {
+    path: '/profile/basic-info',
+    name: 'basic-info',
+    component: BasicInfoView,
+    meta: {
+      requiresAuth: true,
+      title: 'StuHeal - 个人基础信息'
+    }
+  },
+  {
+    path: '/health/daily-checkin',
+    name: 'daily-checkin',
+    component: DailyCheckinView,
+    meta: {
+      requiresAuth: true,
+      title: 'StuHeal - 健康打卡'
+    }
+  },
+  {
+    path: '/health/history',
+    name: 'history',
+    component: HistoryView,
+    meta: {
+      requiresAuth: true,
+      title: 'StuHeal - 历史记录'
     }
   }
 ]
