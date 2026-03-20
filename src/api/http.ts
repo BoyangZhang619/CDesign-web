@@ -193,7 +193,7 @@ export async function fetchWithRefresh(url: string, options: RequestInit = {}) {
       authStore.token = ''
       authStore.userInfo = null
       removeToken()
-      window.location.href = '/login'
+      window.location.href = '/auth'
       throw error
     }
   }
