@@ -237,5 +237,5 @@ loadUserInfo().then(() => {
 })
 </script>
 
-<style src="../css/ProfileEdit.css">
+<style src="../css/ProfileEditView.css">
 </style>

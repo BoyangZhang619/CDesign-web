@@ -150,5 +150,5 @@ onMounted(async () => {
 })
 </script>
 
-<style src="../css/ProfileDisplay.css">
+<style src="../css/ProfileDisplayView.css">
 </style>
