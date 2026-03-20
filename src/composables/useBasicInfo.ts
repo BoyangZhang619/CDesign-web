@@ -40,27 +40,27 @@ export function useBasicInfo() {
 
   // 性别选项
   const genderOptions = [
-    { label: '👨 男', value: 'male' },
-    { label: '👩 女', value: 'female' },
+    { label: '男', value: 'male' },
+    { label: '女', value: 'female' },
     { label: '其他', value: 'other' }
   ]
 
   // 目标类型选项
   const goalOptions = [
-    { label: '🎯 保持现状', value: 'maintain' },
-    { label: '⬇️ 减重', value: 'weight_loss' },
-    { label: '⬆️ 增重', value: 'weight_gain' },
-    { label: '💪 增肌', value: 'muscle_gain' },
-    { label: '🏃 提高体能', value: 'fitness' }
+    { label: '保持现状', value: 'maintain' },
+    { label: '减重', value: 'weight_loss' },
+    { label: '增重', value: 'weight_gain' },
+    { label: '增肌', value: 'muscle_gain' },
+    { label: '提高体能', value: 'fitness' }
   ]
 
   // 活动水平选项
   const activityLevelOptions = [
-    { label: '🚫 久坐不动', value: 'sedentary' },
-    { label: '🚶 轻度活动', value: 'light' },
-    { label: '🏃 中等活动', value: 'moderate' },
-    { label: '💪 高度活动', value: 'active' },
-    { label: '⚡ 非常活跃', value: 'very_active' }
+    { label: '久坐不动', value: 'sedentary' },
+    { label: '轻度活动', value: 'light' },
+    { label: '中等活动', value: 'moderate' },
+    { label: '高度活动', value: 'active' },
+    { label: '非常活跃', value: 'very_active' }
   ]
 
   // 验证表单

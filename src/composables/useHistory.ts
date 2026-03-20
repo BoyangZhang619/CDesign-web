@@ -38,12 +38,12 @@ export function useHistory() {
   // 类型选项
   const typeOptions = [
     { label: '全部', value: '' },
-    { label: '🍽️ 饮食', value: 'meal' },
-    { label: '💪 运动', value: 'exercise' },
-    { label: '😴 睡眠', value: 'sleep' },
-    { label: '⚖️ 体重', value: 'weight' },
-    { label: '😊 心情', value: 'mood' },
-    { label: '💧 喝水', value: 'water' }
+    { label: '饮食', value: 'meal' },
+    { label: '运动', value: 'exercise' },
+    { label: '睡眠', value: 'sleep' },
+    { label: '体重', value: 'weight' },
+    { label: '心情', value: 'mood' },
+    { label: '喝水', value: 'water' }
   ]
 
   // 加载记录

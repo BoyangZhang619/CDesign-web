@@ -3,7 +3,6 @@
     <div class="header-container">
       <div class="header-left">
         <router-link to="/" class="logo">
-          <span class="logo-icon">🏥</span>
           <span class="logo-text">StuHeal</span>
         </router-link>
       </div>
@@ -18,7 +17,7 @@
         <div class="user-section" v-if="authStore.isLoggedIn && authStore.userInfo">
           <span class="user-email">{{ authStore.userInfo.email }}</span>
           <span class="user-credits" title="剩余额度">
-            💎 {{ authStore.userInfo.credits || 0 }}
+            {{ authStore.userInfo.credits || 0 }}
           </span>
         </div>
 

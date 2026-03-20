@@ -64,22 +64,22 @@
       <section class="viz-section">
         <div class="health-visual">
           <div class="health-item">
-            <div class="health-circle sleep-quality">{{ getSleepQualityEmoji(displayData.sleep_quality) }}</div>
+            <div class="health-circle sleep-quality">●</div>
             <div class="health-label">睡眠</div>
             <div class="health-value">{{ getSleepQualityText(displayData.sleep_quality) }}</div>
           </div>
           <div class="health-item">
-            <div class="health-circle mood">{{ getMoodEmoji(displayData.mood) }}</div>
+            <div class="health-circle mood">◆</div>
             <div class="health-label">心情</div>
             <div class="health-value">{{ getMoodText(displayData.mood) }}</div>
           </div>
           <div class="health-item">
-            <div class="health-circle energy">{{ getEnergyEmoji(displayData.energy_level) }}</div>
+            <div class="health-circle energy">▲</div>
             <div class="health-label">精力</div>
             <div class="health-value">{{ displayData.energy_level }}/5</div>
           </div>
           <div class="health-item">
-            <div class="health-circle time">🕐</div>
+            <div class="health-circle time">—</div>
             <div class="health-label">睡眠时间</div>
             <div class="health-value">{{ displayData.sleep_start_time }}</div>
           </div>
@@ -90,12 +90,12 @@
       <section v-if="hasMeals" class="viz-section">
         <div class="meal-visual">
           <div v-if="displayData.breakfast" class="meal-item">
-            <div class="meal-time">🌅</div>
+            <div class="meal-time">早</div>
             <div class="meal-name">早餐</div>
             <div class="meal-detail">{{ displayData.breakfast }}</div>
           </div>
           <div v-if="displayData.lunch" class="meal-item">
-            <div class="meal-time">☀️</div>
+            <div class="meal-time">午</div>
             <div class="meal-name">午餐</div>
             <div class="meal-detail">{{ displayData.lunch }}</div>
           </div>
@@ -174,37 +174,25 @@ const hasMeals = computed(() => {
   return !!(displayData.value.breakfast || displayData.value.lunch || displayData.value.dinner || displayData.value.midnight_snack)
 })
 
-// 睡眠质量映射
-const sleepQualityMap = {
-  excellent: { emoji: '😴', text: '很好' },
-  good: { emoji: '😊', text: '良好' },
-  fair: { emoji: '😐', text: '一般' },
-  poor: { emoji: '😫', text: '很差' }
+// 睡眠质量和心情状态文本映射
+const sleepQualityTextMap = {
+  excellent: '很好',
+  good: '良好',
+  fair: '一般',
+  poor: '很差'
 }
 
-const getSleepQualityEmoji = (value: string) => sleepQualityMap[value as keyof typeof sleepQualityMap]?.emoji || '❓'
-const getSleepQualityText = (value: string) => sleepQualityMap[value as keyof typeof sleepQualityMap]?.text || value
+const getSleepQualityText = (value: string) => sleepQualityTextMap[value as keyof typeof sleepQualityTextMap] || value
 
-// 心情映射
-const moodMap = {
-  very_happy: { emoji: '😄', text: '很开心' },
-  happy: { emoji: '😊', text: '开心' },
-  neutral: { emoji: '😐', text: '平常' },
-  sad: { emoji: '😔', text: '有点低落' },
-  very_sad: { emoji: '😠', text: '很沮丧' }
+const moodTextMap = {
+  very_happy: '很开心',
+  happy: '开心',
+  neutral: '平常',
+  sad: '有点低落',
+  very_sad: '很沮丧'
 }
 
-const getMoodEmoji = (value: string) => moodMap[value as keyof typeof moodMap]?.emoji || '❓'
-const getMoodText = (value: string) => moodMap[value as keyof typeof moodMap]?.text || value
-
-// 精力水平映射
-const getEnergyEmoji = (level: number) => {
-  if (level >= 5) return '⚡'
-  if (level >= 4) return '👍'
-  if (level >= 3) return '➡️'
-  if (level >= 2) return '😴'
-  return '🔋'
-}
+const getMoodText = (value: string) => moodTextMap[value as keyof typeof moodTextMap] || value
 
 const goToEdit = () => {
   router.push('/health/daily-checkin-edit')

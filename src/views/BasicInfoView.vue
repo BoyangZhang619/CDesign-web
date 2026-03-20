@@ -14,9 +14,12 @@
         </div>
 
         <form @submit.prevent="handleSubmit" class="basic-form">
-          <!-- 个人基础信息 -->
+          <!-- 基本信息 -->
           <section class="form-section">
-            <h2 class="section-title">👤 基本信息</h2>
+            <div class="section-header">
+              <span class="section-number">01</span>
+              <h2 class="section-title">基本信息</h2>
+            </div>
 
             <div class="form-row">
               <div class="form-group">
@@ -79,7 +82,10 @@
 
           <!-- 身体数据 -->
           <section class="form-section">
-            <h2 class="section-title">⚖️ 身体数据</h2>
+            <div class="section-header">
+              <span class="section-number">02</span>
+              <h2 class="section-title">身体数据</h2>
+            </div>
 
             <div class="form-row">
               <div class="form-group">
@@ -140,9 +146,12 @@
             </div>
           </section>
 
-          <!-- 健康习惯 -->
+          <!-- 生活习惯 -->
           <section class="form-section">
-            <h2 class="section-title">🏃 健康习惯</h2>
+            <div class="section-header">
+              <span class="section-number">03</span>
+              <h2 class="section-title">生活习惯</h2>
+            </div>
 
             <div class="form-row">
               <div class="form-group">
@@ -193,33 +202,20 @@
                 />
               </div>
             </div>
-          </section>
 
-          <!-- 健康目标描述 -->
-          <section class="form-section">
-            <h2 class="section-title">📝 健康目标描述</h2>
-
-            <div class="form-group">
-              <label for="health_goal_desc" class="form-label">您的健康目标</label>
-              <textarea
-                id="health_goal_desc"
-                v-model="form.health_goal_desc"
-                class="form-textarea"
-                placeholder="详细描述您的健康目标，例如想要达到的体重、增强体能等"
-                rows="4"
-              ></textarea>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="health_goal_desc" class="form-label">健康目标描述</label>
+                <textarea
+                  id="health_goal_desc"
+                  v-model="form.health_goal_desc"
+                  class="form-textarea"
+                  placeholder="详细描述您的健康目标，例如想要达到的体重、增强体能等"
+                  rows="4"
+                ></textarea>
+              </div>
             </div>
           </section>
-
-          <!-- 错误提示 -->
-          <div v-if="errorMsg" class="error-box">
-            {{ errorMsg }}
-          </div>
-
-          <!-- 成功提示 -->
-          <div v-if="successMsg" class="success-box">
-            {{ successMsg }}
-          </div>
 
           <!-- 操作按钮 -->
           <div class="form-actions">
@@ -228,7 +224,7 @@
               :disabled="loading"
               class="btn-primary"
             >
-              {{ loading ? '保存中...' : '✓ 保存健康档案' }}
+              {{ loading ? '保存中...' : '保存档案' }}
             </button>
           </div>
         </form>
@@ -245,8 +241,6 @@ import { useBasicInfo } from '../composables/useBasicInfo'
 const {
   form,
   loading,
-  errorMsg,
-  successMsg,
   genderOptions,
   goalOptions,
   activityLevelOptions,

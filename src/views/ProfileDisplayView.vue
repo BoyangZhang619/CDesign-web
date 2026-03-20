@@ -54,13 +54,13 @@
           </div>
           <div class="status-card">
             <div class="status-icon" :class="userInfo.admin === 1 ? 'admin' : 'normal'">
-              {{ userInfo.admin === 1 ? '👑' : '👤' }}
+              {{ userInfo.admin === 1 ? '■' : '◆' }}
             </div>
             <div class="status-label">账户类型</div>
             <div class="status-value">{{ userInfo.admin === 1 ? '管理员' : '普通用户' }}</div>
           </div>
           <div class="status-card">
-            <div class="status-icon credit">💎</div>
+            <div class="status-icon credit">◆</div>
             <div class="status-label">模型点数</div>
             <div class="status-value">{{ userInfo.credits }}</div>
           </div>

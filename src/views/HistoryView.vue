@@ -5,7 +5,7 @@
     <main class="content">
       <div class="history-wrapper">
         <div class="history-header">
-          <h1 class="history-title">📊 历史记录</h1>
+          <h1 class="history-title">历史记录</h1>
           <p class="history-subtitle">查询和管理您的健康打卡记录</p>
         </div>
 
@@ -59,8 +59,8 @@
           </div>
 
           <div class="filter-actions">
-            <button @click="applyFilters" class="btn-filter">🔍 查询</button>
-            <button @click="resetFilters" class="btn-reset">↻ 重置</button>
+            <button @click="applyFilters" class="btn-filter">查询</button>
+            <button @click="resetFilters" class="btn-reset">重置</button>
           </div>
         </div>
 
@@ -96,7 +96,7 @@
 
         <!-- 空状态 -->
         <div v-else-if="records.length === 0" class="empty-state">
-          <div class="empty-icon">📭</div>
+          <div class="empty-icon">—</div>
           <h3 class="empty-title">暂无记录</h3>
           <p class="empty-text">尝试调整筛选条件或创建新的打卡记录</p>
         </div>
@@ -121,7 +121,7 @@
                 class="btn-delete"
                 title="删除"
               >
-                🗑️
+                ✕
               </button>
             </div>
 
@@ -131,7 +131,7 @@
             </div>
 
             <div class="record-footer">
-              <span class="record-time">⏰ {{ record.time }}</span>
+              <span class="record-time">{{ record.time }}</span>
             </div>
           </div>
         </div>

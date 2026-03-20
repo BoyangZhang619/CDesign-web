@@ -50,44 +50,44 @@ export function useDailyCheckin() {
 
   // 饮食评分选项
   const mealOptions = [
-    { label: '🥗 很健康', value: 'healthy' },
-    { label: '✅ 正常', value: 'normal' },
-    { label: '🍔 不太健康', value: 'unhealthy' },
-    { label: '❌ 很不健康', value: 'very_unhealthy' }
+    { label: '很健康', value: 'healthy' },
+    { label: '正常', value: 'normal' },
+    { label: '不太健康', value: 'unhealthy' },
+    { label: '很不健康', value: 'very_unhealthy' }
   ]
 
   // 运动选项
   const exerciseOptions = [
-    { label: '🚫 没有运动', value: 'none' },
-    { label: '🚶 轻度运动', value: 'light' },
-    { label: '🏃 中等运动', value: 'moderate' },
-    { label: '💪 剧烈运动', value: 'intense' }
+    { label: '没有运动', value: 'none' },
+    { label: '轻度运动', value: 'light' },
+    { label: '中等运动', value: 'moderate' },
+    { label: '剧烈运动', value: 'intense' }
   ]
 
   // 睡眠质量选项
   const sleepQualityOptions = [
-    { label: '😴 很好', value: 'excellent' },
-    { label: '😊 良好', value: 'good' },
-    { label: '😐 一般', value: 'fair' },
-    { label: '😫 很差', value: 'poor' }
+    { label: '很好', value: 'excellent' },
+    { label: '良好', value: 'good' },
+    { label: '一般', value: 'fair' },
+    { label: '很差', value: 'poor' }
   ]
 
   // 心情选项
   const moodOptions = [
-    { label: '😄 很开心', value: 'very_happy' },
-    { label: '😊 开心', value: 'happy' },
-    { label: '😐 平常', value: 'neutral' },
-    { label: '😔 有点低落', value: 'sad' },
-    { label: '😠 很沮丧', value: 'very_sad' }
+    { label: '很开心', value: 'very_happy' },
+    { label: '开心', value: 'happy' },
+    { label: '平常', value: 'neutral' },
+    { label: '有点低落', value: 'sad' },
+    { label: '很沮丧', value: 'very_sad' }
   ]
 
   // 精力选项
   const energyOptions = [
-    { label: '⚡ 精力充沛', value: 'very_high' },
-    { label: '👍 精力充足', value: 'high' },
-    { label: '➡️ 正常', value: 'normal' },
-    { label: '😴 有点疲劳', value: 'tired' },
-    { label: '🔋 很疲劳', value: 'very_tired' }
+    { label: '精力充沛', value: 'very_high' },
+    { label: '精力充足', value: 'high' },
+    { label: '正常', value: 'normal' },
+    { label: '有点疲劳', value: 'tired' },
+    { label: '很疲劳', value: 'very_tired' }
   ]
 
   // 验证表单
