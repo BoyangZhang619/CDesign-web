@@ -173,7 +173,8 @@ export function useDailyCheckin() {
 
       if (response.ok && data) {
         displayData.value = data
-        form.value = { ...data }
+        form.value = { ...data.data.checkinData }
+        console.log('Loaded daily check-in data:', data)
       } else {
         errorMsg.value = data.message || '加载失败'
       }
