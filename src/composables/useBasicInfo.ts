@@ -161,7 +161,7 @@ export function useBasicInfo() {
         method: 'GET'
       })
 
-      const data = await response.json()
+      const data = (await response.json())
 
       if (response.ok && data) {
         form.value = {
