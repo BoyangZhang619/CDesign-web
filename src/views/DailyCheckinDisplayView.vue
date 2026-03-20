@@ -1,9 +1,6 @@
 <template>
   <div class="display-page">
-    <header class="display-header" v-if="displayData">
-      <h1>{{ formatDate(displayData.date) }}</h1>
-      <button @click="goToEdit" class="edit-btn">✏️ 编辑</button>
-    </header>
+    <AppHeader v-if="displayData"/>
 
     <main class="display-content" v-if="displayData">
       <!-- 基础数据可视化 -->
@@ -139,6 +136,7 @@
 </template>
 
 <script setup lang="ts">
+import AppHeader from '../components/AppHeader.vue'
 import { onMounted, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useDailyCheckin } from '../composables/useDailyCheckin'
@@ -152,15 +150,15 @@ const {
 
 const maxCalories = 3000
 
-const formatDate = (dateStr: string) => {
-  const date = new Date(dateStr + 'T00:00:00')
-  return date.toLocaleDateString('zh-CN', {
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit',
-    weekday: 'long'
-  }).replace(/\//g, '-')
-}
+// const formatDate = (dateStr: string) => {
+//   const date = new Date(dateStr + 'T00:00:00')
+//   return date.toLocaleDateString('zh-CN', {
+//     year: 'numeric',
+//     month: '2-digit',
+//     day: '2-digit',
+//     weekday: 'long'
+//   }).replace(/\//g, '-')
+// }
 
 const getEnergyHeight = (calories: number, max: number) => {
   return Math.min((calories / max) * 100, 100) + '%'

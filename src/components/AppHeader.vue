@@ -11,7 +11,7 @@
       <nav class="header-nav">
         <router-link to="/home" class="nav-link">导航</router-link>
         <router-link to="/ai-chat" class="nav-link">AI助手</router-link>
-        <router-link to="/profile/basic-info" class="nav-link">个人资料</router-link>
+        <router-link to="/profile" class="nav-link">个人资料</router-link>
       </nav>
 
       <div class="header-right">

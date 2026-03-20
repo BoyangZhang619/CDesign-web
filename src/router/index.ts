@@ -2,7 +2,8 @@ import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import AuthView from '../views/AuthView.vue'
 import HealthSetupView from '../views/HealthSetupView.vue'
-import ProfileView from '../views/ProfileView.vue'
+import ProfileDisplayView from '../views/ProfileDisplayView.vue'
+import ProfileEditView from '../views/ProfileEditView.vue'
 import AIChatView from '../views/AIChatView.vue'
 import DailyCheckinDisplayView from '../views/DailyCheckinDisplayView.vue'
 import DailyCheckinEditView from '../views/DailyCheckinEditView.vue'
@@ -46,10 +47,19 @@ const routes = [
   {
     path: '/profile',
     name: 'profile',
-    component: ProfileView,
+    component: ProfileDisplayView,
     meta: {
       requiresAuth: true,
       title: 'StuHeal - 个人中心'
+    }
+  },
+  {
+    path: '/profile/edit',
+    name: 'profile-edit',
+    component: ProfileEditView,
+    meta: {
+      requiresAuth: true,
+      title: 'StuHeal - 编辑个人信息'
     }
   },
   {
@@ -64,7 +74,7 @@ const routes = [
   {
     path: '/profile/basic-info',
     name: 'basic-info',
-    component: ProfileView,
+    component: ProfileDisplayView,
     meta: {
       requiresAuth: true,
       title: 'StuHeal - 个人基础信息'
