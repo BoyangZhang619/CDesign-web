@@ -160,12 +160,12 @@ export function useDailyCheckin() {
   }
 
   // 加载数据
-  async function loadDailyCheckin(date: string) {
+  async function loadDailyCheckin() {
     loading.value = true
     errorMsg.value = ''
 
     try {
-      const response = await fetchWithRefresh(`/daily-checkin?date=${date}`, {
+      const response = await fetchWithRefresh(`https://cda.api.zbyblq.xin/api/daily-checkin/get`, {
         method: 'GET'
       })
 

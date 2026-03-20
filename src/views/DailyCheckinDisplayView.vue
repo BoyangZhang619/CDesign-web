@@ -213,8 +213,7 @@ const goToEdit = () => {
 }
 
 onMounted(() => {
-  const today = new Date().toISOString().split('T')[0]
-  loadDailyCheckin(today)
+  loadDailyCheckin()
 })
 </script>
 

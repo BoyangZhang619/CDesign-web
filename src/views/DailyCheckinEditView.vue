@@ -163,8 +163,7 @@ const goBack = () => {
 
 onMounted(() => {
   enterEditMode()
-  const today = new Date().toISOString().split('T')[0]
-  loadDailyCheckin(today)
+  loadDailyCheckin()
 })
 </script>
 
