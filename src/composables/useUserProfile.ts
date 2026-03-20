@@ -32,8 +32,7 @@ export function useUserProfile() {
     errorMsg.value = ''
 
     try {
-      // TODO: 获取用户信息接口 - GET /api/user/profile 或 /api/user/me
-      const response = await fetchWithRefresh('https://cda.api.zbyblq.xin/api/auth/profile', {
+      const response = await fetchWithRefresh('https://cda.api.zbyblq.xin/api/auth/me', {
         method: 'GET'
       })
 
@@ -101,7 +100,7 @@ export function useUserProfile() {
 
     try {
       // TODO: 更新用户信息接口 - PATCH /api/user/profile 或 PUT /api/user/update
-      const response = await fetchWithRefresh('https://cda.api.zbyblq.xin/api/auth/profile', {
+      const response = await fetchWithRefresh('https://cda.api.zbyblq.xin/api/auth/update-user-info', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
