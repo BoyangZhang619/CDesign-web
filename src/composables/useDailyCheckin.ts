@@ -128,7 +128,7 @@ export function useDailyCheckin() {
     successMsg.value = ''
 
     try {
-      const response = await fetchWithRefresh('https://cda.api.zbyblq.xin/api/daily-checkin/insert', {
+      const response = await fetchWithRefresh('https://cda.api.zbyblq.xin/api/daily-checkin/update', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
