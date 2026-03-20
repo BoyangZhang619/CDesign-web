@@ -172,9 +172,9 @@ export function useDailyCheckin() {
       const data = await response.json()
 
       if (response.ok && data) {
-        displayData.value = data
+        displayData.value = data.data.checkinData
         form.value = { ...data.data.checkinData }
-        console.log('Loaded daily check-in data:', data)
+        console.log('Loaded daily check-in data:', data.data.checkinData)
       } else {
         errorMsg.value = data.message || '加载失败'
       }
