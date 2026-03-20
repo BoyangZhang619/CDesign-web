@@ -41,6 +41,7 @@ export function useUserProfile() {
       if (response.ok && data) {
         userInfo.value = data
         editInfo.value = { ...data }
+        console.log('Loaded user info:', userInfo.value, editInfo.value)
       } else {
         errorMsg.value = data.message || '加载用户信息失败'
       }
@@ -99,7 +100,6 @@ export function useUserProfile() {
     successMsg.value = ''
 
     try {
-      // TODO: 更新用户信息接口 - PATCH /api/user/profile 或 PUT /api/user/update
       const response = await fetchWithRefresh('https://cda.api.zbyblq.xin/api/auth/update-user-info', {
         method: 'POST',
         headers: {
