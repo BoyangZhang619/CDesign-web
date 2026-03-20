@@ -2,50 +2,72 @@ import { ref, computed } from 'vue'
 import { fetchWithRefresh } from '../api/http'
 
 export interface BasicInfo {
-  name: string
+  realname: string
   studentId: string
-  phone: string
-  major: string
-  grade: string
-  medicalConditions: string[]
-  emergencyContact: string
-  notes: string
+  gender: string
+  birthday: string
+  height_cm: number
+  current_weight_kg: number
+  target_weight_kg: number
+  goal_type: string
+  dietary_preference: string
+  allergy_info: string
+  work_rest_habit: string
+  activity_level: string
+  health_goal_desc: string
 }
 
 export function useBasicInfo() {
   const form = ref<BasicInfo>({
-    name: '',
+    realname: '',
     studentId: '',
-    phone: '',
-    major: '',
-    grade: '大一',
-    medicalConditions: [],
-    emergencyContact: '',
-    notes: ''
+    gender: 'male',
+    birthday: '',
+    height_cm: 170,
+    current_weight_kg: 70,
+    target_weight_kg: 70,
+    goal_type: 'maintain',
+    dietary_preference: '',
+    allergy_info: '',
+    work_rest_habit: '',
+    activity_level: 'moderate',
+    health_goal_desc: ''
   })
 
   const loading = ref(false)
   const errorMsg = ref('')
   const successMsg = ref('')
 
-  // 医学条件选项
-  const medicalOptions = [
-    { label: '高血压', value: 'hypertension' },
-    { label: '糖尿病', value: 'diabetes' },
-    { label: '心脏病', value: 'heart_disease' },
-    { label: '过敏症', value: 'allergies' },
-    { label: '哮喘', value: 'asthma' },
-    { label: '甲状腺疾病', value: 'thyroid_disease' }
+  // 性别选项
+  const genderOptions = [
+    { label: '👨 男', value: 'male' },
+    { label: '👩 女', value: 'female' },
+    { label: '其他', value: 'other' }
   ]
 
-  // 年级选项
-  const gradeOptions = ['大一', '大二', '大三', '大四', '研一', '研二', '研三']
+  // 目标类型选项
+  const goalOptions = [
+    { label: '🎯 保持现状', value: 'maintain' },
+    { label: '⬇️ 减重', value: 'weight_loss' },
+    { label: '⬆️ 增重', value: 'weight_gain' },
+    { label: '💪 增肌', value: 'muscle_gain' },
+    { label: '🏃 提高体能', value: 'fitness' }
+  ]
+
+  // 活动水平选项
+  const activityLevelOptions = [
+    { label: '🚫 久坐不动', value: 'sedentary' },
+    { label: '🚶 轻度活动', value: 'light' },
+    { label: '🏃 中等活动', value: 'moderate' },
+    { label: '💪 高度活动', value: 'active' },
+    { label: '⚡ 非常活跃', value: 'very_active' }
+  ]
 
   // 验证表单
   function validateForm(): boolean {
     errorMsg.value = ''
 
-    if (!form.value.name?.trim()) {
+    if (!form.value.realname?.trim()) {
       errorMsg.value = '请输入真实姓名'
       return false
     }
@@ -55,23 +77,23 @@ export function useBasicInfo() {
       return false
     }
 
-    if (!form.value.phone?.trim()) {
-      errorMsg.value = '请输入联系方式'
+    if (!form.value.birthday) {
+      errorMsg.value = '请选择出生日期'
       return false
     }
 
-    if (!/^1\d{10}$/.test(form.value.phone)) {
-      errorMsg.value = '请输入有效的手机号'
+    if (form.value.height_cm <= 0 || form.value.height_cm > 250) {
+      errorMsg.value = '请输入有效的身高（1-250 cm）'
       return false
     }
 
-    if (!form.value.major?.trim()) {
-      errorMsg.value = '请输入专业/院系'
+    if (form.value.current_weight_kg <= 0 || form.value.current_weight_kg > 300) {
+      errorMsg.value = '请输入有效的体重（1-300 kg）'
       return false
     }
 
-    if (!form.value.emergencyContact?.trim()) {
-      errorMsg.value = '请输入紧急联系方式'
+    if (form.value.target_weight_kg <= 0 || form.value.target_weight_kg > 300) {
+      errorMsg.value = '请输入有效的目标体重（1-300 kg）'
       return false
     }
 
@@ -89,27 +111,32 @@ export function useBasicInfo() {
     successMsg.value = ''
 
     try {
-      const response = await fetchWithRefresh('/update-basic-info', {
+      const response = await fetchWithRefresh('/api/healthInfo/update-health-info', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          name: form.value.name,
+          realname: form.value.realname,
           studentId: form.value.studentId,
-          phone: form.value.phone,
-          major: form.value.major,
-          grade: form.value.grade,
-          medicalConditions: form.value.medicalConditions,
-          emergencyContact: form.value.emergencyContact,
-          notes: form.value.notes
+          gender: form.value.gender,
+          birthday: form.value.birthday,
+          height_cm: form.value.height_cm,
+          current_weight_kg: form.value.current_weight_kg,
+          target_weight_kg: form.value.target_weight_kg,
+          goal_type: form.value.goal_type,
+          dietary_preference: form.value.dietary_preference,
+          allergy_info: form.value.allergy_info,
+          work_rest_habit: form.value.work_rest_habit,
+          activity_level: form.value.activity_level,
+          health_goal_desc: form.value.health_goal_desc
         })
       })
 
       const data = await response.json()
 
       if (response.ok) {
-        successMsg.value = '基础信息已保存'
+        successMsg.value = '健康信息已保存'
         setTimeout(() => {
           successMsg.value = ''
         }, 3000)
@@ -124,15 +151,51 @@ export function useBasicInfo() {
     }
   }
 
+  // 加载健康信息
+  async function loadHealthInfo() {
+    loading.value = true
+    errorMsg.value = ''
+
+    try {
+      const response = await fetchWithRefresh('/api/healthInfo/get-health-info', {
+        method: 'GET'
+      })
+
+      const data = await response.json()
+
+      if (response.ok && data) {
+        form.value = {
+          realname: data.realname || '',
+          studentId: data.studentId || '',
+          gender: data.gender || 'male',
+          birthday: data.birthday || '',
+          height_cm: data.height_cm || 0,
+          current_weight_kg: data.current_weight_kg || 0,
+          target_weight_kg: data.target_weight_kg || 0,
+          goal_type: data.goal_type || 'maintain',
+          dietary_preference: data.dietary_preference || '',
+          allergy_info: data.allergy_info || '',
+          work_rest_habit: data.work_rest_habit || '',
+          activity_level: data.activity_level || 'moderate',
+          health_goal_desc: data.health_goal_desc || ''
+        }
+      }
+    } catch (error) {
+      console.warn('Load health info error:', error)
+    } finally {
+      loading.value = false
+    }
+  }
+
   // 计算完成度
   const completedFields = computed(() => {
     let count = 0
-    if (form.value.name) count++
+    if (form.value.realname) count++
     if (form.value.studentId) count++
-    if (form.value.phone) count++
-    if (form.value.major) count++
-    if (form.value.medicalConditions.length > 0) count++
-    if (form.value.emergencyContact) count++
+    if (form.value.birthday) count++
+    if (form.value.height_cm > 0) count++
+    if (form.value.current_weight_kg > 0) count++
+    if (form.value.target_weight_kg > 0) count++
     return count
   })
 
@@ -146,11 +209,14 @@ export function useBasicInfo() {
     loading,
     errorMsg,
     successMsg,
-    medicalOptions,
-    gradeOptions,
+    genderOptions,
+    goalOptions,
+    activityLevelOptions,
     validateForm,
     handleSubmit,
+    loadHealthInfo,
     completedFields,
-    completionPercentage
+    completionPercentage,
+    totalFields
   }
 }

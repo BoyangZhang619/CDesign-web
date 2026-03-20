@@ -3,32 +3,48 @@ import { fetchWithRefresh } from '../api/http'
 
 export interface DailyCheckin {
   date: string
-  mealIntake: string // 早中晚三餐评分
-  waterIntake: number // 每天喝水杯数
-  exercise: string // 运动类型和时长
-  weight: number // 当前体重
-  sleepHours: number // 睡眠时间
-  sleepQuality: string // 睡眠质量评分
+  breakfast: string // 早餐内容
+  lunch: string // 午餐内容
+  dinner: string // 晚餐内容
+  midnight_snack: string // 夜宵内容
+  water_intake_ml: number // 每天喝水毫升数
+  exercise_duration_min: number // 运动时长（分钟）
+  sleep_start_time: string // 睡眠开始时间
+  sleep_duration_hours: number // 睡眠时长（小时）
+  body_weight_kg: number // 体重（公斤）
+  energy_level: number // 当日精力水平评分 0-5
+  note: string // 备注
   mood: string // 心情状态
-  energy: string // 精力状态
-  notes: string // 备注
+  sleep_quality: string // 睡眠质量评分
+}
+
+export interface DailyCheckinResponse extends DailyCheckin {
+  total_calories_intake: number // 总摄入卡路里
+  total_calories_burned: number // 总消耗卡路里
+  ai_analysis_summary: string // AI分析总结
 }
 
 export function useDailyCheckin() {
   const form = ref<DailyCheckin>({
     date: new Date().toISOString().split('T')[0],
-    mealIntake: 'normal',
-    waterIntake: 8,
-    exercise: 'moderate',
-    weight: 70,
-    sleepHours: 8,
-    sleepQuality: 'good',
-    mood: 'happy',
-    energy: 'normal',
-    notes: ''
+    breakfast: '',
+    lunch: '',
+    dinner: '',
+    midnight_snack: '',
+    water_intake_ml: 0,
+    exercise_duration_min: 0,
+    sleep_start_time: '22:00',
+    sleep_duration_hours: 8,
+    body_weight_kg: 70,
+    energy_level: 3,
+    note: '',
+    mood: 'neutral',
+    sleep_quality: 'good'
   })
 
+  const displayData = ref<DailyCheckinResponse | null>(null)
   const loading = ref(false)
+  const editing = ref(false)
   const errorMsg = ref('')
   const successMsg = ref('')
 
@@ -83,18 +99,18 @@ export function useDailyCheckin() {
       return false
     }
 
-    if (form.value.weight <= 0) {
+    if (form.value.body_weight_kg <= 0) {
       errorMsg.value = '请输入有效的体重'
       return false
     }
 
-    if (form.value.sleepHours < 0 || form.value.sleepHours > 24) {
+    if (form.value.sleep_duration_hours < 0 || form.value.sleep_duration_hours > 24) {
       errorMsg.value = '睡眠时间应在 0-24 小时之间'
       return false
     }
 
-    if (form.value.waterIntake < 0) {
-      errorMsg.value = '喝水杯数不能为负'
+    if (form.value.water_intake_ml < 0) {
+      errorMsg.value = '喝水毫升数不能为负'
       return false
     }
 
@@ -117,27 +133,18 @@ export function useDailyCheckin() {
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({
-          checkinDate: form.value.date,
-          mealIntake: form.value.mealIntake,
-          waterIntake: form.value.waterIntake,
-          exercise: form.value.exercise,
-          weight: form.value.weight,
-          sleepHours: form.value.sleepHours,
-          sleepQuality: form.value.sleepQuality,
-          mood: form.value.mood,
-          energy: form.value.energy,
-          notes: form.value.notes
-        })
+        body: JSON.stringify(form.value)
       })
 
       const data = await response.json()
 
       if (response.ok) {
+        displayData.value = data
         successMsg.value = '打卡成功！'
+        editing.value = false
         // 重置表单
         form.value.date = new Date().toISOString().split('T')[0]
-        form.value.notes = ''
+        form.value.note = ''
         setTimeout(() => {
           successMsg.value = ''
         }, 3000)
@@ -152,14 +159,56 @@ export function useDailyCheckin() {
     }
   }
 
+  // 加载数据
+  async function loadDailyCheckin(date: string) {
+    loading.value = true
+    errorMsg.value = ''
+
+    try {
+      const response = await fetchWithRefresh(`/daily-checkin?date=${date}`, {
+        method: 'GET'
+      })
+
+      const data = await response.json()
+
+      if (response.ok && data) {
+        displayData.value = data
+        form.value = { ...data }
+      } else {
+        errorMsg.value = data.message || '加载失败'
+      }
+    } catch (error) {
+      errorMsg.value = '网络错误，请检查连接后重试'
+      console.error('Load error:', error)
+    } finally {
+      loading.value = false
+    }
+  }
+
+  // 进入编辑模式
+  function enterEditMode() {
+    editing.value = true
+    if (displayData.value) {
+      form.value = { ...displayData.value }
+    }
+  }
+
+  // 取消编辑
+  function cancelEdit() {
+    editing.value = false
+    if (displayData.value) {
+      form.value = { ...displayData.value }
+    }
+  }
+
   // 计算完成度
   const completedFields = computed(() => {
     let count = 0
     if (form.value.date) count++
-    if (form.value.weight > 0) count++
-    if (form.value.sleepHours >= 0) count++
-    if (form.value.waterIntake >= 0) count++
-    if (form.value.exercise) count++
+    if (form.value.body_weight_kg > 0) count++
+    if (form.value.sleep_duration_hours >= 0) count++
+    if (form.value.water_intake_ml >= 0) count++
+    if (form.value.exercise_duration_min >= 0) count++
     if (form.value.mood) count++
     return count
   })
@@ -171,6 +220,8 @@ export function useDailyCheckin() {
 
   return {
     form,
+    displayData,
+    editing,
     loading,
     errorMsg,
     successMsg,
@@ -181,6 +232,9 @@ export function useDailyCheckin() {
     energyOptions,
     validateForm,
     handleSubmit,
+    loadDailyCheckin,
+    enterEditMode,
+    cancelEdit,
     completedFields,
     completionPercentage
   }

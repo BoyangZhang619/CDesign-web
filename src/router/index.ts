@@ -4,8 +4,8 @@ import AuthView from '../views/AuthView.vue'
 import HealthSetupView from '../views/HealthSetupView.vue'
 import ProfileView from '../views/ProfileView.vue'
 import AIChatView from '../views/AIChatView.vue'
-import BasicInfoView from '../views/BasicInfoView.vue'
-import DailyCheckinView from '../views/DailyCheckinView.vue'
+import DailyCheckinDisplayView from '../views/DailyCheckinDisplayView.vue'
+import DailyCheckinEditView from '../views/DailyCheckinEditView.vue'
 import HistoryView from '../views/HistoryView.vue'
 import { useAuthStore } from '../stores/auth'
 
@@ -64,7 +64,7 @@ const routes = [
   {
     path: '/profile/basic-info',
     name: 'basic-info',
-    component: BasicInfoView,
+    component: ProfileView,
     meta: {
       requiresAuth: true,
       title: 'StuHeal - 个人基础信息'
@@ -73,10 +73,19 @@ const routes = [
   {
     path: '/health/daily-checkin',
     name: 'daily-checkin',
-    component: DailyCheckinView,
+    component: DailyCheckinDisplayView,
     meta: {
       requiresAuth: true,
       title: 'StuHeal - 健康打卡'
+    }
+  },
+  {
+    path: '/health/daily-checkin-edit',
+    name: 'daily-checkin-edit',
+    component: DailyCheckinEditView,
+    meta: {
+      requiresAuth: true,
+      title: 'StuHeal - 编辑打卡'
     }
   },
   {
