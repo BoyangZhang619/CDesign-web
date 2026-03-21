@@ -1,12 +1,13 @@
 <template>
   <div class="profile-display">
     <!-- 头部 -->
-    <div class="pd-header">
+    <!-- <div class="pd-header">
       <div class="pd-header-top">
         <h1>用户信息</h1>
         <button @click="goToEdit" class="edit-btn">编辑</button>
       </div>
-    </div>
+    </div> -->
+    <AppHeader />
 
     <!-- 加载状态 -->
     <div v-if="loading" class="loading">加载中...</div>
@@ -100,7 +101,7 @@
 
     <!-- 底部操作 -->
     <div v-if="userInfo" class="pd-footer">
-      <button @click="handleLogout" class="logout-btn">退出登录</button>
+      <button @click="goToEdit" class="logout-btn">编辑资料</button>
     </div>
   </div>
 </template>
@@ -109,6 +110,7 @@
 import { onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useUserProfile } from '../composables/useUserProfile'
+import AppHeader from '../components/AppHeader.vue'
 
 const router = useRouter()
 const { userInfo, loading, loadUserInfo } = useUserProfile()
@@ -135,14 +137,6 @@ const formatTime = (dateStr: string) => {
 
 const goToEdit = () => {
   router.push('/profile/edit')
-}
-
-const handleLogout = async () => {
-  if (confirm('确定要退出登录吗？')) {
-    // TODO: 调用登出接口 - POST /api/auth/logout
-    localStorage.removeItem('token')
-    router.push('/auth')
-  }
 }
 
 onMounted(async () => {

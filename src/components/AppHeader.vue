@@ -1,6 +1,17 @@
 <template>
   <header class="app-header">
     <div class="header-container">
+      <!-- 移动端返回按钮 -->
+      <button
+        v-if="showBackButton"
+        @click="goBack"
+        class="back-button"
+        title="返回上一步"
+        aria-label="返回"
+      >
+        ◀
+      </button>
+
       <div class="header-left">
         <router-link to="/" class="logo">
           <span class="logo-text">StuHeal</span>
@@ -30,13 +41,25 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
-import { useRouter } from 'vue-router'
+import { ref, computed, onMounted } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
 import { useAuthStore } from '../stores/auth'
 
 const router = useRouter()
+const route = useRoute()
 const authStore = useAuthStore()
 const loading = ref(false)
+
+// 判断是否显示返回按钮（移动端）
+const showBackButton = computed(() => {
+  // 在特定页面显示返回按钮
+  const showBackPages = ['/meal/checkin', '/sleep/checkin', '/sleep/checkin-edit']
+  return showBackPages.includes(route.path) || route.path.startsWith('/sleep/checkin-edit')
+})
+
+function goBack() {
+  router.back()
+}
 
 async function handleLogout() {
   if (!confirm('确定要登出吗？')) {
@@ -211,6 +234,32 @@ async function handleLogout() {
   cursor: not-allowed;
 }
 
+/* =============== 返回按钮 =============== */
+.back-button {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: var(--color-text-secondary);
+  font-size: 18px;
+  cursor: pointer;
+  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: 8px;
+}
+
+.back-button:hover {
+  background: rgba(216, 168, 143, 0.1);
+  color: var(--color-accent-warm);
+}
+
+.back-button:active {
+  transform: scale(0.95);
+}
+
 /* =============== 响应式 =============== */
 @media (max-width: 1024px) {
   .header-container {
@@ -233,6 +282,10 @@ async function handleLogout() {
     padding: 0 12px;
     height: 56px;
     gap: 8px;
+  }
+
+  .back-button {
+    display: flex;
   }
 
   .logo-text {

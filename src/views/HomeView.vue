@@ -15,7 +15,7 @@
         
         <div class="feature-grid">
           <!-- 01 个人基础信息 -->
-          <router-link to="/profile/basic-info" class="feature-card">
+          <router-link to="/profile" class="feature-card">
             <div class="card-number">01</div>
             <h3 class="card-title">个人基础信息</h3>
             <p class="card-description">配置健康模型初始参数，采集身体与目标数据</p>

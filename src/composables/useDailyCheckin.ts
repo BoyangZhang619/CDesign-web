@@ -128,7 +128,8 @@ export function useDailyCheckin() {
     successMsg.value = ''
 
     try {
-      const response = await fetchWithRefresh('https://cda.api.zbyblq.xin/api/daily-checkin/update', {
+      const url_base = import.meta.env.VITE_API_URL || 'https://cda.api.zbyblq.xin'
+      const response = await fetchWithRefresh(`${url_base}/api/daily-checkin/update`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -165,7 +166,8 @@ export function useDailyCheckin() {
     errorMsg.value = ''
 
     try {
-      const response = await fetchWithRefresh(`https://cda.api.zbyblq.xin/api/daily-checkin/get`, {
+      const url_base = import.meta.env.VITE_API_URL || 'https://cda.api.zbyblq.xin'
+      const response = await fetchWithRefresh(`${url_base}/api/daily-checkin/get`, {
         method: 'GET'
       })
 
@@ -214,6 +216,14 @@ export function useDailyCheckin() {
     return count
   })
 
+  function toMealCheckin() {
+    window.location.href = '/meal/checkin'
+  }
+
+  function toSleepCheckin() {
+    window.location.href = '/sleep/checkin'
+  }
+
   const totalFields = 6
   const completionPercentage = computed(
     () => Math.round((completedFields.value / totalFields) * 100)
@@ -236,6 +246,8 @@ export function useDailyCheckin() {
     loadDailyCheckin,
     enterEditMode,
     cancelEdit,
+    toMealCheckin,
+    toSleepCheckin,
     completedFields,
     completionPercentage
   }

@@ -8,6 +8,10 @@ import AIChatView from '../views/AIChatView.vue'
 import DailyCheckinDisplayView from '../views/DailyCheckinDisplayView.vue'
 import DailyCheckinEditView from '../views/DailyCheckinEditView.vue'
 import HistoryView from '../views/HistoryView.vue'
+import MealCheckinDisplayView from '../views/MealCheckinDisplayView.vue'
+import MealCheckinEditView from '../views/MealCheckinEditView.vue'
+import SleepCheckinDisplayView from '../views/SleepCheckinDisplayView.vue'
+import SleepCheckinEditView from '../views/SleepCheckinEditView.vue'
 import { useAuthStore } from '../stores/auth'
 
 const routes = [
@@ -72,15 +76,6 @@ const routes = [
     }
   },
   {
-    path: '/profile/basic-info',
-    name: 'basic-info',
-    component: ProfileDisplayView,
-    meta: {
-      requiresAuth: true,
-      title: 'StuHeal - 个人基础信息'
-    }
-  },
-  {
     path: '/health/daily-checkin',
     name: 'daily-checkin',
     component: DailyCheckinDisplayView,
@@ -105,6 +100,42 @@ const routes = [
     meta: {
       requiresAuth: true,
       title: 'StuHeal - 历史记录'
+    }
+  },
+  {
+    path: '/meal/checkin',
+    name: 'meal-checkin',
+    component: MealCheckinDisplayView,
+    meta: {
+      requiresAuth: true,
+      title: 'StuHeal - 饮食打卡'
+    }
+  },
+  {
+    path: '/meal/checkin-edit',
+    name: 'meal-checkin-edit',
+    component: MealCheckinEditView,
+    meta: {
+      requiresAuth: true,
+      title: 'StuHeal - 编辑饮食打卡'
+    }
+  },
+  {
+    path: '/sleep/checkin',
+    name: 'sleep-checkin',
+    component: SleepCheckinDisplayView,
+    meta: {
+      requiresAuth: true,
+      title: 'StuHeal - 睡眠打卡'
+    }
+  },
+  {
+    path: '/sleep/checkin-edit/:recordId',
+    name: 'SleepCheckinEdit',
+    component: SleepCheckinEditView,
+    meta: {
+      requiresAuth: true,
+      title: 'StuHeal - 编辑睡眠打卡'
     }
   }
 ]

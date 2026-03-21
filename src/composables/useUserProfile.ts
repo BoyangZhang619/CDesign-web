@@ -32,7 +32,8 @@ export function useUserProfile() {
     errorMsg.value = ''
 
     try {
-      const response = await fetchWithRefresh('https://cda.api.zbyblq.xin/api/auth/me', {
+      const url_base = import.meta.env.VITE_API_URL || 'https://cda.api.zbyblq.xin'
+      const response = await fetchWithRefresh(`${url_base}/api/auth/me`, {
         method: 'GET'
       })
 
@@ -102,7 +103,8 @@ export function useUserProfile() {
     successMsg.value = ''
 
     try {
-      const response = await fetchWithRefresh('https://cda.api.zbyblq.xin/api/auth/update-user-info', {
+      const url_base = import.meta.env.VITE_API_URL || 'https://cda.api.zbyblq.xin'
+      const response = await fetchWithRefresh(`${url_base}/api/auth/update-user-info`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

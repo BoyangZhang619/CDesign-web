@@ -6,26 +6,26 @@
       <!-- 基础数据可视化 -->
       <section class="viz-section">
         <div class="stat-visual">
-          <div class="stat-box weight">
-            <div class="stat-icon">⚖️</div>
+          <div class="stat-box weight" @click="toMealCheckin">
+            <div class="stat-icon">⚖</div>
             <div class="stat-text">体重</div>
             <div class="stat-main">{{ displayData.body_weight_kg }}</div>
             <div class="stat-unit">kg</div>
           </div>
-          <div class="stat-box sleep">
-            <div class="stat-icon">😴</div>
+          <div class="stat-box sleep" @click="toSleepCheckin">
+            <div class="stat-icon">◆</div>
             <div class="stat-text">睡眠</div>
             <div class="stat-main">{{ displayData.sleep_duration_hours }}</div>
             <div class="stat-unit">小时</div>
           </div>
           <div class="stat-box exercise">
-            <div class="stat-icon">💪</div>
+            <div class="stat-icon">▲</div>
             <div class="stat-text">运动</div>
             <div class="stat-main">{{ displayData.exercise_duration_min }}</div>
             <div class="stat-unit">分钟</div>
           </div>
           <div class="stat-box water">
-            <div class="stat-icon">💧</div>
+            <div class="stat-icon">—</div>
             <div class="stat-text">饮水</div>
             <div class="stat-main">{{ displayData.water_intake_ml }}</div>
             <div class="stat-unit">ml</div>
@@ -100,12 +100,12 @@
             <div class="meal-detail">{{ displayData.lunch }}</div>
           </div>
           <div v-if="displayData.dinner" class="meal-item">
-            <div class="meal-time">🌙</div>
+            <div class="meal-time">晚</div>
             <div class="meal-name">晚餐</div>
             <div class="meal-detail">{{ displayData.dinner }}</div>
           </div>
           <div v-if="displayData.midnight_snack" class="meal-item">
-            <div class="meal-time">🌃</div>
+            <div class="meal-time">宵</div>
             <div class="meal-name">宵夜</div>
             <div class="meal-detail">{{ displayData.midnight_snack }}</div>
           </div>
@@ -115,7 +115,7 @@
       <!-- AI分析可视化 -->
       <section v-if="displayData.ai_analysis_summary" class="viz-section">
         <div class="ai-visual">
-          <div class="ai-icon">🤖</div>
+          <div class="ai-icon">●</div>
           <div class="ai-text">{{ displayData.ai_analysis_summary }}</div>
         </div>
       </section>
@@ -123,7 +123,7 @@
       <!-- 备注可视化 -->
       <section v-if="displayData.note" class="viz-section">
         <div class="note-visual">
-          <div class="note-icon">📝</div>
+          <div class="note-icon">◆</div>
           <div class="note-text">{{ displayData.note }}</div>
         </div>
       </section>
@@ -145,7 +145,10 @@ const router = useRouter()
 
 const {
   displayData,
-  loadDailyCheckin
+  loadDailyCheckin,
+  toMealCheckin,
+  toSleepCheckin
+
 } = useDailyCheckin()
 
 const maxCalories = 3000
