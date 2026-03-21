@@ -2,8 +2,7 @@ import { ref, computed } from 'vue'
 import { fetchWithRefresh } from '../api/http'
 
 export interface ExerciseRecord {
-  id: string
-  daily_checkin_id: number
+  exercise_record_id: string | number
   user_id: number
   activity_type: string
   duration_min: number
@@ -12,7 +11,7 @@ export interface ExerciseRecord {
   start_time: string
   end_time: string
   note: string
-  ai_recognition_flag: boolean
+  ai_recognition_flag: number | boolean
   suggestion: string | null
   evaluation: string | null
   created_at: string
@@ -21,23 +20,19 @@ export interface ExerciseRecord {
 
 export interface ExerciseCheckinForm {
   activity_type: string
-  duration_min: number
   intensity: 'low' | 'medium' | 'high'
   start_time: string
   end_time: string
   note?: string
-  ai_recognition_flag?: boolean
 }
 
 export function useExerciseCheckin() {
   const form = ref<ExerciseCheckinForm>({
-    activity_type: 'running',
-    duration_min: 30,
+    activity_type: '跑步',
     intensity: 'medium',
     start_time: '',
     end_time: '',
-    note: '',
-    ai_recognition_flag: false
+    note: ''
   })
 
   const records = ref<ExerciseRecord[]>([])
@@ -45,39 +40,37 @@ export function useExerciseCheckin() {
   const errorMsg = ref('')
   const successMsg = ref('')
   const pollIntervalId = ref<number | null>(null)
-  const selectedRecordId = ref<string | null>(null)
+  const selectedRecordId = ref<string | number | null>(null)
 
   // 初始化表单时间
   const initializeForm = () => {
     const now = new Date()
     const endTime = new Date(now.getTime() + 30 * 60 * 1000) // 默认30分钟
     form.value = {
-      activity_type: 'running',
-      duration_min: 30,
+      activity_type: '跑步',
       intensity: 'medium',
       start_time: now.toISOString().slice(0, 16),
       end_time: endTime.toISOString().slice(0, 16),
-      note: '',
-      ai_recognition_flag: false
+      note: ''
     }
   }
 
   // 选项
   const activityTypeOptions = [
-    { label: '跑步', value: 'running' },
-    { label: '步行', value: 'walking' },
-    { label: '力量训练', value: 'strength' },
-    { label: '球类运动', value: 'ball_sports' },
-    { label: '游泳', value: 'swimming' },
-    { label: '骑行', value: 'cycling' },
-    { label: '瑜伽', value: 'yoga' },
-    { label: '其他', value: 'other' }
+    { label: '跑步', value: '跑步' },
+    { label: '步行', value: '步行' },
+    { label: '力量训练', value: '力量训练' },
+    { label: '球类', value: '球类' },
+    { label: '游泳', value: '游泳' },
+    { label: '骑车', value: '骑车' },
+    { label: '瑜伽', value: '瑜伽' },
+    { label: '其他', value: '其他' }
   ]
 
   const intensityOptions = [
-    { label: '低强度', value: 'low' },
-    { label: '中强度', value: 'medium' },
-    { label: '高强度', value: 'high' }
+    { label: '低', value: 'low' },
+    { label: '中', value: 'medium' },
+    { label: '高', value: 'high' }
   ]
 
   // 验证表单
@@ -118,11 +111,6 @@ export function useExerciseCheckin() {
       return false
     }
 
-    if (!form.value.duration_min || form.value.duration_min <= 0) {
-      errorMsg.value = '请输入有效的运动时长'
-      return false
-    }
-
     return true
   }
 
@@ -137,14 +125,12 @@ export function useExerciseCheckin() {
     successMsg.value = ''
 
     try {
-      const payload: ExerciseCheckinForm = {
+      const payload = {
         activity_type: form.value.activity_type,
-        duration_min: form.value.duration_min,
         intensity: form.value.intensity,
         start_time: new Date(form.value.start_time).toISOString().replace('T', ' ').slice(0, 19),
         end_time: new Date(form.value.end_time).toISOString().replace('T', ' ').slice(0, 19),
-        note: form.value.note || '',
-        ai_recognition_flag: form.value.ai_recognition_flag || false
+        note: form.value.note || ''
       }
 
       const response = await fetchWithRefresh('/api/checkin/exercise', {
@@ -163,7 +149,7 @@ export function useExerciseCheckin() {
         await loadRecords()
         startPolling()
       } else {
-        errorMsg.value = data.message || '保存失败'
+        errorMsg.value = data.error || data.message || '保存失败'
       }
     } catch (error) {
       errorMsg.value = '网络错误'
@@ -183,7 +169,7 @@ export function useExerciseCheckin() {
       const data = await response.json()
 
       if (response.ok) {
-        const rawRecords = data.data.records || []
+        const rawRecords = data.data || []
         records.value = rawRecords.map((record: any) => ({
           ...record,
           duration_min: Number(record.duration_min) || 0,
@@ -191,7 +177,7 @@ export function useExerciseCheckin() {
           intensity: record.intensity as 'low' | 'medium' | 'high'
         }))
       } else {
-        console.error('Load records error:', data.message)
+        console.error('Load records error:', data.error || data.message)
       }
     } catch (error) {
       console.error('Load records error:', error)
@@ -199,7 +185,7 @@ export function useExerciseCheckin() {
   }
 
   // 更新运动记录
-  async function updateExerciseRecord(recordId: string, updateData: Partial<ExerciseCheckinForm>) {
+  async function updateExerciseRecord(recordId: string | number, updateData: Partial<ExerciseCheckinForm>) {
     loading.value = true
     errorMsg.value = ''
     successMsg.value = ''
@@ -209,9 +195,6 @@ export function useExerciseCheckin() {
 
       if (updateData.activity_type) {
         payload.activity_type = updateData.activity_type
-      }
-      if (updateData.duration_min !== undefined) {
-        payload.duration_min = updateData.duration_min
       }
       if (updateData.intensity) {
         payload.intensity = updateData.intensity
@@ -242,7 +225,7 @@ export function useExerciseCheckin() {
         await loadRecords()
         startPolling()
       } else {
-        errorMsg.value = data.message || '更新失败'
+        errorMsg.value = data.error || data.message || '更新失败'
       }
     } catch (error) {
       errorMsg.value = '网络错误'
@@ -253,7 +236,7 @@ export function useExerciseCheckin() {
   }
 
   // 删除运动记录
-  async function deleteExerciseRecord(recordId: string) {
+  async function deleteExerciseRecord(recordId: string | number) {
     if (!confirm('确定要删除这条记录吗？')) {
       return
     }
@@ -273,7 +256,7 @@ export function useExerciseCheckin() {
         selectedRecordId.value = null
         await loadRecords()
       } else {
-        errorMsg.value = data.message || '删除失败'
+        errorMsg.value = data.error || data.message || '删除失败'
       }
     } catch (error) {
       errorMsg.value = '网络错误'
@@ -294,7 +277,7 @@ export function useExerciseCheckin() {
       if (!hasCalculating) {
         stopPolling()
       }
-    }, 2000) // 每2秒检查一次
+    }, 3000) // 每3秒检查一次（API通常在2-5秒内完成AI分析）
   }
 
   // 停止轮询

@@ -65,40 +65,15 @@
 
             <div class="form-row">
               <div class="form-group full-width">
-                <label for="duration" class="form-label">运动时长（分钟）</label>
-                <input
-                  id="duration"
-                  v-model.number="form.duration_min"
-                  type="number"
-                  class="form-input"
-                  min="1"
-                  max="1440"
-                />
-              </div>
-            </div>
-
-            <div class="form-row">
-              <div class="form-group full-width">
-                <label for="note" class="form-label">备注</label>
+                <label for="note" class="form-label">备注 (可选)</label>
                 <textarea
                   id="note"
                   v-model="form.note"
                   class="form-textarea"
                   rows="3"
-                  placeholder="可选，记录运动中的特殊情况"
+                  placeholder="记录运动中的特殊情况"
+                  maxlength="200"
                 ></textarea>
-              </div>
-            </div>
-
-            <div class="form-row">
-              <div class="form-group checkbox">
-                <input
-                  id="aiRecognition"
-                  v-model="form.ai_recognition_flag"
-                  type="checkbox"
-                  class="form-checkbox"
-                />
-                <label for="aiRecognition" class="checkbox-label">启用 AI 辅助分析</label>
               </div>
             </div>
 
@@ -135,7 +110,7 @@
               <p class="empty-text">暂无运动记录</p>
             </div>
 
-            <div v-for="record in records" :key="record.id" class="record-card">
+            <div v-for="record in records" :key="record.exercise_record_id" class="record-card">
               <div class="record-header">
                 <div class="record-main">
                   <h3 class="activity-type">{{ getActivityTypeText(record.activity_type) }}</h3>
@@ -143,7 +118,7 @@
                 </div>
                 <div class="record-actions">
                   <router-link
-                    :to="`/exercise/checkin-edit?id=${record.id}`"
+                    :to="`/exercise/checkin-edit?id=${record.exercise_record_id}`"
                     class="btn-edit"
                     title="编辑"
                   >
@@ -151,7 +126,7 @@
                   </router-link>
                   <button
                     class="btn-delete"
-                    @click="deleteExerciseRecord(record.id)"
+                    @click="deleteExerciseRecord(record.exercise_record_id)"
                     title="删除"
                   >
                     删除

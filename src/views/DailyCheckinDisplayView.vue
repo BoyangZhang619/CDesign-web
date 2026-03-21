@@ -18,13 +18,13 @@
             <div class="stat-main">{{ displayData.sleep_duration_hours }}</div>
             <div class="stat-unit">小时</div>
           </div>
-          <div class="stat-box exercise">
+          <div class="stat-box exercise" @click="toExerciseCheckin">
             <div class="stat-icon">▲</div>
             <div class="stat-text">运动</div>
             <div class="stat-main">{{ displayData.exercise_duration_min }}</div>
             <div class="stat-unit">分钟</div>
           </div>
-          <div class="stat-box water">
+          <div class="stat-box water" @click="toMealCheckin">
             <div class="stat-icon">—</div>
             <div class="stat-text">饮水</div>
             <div class="stat-main">{{ displayData.water_intake_ml }}</div>
@@ -147,7 +147,8 @@ const {
   displayData,
   loadDailyCheckin,
   toMealCheckin,
-  toSleepCheckin
+  toSleepCheckin,
+  toExerciseCheckin
 
 } = useDailyCheckin()
 

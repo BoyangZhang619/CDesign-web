@@ -16,12 +16,12 @@
           </div>
 
           <div class="records-list">
-            <div v-for="record in records" :key="record.id" class="record-item" @click="selectRecord(record)">
+            <div v-for="record in records" :key="record.exercise_record_id" class="record-item" @click="selectRecord(record)">
               <div class="record-select">
                 <input
                   type="radio"
-                  :name="'record-' + record.id"
-                  :value="record.id"
+                  :name="'record-' + record.exercise_record_id"
+                  :value="record.exercise_record_id"
                   v-model="selectedRecordId"
                   class="radio-input"
                 />
@@ -93,27 +93,14 @@
 
             <div class="form-row">
               <div class="form-group full-width">
-                <label for="duration" class="form-label">运动时长（分钟）</label>
-                <input
-                  id="duration"
-                  v-model.number="selectedRecord.duration_min"
-                  type="number"
-                  class="form-input"
-                  min="1"
-                  max="1440"
-                />
-              </div>
-            </div>
-
-            <div class="form-row">
-              <div class="form-group full-width">
-                <label for="note" class="form-label">备注</label>
+                <label for="note" class="form-label">备注 (可选)</label>
                 <textarea
                   id="note"
                   v-model="selectedRecord.note"
                   class="form-textarea"
                   rows="3"
-                  placeholder="可选"
+                  placeholder="记录运动中的特殊情况"
+                  maxlength="200"
                 ></textarea>
               </div>
             </div>
@@ -184,7 +171,7 @@ const formatTime = (timeStr: string): string => {
 }
 
 const selectRecord = (record: ExerciseRecord) => {
-  selectedRecordId.value = record.id
+  selectedRecordId.value = record.exercise_record_id
   selectedRecord.value = { ...record }
 }
 
@@ -193,14 +180,13 @@ const handleUpdate = async () => {
 
   const updateData = {
     activity_type: selectedRecord.value.activity_type,
-    duration_min: selectedRecord.value.duration_min,
     intensity: selectedRecord.value.intensity,
     start_time: selectedRecord.value.start_time,
     end_time: selectedRecord.value.end_time,
     note: selectedRecord.value.note
   }
 
-  await updateExerciseRecord(selectedRecord.value.id, updateData)
+  await updateExerciseRecord(selectedRecord.value.exercise_record_id, updateData)
   if (successMsg.value && !errorMsg.value) {
     setTimeout(() => {
       router.push('/exercise/checkin')
@@ -221,7 +207,7 @@ onMounted(() => {
     watch(
       () => records.value,
       (newRecords) => {
-        const record = newRecords.find(r => r.id === recordId)
+        const record = newRecords.find(r => String(r.exercise_record_id) === recordId)
         if (record) {
           selectRecord(record)
         }

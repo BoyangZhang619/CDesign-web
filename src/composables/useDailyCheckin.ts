@@ -224,6 +224,10 @@ export function useDailyCheckin() {
     window.location.href = '/sleep/checkin'
   }
 
+  function toExerciseCheckin() {
+    window.location.href = '/exercise/checkin'
+  }
+
   const totalFields = 6
   const completionPercentage = computed(
     () => Math.round((completedFields.value / totalFields) * 100)
@@ -248,6 +252,7 @@ export function useDailyCheckin() {
     cancelEdit,
     toMealCheckin,
     toSleepCheckin,
+    toExerciseCheckin,
     completedFields,
     completionPercentage
   }
