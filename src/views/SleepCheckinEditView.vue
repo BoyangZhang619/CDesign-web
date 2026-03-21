@@ -43,6 +43,16 @@
             </label>
           </div>
         </section>
+        
+        <!-- 空状态 -->
+        <section v-else class="empty-state">
+          <div class="empty-icon">—</div>
+          <h3 class="empty-title">暂无睡眠记录</h3>
+          <p class="empty-text">返回睡眠打卡页面添加记录</p>
+          <RouterLink to="/sleep/checkin" class="btn-primary">
+            返回睡眠打卡
+          </RouterLink>
+        </section>
 
         <!-- 编辑表单 -->
         <section v-if="selectedRecordId && selectedRecord" class="form-section">
@@ -130,15 +140,6 @@
           </form>
         </section>
 
-        <!-- 空状态 -->
-        <section v-else class="empty-state">
-          <div class="empty-icon">—</div>
-          <h3 class="empty-title">暂无睡眠记录</h3>
-          <p class="empty-text">返回睡眠打卡页面添加记录</p>
-          <RouterLink to="/sleep/checkin" class="btn-primary">
-            返回睡眠打卡
-          </RouterLink>
-        </section>
       </div>
     </main>
   </div>

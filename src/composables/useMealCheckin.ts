@@ -123,7 +123,7 @@ export function useMealCheckin() {
         image_id: form.value.image_id || null
       }
 
-      const response = await fetchWithRefresh('/api/checkin/meal', {
+      const response = await fetchWithRefresh('/api/meal-checkin/checkin/meal', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -169,7 +169,7 @@ export function useMealCheckin() {
   // 加载今天的所有饮食记录
   async function loadRecords() {
     try {
-      const response = await fetchWithRefresh('/api/checkin/meal', {
+      const response = await fetchWithRefresh('/api/meal-checkin/checkin/meal', {
         method: 'GET'
       })
 
