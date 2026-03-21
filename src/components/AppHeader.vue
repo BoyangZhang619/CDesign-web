@@ -53,8 +53,14 @@ const loading = ref(false)
 // 判断是否显示返回按钮（移动端）
 const showBackButton = computed(() => {
   // 在特定页面显示返回按钮
-  const showBackPages = ['/meal/checkin', '/sleep/checkin', '/sleep/checkin-edit']
-  return showBackPages.includes(route.path) || route.path.startsWith('/sleep/checkin-edit')
+  const showBackPages = [
+    '/meal/checkin',
+    '/sleep/checkin',
+    '/sleep/checkin-edit',
+    '/exercise/checkin',
+    '/exercise/checkin-edit'
+  ]
+  return showBackPages.some(page => route.path.includes(page))
 })
 
 function goBack() {

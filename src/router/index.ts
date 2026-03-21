@@ -12,6 +12,8 @@ import MealCheckinDisplayView from '../views/MealCheckinDisplayView.vue'
 import MealCheckinEditView from '../views/MealCheckinEditView.vue'
 import SleepCheckinDisplayView from '../views/SleepCheckinDisplayView.vue'
 import SleepCheckinEditView from '../views/SleepCheckinEditView.vue'
+import ExerciseCheckinDisplayView from '../views/ExerciseCheckinDisplayView.vue'
+import ExerciseCheckinEditView from '../views/ExerciseCheckinEditView.vue'
 import { useAuthStore } from '../stores/auth'
 
 const routes = [
@@ -136,6 +138,24 @@ const routes = [
     meta: {
       requiresAuth: true,
       title: 'StuHeal - 编辑睡眠打卡'
+    }
+  },
+  {
+    path: '/exercise/checkin',
+    name: 'exercise-checkin',
+    component: ExerciseCheckinDisplayView,
+    meta: {
+      requiresAuth: true,
+      title: 'StuHeal - 运动打卡'
+    }
+  },
+  {
+    path: '/exercise/checkin-edit',
+    name: 'exercise-checkin-edit',
+    component: ExerciseCheckinEditView,
+    meta: {
+      requiresAuth: true,
+      title: 'StuHeal - 编辑运动打卡'
     }
   }
 ]
