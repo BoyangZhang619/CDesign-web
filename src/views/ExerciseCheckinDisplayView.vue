@@ -10,11 +10,8 @@
         </div>
 
         <!-- 新增运动记录 -->
-        <section
-          :class="['form-section', { 'collapsed': !isFormExpanded }]"
-          @click="toggleFormExpand"
-        >
-          <div class="section-header">
+        <section :class="['form-section', { 'collapsed': !isFormExpanded }]">
+          <div class="section-header" @click="toggleFormExpand">
             <span class="section-number">01</span>
             <h2 class="section-title">新增运动记录</h2>
             <span class="expand-icon">{{ isFormExpanded ? '▼' : '▶' }}</span>
@@ -94,11 +91,8 @@
         </section>
 
         <!-- 运动记录 -->
-        <section
-          :class="['records-section', { 'collapsed': !isRecordsExpanded }]"
-          @click="toggleRecordsExpand"
-        >
-          <div class="section-header">
+        <section :class="['records-section', { 'collapsed': !isRecordsExpanded }]">
+          <div class="section-header" @click="toggleRecordsExpand">
             <span class="section-number">02</span>
             <h2 class="section-title">运动记录</h2>
             <span class="expand-icon">{{ isRecordsExpanded ? '▼' : '▶' }}</span>
@@ -171,11 +165,8 @@
         </section>
 
         <!-- 统计摘要 -->
-        <section
-          :class="['summary-section', { 'collapsed': !isSummaryExpanded }]"
-          @click="toggleSummaryExpand"
-        >
-          <div class="section-header">
+        <section :class="['summary-section', { 'collapsed': !isSummaryExpanded }]">
+          <div class="section-header" @click="toggleSummaryExpand">
             <span class="section-number">03</span>
             <h2 class="section-title">今日统计</h2>
             <span class="expand-icon">{{ isSummaryExpanded ? '▼' : '▶' }}</span>
