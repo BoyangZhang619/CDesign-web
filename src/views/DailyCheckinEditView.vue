@@ -19,7 +19,8 @@
               </div>
               <div class="form-group">
                 <label for="weight">体重 (kg) *</label>
-                <input v-model.number="form.body_weight_kg" id="weight" type="number" step="0.1" min="0" class="form-input" required />
+                <input v-model.number="form.body_weight_kg" id="weight" type="number" step="0.1" min="0"
+                  class="form-input" required />
               </div>
             </div>
             <div class="form-row">
@@ -29,7 +30,8 @@
               </div>
               <div class="form-group">
                 <label for="sleepDuration">睡眠时长 (小时)</label>
-                <input v-model.number="form.sleep_duration_hours" id="sleepDuration" type="number" step="0.5" min="0" max="24" class="form-input" />
+                <input v-model.number="form.sleep_duration_hours" id="sleepDuration" type="number" step="0.5" min="0"
+                  max="24" class="form-input" />
               </div>
             </div>
           </section>
@@ -40,11 +42,13 @@
             <div class="form-row">
               <div class="form-group">
                 <label for="exercise">运动时长 (分钟)</label>
-                <input v-model.number="form.exercise_duration_min" id="exercise" type="number" step="1" min="0" class="form-input" />
+                <input v-model.number="form.exercise_duration_min" id="exercise" type="number" step="1" min="0"
+                  class="form-input" />
               </div>
               <div class="form-group">
                 <label for="water">饮水 (ml)</label>
-                <input v-model.number="form.water_intake_ml" id="water" type="number" step="100" min="0" class="form-input" />
+                <input v-model.number="form.water_intake_ml" id="water" type="number" step="100" min="0"
+                  class="form-input" />
               </div>
             </div>
           </section>
@@ -55,7 +59,8 @@
             <div class="form-row">
               <div class="form-group">
                 <label for="breakfast">早餐</label>
-                <input v-model="form.breakfast" id="breakfast" type="text" class="form-input" placeholder="例：鸡蛋+牛奶+面包" />
+                <input v-model="form.breakfast" id="breakfast" type="text" class="form-input"
+                  placeholder="例：鸡蛋+牛奶+面包" />
               </div>
             </div>
             <div class="form-row">
@@ -106,7 +111,8 @@
             <div class="form-row">
               <div class="form-group">
                 <label for="energy">评分 (0-5) *</label>
-                <input v-model.number="form.energy_level" id="energy" type="number" step="1" min="0" max="5" class="form-input" required />
+                <input v-model.number="form.energy_level" id="energy" type="number" step="1" min="0" max="5"
+                  class="form-input" required />
               </div>
             </div>
           </section>
@@ -116,7 +122,8 @@
             <h2>📝 备注</h2>
             <div class="form-group">
               <label for="note">其他补充说明</label>
-              <textarea v-model="form.note" id="note" class="form-textarea" placeholder="例如：今天在健身房运动一小时，感觉很好..." rows="4"></textarea>
+              <textarea v-model="form.note" id="note" class="form-textarea" placeholder="例如：今天在健身房运动一小时，感觉很好..."
+                rows="4"></textarea>
             </div>
           </section>
 
@@ -167,4 +174,6 @@ onMounted(() => {
 })
 </script>
 
-<style src="../css/DailyCheckinEdit.css"></style>
+<style scoped>
+@import "@/css/checkin/DailyCheckinEdit.css";
+</style>

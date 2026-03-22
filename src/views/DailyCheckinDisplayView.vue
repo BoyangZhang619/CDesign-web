@@ -1,6 +1,6 @@
 <template>
   <div class="display-page">
-    <AppHeader v-if="displayData"/>
+    <AppHeader v-if="displayData" />
 
     <main class="display-content" v-if="displayData">
       <!-- 基础数据可视化 -->
@@ -39,14 +39,16 @@
           <div class="energy-chart">
             <div class="energy-bar-group">
               <div class="energy-label">摄入</div>
-              <div class="energy-bar intake-bar" :style="{ height: getEnergyHeight(displayData.total_calories_intake, maxCalories) }">
+              <div class="energy-bar intake-bar"
+                :style="{ height: getEnergyHeight(displayData.total_calories_intake, maxCalories) }">
                 <span class="energy-value">{{ displayData.total_calories_intake }}</span>
               </div>
               <div class="energy-amount">kcal</div>
             </div>
             <div class="energy-bar-group">
               <div class="energy-label">消耗</div>
-              <div class="energy-bar burned-bar" :style="{ height: getEnergyHeight(displayData.total_calories_burned, maxCalories) }">
+              <div class="energy-bar burned-bar"
+                :style="{ height: getEnergyHeight(displayData.total_calories_burned, maxCalories) }">
                 <span class="energy-value">{{ displayData.total_calories_burned }}</span>
               </div>
               <div class="energy-amount">kcal</div>
@@ -207,4 +209,6 @@ onMounted(() => {
 })
 </script>
 
-<style src="../css/DailyCheckinDisplay.css"></style>
+<style scoped>
+@import "@/css/checkin/DailyCheckinDisplay.css";
+</style>

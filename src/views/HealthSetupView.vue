@@ -197,4 +197,6 @@ const {
 const totalFields = 10
 </script>
 
-<style src="../css/HealthSetupView.css"></style>
+<style scoped>
+@import '@/css/HealthSetupView.css';
+</style>

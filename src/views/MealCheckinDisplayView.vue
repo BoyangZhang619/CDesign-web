@@ -42,39 +42,21 @@
             <div class="form-row">
               <div class="form-group">
                 <label for="foodName" class="form-label">食物名称 *</label>
-                <input
-                  id="foodName"
-                  v-model="form.food_name"
-                  type="text"
-                  class="form-input"
-                  placeholder="例如：番茄鸡蛋面、红油火锅"
-                  required
-                />
+                <input id="foodName" v-model="form.food_name" type="text" class="form-input" placeholder="例如：番茄鸡蛋面、红油火锅"
+                  required />
               </div>
 
               <div class="form-group">
                 <label for="mealTime" class="form-label">进食时间 *</label>
-                <input
-                  id="mealTime"
-                  v-model="form.meal_time"
-                  type="datetime-local"
-                  class="form-input"
-                  required
-                />
+                <input id="mealTime" v-model="form.meal_time" type="datetime-local" class="form-input" required />
               </div>
             </div>
 
             <div class="form-row">
               <div class="form-group full-width">
                 <label for="foodDetail" class="form-label">食物描述 *</label>
-                <textarea
-                  id="foodDetail"
-                  v-model="form.food_detail"
-                  class="form-textarea"
-                  placeholder="详细描述食物，例如：一碗番茄鸡蛋面，配青菜一份和豆腐半盒，油量中等"
-                  rows="4"
-                  required
-                ></textarea>
+                <textarea id="foodDetail" v-model="form.food_detail" class="form-textarea"
+                  placeholder="详细描述食物，例如：一碗番茄鸡蛋面，配青菜一份和豆腐半盒，油量中等" rows="4" required></textarea>
               </div>
             </div>
 
@@ -271,5 +253,5 @@ onUnmounted(() => {
 </script>
 
 <style scoped>
-@import '../css/MealCheckinDisplay.css';
+@import '@/css/checkin/MealCheckinDisplay.css';
 </style>

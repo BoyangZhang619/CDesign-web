@@ -14,12 +14,8 @@
           <div class="filter-section">
             <label class="filter-label">记录类型</label>
             <div class="type-buttons">
-              <button
-                v-for="option in typeOptions"
-                :key="option.value"
-                @click="changeType(option.value)"
-                :class="['type-btn', { active: filters.type === option.value }]"
-              >
+              <button v-for="option in typeOptions" :key="option.value" @click="changeType(option.value)"
+                :class="['type-btn', { active: filters.type === option.value }]">
                 {{ option.label }}
               </button>
             </div>
@@ -28,33 +24,18 @@
           <div class="filter-row">
             <div class="filter-group">
               <label for="startDate" class="filter-label">开始日期</label>
-              <input
-                id="startDate"
-                v-model="filters.startDate"
-                type="date"
-                class="filter-input"
-              />
+              <input id="startDate" v-model="filters.startDate" type="date" class="filter-input" />
             </div>
 
             <div class="filter-group">
               <label for="endDate" class="filter-label">结束日期</label>
-              <input
-                id="endDate"
-                v-model="filters.endDate"
-                type="date"
-                class="filter-input"
-              />
+              <input id="endDate" v-model="filters.endDate" type="date" class="filter-input" />
             </div>
 
             <div class="filter-group">
               <label for="searchText" class="filter-label">搜索</label>
-              <input
-                id="searchText"
-                v-model="filters.searchText"
-                type="text"
-                class="filter-input"
-                placeholder="搜索备注..."
-              />
+              <input id="searchText" v-model="filters.searchText" type="text" class="filter-input"
+                placeholder="搜索备注..." />
             </div>
           </div>
 
@@ -69,12 +50,8 @@
           <div class="sort-section">
             <label class="sort-label">排序</label>
             <div class="sort-buttons">
-              <button
-                v-for="option in sortOptions"
-                :key="option.value"
-                @click="changeSort(option.value)"
-                :class="['sort-btn', { active: currentSort === option.value }]"
-              >
+              <button v-for="option in sortOptions" :key="option.value" @click="changeSort(option.value)"
+                :class="['sort-btn', { active: currentSort === option.value }]">
                 {{ option.label }}
               </button>
             </div>
@@ -103,11 +80,7 @@
 
         <!-- 记录列表 -->
         <div v-else class="records-list">
-          <div
-            v-for="record in records"
-            :key="record.id"
-            class="record-item"
-          >
+          <div v-for="record in records" :key="record.id" class="record-item">
             <div class="record-header">
               <div class="record-info">
                 <span class="record-type-badge" :class="`type-${record.type}`">
@@ -116,11 +89,7 @@
                 <h4 class="record-title">{{ record.title }}</h4>
                 <span class="record-date">{{ record.date }}</span>
               </div>
-              <button
-                @click="deleteRecord(record.id)"
-                class="btn-delete"
-                title="删除"
-              >
+              <button @click="deleteRecord(record.id)" class="btn-delete" title="删除">
                 ✕
               </button>
             </div>
@@ -138,11 +107,7 @@
 
         <!-- 分页 -->
         <div v-if="!loading && records.length > 0" class="pagination">
-          <button
-            @click="currentPage--"
-            :disabled="currentPage <= 1"
-            class="pagination-btn"
-          >
+          <button @click="currentPage--" :disabled="currentPage <= 1" class="pagination-btn">
             ← 上一页
           </button>
 
@@ -150,11 +115,7 @@
             第 {{ currentPage }} / {{ totalPages }} 页
           </span>
 
-          <button
-            @click="currentPage++"
-            :disabled="currentPage >= totalPages"
-            class="pagination-btn"
-          >
+          <button @click="currentPage++" :disabled="currentPage >= totalPages" class="pagination-btn">
             下一页 →
           </button>
         </div>
@@ -199,5 +160,5 @@ onMounted(() => {
 </script>
 
 <style scoped>
-@import '../css/HistoryView.css';
+@import '@/css/HistoryView.css';
 </style>

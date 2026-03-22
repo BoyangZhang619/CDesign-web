@@ -37,26 +37,14 @@
           <form @submit.prevent="handleLogin" class="auth-form">
             <div class="form-group">
               <label for="login-email" class="form-label">邮箱地址</label>
-              <input
-                id="login-email"
-                v-model="loginForm.email"
-                type="email"
-                class="form-input"
-                placeholder="请输入邮箱地址"
-                @keyup.enter="handleLogin"
-              />
+              <input id="login-email" v-model="loginForm.email" type="email" class="form-input" placeholder="请输入邮箱地址"
+                @keyup.enter="handleLogin" />
             </div>
 
             <div class="form-group">
               <label for="login-password" class="form-label">密码</label>
-              <input
-                id="login-password"
-                v-model="loginForm.password"
-                type="password"
-                class="form-input"
-                placeholder="请输入密码"
-                @keyup.enter="handleLogin"
-              />
+              <input id="login-password" v-model="loginForm.password" type="password" class="form-input"
+                placeholder="请输入密码" @keyup.enter="handleLogin" />
             </div>
 
             <button type="submit" class="form-button" :disabled="loading">
@@ -69,11 +57,7 @@
               <span>没有账户？</span>
             </div>
 
-            <button
-              type="button"
-              class="form-toggle-btn"
-              @click="toggleMode"
-            >
+            <button type="button" class="form-toggle-btn" @click="toggleMode">
               创建新账户
             </button>
           </form>
@@ -84,36 +68,20 @@
           <form @submit.prevent="handleRegister" class="auth-form">
             <div class="form-group">
               <label for="register-email" class="form-label">邮箱地址</label>
-              <input
-                id="register-email"
-                v-model="registerForm.email"
-                type="email"
-                class="form-input"
-                placeholder="请输入邮箱地址"
-              />
+              <input id="register-email" v-model="registerForm.email" type="email" class="form-input"
+                placeholder="请输入邮箱地址" />
             </div>
 
             <div class="form-group">
               <label for="register-password" class="form-label">密码</label>
-              <input
-                id="register-password"
-                v-model="registerForm.password"
-                type="password"
-                class="form-input"
-                placeholder="至少6位密码"
-              />
+              <input id="register-password" v-model="registerForm.password" type="password" class="form-input"
+                placeholder="至少6位密码" />
             </div>
 
             <div class="form-group">
               <label for="confirm-password" class="form-label">确认密码</label>
-              <input
-                id="confirm-password"
-                v-model="registerForm.confirmPassword"
-                type="password"
-                class="form-input"
-                placeholder="再次输入密码"
-                @keyup.enter="handleRegister"
-              />
+              <input id="confirm-password" v-model="registerForm.confirmPassword" type="password" class="form-input"
+                placeholder="再次输入密码" @keyup.enter="handleRegister" />
             </div>
 
             <button type="submit" class="form-button" :disabled="loading">
@@ -127,11 +95,7 @@
               <span>已有账户？</span>
             </div>
 
-            <button
-              type="button"
-              class="form-toggle-btn"
-              @click="toggleMode"
-            >
+            <button type="button" class="form-toggle-btn" @click="toggleMode">
               返回登录
             </button>
           </form>
@@ -157,4 +121,6 @@ const {
 } = useAuthForm()
 </script>
 
-<style src="../css/AuthView.css"></style>
+<style scoped>
+@import '@/css/AuthView.css';
+</style>

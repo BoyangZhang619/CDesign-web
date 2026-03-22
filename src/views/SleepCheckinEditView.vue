@@ -231,4 +231,4 @@ onMounted(async () => {
 })
 </script>
 
-<style src="@/css/SleepCheckinDisplay.css"></style>
+<style src="@/css/checkin/SleepCheckinDisplay.css"></style>

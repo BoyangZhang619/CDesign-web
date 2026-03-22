@@ -12,7 +12,7 @@
       <!-- 核心功能区 -->
       <section class="features-section">
         <div class="section-label">核心功能</div>
-        
+
         <div class="feature-grid">
           <!-- 01 个人基础信息 -->
           <router-link to="/profile" class="feature-card">
@@ -161,5 +161,6 @@ async function loadUserInfo() {
 loadUserInfo()
 </script>
 
-<style src="../css/HomeView.css"></style>
-
+<style scoped>
+@import '@/css/HomeView.css';
+</style>

@@ -235,4 +235,6 @@ const goBack = () => {
 }
 </script>
 
-<style src="../css/ProfileEditView.css"></style>
+<style scoped>
+@import '@/css/ProfileEditView.css';
+</style>

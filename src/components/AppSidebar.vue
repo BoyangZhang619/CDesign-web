@@ -155,4 +155,6 @@ function closeSidebar() {
 }
 </script>
 
-<style src="@/css/components/AppSidebar.css"></style>
+<style scoped>
+  @import "@/css/components/AppSidebar.css";
+</style>

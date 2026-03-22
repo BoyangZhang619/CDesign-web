@@ -28,30 +28,18 @@
         <!-- 基本信息 -->
         <section class="form-section">
           <h2 class="section-title">基本信息</h2>
-          
+
           <div class="form-row">
             <div class="form-group">
               <label for="realname">真实姓名 <span class="required">*</span></label>
-              <input
-                id="realname"
-                v-model="form.realname"
-                type="text"
-                class="form-input"
-                placeholder="请输入你的真实姓名"
-                required
-              />
+              <input id="realname" v-model="form.realname" type="text" class="form-input" placeholder="请输入你的真实姓名"
+                required />
             </div>
 
             <div class="form-group">
               <label for="studentId">学号 <span class="required">*</span></label>
-              <input
-                id="studentId"
-                v-model="form.studentId"
-                type="text"
-                class="form-input"
-                placeholder="请输入学号"
-                required
-              />
+              <input id="studentId" v-model="form.studentId" type="text" class="form-input" placeholder="请输入学号"
+                required />
             </div>
           </div>
 
@@ -67,12 +55,7 @@
 
             <div class="form-group">
               <label for="birthday">出生日期</label>
-              <input
-                id="birthday"
-                v-model="form.birthday"
-                type="date"
-                class="form-input"
-              />
+              <input id="birthday" v-model="form.birthday" type="date" class="form-input" />
             </div>
           </div>
         </section>
@@ -84,43 +67,20 @@
           <div class="form-row">
             <div class="form-group">
               <label for="height">身高 (cm)</label>
-              <input
-                id="height"
-                v-model.number="form.height_cm"
-                type="number"
-                class="form-input"
-                min="1"
-                max="250"
-                placeholder="请输入身高"
-              />
+              <input id="height" v-model.number="form.height_cm" type="number" class="form-input" min="1" max="250"
+                placeholder="请输入身高" />
             </div>
 
             <div class="form-group">
               <label for="weight">当前体重 (kg)</label>
-              <input
-                id="weight"
-                v-model.number="form.current_weight_kg"
-                type="number"
-                class="form-input"
-                min="1"
-                max="300"
-                step="0.1"
-                placeholder="请输入当前体重"
-              />
+              <input id="weight" v-model.number="form.current_weight_kg" type="number" class="form-input" min="1"
+                max="300" step="0.1" placeholder="请输入当前体重" />
             </div>
 
             <div class="form-group">
               <label for="targetWeight">目标体重 (kg)</label>
-              <input
-                id="targetWeight"
-                v-model.number="form.target_weight_kg"
-                type="number"
-                class="form-input"
-                min="1"
-                max="300"
-                step="0.1"
-                placeholder="请输入目标体重"
-              />
+              <input id="targetWeight" v-model.number="form.target_weight_kg" type="number" class="form-input" min="1"
+                max="300" step="0.1" placeholder="请输入目标体重" />
             </div>
           </div>
 
@@ -137,13 +97,8 @@
 
           <div class="form-group">
             <label for="healthGoal">健康目标描述</label>
-            <textarea
-              id="healthGoal"
-              v-model="form.health_goal_desc"
-              class="form-input form-textarea"
-              placeholder="请描述你的健康目标和期望"
-              rows="4"
-            ></textarea>
+            <textarea id="healthGoal" v-model="form.health_goal_desc" class="form-input form-textarea"
+              placeholder="请描述你的健康目标和期望" rows="4"></textarea>
           </div>
         </section>
 
@@ -165,37 +120,21 @@
 
             <div class="form-group">
               <label for="dietary">饮食偏好</label>
-              <input
-                id="dietary"
-                v-model="form.dietary_preference"
-                type="text"
-                class="form-input"
-                placeholder="如：素食、无糖等"
-              />
+              <input id="dietary" v-model="form.dietary_preference" type="text" class="form-input"
+                placeholder="如：素食、无糖等" />
             </div>
           </div>
 
           <div class="form-row">
             <div class="form-group">
               <label for="workRest">作息习惯</label>
-              <input
-                id="workRest"
-                v-model="form.work_rest_habit"
-                type="text"
-                class="form-input"
-                placeholder="如：早起、熬夜等"
-              />
+              <input id="workRest" v-model="form.work_rest_habit" type="text" class="form-input"
+                placeholder="如：早起、熬夜等" />
             </div>
 
             <div class="form-group">
               <label for="allergy">过敏信息</label>
-              <input
-                id="allergy"
-                v-model="form.allergy_info"
-                type="text"
-                class="form-input"
-                placeholder="请输入食物或药物过敏"
-              />
+              <input id="allergy" v-model="form.allergy_info" type="text" class="form-input" placeholder="请输入食物或药物过敏" />
             </div>
           </div>
         </section>
@@ -247,4 +186,6 @@ const handleCancel = () => {
 }
 </script>
 
-<style src="@/css/BasicInfoView.css"></style>
+<style scoped>
+@import '@/css/BasicInfoView.css';
+</style>

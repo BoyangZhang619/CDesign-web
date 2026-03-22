@@ -18,13 +18,8 @@
           <div class="records-list">
             <div v-for="record in records" :key="record.id" class="record-item" @click="selectRecord(record)">
               <div class="record-select">
-                <input
-                  type="radio"
-                  :name="'record-' + record.id"
-                  :value="record.id"
-                  v-model="selectedRecordId"
-                  class="radio-input"
-                />
+                <input type="radio" :name="'record-' + record.id" :value="record.id" v-model="selectedRecordId"
+                  class="radio-input" />
               </div>
               <div class="record-info">
                 <div class="record-header">
@@ -72,24 +67,15 @@
             <div class="form-row">
               <div class="form-group full-width">
                 <label for="foodName" class="form-label">食物名称</label>
-                <input
-                  id="foodName"
-                  v-model="selectedRecord.food_name"
-                  type="text"
-                  class="form-input"
-                />
+                <input id="foodName" v-model="selectedRecord.food_name" type="text" class="form-input" />
               </div>
             </div>
 
             <div class="form-row">
               <div class="form-group full-width">
                 <label for="foodDetail" class="form-label">食物描述</label>
-                <textarea
-                  id="foodDetail"
-                  v-model="selectedRecord.food_detail"
-                  class="form-textarea"
-                  rows="4"
-                ></textarea>
+                <textarea id="foodDetail" v-model="selectedRecord.food_detail" class="form-textarea"
+                  rows="4"></textarea>
               </div>
             </div>
 
@@ -181,5 +167,5 @@ onMounted(() => {
 </script>
 
 <style scoped>
-@import '../css/MealCheckinDisplay.css';
+@import '@/css/checkin/MealCheckinDisplay.css';
 </style>

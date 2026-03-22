@@ -33,16 +33,12 @@
 
           <!-- 消息列表 -->
           <div v-else class="messages-list">
-            <div
-              v-for="(msg, index) in messages"
-              :key="index"
-              :class="['message-bubble', `msg-${msg.role}`]"
-            >
+            <div v-for="(msg, index) in messages" :key="index" :class="['message-bubble', `msg-${msg.role}`]">
               <div class="message-header">
                 <span class="message-role">
                   {{ msg.role === 'user' ? '您' : 'AI' }}
                 </span>
-                <span class="message-time">{{ formatTime(index) }}</span>
+                <!-- <span class="message-time">{{ formatTime(index) }}</span> -->
               </div>
               <div class="message-content">{{ msg.content }}</div>
             </div>
@@ -56,8 +52,7 @@
             <div v-if="errorMsg" class="error-box">
               <svg class="error-icon" viewBox="0 0 24 24" fill="currentColor">
                 <path
-                  d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"
-                />
+                  d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z" />
               </svg>
               <span>{{ errorMsg }}</span>
             </div>
@@ -65,23 +60,12 @@
 
           <!-- 输入框 -->
           <div class="input-box">
-            <textarea
-              v-model="inputMessage"
-              @keydown.enter.ctrl="handleSendChat"
-              :disabled="loading"
-              class="chat-textarea"
-              placeholder="输入您的问题... (Ctrl+Enter 发送)"
-              rows="3"
-            ></textarea>
-            <button
-              @click="handleSendChat"
-              :disabled="loading || !inputMessage.trim()"
-              class="btn-submit"
-            >
+            <textarea v-model="inputMessage" @keydown.enter.ctrl="handleSendChat" :disabled="loading"
+              class="chat-textarea" placeholder="输入您的问题... (Ctrl+Enter 发送)" rows="3"></textarea>
+            <button @click="handleSendChat" :disabled="loading || !inputMessage.trim()" class="btn-submit">
               <svg v-if="!loading" viewBox="0 0 24 24" fill="currentColor">
                 <path
-                  d="M16.6915026,12.4744748 L3.50612381,13.2599618 C3.19218622,13.2599618 3.03521743,13.4170592 3.03521743,13.5741566 L1.15159189,20.0151496 C0.8376543,20.8006365 0.99,21.89 1.77946707,22.52 C2.41,22.99 3.50612381,23.1 4.13399899,22.8429026 L21.714504,14.0454487 C22.6563168,13.5741566 23.1272231,12.6315722 22.9702544,11.6889879 L4.13399899,1.16350093 C3.34915502,0.9 2.40734225,1.00636533 1.77946707,1.4776575 C0.994623095,2.10604706 0.837654326,3.0486314 1.15159189,3.99701575 L3.03521743,10.4379852 C3.03521743,10.5950826 3.19218622,10.75 3.50612381,10.75 L16.6915026,11.5354869 C16.6915026,11.5354869 17.1624089,11.5354869 17.1624089,12.0068791 C17.1624089,12.4744748 16.6915026,12.4744748 16.6915026,12.4744748 Z"
-                />
+                  d="M16.6915026,12.4744748 L3.50612381,13.2599618 C3.19218622,13.2599618 3.03521743,13.4170592 3.03521743,13.5741566 L1.15159189,20.0151496 C0.8376543,20.8006365 0.99,21.89 1.77946707,22.52 C2.41,22.99 3.50612381,23.1 4.13399899,22.8429026 L21.714504,14.0454487 C22.6563168,13.5741566 23.1272231,12.6315722 22.9702544,11.6889879 L4.13399899,1.16350093 C3.34915502,0.9 2.40734225,1.00636533 1.77946707,1.4776575 C0.994623095,2.10604706 0.837654326,3.0486314 1.15159189,3.99701575 L3.03521743,10.4379852 C3.03521743,10.5950826 3.19218622,10.75 3.50612381,10.75 L16.6915026,11.5354869 C16.6915026,11.5354869 17.1624089,11.5354869 17.1624089,12.0068791 C17.1624089,12.4744748 16.6915026,12.4744748 16.6915026,12.4744748 Z" />
               </svg>
               <span v-else>发送中</span>
               <span v-if="!loading">发送</span>
@@ -103,11 +87,7 @@
               <span>启用流式对话</span>
             </label>
 
-            <button
-              v-if="messages.length > 0"
-              @click="handleClearMessages"
-              class="btn-clear-history"
-            >
+            <button v-if="messages.length > 0" @click="handleClearMessages" class="btn-clear-history">
               清除历史
             </button>
           </div>
@@ -164,14 +144,16 @@ function handleClearMessages() {
   }
 }
 
-// 格式化时间（简单版本）
-function formatTime(index: number): string {
-  return `C ${Math.floor(index / 2) + 1}`
-}
+// // 格式化时间（简单版本）
+// function formatTime(index: number): string {
+//   return `C ${Math.floor(index / 2) + 1}`
+// }
 
 onMounted(() => {
   loadUserInfo()
 })
 </script>
 
-<style src="@/css/AIChatView.css"></style>
+<style scoped>
+@import '@/css/AIChatView.css';
+</style>
