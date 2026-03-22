@@ -162,7 +162,7 @@
           </section>
 
           <!-- 错误提示 -->
-          <div v-if="errorMsg" class="error-alert">{{ errorMsg }}</div>
+          <div v-if="errorMsg" class="error-box">{{ errorMsg }}</div>
 
           <!-- 操作按钮 -->
           <div class="form-actions">

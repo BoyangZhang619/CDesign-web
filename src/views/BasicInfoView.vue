@@ -1,262 +1,250 @@
 <template>
-  <div class="page">
+  <div class="basic-info-view">
     <AppHeader />
 
-    <main class="content">
-      <div class="form-wrapper">
-        <div class="form-header">
-          <h1 class="form-title">健康档案</h1>
-          <p class="form-subtitle">完成您的个人健康信息设置</p>
-          <div class="progress-bar">
-            <div class="progress-fill" :style="{ width: completionPercentage + '%' }"></div>
-          </div>
-          <p class="progress-text">已完成 {{ completedFields }}/{{ totalFields }} 项</p>
-        </div>
-
-        <form @submit.prevent="handleSubmit" class="basic-form">
-          <!-- 基本信息 -->
-          <section class="form-section">
-            <div class="section-header">
-              <span class="section-number">01</span>
-              <h2 class="section-title">基本信息</h2>
-            </div>
-
-            <div class="form-row">
-              <div class="form-group">
-                <label for="realname" class="form-label">真实姓名 *</label>
-                <input
-                  id="realname"
-                  v-model="form.realname"
-                  type="text"
-                  class="form-input"
-                  placeholder="请输入您的真实姓名"
-                  required
-                />
-              </div>
-
-              <div class="form-group">
-                <label for="studentId" class="form-label">学号 *</label>
-                <input
-                  id="studentId"
-                  v-model="form.studentId"
-                  type="text"
-                  class="form-input"
-                  placeholder="请输入学号"
-                  required
-                />
-              </div>
-            </div>
-
-            <div class="form-row">
-              <div class="form-group">
-                <label for="birthday" class="form-label">出生日期 *</label>
-                <input
-                  id="birthday"
-                  v-model="form.birthday"
-                  type="date"
-                  class="form-input"
-                  required
-                />
-              </div>
-
-              <div class="form-group">
-                <label class="form-label">性别</label>
-                <div class="radio-group">
-                  <label
-                    v-for="option in genderOptions"
-                    :key="option.value"
-                    class="radio-label"
-                  >
-                    <input
-                      v-model="form.gender"
-                      type="radio"
-                      :value="option.value"
-                      class="radio-input"
-                    />
-                    <span>{{ option.label }}</span>
-                  </label>
-                </div>
-              </div>
-            </div>
-          </section>
-
-          <!-- 身体数据 -->
-          <section class="form-section">
-            <div class="section-header">
-              <span class="section-number">02</span>
-              <h2 class="section-title">身体数据</h2>
-            </div>
-
-            <div class="form-row">
-              <div class="form-group">
-                <label for="height_cm" class="form-label">身高 (cm) *</label>
-                <input
-                  id="height_cm"
-                  v-model.number="form.height_cm"
-                  type="number"
-                  step="0.1"
-                  min="50"
-                  max="250"
-                  class="form-input"
-                  placeholder="例：170"
-                  required
-                />
-              </div>
-
-              <div class="form-group">
-                <label for="current_weight_kg" class="form-label">当前体重 (kg) *</label>
-                <input
-                  id="current_weight_kg"
-                  v-model.number="form.current_weight_kg"
-                  type="number"
-                  step="0.1"
-                  min="20"
-                  max="300"
-                  class="form-input"
-                  placeholder="例：70"
-                  required
-                />
-              </div>
-            </div>
-
-            <div class="form-row">
-              <div class="form-group">
-                <label for="target_weight_kg" class="form-label">目标体重 (kg) *</label>
-                <input
-                  id="target_weight_kg"
-                  v-model.number="form.target_weight_kg"
-                  type="number"
-                  step="0.1"
-                  min="20"
-                  max="300"
-                  class="form-input"
-                  placeholder="例：65"
-                  required
-                />
-              </div>
-
-              <div class="form-group">
-                <label class="form-label">健康目标</label>
-                <select v-model="form.goal_type" class="form-input">
-                  <option v-for="option in goalOptions" :key="option.value" :value="option.value">
-                    {{ option.label }}
-                  </option>
-                </select>
-              </div>
-            </div>
-          </section>
-
-          <!-- 生活习惯 -->
-          <section class="form-section">
-            <div class="section-header">
-              <span class="section-number">03</span>
-              <h2 class="section-title">生活习惯</h2>
-            </div>
-
-            <div class="form-row">
-              <div class="form-group">
-                <label class="form-label">日常活动水平</label>
-                <select v-model="form.activity_level" class="form-input">
-                  <option
-                    v-for="option in activityLevelOptions"
-                    :key="option.value"
-                    :value="option.value"
-                  >
-                    {{ option.label }}
-                  </option>
-                </select>
-              </div>
-
-              <div class="form-group">
-                <label for="dietary_preference" class="form-label">饮食偏好</label>
-                <input
-                  id="dietary_preference"
-                  v-model="form.dietary_preference"
-                  type="text"
-                  class="form-input"
-                  placeholder="例：清淡饮食，避免油腻"
-                />
-              </div>
-            </div>
-
-            <div class="form-row">
-              <div class="form-group">
-                <label for="allergy_info" class="form-label">过敏信息</label>
-                <input
-                  id="allergy_info"
-                  v-model="form.allergy_info"
-                  type="text"
-                  class="form-input"
-                  placeholder="例：对花生过敏"
-                />
-              </div>
-
-              <div class="form-group">
-                <label for="work_rest_habit" class="form-label">作息习惯</label>
-                <input
-                  id="work_rest_habit"
-                  v-model="form.work_rest_habit"
-                  type="text"
-                  class="form-input"
-                  placeholder="例：晚上11点睡觉，早上7点起床"
-                />
-              </div>
-            </div>
-
-            <div class="form-row">
-              <div class="form-group">
-                <label for="health_goal_desc" class="form-label">健康目标描述</label>
-                <textarea
-                  id="health_goal_desc"
-                  v-model="form.health_goal_desc"
-                  class="form-textarea"
-                  placeholder="详细描述您的健康目标，例如想要达到的体重、增强体能等"
-                  rows="4"
-                ></textarea>
-              </div>
-            </div>
-          </section>
-
-          <!-- 操作按钮 -->
-          <div class="form-actions">
-            <button
-              type="submit"
-              :disabled="loading"
-              class="btn-primary"
-            >
-              {{ loading ? '保存中...' : '保存档案' }}
-            </button>
-          </div>
-        </form>
+    <div class="basic-info-container">
+      <!-- 页面标题 -->
+      <div class="page-header">
+        <h1>健康信息完善</h1>
+        <p>请完整填写以下信息，帮助我们更好地了解你的健康状况</p>
       </div>
-    </main>
+
+      <!-- 错误提示 -->
+      <div v-if="errorMsg" class="alert alert-error">
+        <div class="alert-content">
+          <span>{{ errorMsg }}</span>
+          <button @click="errorMsg = ''" class="alert-close">×</button>
+        </div>
+      </div>
+
+      <!-- 加载状态 -->
+      <div v-if="loading" class="loading-spinner">
+        <div class="spinner"></div>
+        <p>保存中...</p>
+      </div>
+
+      <!-- 表单 -->
+      <form v-show="!loading" @submit.prevent="handleSubmit" class="health-form">
+        <!-- 基本信息 -->
+        <section class="form-section">
+          <h2 class="section-title">基本信息</h2>
+          
+          <div class="form-row">
+            <div class="form-group">
+              <label for="realname">真实姓名 <span class="required">*</span></label>
+              <input
+                id="realname"
+                v-model="form.realname"
+                type="text"
+                class="form-input"
+                placeholder="请输入你的真实姓名"
+                required
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="studentId">学号 <span class="required">*</span></label>
+              <input
+                id="studentId"
+                v-model="form.studentId"
+                type="text"
+                class="form-input"
+                placeholder="请输入学号"
+                required
+              />
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="gender">性别</label>
+              <select id="gender" v-model="form.gender" class="form-input">
+                <option value="male">男</option>
+                <option value="female">女</option>
+                <option value="other">其他</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="birthday">出生日期</label>
+              <input
+                id="birthday"
+                v-model="form.birthday"
+                type="date"
+                class="form-input"
+              />
+            </div>
+          </div>
+        </section>
+
+        <!-- 体重管理 -->
+        <section class="form-section">
+          <h2 class="section-title">体重管理</h2>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="height">身高 (cm)</label>
+              <input
+                id="height"
+                v-model.number="form.height_cm"
+                type="number"
+                class="form-input"
+                min="1"
+                max="250"
+                placeholder="请输入身高"
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="weight">当前体重 (kg)</label>
+              <input
+                id="weight"
+                v-model.number="form.current_weight_kg"
+                type="number"
+                class="form-input"
+                min="1"
+                max="300"
+                step="0.1"
+                placeholder="请输入当前体重"
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="targetWeight">目标体重 (kg)</label>
+              <input
+                id="targetWeight"
+                v-model.number="form.target_weight_kg"
+                type="number"
+                class="form-input"
+                min="1"
+                max="300"
+                step="0.1"
+                placeholder="请输入目标体重"
+              />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="goalType">健康目标</label>
+            <select id="goalType" v-model="form.goal_type" class="form-input">
+              <option value="maintain">保持现状</option>
+              <option value="weight_loss">减重</option>
+              <option value="weight_gain">增重</option>
+              <option value="muscle_gain">增肌</option>
+              <option value="fitness">提高体能</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="healthGoal">健康目标描述</label>
+            <textarea
+              id="healthGoal"
+              v-model="form.health_goal_desc"
+              class="form-input form-textarea"
+              placeholder="请描述你的健康目标和期望"
+              rows="4"
+            ></textarea>
+          </div>
+        </section>
+
+        <!-- 生活习惯 -->
+        <section class="form-section">
+          <h2 class="section-title">生活习惯</h2>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="activity">活动水平</label>
+              <select id="activity" v-model="form.activity_level" class="form-input">
+                <option value="sedentary">久坐不动</option>
+                <option value="light">轻度活动</option>
+                <option value="moderate">中等活动</option>
+                <option value="active">高度活动</option>
+                <option value="very_active">非常活跃</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="dietary">饮食偏好</label>
+              <input
+                id="dietary"
+                v-model="form.dietary_preference"
+                type="text"
+                class="form-input"
+                placeholder="如：素食、无糖等"
+              />
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="workRest">作息习惯</label>
+              <input
+                id="workRest"
+                v-model="form.work_rest_habit"
+                type="text"
+                class="form-input"
+                placeholder="如：早起、熬夜等"
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="allergy">过敏信息</label>
+              <input
+                id="allergy"
+                v-model="form.allergy_info"
+                type="text"
+                class="form-input"
+                placeholder="请输入食物或药物过敏"
+              />
+            </div>
+          </div>
+        </section>
+
+        <!-- 操作按钮 -->
+        <div class="form-actions">
+          <button type="button" @click="handleCancel" class="btn btn-cancel">
+            取消
+          </button>
+          <button type="submit" class="btn btn-submit" :disabled="loading">
+            {{ loading ? '保存中...' : '保存信息' }}
+          </button>
+        </div>
+      </form>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { onMounted } from 'vue'
-import AppHeader from '../components/AppHeader.vue'
+import { ref } from 'vue'
+import { useRouter } from 'vue-router'
+import AppHeader from '@/components/AppHeader.vue'
 import { useBasicInfo } from '../composables/useBasicInfo'
 
-const {
-  form,
-  loading,
-  genderOptions,
-  goalOptions,
-  activityLevelOptions,
-  handleSubmit,
-  loadHealthInfo,
-  completedFields,
-  completionPercentage,
-  totalFields
-} = useBasicInfo()
+const router = useRouter()
+const { form, handleSubmit: composableHandleSubmit } = useBasicInfo()
 
-// 初始化时加载健康信息
-onMounted(() => {
-  loadHealthInfo()
-})
+const loading = ref(false)
+const errorMsg = ref('')
+
+const handleSubmit = async () => {
+  errorMsg.value = ''
+  loading.value = true
+
+  try {
+    await composableHandleSubmit()
+    setTimeout(() => {
+      router.push('/home')
+    }, 800)
+  } catch (error: any) {
+    errorMsg.value = error.message || '保存失败，请重试'
+  } finally {
+    loading.value = false
+  }
+}
+
+const handleCancel = () => {
+  router.push('/home')
+}
 </script>
 
-<style scoped>
-@import '../css/BasicInfoView.css';
-</style>
+<style src="@/css/BasicInfoView.css"></style>

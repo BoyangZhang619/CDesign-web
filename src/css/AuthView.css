@@ -1,20 +1,15 @@
-/* =============== 颜色系统 (轻新现代) =============== */
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Montserrat:wght@400;500;600;700&display=swap');
+
+/* =============== 颜色系统 - Modern European Minimalist =============== */
 :root {
+  --color-text-primary: #3a3a3a;
+  --color-text-secondary: #8a8a8a;
+  --color-border: #e8e8e8;
   --color-bg-primary: #fafaf9;
-  --color-bg-secondary: #f5f4f0;
-  --color-bg-tertiary: #efe9e3;
-  --color-card-bg: #ffffff;
-  --color-text-primary: #2d2d2a;
-  --color-text-secondary: #6f6f6a;
-  --color-text-tertiary: #999993;
-  --color-border: #e8e3dd;
-  --color-border-light: #f0ebe5;
-  --color-accent-warm: #d8a88f;
-  --color-accent-cool: #8fb3d4;
-  --color-accent-soft-green: #a8c7a0;
-  --color-accent-soft-orange: #e8b4a0;
-  --color-success: #8fb3a8;
-  --color-error: #c89b9b;
+  --color-bg-white: #ffffff;
+  --color-accent: #3a3a3a;
+  --color-success: #4a7a6a;
+  --color-error: #8b4545;
 }
 
 /* =============== 布局与基础结构 =============== */
@@ -23,10 +18,11 @@
   grid-template-columns: 1fr 1fr;
   min-height: 100vh;
   background: var(--color-bg-primary);
+  font-family: 'Montserrat', sans-serif;
 }
 
 .auth-brand {
-  background: linear-gradient(135deg, #f8f6f2 0%, #f0ebe5 100%);
+  background: linear-gradient(135deg, #fafaf9 0%, #f5f5f2 100%);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -42,7 +38,7 @@
   right: -20%;
   width: 600px;
   height: 600px;
-  background: radial-gradient(circle at center, rgba(216, 168, 143, 0.12) 0%, rgba(216, 168, 143, 0.03) 40%, transparent 70%);
+  background: radial-gradient(circle at center, rgba(58, 58, 58, 0.08) 0%, rgba(58, 58, 58, 0.02) 40%, transparent 70%);
   border-radius: 50%;
   pointer-events: none;
   animation: floatBlob 15s ease-in-out infinite;
@@ -55,7 +51,7 @@
   left: -150px;
   width: 500px;
   height: 500px;
-  background: radial-gradient(circle at center, rgba(143, 179, 168, 0.08) 0%, rgba(143, 179, 168, 0.02) 40%, transparent 70%);
+  background: radial-gradient(circle at center, rgba(74, 122, 106, 0.06) 0%, rgba(74, 122, 106, 0.02) 40%, transparent 70%);
   border-radius: 50%;
   pointer-events: none;
   animation: floatBlob 20s ease-in-out infinite reverse;
@@ -101,7 +97,7 @@
 .decoration-1 {
   width: 100px;
   height: 100px;
-  background: linear-gradient(135deg, rgba(216, 168, 143, 0.15), transparent);
+  background: linear-gradient(135deg, rgba(58, 58, 58, 0.08), transparent);
   border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%;
   top: 15%;
   right: 15%;
@@ -111,7 +107,7 @@
 .decoration-2 {
   width: 70px;
   height: 70px;
-  background: linear-gradient(45deg, rgba(143, 179, 168, 0.12), transparent);
+  background: linear-gradient(45deg, rgba(74, 122, 106, 0.06), transparent);
   border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
   bottom: 25%;
   left: 12%;
@@ -121,7 +117,7 @@
 .decoration-3 {
   width: 50px;
   height: 50px;
-  background: linear-gradient(120deg, rgba(232, 180, 160, 0.1), transparent);
+  background: linear-gradient(120deg, rgba(139, 69, 69, 0.05), transparent);
   border-radius: 45%;
   top: 55%;
   right: 18%;
@@ -131,7 +127,7 @@
 .decoration-4 {
   width: 90px;
   height: 5px;
-  background: linear-gradient(90deg, transparent, rgba(216, 168, 143, 0.2), transparent);
+  background: linear-gradient(90deg, transparent, rgba(58, 58, 58, 0.12), transparent);
   border-radius: 3px;
   top: 35%;
   left: 18%;
@@ -141,21 +137,21 @@
 .decoration-5 {
   width: 6px;
   height: 6px;
-  background: rgba(216, 168, 143, 0.3);
+  background: rgba(58, 58, 58, 0.2);
   border-radius: 50%;
   top: 70%;
   right: 25%;
   animation-delay: 0.35s;
   box-shadow: 
-    25px -35px 0 -3px rgba(143, 179, 168, 0.2),
-    -20px 30px 0 -4px rgba(232, 180, 160, 0.15),
-    45px 15px 0 -5px rgba(216, 168, 143, 0.1);
+    25px -35px 0 -3px rgba(74, 122, 106, 0.12),
+    -20px 30px 0 -4px rgba(139, 69, 69, 0.1),
+    45px 15px 0 -5px rgba(58, 58, 58, 0.08);
 }
 
 .decoration-6 {
   width: 80px;
   height: 80px;
-  background: linear-gradient(160deg, rgba(168, 199, 160, 0.08), transparent);
+  background: linear-gradient(160deg, rgba(74, 122, 106, 0.05), transparent);
   border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
   top: 20%;
   left: 10%;
@@ -165,7 +161,7 @@
 .decoration-7 {
   width: 60px;
   height: 60px;
-  background: linear-gradient(240deg, rgba(216, 168, 143, 0.09), transparent);
+  background: linear-gradient(240deg, rgba(58, 58, 58, 0.06), transparent);
   border-radius: 70% 30% 30% 70% / 70% 70% 30% 30%;
   bottom: 15%;
   right: 12%;
@@ -185,9 +181,10 @@
 
 .brand-title {
   margin: 0;
+  font-family: 'Playfair Display', serif;
   font-size: 48px;
-  font-weight: 300;
-  letter-spacing: -0.5px;
+  font-weight: 600;
+  letter-spacing: 0.6px;
   margin-bottom: 16px;
   color: var(--color-text-primary);
   line-height: 1.2;
@@ -195,29 +192,28 @@
 
 .brand-subtitle {
   margin: 0;
-  font-size: 18px;
-  font-weight: 400;
-  color: var(--color-accent-warm);
-  margin-bottom: 32px;
-  letter-spacing: 0px;
-  line-height: 1.6;
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--color-text-secondary);
+  letter-spacing: 0.3px;
+  margin-bottom: 24px;
 }
 
 .brand-description {
   margin: 0;
   font-size: 14px;
-  line-height: 1.8;
   color: var(--color-text-secondary);
-  font-weight: 300;
+  line-height: 1.6;
+  letter-spacing: 0.2px;
 }
 
-/* =============== 认证表单容器 =============== */
+/* =============== 表单容器 =============== */
 .auth-form-container {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 40px 60px;
-  background: var(--color-bg-primary);
+  padding: 40px 20px;
+  background: var(--color-bg-white);
 }
 
 .auth-form-wrapper {
@@ -225,35 +221,33 @@
   max-width: 420px;
 }
 
-/* =============== 表单标题与副标题 =============== */
 .form-header {
-  margin-bottom: 40px;
   text-align: center;
+  margin-bottom: 32px;
 }
 
 .form-title {
   margin: 0;
+  font-family: 'Playfair Display', serif;
   font-size: 28px;
-  font-weight: 400;
+  font-weight: 600;
+  letter-spacing: 0.6px;
   color: var(--color-text-primary);
-  letter-spacing: -0.5px;
   margin-bottom: 8px;
-  line-height: 1.3;
 }
 
 .form-subtitle {
   margin: 0;
   font-size: 13px;
   color: var(--color-text-secondary);
-  font-weight: 300;
-  letter-spacing: 0px;
+  letter-spacing: 0.2px;
 }
 
-/* =============== 表单元素 =============== */
+/* =============== 表单样式 =============== */
 .auth-form {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 20px;
 }
 
 .form-group {
@@ -264,63 +258,64 @@
 
 .form-label {
   font-size: 12px;
-  font-weight: 500;
-  color: var(--color-text-primary);
-  letter-spacing: 0.3px;
-  text-transform: none;
-  opacity: 0.8;
+  color: var(--color-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.2px;
+  font-weight: 600;
 }
 
 .form-input {
   padding: 12px 16px;
-  font-size: 14px;
-  border: 1px solid var(--color-border-light);
-  background: var(--color-card-bg);
+  border: 1px solid var(--color-border);
+  background-color: var(--color-bg-primary);
   color: var(--color-text-primary);
-  border-radius: 12px;
-  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-  font-family: inherit;
-  letter-spacing: 0px;
-  line-height: 1.5;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+  font-family: 'Montserrat', sans-serif;
+  font-size: 13px;
+  border-radius: 0;
+  transition: all 0.3s ease;
 }
 
 .form-input:focus {
   outline: none;
-  border-color: var(--color-accent-warm);
-  background: var(--color-card-bg);
-  box-shadow: 0 4px 12px rgba(216, 168, 143, 0.15);
+  border-color: var(--color-accent);
+  background-color: var(--color-bg-white);
+  box-shadow: 0 0 0 3px rgba(58, 58, 58, 0.05);
 }
 
 .form-input::placeholder {
-  color: var(--color-text-tertiary);
+  color: var(--color-text-secondary);
+  opacity: 0.7;
 }
 
-/* =============== 按钮 =============== */
+/* =============== 按钮样式 =============== */
 .form-button {
-  padding: 12px 24px;
-  font-size: 14px;
-  font-weight: 500;
-  letter-spacing: 0.3px;
-  color: #ffffff;
-  background: var(--color-accent-warm);
-  border: none;
-  border-radius: 12px;
+  padding: 12px 32px;
+  border: 1px solid var(--color-accent);
+  background-color: var(--color-text-primary);
+  color: var(--color-bg-white);
+  font-family: 'Montserrat', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
   cursor: pointer;
-  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-  margin-top: 8px;
-  box-shadow: 0 2px 8px rgba(216, 168, 143, 0.2);
+  transition: all 0.3s ease;
+  border-radius: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 44px;
 }
 
 .form-button:hover:not(:disabled) {
-  background: #d09680;
-  box-shadow: 0 8px 20px rgba(216, 168, 143, 0.25);
-  transform: translateY(-2px);
+  background-color: #2a2a2a;
+  border-color: #2a2a2a;
+  box-shadow: 0 4px 12px rgba(58, 58, 58, 0.15);
 }
 
 .form-button:active:not(:disabled) {
-  transform: translateY(0);
-  box-shadow: 0 4px 12px rgba(216, 168, 143, 0.15);
+  transform: translateY(1px);
+  box-shadow: 0 2px 6px rgba(58, 58, 58, 0.1);
 }
 
 .form-button:disabled {
@@ -328,59 +323,48 @@
   cursor: not-allowed;
 }
 
-.form-toggle-btn {
-  padding: 11px 20px;
-  font-size: 13px;
-  font-weight: 400;
-  color: var(--color-text-secondary);
-  background: transparent;
-  border: 1px solid var(--color-border-light);
-  border-radius: 12px;
-  cursor: pointer;
-  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-  letter-spacing: 0px;
-  margin-top: 8px;
+/* =============== 错误/成功提示 =============== */
+.form-error {
+  margin: 0;
+  padding: 12px 16px;
+  background-color: #fef5f5;
+  border-left: 3px solid var(--color-error);
+  color: var(--color-error);
+  font-size: 12px;
+  border-radius: 0;
+  animation: slideIn 0.3s ease;
 }
 
-.form-toggle-btn:hover {
-  border-color: var(--color-accent-warm);
-  background: rgba(216, 168, 143, 0.06);
-  color: var(--color-text-primary);
-}
-
-/* =============== 提示信息 =============== */
-.form-error,
 .form-success {
   margin: 0;
   padding: 12px 16px;
-  font-size: 13px;
-  border-radius: 12px;
-  text-align: center;
-  letter-spacing: 0.3px;
-  line-height: 1.6;
+  background-color: #f5faf9;
+  border-left: 3px solid var(--color-success);
+  color: var(--color-success);
+  font-size: 12px;
+  border-radius: 0;
+  animation: slideIn 0.3s ease;
 }
 
-.form-error {
-  color: #8b6565;
-  background: #faf5f5;
-  border: 1px solid #f0dfdf;
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-.form-success {
-  color: #6a8a80;
-  background: #f5faf7;
-  border: 1px solid #e0efe8;
-}
-
-/* =============== 分割线 =============== */
+/* =============== 分隔线 =============== */
 .form-divider {
   display: flex;
   align-items: center;
   gap: 12px;
-  margin: 24px 0 16px;
+  margin: 8px 0;
   font-size: 12px;
-  color: var(--color-text-tertiary);
-  letter-spacing: 0px;
+  color: var(--color-text-secondary);
 }
 
 .form-divider::before,
@@ -388,84 +372,37 @@
   content: '';
   flex: 1;
   height: 1px;
-  background: var(--color-border-light);
+  background-color: var(--color-border);
 }
 
-/* =============== 动画定义 =============== */
-@keyframes fadeInLeft {
-  from {
-    opacity: 0;
-    transform: translateX(-30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
+/* =============== 切换按钮 =============== */
+.form-toggle-btn {
+  padding: 12px 32px;
+  border: 1px solid var(--color-border);
+  background-color: var(--color-bg-primary);
+  color: var(--color-text-primary);
+  font-family: 'Montserrat', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border-radius: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 44px;
 }
 
-@keyframes fadeInRight {
-  from {
-    opacity: 0;
-    transform: translateX(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
+.form-toggle-btn:hover {
+  border-color: var(--color-accent);
+  background-color: var(--color-bg-white);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
 }
 
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-.auth-brand {
-  animation: fadeInLeft 0.7s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.auth-form-container {
-  animation: fadeInRight 0.7s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.brand-content {
-  animation: fadeIn 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0.2s both;
-}
-
-.form-header {
-  animation: fadeIn 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0.1s both;
-}
-
-.form-group {
-  animation: fadeIn 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.form-group:nth-child(1) {
-  animation-delay: 0.15s;
-}
-
-.form-group:nth-child(2) {
-  animation-delay: 0.2s;
-}
-
-.form-group:nth-child(3) {
-  animation-delay: 0.25s;
-}
-
-.form-button {
-  animation: fadeIn 0.6s cubic-bezier(0.4, 0, 0.2, 1) 0.35s both;
-}
-
-/* =============== 输入框焦点标签效果 =============== */
-.form-label {
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.form-group:has(.form-input:focus) .form-label {
-  color: var(--color-accent-warm);
+.form-toggle-btn:active {
+  transform: translateY(1px);
 }
 
 /* =============== 响应式设计 =============== */
@@ -475,46 +412,97 @@
   }
 
   .auth-brand {
-    min-height: 280px;
     padding: 40px 20px;
-  }
-
-  .brand-title {
-    font-size: 36px;
-  }
-
-  .brand-subtitle {
-    font-size: 16px;
+    min-height: 280px;
   }
 
   .auth-form-container {
-    padding: 40px 20px;
+    min-height: auto;
   }
 }
 
-@media (max-width: 640px) {
-  .auth-brand {
-    min-height: 240px;
-  }
-
-  .brand-title {
-    font-size: 28px;
-  }
-
-  .brand-subtitle {
-    font-size: 14px;
-    margin-bottom: 20px;
-  }
-
-  .brand-description {
-    font-size: 12px;
+@media (max-width: 768px) {
+  .auth-form-container {
+    padding: 30px 16px;
   }
 
   .auth-form-wrapper {
     max-width: 100%;
   }
 
+  .form-header {
+    margin-bottom: 24px;
+  }
+
   .form-title {
-    font-size: 22px;
+    font-size: 24px;
+  }
+
+  .form-subtitle {
+    font-size: 12px;
+  }
+
+  .auth-form {
+    gap: 16px;
+  }
+
+  .form-input {
+    padding: 10px 12px;
+    font-size: 12px;
+  }
+
+  .form-button,
+  .form-toggle-btn {
+    height: 40px;
+    padding: 10px 24px;
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .auth-form-container {
+    padding: 20px 12px;
+  }
+
+  .form-header {
+    margin-bottom: 20px;
+  }
+
+  .form-title {
+    font-size: 20px;
+  }
+
+  .form-subtitle {
+    font-size: 11px;
+  }
+
+  .auth-form {
+    gap: 12px;
+  }
+
+  .form-group {
+    gap: 6px;
+  }
+
+  .form-label {
+    font-size: 11px;
+  }
+
+  .form-input {
+    padding: 10px;
+    font-size: 12px;
+  }
+
+  .form-button,
+  .form-toggle-btn {
+    height: 40px;
+    padding: 10px 16px;
+    font-size: 11px;
+  }
+
+  .form-error,
+  .form-success {
+    font-size: 11px;
+    padding: 10px 12px;
   }
 }
