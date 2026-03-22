@@ -231,6 +231,4 @@ onMounted(async () => {
 })
 </script>
 
-<style scoped>
-@import '../css/SleepCheckinDisplay.css';
-</style>
+<style src="@/css/SleepCheckinDisplay.css"></style>

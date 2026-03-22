@@ -1,241 +1,238 @@
 <template>
-  <div class="profile-edit">
-    <!-- 头部 -->
-    <div class="pe-header">
-      <button @click="goBack" class="back-btn">← 返回</button>
-      <h1>编辑用户信息</h1>
-      <div style="width: 44px"></div>
-    </div>
+  <div class="page">
+    <AppHeader />
 
-    <!-- 加载状态 -->
-    <div v-if="loading" class="loading">加载中...</div>
-
-    <!-- 编辑表单 -->
-    <form v-else @submit.prevent="handleSubmit" class="pe-content">
-      <!-- 错误提示 -->
-      <div v-if="errorMsg" class="error-message">{{ errorMsg }}</div>
-
-      <!-- 成功提示 -->
-      <div v-if="successMsg" class="success-message">{{ successMsg }}</div>
-
-      <!-- 账户信息部分 -->
-      <section class="form-section">
-        <h3>账户信息</h3>
-
-        <!-- 邮箱 -->
-        <div class="form-group">
-          <label>邮箱</label>
-          <input
-            v-model="editInfo.email"
-            type="email"
-            class="form-input"
-          />
-        </div>
-
-        <!-- 昵称 -->
-        <div class="form-group">
-          <label for="nickname">昵称</label>
-          <input
-            id="nickname"
-            v-model="editInfo.nickname"
-            type="text"
-            placeholder="请输入昵称"
-            class="form-input"
-            maxlength="64"
-          />
-          <div class="input-hint">最多 64 个字符</div>
-        </div>
-
-        <!-- 电话 -->
-        <div class="form-group">
-          <label for="phone">电话</label>
-          <input
-            id="phone"
-            v-model="editInfo.phone"
-            type="tel"
-            placeholder="请输入电话号码"
-            class="form-input"
-            maxlength="32"
-          />
-          <div class="input-hint">最多 32 个字符</div>
-        </div>
-
-        <!-- 头像 URL -->
-        <div class="form-group">
-          <label for="avatar">头像 URL</label>
-          <input
-            id="avatar"
-            v-model="editInfo.avatar_url"
-            type="url"
-            placeholder="请输入头像链接"
-            class="form-input"
-            maxlength="255"
-          />
-          <div class="input-hint">请输入有效的图片 URL</div>
-          <div v-if="editInfo.avatar_url" class="avatar-preview">
-            <img :src="editInfo.avatar_url" :alt="editInfo.nickname || '头像预览'" />
-          </div>
-        </div>
-      </section>
-
-      <!-- 账户状态部分（部分只读） -->
-      <section class="form-section">
-        <h3>账户状态（信息只读）</h3>
-
-        <!-- 账户角色 -->
-        <div class="form-group">
-          <label>角色</label>
-          <input
-            :value="editInfo.role"
-            type="text"
-            class="form-input"
-          />
-        </div>
-
-        <!-- 账户状态 -->
-        <div class="form-group">
-          <label>账户状态</label>
-          <input
-            :value="editInfo.status === 1 ? '活跃' : '已禁用'"
-            type="text"
-            disabled
-            class="form-input disabled"
-          />
-        </div>
-
-        <!-- 管理员标记 -->
-        <div class="form-group">
-          <label>账户类型</label>
-          <input
-            :value="editInfo.admin === 1 ? '管理员' : '普通用户'"
-            type="text"
-            disabled
-            class="form-input disabled"
-          />
-        </div>
-
-        <!-- 模型点数 -->
-        <div class="form-group">
-          <label>模型点数</label>
-          <input
-            :value="editInfo.credits"
-            type="number"
-            disabled
-            class="form-input disabled"
-          />
-        </div>
-      </section>
-
-      <!-- 时间信息部分（只读） -->
-      <section class="form-section">
-        <h3>时间信息（只读）</h3>
-
-        <!-- 创建时间 -->
-        <div class="form-group">
-          <label>创建时间</label>
-          <input
-            :value="formatDateTime(editInfo.created_at)"
-            type="text"
-            disabled
-            class="form-input disabled"
-          />
-        </div>
-
-        <!-- 最后修改 -->
-        <div class="form-group">
-          <label>最后修改</label>
-          <input
-            :value="formatDateTime(editInfo.updated_at)"
-            type="text"
-            disabled
-            class="form-input disabled"
-          />
-        </div>
-
-        <!-- 最后登录 -->
-        <div class="form-group">
-          <label>最后登录</label>
-          <input
-            :value="editInfo.last_login_time ? formatDateTime(editInfo.last_login_time) : '未登录'"
-            type="text"
-            disabled
-            class="form-input disabled"
-          />
-        </div>
-      </section>
-
-      <!-- 表单按钮 -->
-      <div class="form-actions">
-        <button type="button" @click="goBack" class="btn-cancel">取消</button>
-        <button
-          type="submit"
-          :disabled="!hasChanges || loading"
-          class="btn-submit"
-        >
-          {{ loading ? '保存中...' : '保存修改' }}
-        </button>
+    <main class="profile-content">
+      <!-- 加载状态 -->
+      <div v-if="loading" class="loading-state">
+        <div class="loading-spinner"></div>
+        <p>加载中...</p>
       </div>
-    </form>
+
+      <!-- 编辑表单 -->
+      <form v-else @submit.prevent="handleSubmit" class="profile-form">
+        <!-- 页面标题 -->
+        <h1 class="form-title">编辑资料</h1>
+
+        <!-- 错误/成功提示 -->
+        <div v-if="errorMsg" class="alert alert-error">
+          <span>{{ errorMsg }}</span>
+          <button type="button" @click="errorMsg = ''" class="alert-close">×</button>
+        </div>
+        <div v-if="successMsg" class="alert alert-success">
+          <span>{{ successMsg }}</span>
+          <button type="button" @click="successMsg = ''" class="alert-close">×</button>
+        </div>
+
+        <!-- 头像编辑区 -->
+        <section class="form-section">
+          <h2 class="section-title">头像</h2>
+          <div class="avatar-edit-group">
+            <div class="avatar-preview-wrapper">
+              <img
+                v-if="editInfo.avatar_url"
+                :src="editInfo.avatar_url"
+                :alt="editInfo.nickname || '用户头像'"
+                class="avatar-preview-image"
+              />
+              <div v-else class="avatar-preview-empty">
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                  <path
+                    d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"
+                  />
+                </svg>
+              </div>
+            </div>
+            <div class="avatar-input-group">
+              <label for="avatar">头像链接</label>
+              <input
+                id="avatar"
+                v-model="editInfo.avatar_url"
+                type="url"
+                placeholder="请输入头像图片的完整链接"
+                class="form-input"
+              />
+              <span class="form-hint">输入 http:// 或 https:// 开头的图片链接</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- 账户信息编辑区 -->
+        <section class="form-section">
+          <h2 class="section-title">账户信息</h2>
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="email">邮箱</label>
+              <input
+                id="email"
+                v-model="editInfo.email"
+                type="email"
+                class="form-input"
+                disabled
+              />
+              <span class="form-hint">邮箱无法修改</span>
+            </div>
+
+            <div class="form-group">
+              <label for="nickname">昵称</label>
+              <input
+                id="nickname"
+                v-model="editInfo.nickname"
+                type="text"
+                placeholder="请输入昵称"
+                class="form-input"
+                maxlength="64"
+              />
+              <span class="form-hint">最多 64 个字符</span>
+            </div>
+
+            <div class="form-group">
+              <label for="phone">电话</label>
+              <input
+                id="phone"
+                v-model="editInfo.phone"
+                type="tel"
+                placeholder="请输入电话号码"
+                class="form-input"
+                maxlength="32"
+              />
+              <span class="form-hint">最多 32 个字符</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- 账户状态信息（只读） -->
+        <section class="form-section">
+          <h2 class="section-title">账户状态</h2>
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="role">角色</label>
+              <input
+                id="role"
+                :value="editInfo.role"
+                type="text"
+                class="form-input"
+                disabled
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="status">账户状态</label>
+              <input
+                id="status"
+                :value="editInfo.status === 1 ? '活跃' : '已禁用'"
+                type="text"
+                class="form-input"
+                disabled
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="admin">账户类型</label>
+              <input
+                id="admin"
+                :value="editInfo.admin === 1 ? '管理员' : '普通用户'"
+                type="text"
+                class="form-input"
+                disabled
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="credits">模型点数</label>
+              <input
+                id="credits"
+                :value="editInfo.credits"
+                type="text"
+                class="form-input"
+                disabled
+              />
+            </div>
+          </div>
+        </section>
+
+        <!-- 操作按钮 -->
+        <div class="form-actions">
+          <button type="button" @click="goBack" class="btn btn-cancel">返回</button>
+          <button type="submit" class="btn btn-submit">保存修改</button>
+        </div>
+      </form>
+    </main>
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
+import AppHeader from '../components/AppHeader.vue'
 import { useUserProfile } from '../composables/useUserProfile'
 
 const router = useRouter()
-const {
-  userInfo,
-  editInfo,
-  loading,
-  errorMsg,
-  successMsg,
-  loadUserInfo,
-  enterEditMode,
-  saveUserInfo
-} = useUserProfile()
+const { userInfo, loading, loadUserInfo, saveUserInfo } = useUserProfile()
 
-const hasChanges = computed(() => {
-  if (!userInfo.value) return false
-  return (
-    editInfo.value.nickname !== userInfo.value.nickname ||
-    editInfo.value.phone !== userInfo.value.phone ||
-    editInfo.value.avatar_url !== userInfo.value.avatar_url
-  )
+const editInfo = ref({
+  email: '',
+  nickname: '',
+  phone: '',
+  avatar_url: '',
+  role: '',
+  status: 0,
+  admin: 0,
+  credits: 0
 })
 
-const formatDateTime = (dateStr: string | undefined) => {
-  if (!dateStr) return '-'
-  const date = new Date(dateStr)
-  return date.toLocaleString('zh-CN', {
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit',
-    hour: '2-digit',
-    minute: '2-digit',
-    second: '2-digit'
-  })
+const errorMsg = ref('')
+const successMsg = ref('')
+
+onMounted(async () => {
+  await loadUserInfo()
+  updateEditInfo()
+})
+
+const updateEditInfo = () => {
+  if (userInfo.value) {
+    editInfo.value = {
+      email: userInfo.value.email || '',
+      nickname: userInfo.value.nickname || '',
+      phone: userInfo.value.phone || '',
+      avatar_url: userInfo.value.avatar_url || '',
+      role: userInfo.value.role || '',
+      status: userInfo.value.status || 0,
+      admin: userInfo.value.admin || 0,
+      credits: userInfo.value.credits || 0
+    }
+  }
+}
+
+const handleSubmit = async () => {
+  errorMsg.value = ''
+  successMsg.value = ''
+
+  if (!editInfo.value.email) {
+    errorMsg.value = '邮箱不能为空'
+    return
+  }
+
+  if (!editInfo.value.nickname) {
+    errorMsg.value = '昵称不能为空'
+    return
+  }
+
+  // 更新 editInfo 然后保存
+  try {
+    await saveUserInfo()
+    successMsg.value = '资料更新成功！'
+    setTimeout(() => {
+      router.push('/profile')
+    }, 1500)
+  } catch (error: any) {
+    errorMsg.value = error.message || '更新失败，请重试'
+  }
 }
 
 const goBack = () => {
   router.push('/profile')
 }
-
-const handleSubmit = async () => {
-  await saveUserInfo()
-  if (!errorMsg.value) {
-    setTimeout(() => {
-      goBack()
-    }, 1500)
-  }
-}
-
-// 初始化
-loadUserInfo().then(() => {
-  enterEditMode()
-})
 </script>
 
-<style src="../css/ProfileEditView.css">
-</style>
+<style src="../css/ProfileEditView.css"></style>

@@ -1,72 +1,144 @@
 <template>
   <header class="app-header">
     <div class="header-container">
-      <!-- 移动端返回按钮 -->
-      <button
-        v-if="showBackButton"
-        @click="goBack"
-        class="back-button"
-        title="返回上一步"
-        aria-label="返回"
-      >
-        ◀
-      </button>
-
+      <!-- 左侧：Logo + 菜单按钮 -->
       <div class="header-left">
-        <router-link to="/" class="logo">
+        <button class="logo" @click="toggleSidebar" title="打开侧栏导航">
           <span class="logo-text">StuHeal</span>
-        </router-link>
-      </div>
-
-      <nav class="header-nav">
-        <router-link to="/home" class="nav-link">导航</router-link>
-        <router-link to="/ai-chat" class="nav-link">AI助手</router-link>
-        <router-link to="/profile" class="nav-link">个人资料</router-link>
-      </nav>
-
-      <div class="header-right">
-        <div class="user-section" v-if="authStore.isLoggedIn && authStore.userInfo">
-          <span class="user-email">{{ authStore.userInfo.email }}</span>
-          <span class="user-credits" title="剩余额度">
-            {{ authStore.userInfo.credits || 0 }}
-          </span>
-        </div>
-
-        <button @click="handleLogout" :disabled="loading" class="logout-btn">
-          {{ loading ? '...' : '登出' }}
         </button>
       </div>
+
+      <!-- 中间：搜索栏 -->
+      <div class="header-center">
+        <div class="search-wrapper">
+          <svg
+            class="search-icon"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <circle cx="11" cy="11" r="8"></circle>
+            <path d="m21 21-4.35-4.35"></path>
+          </svg>
+          <input
+            type="text"
+            class="search-input"
+            placeholder="搜索或与 AI 聊天..."
+            @focus="goToAIChat"
+            @keydown.enter="goToAIChat"
+            readonly
+          />
+        </div>
+      </div>
+
+      <!-- 右侧：用户头像 + 菜单 -->
+      <div class="header-right">
+        <button
+          class="user-avatar-btn"
+          @click="goToProfile"
+          :title="`前往个人信息 (${authStore.userInfo?.email || '用户'})`"
+          aria-label="用户头像"
+        >
+          <img
+            v-if="authStore.userInfo?.avatar"
+            :src="authStore.userInfo.avatar"
+            :alt="authStore.userInfo.email"
+            class="user-avatar-img"
+          />
+          <svg
+            v-else
+            class="user-avatar-default"
+            viewBox="0 0 24 24"
+            fill="currentColor"
+          >
+            <path
+              d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"
+            />
+          </svg>
+        </button>
+
+        <button
+          class="more-menu-btn"
+          @click="toggleMoreMenu"
+          title="更多选项"
+          aria-label="更多选项"
+        >
+          <svg viewBox="0 0 24 24" fill="currentColor">
+            <circle cx="12" cy="5" r="2" />
+            <circle cx="12" cy="12" r="2" />
+            <circle cx="12" cy="19" r="2" />
+          </svg>
+        </button>
+
+        <!-- 下拉菜单 -->
+        <div v-if="moreMenuOpen" class="more-menu">
+          <button @click="handleLogout" :disabled="loading" class="menu-item logout-item">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+              <path
+                d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"
+              />
+            </svg>
+            {{ loading ? '登出中...' : '登出' }}
+          </button>
+        </div>
+      </div>
     </div>
+
+    <!-- 侧栏组件 -->
+    <AppSidebar :isOpen="sidebarOpen" @close="closeSidebar" />
   </header>
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
-import { useRouter, useRoute } from 'vue-router'
+import { ref, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
 import { useAuthStore } from '../stores/auth'
+import AppSidebar from './AppSidebar.vue'
 
 const router = useRouter()
-const route = useRoute()
 const authStore = useAuthStore()
+
+const sidebarOpen = ref(false)
+const moreMenuOpen = ref(false)
 const loading = ref(false)
 
-// 判断是否显示返回按钮（移动端）
-const showBackButton = computed(() => {
-  // 在特定页面显示返回按钮
-  const showBackPages = [
-    '/meal/checkin',
-    '/sleep/checkin',
-    '/sleep/checkin-edit',
-    '/exercise/checkin',
-    '/exercise/checkin-edit'
-  ]
-  return showBackPages.some(page => route.path.includes(page))
-})
-
-function goBack() {
-  router.back()
+// 切换侧栏
+function toggleSidebar() {
+  sidebarOpen.value = !sidebarOpen.value
+  moreMenuOpen.value = false
 }
 
+// 关闭侧栏
+function closeSidebar() {
+  sidebarOpen.value = false
+}
+
+// 切换更多菜单
+function toggleMoreMenu() {
+  moreMenuOpen.value = !moreMenuOpen.value
+}
+
+// 关闭菜单
+function closeMenus() {
+  moreMenuOpen.value = false
+}
+
+// 跳转到 AI 聊天
+function goToAIChat() {
+  closeSidebar()
+  closeMenus()
+  router.push('/ai-chat')
+}
+
+// 跳转到个人资料
+function goToProfile() {
+  closeSidebar()
+  closeMenus()
+  router.push('/profile')
+}
+
+// 登出
 async function handleLogout() {
   if (!confirm('确定要登出吗？')) {
     return
@@ -82,248 +154,20 @@ async function handleLogout() {
     loading.value = false
   }
 }
+
+// 点击页面其他地方关闭菜单
+function handleClickOutside(e) {
+  const header = document.querySelector('.app-header')
+  if (header && !header.contains(e.target)) {
+    closeMenus()
+  }
+}
+
+// 初始化
+onMounted(() => {
+  document.addEventListener('click', handleClickOutside)
+})
 </script>
 
-<style scoped>
-/* =============== 颜色系统 =============== */
-:root {
-  --color-bg-primary: #fafaf9;
-  --color-card-bg: #ffffff;
-  --color-text-primary: #2d2d2a;
-  --color-text-secondary: #6f6f6a;
-  --color-text-tertiary: #999993;
-  --color-border-light: #f0ebe5;
-  --color-accent-warm: #d8a88f;
-  --color-accent-cool: #8fb3d4;
-}
-
-/* =============== 头部布局 =============== */
-.app-header {
-  background: var(--color-card-bg);
-  border-bottom: 1px solid var(--color-border-light);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
-  position: sticky;
-  top: 0;
-  z-index: 100;
-}
-
-.header-container {
-  max-width: 1400px;
-  margin: 0 auto;
-  padding: 0 24px;
-  height: 64px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 32px;
-}
-
-/* =============== 左侧 - Logo =============== */
-.header-left {
-  flex-shrink: 0;
-}
-
-.logo {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  text-decoration: none;
-  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.logo:hover {
-  opacity: 0.8;
-  transform: translateY(-1px);
-}
-
-.logo-icon {
-  font-size: 24px;
-}
-
-.logo-text {
-  font-size: 18px;
-  font-weight: 600;
-  color: var(--color-text-primary);
-  letter-spacing: -0.3px;
-}
-
-/* =============== 中间 - 导航 =============== */
-.header-nav {
-  display: flex;
-  gap: 4px;
-  flex: 1;
-  justify-content: center;
-}
-
-.nav-link {
-  padding: 8px 16px;
-  text-decoration: none;
-  color: var(--color-text-secondary);
-  font-size: 13px;
-  font-weight: 500;
-  border-radius: 8px;
-  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-  position: relative;
-}
-
-.nav-link:hover {
-  color: var(--color-accent-warm);
-  background: rgba(216, 168, 143, 0.05);
-}
-
-.nav-link.router-link-active {
-  color: var(--color-accent-warm);
-  background: rgba(216, 168, 143, 0.1);
-}
-
-/* =============== 右侧 - 用户信息和操作 =============== */
-.header-right {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  flex-shrink: 0;
-}
-
-.user-section {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 0 12px;
-  border-left: 1px solid var(--color-border-light);
-  border-right: 1px solid var(--color-border-light);
-}
-
-.user-email {
-  font-size: 12px;
-  color: var(--color-text-secondary);
-  max-width: 120px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.user-credits {
-  font-size: 12px;
-  font-weight: 600;
-  color: var(--color-accent-warm);
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  white-space: nowrap;
-}
-
-.logout-btn {
-  padding: 8px 16px;
-  background: var(--color-accent-warm);
-  color: white;
-  border: none;
-  border-radius: 8px;
-  font-size: 12px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 2px 8px rgba(216, 168, 143, 0.15);
-}
-
-.logout-btn:hover:not(:disabled) {
-  background: #d09680;
-  box-shadow: 0 4px 12px rgba(216, 168, 143, 0.25);
-  transform: translateY(-1px);
-}
-
-.logout-btn:active:not(:disabled) {
-  transform: translateY(0);
-}
-
-.logout-btn:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-
-/* =============== 返回按钮 =============== */
-.back-button {
-  display: none;
-  align-items: center;
-  justify-content: center;
-  width: 40px;
-  height: 40px;
-  padding: 0;
-  border: none;
-  background: transparent;
-  color: var(--color-text-secondary);
-  font-size: 18px;
-  cursor: pointer;
-  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-  border-radius: 8px;
-}
-
-.back-button:hover {
-  background: rgba(216, 168, 143, 0.1);
-  color: var(--color-accent-warm);
-}
-
-.back-button:active {
-  transform: scale(0.95);
-}
-
-/* =============== 响应式 =============== */
-@media (max-width: 1024px) {
-  .header-container {
-    gap: 16px;
-    padding: 0 16px;
-  }
-
-  .header-nav {
-    gap: 0;
-  }
-
-  .nav-link {
-    padding: 6px 12px;
-    font-size: 12px;
-  }
-}
-
-@media (max-width: 768px) {
-  .header-container {
-    padding: 0 12px;
-    height: 56px;
-    gap: 8px;
-  }
-
-  .back-button {
-    display: flex;
-  }
-
-  .logo-text {
-    display: none;
-  }
-
-  .logo-icon {
-    font-size: 20px;
-  }
-
-  .header-nav {
-    display: none;
-  }
-
-  .user-section {
-    display: none;
-  }
-
-  .logout-btn {
-    padding: 6px 12px;
-    font-size: 11px;
-  }
-}
-
-@media (max-width: 480px) {
-  .header-container {
-    padding: 0 8px;
-  }
-
-  .logout-btn {
-    padding: 6px 10px;
-  }
-}
-</style>
+<style src="@/css/components/AppHeader.css"></style>
 
