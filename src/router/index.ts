@@ -6,14 +6,11 @@ import ProfileDisplayView from '../views/ProfileDisplayView.vue'
 import ProfileEditView from '../views/ProfileEditView.vue'
 import AIChatView from '../views/AIChatView.vue'
 import DailyCheckinDisplayView from '../views/DailyCheckinDisplayView.vue'
-import DailyCheckinEditView from '../views/DailyCheckinEditView.vue'
 import HistoryView from '../views/HistoryView.vue'
 import MealCheckinDisplayView from '../views/MealCheckinDisplayView.vue'
-import MealCheckinEditView from '../views/MealCheckinEditView.vue'
 import SleepCheckinDisplayView from '../views/SleepCheckinDisplayView.vue'
-import SleepCheckinEditView from '../views/SleepCheckinEditView.vue'
 import ExerciseCheckinDisplayView from '../views/ExerciseCheckinDisplayView.vue'
-import ExerciseCheckinEditView from '../views/ExerciseCheckinEditView.vue'
+import PortraitView from '../views/PortraitView.vue'
 import { useAuthStore } from '../stores/auth'
 
 const routes = [
@@ -87,15 +84,6 @@ const routes = [
     }
   },
   {
-    path: '/health/daily-checkin-edit',
-    name: 'daily-checkin-edit',
-    component: DailyCheckinEditView,
-    meta: {
-      requiresAuth: true,
-      title: 'StuHeal - 编辑打卡'
-    }
-  },
-  {
     path: '/health/history',
     name: 'history',
     component: HistoryView,
@@ -114,30 +102,12 @@ const routes = [
     }
   },
   {
-    path: '/meal/checkin-edit',
-    name: 'meal-checkin-edit',
-    component: MealCheckinEditView,
-    meta: {
-      requiresAuth: true,
-      title: 'StuHeal - 编辑饮食打卡'
-    }
-  },
-  {
     path: '/sleep/checkin',
     name: 'sleep-checkin',
     component: SleepCheckinDisplayView,
     meta: {
       requiresAuth: true,
       title: 'StuHeal - 睡眠打卡'
-    }
-  },
-  {
-    path: '/sleep/checkin-edit/:recordId',
-    name: 'SleepCheckinEdit',
-    component: SleepCheckinEditView,
-    meta: {
-      requiresAuth: true,
-      title: 'StuHeal - 编辑睡眠打卡'
     }
   },
   {
@@ -150,12 +120,12 @@ const routes = [
     }
   },
   {
-    path: '/exercise/checkin-edit',
-    name: 'exercise-checkin-edit',
-    component: ExerciseCheckinEditView,
+    path: '/analysis/portrait',
+    name: 'portrait',
+    component: PortraitView,
     meta: {
       requiresAuth: true,
-      title: 'StuHeal - 编辑运动打卡'
+      title: 'StuHeal - 健康画像'
     }
   }
 ]
