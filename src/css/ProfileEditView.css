@@ -1,24 +1,12 @@
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Montserrat:wght@400;500;600;700&display=swap');
 
-:root {
-  --profe-color-text-primary: #3a3a3a;
-  --profe-color-text-secondary: #8a8a8a;
-  --profe-color-border: #e8e8e8;
-  --profe-color-bg-primary: #fafaf9;
-  --profe-color-bg-white: #ffffff;
-  --profe-color-accent: #3a3a3a;
-  --profe-color-success: #4a7a6a;
-  --profe-color-error: #8b4545;
-  --profe-color-input-bg: #fafaf9;
-}
-
 .page {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  background-color: var(--profe-color-bg-primary);
+  background: linear-gradient(135deg, var(--color-cream) 0%, var(--color-ivory) 50%, var(--color-oatmeal) 100%);
   font-family: 'Montserrat', sans-serif;
-  color: var(--profe-color-text-primary);
+  color: var(--color-text-primary);
 }
 
 .profile-content {
@@ -43,8 +31,8 @@
 .loading-spinner {
   width: 40px;
   height: 40px;
-  border: 2px solid var(--profe-color-border);
-  border-top-color: var(--profe-color-text-primary);
+  border: 2px solid var(--color-border);
+  border-top-color: var(--color-text-primary);
   border-radius: 50%;
   animation: spin 0.8s linear infinite;
 }
@@ -56,7 +44,7 @@
 }
 
 .loading-state p {
-  color: var(--profe-color-text-secondary);
+  color: var(--color-text-secondary);
   font-size: 14px;
 }
 
@@ -70,11 +58,11 @@
 .form-title {
   font-family: 'Playfair Display', serif;
   font-size: 28px;
-  font-weight: 600;
+  font-weight: 500;
   letter-spacing: 0.6px;
   line-height: 1.2;
   margin: 0;
-  color: var(--profe-color-text-primary);
+  color: var(--color-text-primary);
 }
 
 /* 提示消息 */
@@ -86,19 +74,19 @@
   border-radius: 0;
   border-left: 3px solid;
   gap: 16px;
-  animation: slideIn 0.3s ease;
+  animation: slideDown 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .alert-error {
-  background-color: #fef5f5;
-  border-left-color: var(--profe-color-error);
-  color: var(--profe-color-error);
+  background-color: rgba(200, 90, 84, 0.08);
+  border-left-color: var(--color-error);
+  color: var(--color-error);
 }
 
 .alert-success {
-  background-color: #f5faf9;
-  border-left-color: var(--profe-color-success);
-  color: var(--profe-color-success);
+  background-color: rgba(139, 154, 127, 0.08);
+  border-left-color: var(--color-success);
+  color: var(--color-success);
 }
 
 .alert span {
@@ -133,19 +121,19 @@
   flex-direction: column;
   gap: 20px;
   padding: 24px;
-  background-color: var(--profe-color-bg-white);
-  border: 1px solid var(--profe-color-border);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  background-color: var(--color-cream);
+  border: 1px solid var(--color-border);
+  box-shadow: var(--shadow-md);
   animation: slideIn 0.4s ease;
 }
 
 .section-title {
   font-family: 'Playfair Display', serif;
   font-size: 18px;
-  font-weight: 600;
+  font-weight: 500;
   letter-spacing: 0.6px;
   margin: 0 0 8px 0;
-  color: var(--profe-color-text-primary);
+  color: var(--color-text-primary);
 }
 
 /* 表单网格 */
@@ -163,40 +151,45 @@
 }
 
 .form-group label {
-  font-size: 12px;
-  color: var(--profe-color-text-secondary);
+  font-size: 11px;
+  color: var(--color-text-secondary);
   text-transform: uppercase;
-  letter-spacing: 0.2px;
+  letter-spacing: 0.3px;
   font-weight: 600;
 }
 
 .form-input {
   padding: 12px 16px;
-  border: 1px solid var(--profe-color-border);
-  background-color: var(--profe-color-input-bg);
-  color: var(--profe-color-text-primary);
+  border: 1px solid var(--color-border);
+  background-color: var(--color-ivory);
+  color: var(--color-text-primary);
   font-family: 'Montserrat', sans-serif;
   font-size: 13px;
   border-radius: 0;
-  transition: all 0.3s ease;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.form-input:hover {
+  border-color: var(--color-warm-gray);
 }
 
 .form-input:focus {
   outline: none;
-  border-color: var(--profe-color-accent);
-  background-color: var(--profe-color-bg-white);
-  box-shadow: 0 0 0 3px rgba(58, 58, 58, 0.05);
+  border-color: var(--color-prussian-blue);
+  background-color: var(--color-cream);
+  box-shadow: 0 0 0 3px rgba(56, 71, 89, 0.08);
 }
 
 .form-input:disabled {
-  background-color: #f5f5f5;
-  color: var(--profe-color-text-secondary);
+  background-color: var(--color-oatmeal);
+  color: var(--color-text-secondary);
   cursor: not-allowed;
+  opacity: 0.6;
 }
 
 .form-hint {
   font-size: 11px;
-  color: var(--profe-color-text-secondary);
+  color: var(--color-text-secondary);
   font-weight: 400;
   margin-top: -4px;
 }
@@ -215,8 +208,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: var(--profe-color-bg-primary);
-  border: 1px solid var(--profe-color-border);
+  background-color: var(--color-ivory);
+  border: 1px solid var(--color-border);
   overflow: hidden;
 }
 
@@ -232,7 +225,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--profe-color-text-secondary);
+  color: var(--color-text-secondary);
 }
 
 .avatar-preview-empty svg {
@@ -249,22 +242,22 @@
 }
 
 .avatar-input-group label {
-  font-size: 12px;
-  color: var(--profe-color-text-secondary);
+  font-size: 11px;
+  color: var(--color-text-secondary);
   text-transform: uppercase;
-  letter-spacing: 0.2px;
+  letter-spacing: 0.3px;
   font-weight: 600;
 }
 
 .avatar-input-group .form-input {
   padding: 12px 16px;
-  border: 1px solid var(--profe-color-border);
-  background-color: var(--profe-color-input-bg);
+  border: 1px solid var(--color-border);
+  background-color: var(--color-ivory);
 }
 
 .avatar-input-group .form-hint {
   font-size: 11px;
-  color: var(--profe-color-text-secondary);
+  color: var(--color-text-secondary);
 }
 
 /* 操作按钮 */
@@ -273,24 +266,24 @@
   gap: 16px;
   justify-content: flex-end;
   padding: 24px;
-  background-color: var(--profe-color-bg-white);
-  border: 1px solid var(--profe-color-border);
-  border-top: none;
-  box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.04);
+  background: linear-gradient(135deg, var(--color-cream) 0%, var(--color-ivory) 100%);
+  border: 1px solid var(--color-border);
+  border-top: 1px solid var(--color-border);
+  box-shadow: var(--shadow-sm);
 }
 
 .btn {
-  padding: 12px 32px;
-  border: 1px solid var(--profe-color-border);
-  background-color: var(--profe-color-bg-white);
-  color: var(--profe-color-text-primary);
+  padding: 12px 40px;
+  border: 1px solid var(--color-border);
+  background-color: transparent;
+  color: var(--color-text-primary);
   font-family: 'Montserrat', sans-serif;
-  font-size: 13px;
+  font-size: 11px;
   font-weight: 600;
   letter-spacing: 0.5px;
   text-transform: uppercase;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   border-radius: 0;
   display: flex;
   align-items: center;
@@ -298,29 +291,32 @@
 }
 
 .btn:hover {
-  border-color: var(--profe-color-accent);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  border-color: var(--color-warm-gray);
+  background-color: var(--color-ivory);
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
 }
 
 .btn:active {
-  transform: translateY(1px);
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+  transform: translateY(0);
+  box-shadow: var(--shadow-sm);
 }
 
 .btn-submit {
-  background-color: var(--profe-color-text-primary);
-  color: var(--profe-color-bg-white);
-  border-color: var(--profe-color-text-primary);
+  background-color: var(--color-prussian-blue);
+  color: var(--color-cream);
+  border-color: var(--color-prussian-blue);
 }
 
 .btn-submit:hover {
-  background-color: #2a2a2a;
-  border-color: #2a2a2a;
-  box-shadow: 0 4px 12px rgba(58, 58, 58, 0.15);
+  background-color: #2d3d4f;
+  border-color: #2d3d4f;
+  box-shadow: var(--shadow-lg);
 }
 
 .btn-cancel:hover {
-  background-color: var(--profe-color-bg-primary);
+  background-color: var(--color-ivory);
+  border-color: var(--color-warm-gray);
 }
 
 /* 动画 */

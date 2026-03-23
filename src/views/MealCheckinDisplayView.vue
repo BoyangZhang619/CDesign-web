@@ -26,7 +26,7 @@
       <!-- 今天的记录列表 -->
       <section v-if="records.length > 0" class="meal-records-section">
         <div class="section-title-bar">
-          <h2 class="section-title">🍽️ 今日记录</h2>
+          <h2 class="section-title">今日记录</h2>
           <span class="record-count">{{ records.length }}</span>
         </div>
 
@@ -92,7 +92,7 @@
       <!-- 日汇总统计 -->
       <section v-if="records.length > 0" class="meal-summary-section">
         <div class="section-title-bar">
-          <h2 class="section-title">📊 今日汇总</h2>
+          <h2 class="section-title">今日汇总</h2>
         </div>
 
         <div class="summary-grid">

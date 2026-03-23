@@ -1,29 +1,29 @@
 /* CSS 变量和基础样式 */
-/* :root { */
-  /* --sleep-bg-light: #fafaf9;
-  --sleep-bg-secondary: #f5f5f3;
-  --sleep-color-warm: #d8a88f;
-  --sleep-color-cool: #8fb3d4;
+:root {
+  --bg-light: #fafaf9;
+  --bg-secondary: #f5f5f3;
+  --color-warm: #d8a88f;
+  --color-cool: #8fb3d4;
   --color-soft-green: #a8c7a0;
-  --sleep-color-text: #2d2d2a;
-  --sleep-color-text-light: #7f7f7b;
-  --sleep-color-border: #e5e5e0;
-  --sleep-color-error: #e74c3c;
-  --sleep-color-success: #27ae60;
-  --sleep-color-warning: #f39c12;
+  --color-text: #2d2d2a;
+  --color-text-light: #7f7f7b;
+  --color-border: #e5e5e0;
+  --color-error: #e74c3c;
+  --color-success: #27ae60;
+  --color-warning: #f39c12;
 
-  --sleep-transition: 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-  --sleep-spacing-xs: 8px;
-  --sleep-spacing-sm: 12px;
-  --sleep-spacing-md: 16px;
-  --sleep-spacing-lg: 20px;
-  --sleep-spacing-xl: 28px; */
-/* } */
+  --transition: 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  --spacing-xs: 8px;
+  --spacing-sm: 12px;
+  --spacing-md: 16px;
+  --spacing-lg: 20px;
+  --spacing-xl: 28px;
+}
 
 /* 页面容器 */
 .page {
   width: 100%;
-  background-color: var(--sleep-bg-light);
+  background-color: var(--bg-light);
 }
 
 .content {
@@ -34,26 +34,26 @@
 }
 
 .sleep-wrapper {
-  padding: var(--sleep-spacing-xl) var(--sleep-spacing-lg);
+  padding: var(--spacing-xl) var(--spacing-lg);
 }
 
 /* 页面头部 */
 .page-header {
-  margin-bottom: var(--sleep-spacing-xl);
+  margin-bottom: var(--spacing-xl);
   text-align: center;
 }
 
 .page-title {
   font-size: 2rem;
   font-weight: 400;
-  color: var(--sleep-color-text);
-  margin: 0 0 var(--sleep-spacing-sm) 0;
+  color: var(--color-text);
+  margin: 0 0 var(--spacing-sm) 0;
   letter-spacing: -0.5px;
 }
 
 .page-subtitle {
   font-size: 0.95rem;
-  color: var(--sleep-color-text-light);
+  color: var(--color-text-light);
   margin: 0;
   font-weight: 300;
   letter-spacing: 0px;
@@ -66,17 +66,17 @@
 .empty-state {
   background-color: white;
   border-radius: 12px;
-  padding: var(--sleep-spacing-xl);
-  margin-bottom: var(--sleep-spacing-xl);
+  padding: var(--spacing-xl);
+  margin-bottom: var(--spacing-xl);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-  transition: padding var(--sleep-transition);
+  transition: padding var(--transition);
 }
 
 /* 折叠状�?*/
 .form-section.collapsed,
 .records-section.collapsed,
 .summary-section.collapsed {
-  padding: 16px var(--sleep-spacing-xl);
+  padding: 16px var(--spacing-xl);
 }
 
 .form-section.collapsed .section-header,
@@ -91,17 +91,17 @@
 .section-header {
   display: flex;
   align-items: center;
-  gap: var(--sleep-spacing-md);
-  margin-bottom: var(--sleep-spacing-lg);
-  padding-bottom: var(--sleep-spacing-lg);
-  border-bottom: 2px solid var(--sleep-color-border);
+  gap: var(--spacing-md);
+  margin-bottom: var(--spacing-lg);
+  padding-bottom: var(--spacing-lg);
+  border-bottom: 2px solid var(--color-border);
 }
 
 .expand-icon {
   margin-left: auto;
   font-size: 12px;
-  color: var(--sleep-color-text-light);
-  transition: transform var(--sleep-transition);
+  color: var(--color-text-light);
+  transition: transform var(--transition);
 }
 
 .section-number {
@@ -110,7 +110,7 @@
   justify-content: center;
   min-width: 44px;
   height: 44px;
-  /* background: linear-gradient(135deg, var(--sleep-color-warm) 0%, #c9956f 100%); */
+  /* background: linear-gradient(135deg, var(--color-warm) 0%, #c9956f 100%); */
   color: white;
   font-size: 1rem;
   font-weight: 600;
@@ -121,7 +121,7 @@
 .section-title {
   font-size: 1.2rem;
   font-weight: 400;
-  color: var(--sleep-color-text);
+  color: var(--color-text);
   margin: 0;
   letter-spacing: -0.3px;
 }
@@ -130,19 +130,19 @@
 .sleep-form {
   display: flex;
   flex-direction: column;
-  gap: var(--sleep-spacing-lg);
+  gap: var(--spacing-lg);
 }
 
 .form-row {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: var(--sleep-spacing-md);
+  gap: var(--spacing-md);
 }
 
 .form-group {
   display: flex;
   flex-direction: column;
-  gap: var(--sleep-spacing-sm);
+  gap: var(--spacing-sm);
 }
 
 .form-group.full-width {
@@ -152,32 +152,32 @@
 .form-label {
   font-size: 0.9rem;
   font-weight: 400;
-  color: var(--sleep-color-text);
+  color: var(--color-text);
   letter-spacing: -0.2px;
 }
 
 .form-input,
 .form-textarea {
-  padding: var(--sleep-spacing-sm) var(--sleep-spacing-md);
-  border: 1px solid var(--sleep-color-border);
+  padding: var(--spacing-sm) var(--spacing-md);
+  border: 1px solid var(--color-border);
   border-radius: 8px;
   font-size: 0.95rem;
   font-family: inherit;
-  color: var(--sleep-color-text);
-  background-color: var(--sleep-bg-light);
-  transition: border-color var(--sleep-transition), box-shadow var(--sleep-transition);
+  color: var(--color-text);
+  background-color: var(--bg-light);
+  transition: border-color var(--transition), box-shadow var(--transition);
 }
 
 .form-input:focus,
 .form-textarea:focus {
   outline: none;
-  border-color: var(--sleep-color-cool);
+  border-color: var(--color-cool);
   box-shadow: 0 0 0 2px rgba(143, 179, 212, 0.1);
 }
 
 .form-input::placeholder,
 .form-textarea::placeholder {
-  color: var(--sleep-color-text-light);
+  color: var(--color-text-light);
 }
 
 .form-textarea {
@@ -188,23 +188,23 @@
 /* 消息提示 */
 .error-box,
 .success-box {
-  padding: var(--sleep-spacing-md) var(--sleep-spacing-lg);
+  padding: var(--spacing-md) var(--spacing-lg);
   border-radius: 8px;
   font-size: 0.9rem;
-  margin-bottom: var(--sleep-spacing-md);
-  animation: slideIn var(--sleep-transition);
+  margin-bottom: var(--spacing-md);
+  animation: slideIn var(--transition);
 }
 
 .error-box {
   background-color: #fadbd8;
-  border-left: 4px solid var(--sleep-color-error);
-  color: var(--sleep-color-error);
+  border-left: 4px solid var(--color-error);
+  color: var(--color-error);
 }
 
 .success-box {
   background-color: #d5f4e6;
-  border-left: 4px solid var(--sleep-color-success);
-  color: var(--sleep-color-success);
+  border-left: 4px solid var(--color-success);
+  color: var(--color-success);
 }
 
 @keyframes slideIn {
@@ -221,21 +221,21 @@
 /* 按钮样式 */
 .form-actions {
   display: flex;
-  gap: var(--sleep-spacing-md);
-  margin-top: var(--sleep-spacing-lg);
+  gap: var(--spacing-md);
+  margin-top: var(--spacing-lg);
 }
 
 .btn-primary,
 .btn-secondary,
 .btn-edit,
 .btn-delete {
-  padding: var(--sleep-spacing-sm) var(--sleep-spacing-lg);
+  padding: var(--spacing-sm) var(--spacing-lg);
   border: none;
   border-radius: 8px;
   font-size: 0.95rem;
   font-weight: 400;
   cursor: pointer;
-  transition: all var(--sleep-transition);
+  transition: all var(--transition);
   letter-spacing: -0.2px;
   text-decoration: none;
   display: inline-block;
@@ -243,7 +243,7 @@
 }
 
 .btn-primary {
-  /* background: linear-gradient(135deg, var(--sleep-color-cool) 0%, #7a9fc0 100%); */
+  /* background: linear-gradient(135deg, var(--color-cool) 0%, #7a9fc0 100%); */
   color: white;
 }
 
@@ -258,13 +258,13 @@
 }
 
 .btn-secondary {
-  background-color: var(--sleep-bg-secondary);
-  color: var(--sleep-color-text);
-  border: 1px solid var(--sleep-color-border);
+  background-color: var(--bg-secondary);
+  color: var(--color-text);
+  border: 1px solid var(--color-border);
 }
 
 .btn-secondary:hover {
-  background-color: var(--sleep-color-border);
+  background-color: var(--color-border);
 }
 
 .btn-edit,
@@ -297,15 +297,15 @@
 .records-list {
   display: flex;
   flex-direction: column;
-  gap: var(--sleep-spacing-md);
+  gap: var(--spacing-md);
 }
 
 .record-card {
-  padding: var(--sleep-spacing-lg);
-  background-color: var(--sleep-bg-light);
+  padding: var(--spacing-lg);
+  background-color: var(--bg-light);
   border-radius: 12px;
-  border: 1px solid var(--sleep-color-border);
-  transition: all var(--sleep-transition);
+  border: 1px solid var(--color-border);
+  transition: all var(--transition);
 }
 
 .record-card:hover {
@@ -314,13 +314,13 @@
 }
 
 .record-header {
-  margin-bottom: var(--sleep-spacing-md);
+  margin-bottom: var(--spacing-md);
 }
 
 .record-meta {
   display: flex;
   align-items: center;
-  gap: var(--sleep-spacing-sm);
+  gap: var(--spacing-sm);
   flex-wrap: wrap;
 }
 
@@ -332,7 +332,7 @@
 }
 
 .sleep-type-badge {
-  background-color: var(--sleep-color-warm);
+  background-color: var(--color-warm);
   color: white;
   padding: 4px 10px;
   border-radius: 6px;
@@ -341,23 +341,23 @@
 
 .sleep-duration,
 .record-time {
-  color: var(--sleep-color-text-light);
+  color: var(--color-text-light);
 }
 
 .record-content {
-  margin-bottom: var(--sleep-spacing-md);
+  margin-bottom: var(--spacing-md);
 }
 
 .sleep-feeling {
   font-size: 0.95rem;
-  color: var(--sleep-color-text);
-  margin: 0 0 var(--sleep-spacing-sm) 0;
+  color: var(--color-text);
+  margin: 0 0 var(--spacing-sm) 0;
   line-height: 1.6;
 }
 
 .sleep-details {
   display: flex;
-  gap: var(--sleep-spacing-md);
+  gap: var(--spacing-md);
   flex-wrap: wrap;
 }
 
@@ -369,32 +369,32 @@
 
 .detail-label {
   font-size: 0.85rem;
-  color: var(--sleep-color-text-light);
+  color: var(--color-text-light);
 }
 
 .detail-value {
   font-size: 0.95rem;
   font-weight: 500;
-  color: var(--sleep-color-text);
+  color: var(--color-text);
 }
 
 .detail-unit {
   font-size: 0.8rem;
-  color: var(--sleep-color-text-light);
+  color: var(--color-text-light);
 }
 
 /* 质量评分 */
 .quality-info {
-  padding: var(--sleep-spacing-md) 0;
-  border-top: 1px solid var(--sleep-color-border);
-  border-bottom: 1px solid var(--sleep-color-border);
-  margin: var(--sleep-spacing-md) 0;
+  padding: var(--spacing-md) 0;
+  border-top: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--color-border);
+  margin: var(--spacing-md) 0;
 }
 
 .quality-content {
   display: grid;
   grid-template-columns: auto 1fr;
-  gap: var(--sleep-spacing-lg);
+  gap: var(--spacing-lg);
 }
 
 .quality-score {
@@ -405,13 +405,13 @@
 
 .score-label {
   font-size: 0.85rem;
-  color: var(--sleep-color-text-light);
+  color: var(--color-text-light);
 }
 
 .score-value {
   font-size: 1.8rem;
   font-weight: 600;
-  background: linear-gradient(135deg, var(--sleep-color-cool) 0%, var(--color-soft-green) 100%);
+  background: linear-gradient(135deg, var(--color-cool) 0%, var(--color-soft-green) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -419,26 +419,26 @@
 
 .score-unit {
   font-size: 0.85rem;
-  color: var(--sleep-color-text-light);
+  color: var(--color-text-light);
 }
 
 .quality-text {
   display: flex;
   flex-direction: column;
-  gap: var(--sleep-spacing-sm);
+  gap: var(--spacing-sm);
 }
 
 .suggestion,
 .evaluation {
   font-size: 0.9rem;
-  color: var(--sleep-color-text);
+  color: var(--color-text);
   margin: 0;
   line-height: 1.5;
 }
 
 .suggestion strong,
 .evaluation strong {
-  color: var(--sleep-color-text);
+  color: var(--color-text);
   font-weight: 500;
 }
 
@@ -446,8 +446,8 @@
 .calculating {
   display: flex;
   align-items: center;
-  gap: var(--sleep-spacing-sm);
-  color: var(--sleep-color-text-light);
+  gap: var(--spacing-sm);
+  color: var(--color-text-light);
   font-size: 0.9rem;
 }
 
@@ -455,8 +455,8 @@
   display: inline-block;
   width: 14px;
   height: 14px;
-  border: 2px solid var(--sleep-color-border);
-  border-top-color: var(--sleep-color-cool);
+  border: 2px solid var(--color-border);
+  border-top-color: var(--color-cool);
   border-radius: 50%;
   animation: spin 0.8s linear infinite;
 }
@@ -470,26 +470,26 @@
 /* 记录操作按钮 */
 .record-actions {
   display: flex;
-  gap: var(--sleep-spacing-sm);
-  margin-top: var(--sleep-spacing-md);
-  padding-top: var(--sleep-spacing-md);
-  border-top: 1px solid var(--sleep-color-border);
+  gap: var(--spacing-sm);
+  margin-top: var(--spacing-md);
+  padding-top: var(--spacing-md);
+  border-top: 1px solid var(--color-border);
 }
 
 /* 记录选择器（编辑页面�?*/
 .records-selector {
   display: flex;
   flex-direction: column;
-  gap: var(--sleep-spacing-md);
+  gap: var(--spacing-md);
 }
 
 .selector-item {
-  padding: var(--sleep-spacing-md);
-  background-color: var(--sleep-bg-light);
-  border: 2px solid var(--sleep-color-border);
+  padding: var(--spacing-md);
+  background-color: var(--bg-light);
+  border: 2px solid var(--color-border);
   border-radius: 8px;
   cursor: pointer;
-  transition: all var(--sleep-transition);
+  transition: all var(--transition);
 }
 
 .selector-item input[type="radio"] {
@@ -497,67 +497,67 @@
 }
 
 .selector-item:has(input[type="radio"]:checked) {
-  border-color: var(--sleep-color-cool);
+  border-color: var(--color-cool);
   background-color: rgba(143, 179, 212, 0.05);
 }
 
 .selector-item:hover {
-  border-color: var(--sleep-color-cool);
+  border-color: var(--color-cool);
 }
 
 .selector-content {
   display: flex;
   flex-direction: column;
-  gap: var(--sleep-spacing-sm);
+  gap: var(--spacing-sm);
 }
 
 .selector-meta {
   display: flex;
   align-items: center;
-  gap: var(--sleep-spacing-sm);
+  gap: var(--spacing-sm);
   flex-wrap: wrap;
 }
 
 .selector-time {
   font-size: 0.9rem;
-  color: var(--sleep-color-text-light);
+  color: var(--color-text-light);
 }
 
 .selector-quality {
   font-size: 0.85rem;
-  color: var(--sleep-color-text-light);
+  color: var(--color-text-light);
 }
 
 .selector-quality.calculating {
-  color: var(--sleep-color-warning);
+  color: var(--color-warning);
 }
 
 /* 统计汇�?*/
 .summary-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-  gap: var(--sleep-spacing-md);
+  gap: var(--spacing-md);
 }
 
 .summary-item {
   background: linear-gradient(135deg, rgba(143, 179, 212, 0.1) 0%, rgba(168, 199, 160, 0.1) 100%);
-  padding: var(--sleep-spacing-lg);
+  padding: var(--spacing-lg);
   border-radius: 12px;
   text-align: center;
-  border: 1px solid var(--sleep-color-border);
+  border: 1px solid var(--color-border);
 }
 
 .summary-label {
   font-size: 0.85rem;
-  color: var(--sleep-color-text-light);
-  margin-bottom: var(--sleep-spacing-sm);
+  color: var(--color-text-light);
+  margin-bottom: var(--spacing-sm);
   display: block;
 }
 
 .summary-value {
   font-size: 1.8rem;
   font-weight: 600;
-  background: linear-gradient(135deg, var(--sleep-color-cool) 0%, var(--color-soft-green) 100%);
+  background: linear-gradient(135deg, var(--color-cool) 0%, var(--color-soft-green) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -567,46 +567,46 @@
 
 .summary-unit {
   font-size: 0.8rem;
-  color: var(--sleep-color-text-light);
+  color: var(--color-text-light);
   display: block;
 }
 
 /* 空状�?*/
 .empty-state {
   text-align: center;
-  padding: 60px var(--sleep-spacing-lg);
+  padding: 60px var(--spacing-lg);
 }
 
 .empty-icon {
   font-size: 4rem;
-  color: var(--sleep-color-border);
-  margin-bottom: var(--sleep-spacing-lg);
+  color: var(--color-border);
+  margin-bottom: var(--spacing-lg);
 }
 
 .empty-title {
   font-size: 1.2rem;
   font-weight: 400;
-  color: var(--sleep-color-text);
-  margin: 0 0 var(--sleep-spacing-sm) 0;
+  color: var(--color-text);
+  margin: 0 0 var(--spacing-sm) 0;
 }
 
 .empty-text {
   font-size: 0.95rem;
-  color: var(--sleep-color-text-light);
-  margin: 0 0 var(--sleep-spacing-lg) 0;
+  color: var(--color-text-light);
+  margin: 0 0 var(--spacing-lg) 0;
 }
 
 /* 响应式设�?*/
 @media (max-width: 768px) {
   .sleep-wrapper {
-    padding: var(--sleep-spacing-lg) var(--sleep-spacing-md);
+    padding: var(--spacing-lg) var(--spacing-md);
   }
 
   .form-section,
   .records-section,
   .summary-section,
   .empty-state {
-    padding: var(--sleep-spacing-lg) var(--sleep-spacing-md);
+    padding: var(--spacing-lg) var(--spacing-md);
   }
 
   .form-row {
@@ -618,7 +618,7 @@
   }
 
   .section-header {
-    gap: var(--sleep-spacing-sm);
+    gap: var(--spacing-sm);
   }
 
   .section-number {
@@ -651,14 +651,14 @@
 
 @media (max-width: 480px) {
   .sleep-wrapper {
-    padding: var(--sleep-spacing-md) var(--sleep-spacing-sm);
+    padding: var(--spacing-md) var(--spacing-sm);
   }
 
   .form-section,
   .records-section,
   .summary-section,
   .empty-state {
-    padding: var(--sleep-spacing-md) var(--sleep-spacing-sm);
+    padding: var(--spacing-md) var(--spacing-sm);
     border-radius: 8px;
   }
 
@@ -678,11 +678,11 @@
 
   .summary-grid {
     grid-template-columns: 1fr;
-    gap: var(--sleep-spacing-sm);
+    gap: var(--spacing-sm);
   }
 
   .summary-item {
-    padding: var(--sleep-spacing-md);
+    padding: var(--spacing-md);
   }
 
   .record-meta {

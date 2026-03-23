@@ -281,11 +281,6 @@
   text-transform: uppercase;
 }
 
-.metric-button:hover {
-  /* background: var(--color-prussian-blue);
-  color: white;
-  border-color: var(--color-prussian-blue); */
-}
 
 .metric-button:active {
   transform: translateY(1px);

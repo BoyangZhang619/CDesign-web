@@ -1,22 +1,22 @@
 /* =============== 颜色系统 =============== */
 :root {
-  --hist-color-bg-primary: #fafaf9;
-  --hist-color-bg-secondary: #f5f4f0;
-  --hist-color-card-bg: #ffffff;
-  --hist-color-text-primary: #2d2d2a;
-  --hist-color-text-secondary: #6f6f6a;
-  --hist-color-text-tertiary: #999993;
-  --hist-color-border: #e8e3dd;
-  --hist-color-border-light: #f0ebe5;
-  --hist-color-accent-warm: #d8a88f;
-  --hist-color-accent-cool: #8fb3d4;
-  --hist-color-error: #c89b9b;
+  --color-bg-primary: #fafaf9;
+  --color-bg-secondary: #f5f4f0;
+  --color-card-bg: #ffffff;
+  --color-text-primary: #2d2d2a;
+  --color-text-secondary: #6f6f6a;
+  --color-text-tertiary: #999993;
+  --color-border: #e8e3dd;
+  --color-border-light: #f0ebe5;
+  --color-accent-warm: #d8a88f;
+  --color-accent-cool: #8fb3d4;
+  --color-error: #c89b9b;
 }
 
 /* =============== 页面布局 =============== */
 .page {
   min-height: 100vh;
-  background: var(--hist-color-bg-primary);
+  background: var(--color-bg-primary);
   display: flex;
   flex-direction: column;
 }
@@ -44,21 +44,21 @@
   margin: 0 0 8px 0;
   font-size: 32px;
   font-weight: 500;
-  color: var(--hist-color-text-primary);
+  color: var(--color-text-primary);
   letter-spacing: -0.5px;
 }
 
 .history-subtitle {
   margin: 0;
   font-size: 14px;
-  color: var(--hist-color-text-secondary);
+  color: var(--color-text-secondary);
   font-weight: 300;
 }
 
 /* =============== 筛选面�?=============== */
 .filter-panel {
-  background: var(--hist-color-card-bg);
-  border: 1px solid var(--hist-color-border-light);
+  background: var(--color-card-bg);
+  border: 1px solid var(--color-border-light);
   border-radius: 16px;
   padding: 24px;
   margin-bottom: 24px;
@@ -78,7 +78,7 @@
   display: block;
   font-size: 13px;
   font-weight: 500;
-  color: var(--hist-color-text-primary);
+  color: var(--color-text-primary);
   margin-bottom: 10px;
   letter-spacing: 0.3px;
 }
@@ -92,9 +92,9 @@
 
 .type-btn {
   padding: 10px 14px;
-  background: var(--hist-color-bg-secondary);
-  border: 1px solid var(--hist-color-border-light);
-  color: var(--hist-color-text-secondary);
+  background: var(--color-bg-secondary);
+  border: 1px solid var(--color-border-light);
+  color: var(--color-text-secondary);
   border-radius: 10px;
   font-size: 12px;
   font-weight: 500;
@@ -103,15 +103,15 @@
 }
 
 .type-btn:hover {
-  border-color: var(--hist-color-accent-warm);
+  border-color: var(--color-accent-warm);
   background: rgba(216, 168, 143, 0.05);
-  color: var(--hist-color-accent-warm);
+  color: var(--color-accent-warm);
 }
 
 .type-btn.active {
-  background: var(--hist-color-accent-warm);
+  background: var(--color-accent-warm);
   color: white;
-  border-color: var(--hist-color-accent-warm);
+  border-color: var(--color-accent-warm);
 }
 
 /* 筛选行 */
@@ -130,9 +130,9 @@
 
 .filter-input {
   padding: 10px 12px;
-  border: 1px solid var(--hist-color-border-light);
-  background: var(--hist-color-card-bg);
-  color: var(--hist-color-text-primary);
+  border: 1px solid var(--color-border-light);
+  background: var(--color-card-bg);
+  color: var(--color-text-primary);
   border-radius: 10px;
   font-size: 12px;
   font-family: inherit;
@@ -141,12 +141,12 @@
 
 .filter-input:focus {
   outline: none;
-  border-color: var(--hist-color-accent-warm);
+  border-color: var(--color-accent-warm);
   box-shadow: 0 2px 8px rgba(216, 168, 143, 0.1);
 }
 
 .filter-input::placeholder {
-  color: var(--hist-color-text-tertiary);
+  color: var(--color-text-tertiary);
 }
 
 /* 筛选按�?*/
@@ -167,7 +167,7 @@
 }
 
 .btn-filter {
-  background: var(--hist-color-accent-warm);
+  background: var(--color-accent-warm);
   color: white;
   flex: 1;
   box-shadow: 0 2px 8px rgba(216, 168, 143, 0.15);
@@ -180,14 +180,14 @@
 }
 
 .btn-reset {
-  background: var(--hist-color-bg-secondary);
-  color: var(--hist-color-text-secondary);
-  border: 1px solid var(--hist-color-border-light);
+  background: var(--color-bg-secondary);
+  color: var(--color-text-secondary);
+  border: 1px solid var(--color-border-light);
 }
 
 .btn-reset:hover {
-  border-color: var(--hist-color-accent-warm);
-  color: var(--hist-color-accent-warm);
+  border-color: var(--color-accent-warm);
+  color: var(--color-accent-warm);
   background: rgba(216, 168, 143, 0.05);
 }
 
@@ -209,7 +209,7 @@
 .sort-label {
   font-size: 12px;
   font-weight: 500;
-  color: var(--hist-color-text-secondary);
+  color: var(--color-text-secondary);
   white-space: nowrap;
 }
 
@@ -220,9 +220,9 @@
 
 .sort-btn {
   padding: 6px 12px;
-  background: var(--hist-color-bg-secondary);
-  border: 1px solid var(--hist-color-border-light);
-  color: var(--hist-color-text-secondary);
+  background: var(--color-bg-secondary);
+  border: 1px solid var(--color-border-light);
+  color: var(--color-text-secondary);
   border-radius: 8px;
   font-size: 11px;
   font-weight: 500;
@@ -231,19 +231,19 @@
 }
 
 .sort-btn:hover {
-  border-color: var(--hist-color-accent-warm);
-  color: var(--hist-color-accent-warm);
+  border-color: var(--color-accent-warm);
+  color: var(--color-accent-warm);
 }
 
 .sort-btn.active {
-  background: var(--hist-color-accent-warm);
+  background: var(--color-accent-warm);
   color: white;
-  border-color: var(--hist-color-accent-warm);
+  border-color: var(--color-accent-warm);
 }
 
 .pagination-info {
   font-size: 12px;
-  color: var(--hist-color-text-tertiary);
+  color: var(--color-text-tertiary);
   white-space: nowrap;
 }
 
@@ -256,8 +256,8 @@
 }
 
 .record-item {
-  background: var(--hist-color-card-bg);
-  border: 1px solid var(--hist-color-border-light);
+  background: var(--color-card-bg);
+  border: 1px solid var(--color-border-light);
   border-radius: 14px;
   padding: 16px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
@@ -266,7 +266,7 @@
 }
 
 .record-item:hover {
-  border-color: var(--hist-color-accent-warm);
+  border-color: var(--color-accent-warm);
   box-shadow: 0 4px 16px rgba(216, 168, 143, 0.12);
 }
 
@@ -322,19 +322,19 @@
   margin: 0;
   font-size: 14px;
   font-weight: 600;
-  color: var(--hist-color-text-primary);
+  color: var(--color-text-primary);
 }
 
 .record-date {
   font-size: 11px;
-  color: var(--hist-color-text-tertiary);
+  color: var(--color-text-tertiary);
 }
 
 .btn-delete {
   padding: 6px 10px;
   background: transparent;
-  border: 1px solid var(--hist-color-border-light);
-  color: var(--hist-color-text-secondary);
+  border: 1px solid var(--color-border-light);
+  color: var(--color-text-secondary);
   border-radius: 8px;
   font-size: 14px;
   cursor: pointer;
@@ -342,8 +342,8 @@
 }
 
 .btn-delete:hover {
-  border-color: var(--hist-color-error);
-  color: var(--hist-color-error);
+  border-color: var(--color-error);
+  color: var(--color-error);
   background: rgba(200, 155, 155, 0.05);
 }
 
@@ -354,14 +354,14 @@
 .record-value {
   font-size: 18px;
   font-weight: 600;
-  color: var(--hist-color-accent-warm);
+  color: var(--color-accent-warm);
   margin-bottom: 6px;
 }
 
 .record-description {
   margin: 0;
   font-size: 12px;
-  color: var(--hist-color-text-secondary);
+  color: var(--color-text-secondary);
   line-height: 1.5;
 }
 
@@ -369,7 +369,7 @@
   display: flex;
   gap: 12px;
   font-size: 11px;
-  color: var(--hist-color-text-tertiary);
+  color: var(--color-text-tertiary);
 }
 
 .record-time {
@@ -391,8 +391,8 @@
 .spinner {
   width: 40px;
   height: 40px;
-  border: 3px solid var(--hist-color-border-light);
-  border-top-color: var(--hist-color-accent-warm);
+  border: 3px solid var(--color-border-light);
+  border-top-color: var(--color-accent-warm);
   border-radius: 50%;
   animation: spin 0.8s linear infinite;
 }
@@ -405,7 +405,7 @@
 
 .loading-state p {
   font-size: 13px;
-  color: var(--hist-color-text-secondary);
+  color: var(--color-text-secondary);
 }
 
 .empty-state {
@@ -427,13 +427,13 @@
   margin: 0 0 8px 0;
   font-size: 16px;
   font-weight: 500;
-  color: var(--hist-color-text-primary);
+  color: var(--color-text-primary);
 }
 
 .empty-text {
   margin: 0;
   font-size: 13px;
-  color: var(--hist-color-text-secondary);
+  color: var(--color-text-secondary);
   max-width: 300px;
 }
 
@@ -457,14 +457,14 @@
   gap: 12px;
   margin-top: 24px;
   padding-top: 20px;
-  border-top: 1px solid var(--hist-color-border-light);
+  border-top: 1px solid var(--color-border-light);
 }
 
 .pagination-btn {
   padding: 8px 16px;
-  background: var(--hist-color-bg-secondary);
-  border: 1px solid var(--hist-color-border-light);
-  color: var(--hist-color-text-secondary);
+  background: var(--color-bg-secondary);
+  border: 1px solid var(--color-border-light);
+  color: var(--color-text-secondary);
   border-radius: 10px;
   font-size: 12px;
   font-weight: 500;
@@ -473,8 +473,8 @@
 }
 
 .pagination-btn:hover:not(:disabled) {
-  border-color: var(--hist-color-accent-warm);
-  color: var(--hist-color-accent-warm);
+  border-color: var(--color-accent-warm);
+  color: var(--color-accent-warm);
   background: rgba(216, 168, 143, 0.05);
 }
 
@@ -485,7 +485,7 @@
 
 .page-indicator {
   font-size: 12px;
-  color: var(--hist-color-text-secondary);
+  color: var(--color-text-secondary);
   font-weight: 500;
   min-width: 100px;
   text-align: center;
