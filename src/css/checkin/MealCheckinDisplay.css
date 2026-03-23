@@ -1,55 +1,21 @@
 ﻿@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Montserrat:wght@400;500;600;700&display=swap');
 
-/* ==========================================
-   现代欧式简约风格 - 饮食打卡显示页面
-   ========================================== */
-
-:root {
-  /* 莫兰迪色系 - 主色调 */
-  --color-cream: #faf9f7;
-  --color-ivory: #f5f3f0;
-  --color-oatmeal: #e8e5e0;
-  --color-warm-gray: #d4cfc8;
-  --color-cool-gray: #c9c5bf;
-  
-  /* 点缀色 - 高雅沉静 */
-  --color-prussian-blue: #384759;
-  --color-sage-green: #8b9a7f;
-  --color-champagne-gold: #d4af8f;
-  --color-burgundy: #7a4a5a;
-  --color-soft-taupe: #a89480;
-  
-  /* 文本色 */
-  --color-text-primary: #3d3a37;
-  --color-text-secondary: #7a7a77;
-  --color-text-light: #9a9a97;
-  --color-border: #e8e5e0;
-  
-  /* 功能色 */
-  --color-error: #c85a54;
-  --color-success: #8b9a7f;
-  
-  /* 阴影 - 极细微的柔和阴影 */
-  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08);
-  --shadow-md: 0 2px 6px rgba(0, 0, 0, 0.06);
-  --shadow-lg: 0 4px 12px rgba(0, 0, 0, 0.08);
-}
+/* 饮食打卡显示页面样式 */
+/* 使用全局CSS变量（定义在App.vue中） */
 
 /* ==========================================
    页面基础布局
    ========================================== */
 
 .meal-display-page {
-  background: linear-gradient(180deg, var(--color-cream) 0%, var(--color-ivory) 50%, var(--color-oatmeal) 100%);
   min-height: 100vh;
-  color: var(--color-text-primary);
-  font-family: 'Lato', 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: linear-gradient(135deg, var(--color-cream), var(--color-ivory), var(--color-oatmeal));
 }
 
 .meal-display-main {
-  max-width: 1000px;
+  max-width: 1200px;
   margin: 0 auto;
-  padding: 0;
+  padding: 60px 24px 40px;
 }
 
 /* 顶部装饰线 */
@@ -68,41 +34,35 @@
    ========================================== */
 
 .meal-title-section {
-  padding: 60px 40px;
-  text-align: center;
-  border-bottom: 1px solid var(--color-border);
-  background: rgba(255, 255, 255, 0.3);
+  margin-bottom: 40px;
+  padding: 0 16px;
 }
 
 .title-container {
-  max-width: 600px;
-  margin: 0 auto;
+  text-align: center;
 }
 
 .meal-title {
-  font-family: 'Playfair Display', 'Bodoni Moda', serif;
-  font-size: 52px;
+  font-family: 'Playfair Display', serif;
+  font-size: 48px;
   font-weight: 500;
-  letter-spacing: 2px;
-  margin: 0 0 12px 0;
-  color: var(--color-prussian-blue);
-  line-height: 1.2;
+  color: var(--color-text-primary);
+  margin: 0 0 12px;
+  letter-spacing: -0.5px;
 }
 
 .meal-subtitle {
-  font-size: 16px;
-  font-weight: 300;
+  font-size: 14px;
   color: var(--color-text-secondary);
-  margin: 0 0 20px 0;
-  letter-spacing: 0.5px;
+  margin: 0 0 8px;
+  font-weight: 300;
 }
 
 .date-display {
   font-size: 13px;
   color: var(--color-text-light);
-  letter-spacing: 1px;
-  text-transform: uppercase;
-  font-weight: 500;
+  font-weight: 300;
+  letter-spacing: 0.5px;
 }
 
 /* ==========================================
@@ -110,44 +70,37 @@
    ========================================== */
 
 .meal-add-section {
-  padding: 60px 40px;
   display: flex;
   justify-content: center;
-  align-items: center;
+  margin-bottom: 40px;
+  padding: 0 16px;
 }
 
 .add-record-btn {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 16px 40px;
-  background: white;
-  border: 2px solid var(--color-prussian-blue);
-  color: var(--color-prussian-blue);
-  font-size: 16px;
-  font-weight: 500;
-  letter-spacing: 0.5px;
-  cursor: pointer;
-  border-radius: 2px;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  font-family: 'Montserrat', sans-serif;
-}
-
-.add-icon {
-  font-size: 24px;
-  font-weight: 300;
-  line-height: 1;
-}
-
-.add-record-btn:hover {
+  gap: 8px;
+  padding: 12px 32px;
   background: var(--color-prussian-blue);
-  color: white;
-  transform: translateY(-2px);
+  color: var(--color-cream);
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   box-shadow: var(--shadow-md);
 }
 
-.add-record-btn:active {
-  transform: translateY(0);
+.add-record-btn:hover {
+  background: rgba(56, 71, 89, 0.9);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+.add-icon {
+  font-size: 18px;
+  font-weight: bold;
 }
 
 /* ==========================================
@@ -155,60 +108,62 @@
    ========================================== */
 
 .meal-records-section {
-  padding: 60px 40px;
-  background: transparent;
+  margin-bottom: 40px;
+  padding: 0 16px;
 }
 
 .section-title-bar {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  margin-bottom: 40px;
-  padding-bottom: 20px;
-  border-bottom: 1px solid var(--color-border);
+  gap: 12px;
+  margin-bottom: 20px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid var(--color-border);
 }
 
 .section-title {
   font-family: 'Playfair Display', serif;
-  font-size: 28px;
+  font-size: 22px;
   font-weight: 500;
+  color: var(--color-text-primary);
   margin: 0;
-  color: var(--color-prussian-blue);
-  letter-spacing: 1px;
 }
 
 .record-count {
-  font-size: 13px;
-  color: var(--color-text-secondary);
-  background: var(--color-ivory);
-  padding: 6px 12px;
-  border-radius: 2px;
-  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 28px;
+  height: 28px;
+  background: var(--color-prussian-blue);
+  color: var(--color-cream);
+  border-radius: 50%;
+  font-size: 12px;
+  font-weight: 600;
 }
 
 .records-container {
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-  margin-bottom: 32px;
+  display: grid;
+  gap: 16px;
+  margin-bottom: 20px;
 }
 
+/* 记录卡片样式 */
 .record-card {
-  background: white;
-  border: 1px solid var(--color-border);
-  padding: 32px;
-  border-radius: 2px;
+  background: var(--color-cream);
+  border-radius: 12px;
+  padding: 20px;
   box-shadow: var(--shadow-sm);
-  transition: all 0.3s ease;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .record-card:hover {
+  transform: translateY(-2px);
   box-shadow: var(--shadow-md);
-  transform: translateY(-1px);
 }
 
 .record-header {
-  margin-bottom: 20px;
+  margin-bottom: 12px;
 }
 
 .record-meta {
@@ -220,48 +175,40 @@
 
 .meal-type-badge,
 .food-source-badge {
-  font-family: 'Montserrat', sans-serif;
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.3px;
-  text-transform: uppercase;
-  padding: 6px 12px;
-  border: 1px solid var(--color-border);
-  background: var(--color-cream);
+  display: inline-block;
+  padding: 4px 12px;
+  background: var(--color-ivory);
   color: var(--color-text-primary);
-  border-radius: 2px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  border: 1px solid var(--color-border);
 }
 
 .record-time {
-  font-family: 'Montserrat', sans-serif;
-  font-size: 12px;
+  font-size: 13px;
   color: var(--color-text-secondary);
-  letter-spacing: 0.2px;
+  font-weight: 400;
   margin-left: auto;
 }
 
 .record-content {
-  margin-bottom: 20px;
-  padding-bottom: 20px;
-  border-bottom: 1px solid var(--color-border);
+  margin-bottom: 12px;
 }
 
 .food-name {
   font-family: 'Playfair Display', serif;
-  font-size: 20px;
+  font-size: 18px;
   font-weight: 500;
-  letter-spacing: 0.5px;
   color: var(--color-prussian-blue);
-  margin: 0 0 8px 0;
-  line-height: 1.2;
+  margin: 0 0 8px;
+  line-height: 1.4;
 }
 
 .food-detail {
-  font-family: 'Montserrat', sans-serif;
   font-size: 13px;
   color: var(--color-text-secondary);
-  letter-spacing: 0.2px;
-  line-height: 1.6;
+  line-height: 1.5;
   margin: 0;
 }
 
@@ -270,7 +217,8 @@
    ========================================== */
 
 .nutrition-info {
-  padding: 0;
+  padding-top: 12px;
+  border-top: 1px solid var(--color-border);
 }
 
 .calculating {
@@ -310,12 +258,11 @@
   gap: 6px;
   text-align: center;
   padding: 12px;
-  background: var(--color-cream);
-  border-radius: 2px;
+  background: var(--color-ivory);
+  border-radius: 8px;
 }
 
 .nutrition-label {
-  font-family: 'Montserrat', sans-serif;
   font-size: 11px;
   font-weight: 600;
   letter-spacing: 0.2px;
@@ -325,14 +272,13 @@
 
 .nutrition-value {
   font-family: 'Playfair Display', serif;
-  font-size: 22px;
+  font-size: 20px;
   font-weight: 500;
   color: var(--color-prussian-blue);
   line-height: 1.2;
 }
 
 .nutrition-unit {
-  font-family: 'Montserrat', sans-serif;
   font-size: 11px;
   color: var(--color-text-light);
   letter-spacing: 0.2px;
@@ -343,30 +289,28 @@
    ========================================== */
 
 .show-all-container {
-  display: flex;
-  justify-content: center;
-  margin-bottom: 32px;
+  text-align: center;
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid var(--color-border);
 }
 
 .show-all-btn {
-  padding: 12px 32px;
-  border: 1px solid var(--color-border);
-  background: white;
+  padding: 10px 24px;
+  background: transparent;
   color: var(--color-prussian-blue);
-  font-family: 'Montserrat', sans-serif;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
   font-size: 13px;
-  font-weight: 600;
-  letter-spacing: 0.5px;
-  text-transform: uppercase;
+  font-weight: 500;
   cursor: pointer;
-  border-radius: 2px;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .show-all-btn:hover {
-  background: var(--color-prussian-blue);
-  color: white;
+  background: var(--color-ivory);
   border-color: var(--color-prussian-blue);
+  transform: translateY(-1px);
 }
 
 /* ==========================================
@@ -374,59 +318,55 @@
    ========================================== */
 
 .meal-summary-section {
-  padding: 60px 40px;
-  background: linear-gradient(135deg, 
-    rgba(131, 71, 89, 0.03) 0%,
-    rgba(212, 175, 143, 0.03) 100%);
-  border-top: 1px solid var(--color-border);
-  border-bottom: 1px solid var(--color-border);
+  margin-bottom: 40px;
+  padding: 0 16px;
 }
 
 .summary-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  gap: 24px;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 16px;
 }
 
 .summary-item {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
+  background: var(--color-cream);
+  border-radius: 12px;
+  padding: 20px;
   text-align: center;
-  padding: 24px;
-  background: white;
-  border: 1px solid var(--color-border);
-  border-radius: 2px;
   box-shadow: var(--shadow-sm);
-  transition: all 0.3s ease;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 1px solid var(--color-border);
 }
 
 .summary-item:hover {
+  transform: translateY(-4px);
   box-shadow: var(--shadow-md);
+  border-color: var(--color-prussian-blue);
 }
 
 .summary-label {
-  font-family: 'Montserrat', sans-serif;
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.3px;
+  font-size: 12px;
   color: var(--color-text-secondary);
+  font-weight: 500;
   text-transform: uppercase;
+  letter-spacing: 0.5px;
+  display: block;
+  margin-bottom: 8px;
 }
 
 .summary-value {
   font-family: 'Playfair Display', serif;
-  font-size: 32px;
+  font-size: 28px;
   font-weight: 500;
   color: var(--color-prussian-blue);
-  line-height: 1.2;
+  display: block;
+  margin-bottom: 4px;
 }
 
 .summary-unit {
-  font-family: 'Montserrat', sans-serif;
-  font-size: 11px;
+  font-size: 12px;
   color: var(--color-text-light);
-  letter-spacing: 0.2px;
+  font-weight: 400;
 }
 
 /* ==========================================
@@ -435,42 +375,40 @@
 
 .empty-state {
   text-align: center;
-  padding: 100px 40px;
-  background: white;
-  border: 1px solid var(--color-border);
-  margin: 60px 40px;
-  border-radius: 2px;
-  box-shadow: var(--shadow-sm);
+  padding: 80px 24px;
 }
 
 .empty-icon {
   font-size: 64px;
   margin-bottom: 20px;
-  line-height: 1;
 }
 
 .empty-title {
-  font-family: 'Playfair Display', serif;
   font-size: 24px;
   font-weight: 500;
-  letter-spacing: 0.5px;
-  color: var(--color-prussian-blue);
-  margin: 0 0 12px 0;
-  line-height: 1.2;
+  color: var(--color-text-primary);
+  margin: 0 0 8px;
 }
 
 .empty-text {
-  font-family: 'Montserrat', sans-serif;
   font-size: 14px;
   color: var(--color-text-secondary);
-  letter-spacing: 0.2px;
   margin: 0;
-  line-height: 1.6;
 }
 
 /* ==========================================
    浮窗模态框
    ========================================== */
+
+.modal-fade-enter-active,
+.modal-fade-leave-active {
+  transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.modal-fade-enter-from,
+.modal-fade-leave-to {
+  opacity: 0;
+}
 
 .modal-overlay {
   position: fixed;
@@ -478,40 +416,35 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(61, 58, 55, 0.4);
+  background: rgba(0, 0, 0, 0.5);
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 1000;
   padding: 20px;
-  animation: fadeIn 0.3s ease;
+  animation: fadeIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 @keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 .modal-content {
-  background: white;
-  border: 1px solid var(--color-border);
-  border-radius: 2px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+  background: var(--color-cream);
+  border-radius: 16px;
+  width: 100%;
+  max-width: 500px;
   max-height: 90vh;
   overflow-y: auto;
+  box-shadow: var(--shadow-xl);
   animation: slideUp 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  width: 100%;
-  max-width: 600px;
 }
 
 @keyframes slideUp {
   from {
     opacity: 0;
-    transform: translateY(20px);
+    transform: translateY(30px);
   }
   to {
     opacity: 1;
@@ -523,7 +456,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 32px 40px;
+  padding: 24px;
   border-bottom: 1px solid var(--color-border);
 }
 
@@ -531,28 +464,28 @@
   font-family: 'Playfair Display', serif;
   font-size: 24px;
   font-weight: 500;
+  color: var(--color-text-primary);
   margin: 0;
-  color: var(--color-prussian-blue);
-  letter-spacing: 0.5px;
 }
 
 .modal-close {
-  background: none;
+  background: transparent;
   border: none;
   font-size: 24px;
-  color: var(--color-text-light);
+  color: var(--color-text-secondary);
   cursor: pointer;
-  transition: color 0.3s ease;
   padding: 0;
   width: 32px;
   height: 32px;
   display: flex;
   align-items: center;
   justify-content: center;
+  transition: all 0.2s;
 }
 
 .modal-close:hover {
-  color: var(--color-prussian-blue);
+  color: var(--color-text-primary);
+  transform: rotate(90deg);
 }
 
 /* ==========================================
@@ -560,57 +493,53 @@
    ========================================== */
 
 .meal-form {
-  padding: 40px;
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
+  padding: 24px;
 }
 
 .form-group {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
+  margin-bottom: 20px;
 }
 
 .form-label {
-  font-family: 'Montserrat', sans-serif;
+  display: block;
   font-size: 12px;
   font-weight: 600;
-  letter-spacing: 0.3px;
   color: var(--color-text-primary);
   text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 8px;
 }
 
 .button-group {
   display: flex;
-  flex-wrap: wrap;
   gap: 12px;
+  margin-bottom: 4px;
+  flex-wrap: wrap;
 }
 
 .toggle-btn {
-  font-family: 'Montserrat', sans-serif;
-  font-size: 12px;
-  font-weight: 600;
-  letter-spacing: 0.2px;
-  padding: 10px 20px;
+  flex: 1;
+  min-width: 80px;
+  padding: 10px 12px;
+  background: var(--color-ivory);
   border: 1px solid var(--color-border);
-  background: white;
-  color: var(--color-text-primary);
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--color-text-secondary);
   cursor: pointer;
-  transition: all 0.3s ease;
-  border-radius: 2px;
-  text-transform: uppercase;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .toggle-btn:hover {
-  border-color: var(--color-prussian-blue);
-  background: var(--color-cream);
+  background: var(--color-oatmeal);
+  border-color: var(--color-text-secondary);
 }
 
 .toggle-btn.active {
   background: var(--color-prussian-blue);
-  color: white;
   border-color: var(--color-prussian-blue);
+  color: var(--color-cream);
 }
 
 .form-row {
@@ -625,14 +554,15 @@
 
 .form-input,
 .form-textarea {
-  font-family: 'Montserrat', sans-serif;
-  font-size: 14px;
-  color: var(--color-text-primary);
-  background: var(--color-cream);
+  width: 100%;
+  padding: 10px 12px;
+  background: var(--color-ivory);
   border: 1px solid var(--color-border);
-  padding: 12px 16px;
-  border-radius: 2px;
-  transition: all 0.3s ease;
+  border-radius: 8px;
+  font-size: 13px;
+  color: var(--color-text-primary);
+  font-family: inherit;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   box-sizing: border-box;
 }
 
@@ -644,15 +574,15 @@
 .form-input:focus,
 .form-textarea:focus {
   outline: none;
-  background: white;
+  background: var(--color-cream);
   border-color: var(--color-prussian-blue);
-  box-shadow: 0 0 0 3px rgba(56, 71, 89, 0.05);
+  box-shadow: 0 0 0 3px rgba(56, 71, 89, 0.1);
 }
 
 .form-textarea {
   resize: vertical;
-  min-height: 100px;
-  font-family: 'Montserrat', sans-serif;
+  min-height: 80px;
+  font-family: inherit;
 }
 
 /* ==========================================
@@ -661,33 +591,21 @@
 
 .error-box,
 .success-box {
-  padding: 16px 20px;
+  padding: 12px 16px;
   border-left: 3px solid;
-  border-radius: 2px;
-  font-family: 'Montserrat', sans-serif;
-  font-size: 13px;
-  animation: slideDown 0.3s ease;
-}
-
-@keyframes slideDown {
-  from {
-    opacity: 0;
-    transform: translateY(-10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  border-radius: 6px;
+  font-size: 12px;
+  margin-bottom: 16px;
 }
 
 .error-box {
-  background: rgba(200, 90, 84, 0.08);
+  background: rgba(200, 90, 84, 0.1);
   border-left-color: var(--color-error);
   color: var(--color-error);
 }
 
 .success-box {
-  background: rgba(139, 154, 127, 0.08);
+  background: rgba(139, 154, 127, 0.1);
   border-left-color: var(--color-success);
   color: var(--color-success);
 }
@@ -698,41 +616,33 @@
 
 .form-actions {
   display: flex;
-  gap: 16px;
+  gap: 12px;
   justify-content: flex-end;
-  margin-top: 24px;
-  padding-top: 24px;
+  padding-top: 12px;
   border-top: 1px solid var(--color-border);
 }
 
 .btn-primary,
 .btn-secondary {
-  font-family: 'Montserrat', sans-serif;
-  font-size: 12px;
+  padding: 10px 24px;
+  border: none;
+  border-radius: 8px;
+  font-size: 13px;
   font-weight: 600;
-  letter-spacing: 0.5px;
-  text-transform: uppercase;
-  padding: 12px 32px;
-  height: 44px;
-  border-radius: 2px;
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  white-space: nowrap;
-  box-sizing: border-box;
+  font-family: 'Montserrat', sans-serif;
 }
 
 .btn-primary {
-  border: 1px solid var(--color-prussian-blue);
   background: var(--color-prussian-blue);
-  color: white;
+  color: var(--color-cream);
 }
 
 .btn-primary:hover:not(:disabled) {
+  background: rgba(56, 71, 89, 0.9);
+  transform: translateY(-1px);
   box-shadow: var(--shadow-md);
-  transform: translateY(-2px);
 }
 
 .btn-primary:disabled {
@@ -741,14 +651,14 @@
 }
 
 .btn-secondary {
-  border: 1px solid var(--color-border);
-  background: white;
+  background: var(--color-ivory);
   color: var(--color-text-primary);
+  border: 1px solid var(--color-border);
 }
 
 .btn-secondary:hover {
-  background: var(--color-cream);
-  border-color: var(--color-prussian-blue);
+  background: var(--color-oatmeal);
+  border-color: var(--color-text-secondary);
 }
 
 /* ==========================================
@@ -760,103 +670,38 @@
 }
 
 /* ==========================================
-   过渡动画
-   ========================================== */
-
-.modal-fade-enter-active,
-.modal-fade-leave-active {
-  transition: opacity 0.3s ease;
-}
-
-.modal-fade-enter-from,
-.modal-fade-leave-to {
-  opacity: 0;
-}
-
-/* ==========================================
    响应式设计
    ========================================== */
 
 @media (max-width: 768px) {
-  .meal-title-section {
-    padding: 40px 20px;
+  .meal-display-main {
+    padding: 50px 16px 30px;
   }
 
   .meal-title {
     font-size: 36px;
   }
 
-  .meal-add-section {
-    padding: 40px 20px;
-  }
-
-  .add-record-btn {
-    padding: 14px 28px;
-    font-size: 14px;
-  }
-
-  .meal-records-section {
-    padding: 40px 20px;
-  }
-
-  .record-card {
-    padding: 24px;
-  }
-
-  .section-title {
-    font-size: 22px;
-  }
-
-  .food-name {
-    font-size: 18px;
-  }
-
-  .meal-summary-section {
-    padding: 40px 20px;
-  }
-
   .summary-grid {
     grid-template-columns: repeat(2, 1fr);
-    gap: 16px;
-  }
-
-  .summary-item {
-    padding: 20px;
-  }
-
-  .summary-value {
-    font-size: 24px;
-  }
-
-  .modal-content {
-    max-width: 90%;
-  }
-
-  .modal-header {
-    padding: 24px 20px;
-  }
-
-  .modal-title {
-    font-size: 20px;
-  }
-
-  .meal-form {
-    padding: 24px;
   }
 
   .form-row {
     grid-template-columns: 1fr;
   }
 
-  .empty-state {
-    margin: 40px 20px;
-    padding: 60px 20px;
+  .button-group {
+    flex-direction: column;
+  }
+
+  .toggle-btn {
+    width: 100%;
   }
 }
 
 @media (max-width: 480px) {
-  .meal-title-section {
-    padding: 32px 16px;
+  .meal-display-main {
+    padding: 40px 12px 24px;
   }
 
   .meal-title {
@@ -864,126 +709,24 @@
   }
 
   .meal-subtitle {
-    font-size: 14px;
-  }
-
-  .meal-add-section {
-    padding: 32px 16px;
-  }
-
-  .add-record-btn {
-    padding: 12px 24px;
     font-size: 13px;
-    width: 100%;
-    justify-content: center;
-  }
-
-  .meal-records-section {
-    padding: 32px 16px;
-  }
-
-  .record-card {
-    padding: 20px;
-  }
-
-  .section-title {
-    font-size: 18px;
-  }
-
-  .record-meta {
-    gap: 8px;
-  }
-
-  .meal-type-badge,
-  .food-source-badge {
-    font-size: 10px;
-    padding: 4px 8px;
-  }
-
-  .food-name {
-    font-size: 16px;
-  }
-
-  .nutrition-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 12px;
-  }
-
-  .nutrition-value {
-    font-size: 18px;
-  }
-
-  .meal-summary-section {
-    padding: 32px 16px;
   }
 
   .summary-grid {
     grid-template-columns: 1fr;
-    gap: 12px;
-  }
-
-  .summary-item {
-    padding: 16px;
-  }
-
-  .summary-value {
-    font-size: 20px;
-  }
-
-  .modal-content {
-    max-width: 100%;
-    border-radius: 8px 8px 0 0;
-  }
-
-  .modal-header {
-    padding: 20px 16px;
-  }
-
-  .modal-title {
-    font-size: 18px;
-  }
-
-  .meal-form {
-    padding: 20px;
-    gap: 16px;
-  }
-
-  .form-label {
-    font-size: 11px;
-  }
-
-  .form-input,
-  .form-textarea {
-    font-size: 13px;
-    padding: 10px 12px;
   }
 
   .form-actions {
     flex-direction: column-reverse;
-    gap: 12px;
   }
 
-  .btn-primary,
-  .btn-secondary {
+  .btn-secondary,
+  .btn-primary {
     width: 100%;
-    height: 40px;
-    font-size: 11px;
   }
 
-  .empty-state {
-    margin: 32px 16px;
-    padding: 60px 16px;
-  }
-
-  .empty-icon {
-    font-size: 48px;
-  }
-
-  .empty-title {
-    font-size: 20px;
-  }
-
-  .empty-text {
-    font-size: 13px;
+  .modal-content {
+    border-radius: 12px;
+    max-height: 95vh;
   }
 }

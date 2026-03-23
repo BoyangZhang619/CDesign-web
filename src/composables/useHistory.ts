@@ -1,15 +1,70 @@
 import { ref, computed } from 'vue'
 import { fetchWithRefresh } from '../api/http'
 
-export interface HistoryRecord {
-  id: string
-  date: string
-  type: 'meal' | 'exercise' | 'sleep' | 'weight' | 'mood' | 'water'
-  title: string
-  value: string | number
-  description: string
-  time: string
+// 饮食记录
+export interface MealRecord {
+  id: number
+  daily_checkin_id: number
+  user_id: number
+  meal_type: 'breakfast' | 'lunch' | 'dinner' | 'snack'
+  food_source: string
+  food_name: string
+  food_detail: string
+  calories: string | number
+  protein_g: string | number
+  fat_g: string | number
+  carbohydrate_g: string | number
+  fiber_g: string | number
+  sugar_g: string | number
+  meal_time: string
+  ai_recognition_flag: number
+  image_id: string | null
+  created_at: string
+  updated_at: string
+  type: 'meal'
 }
+
+// 运动记录
+export interface ExerciseRecord {
+  id: number
+  daily_checkin_id: number
+  user_id: number
+  activity_type: string
+  duration_min: number
+  intensity: 'light' | 'medium' | 'heavy'
+  calories_burned: string | number
+  start_time: string
+  end_time: string
+  note: string
+  ai_recognition_flag: number
+  created_at: string
+  updated_at: string
+  suggestion: string
+  evaluation: string
+  type: 'exercise'
+}
+
+// 睡眠记录
+export interface SleepRecord {
+  id: number
+  daily_checkin_id: number
+  user_id: number
+  sleep_start_time: string
+  wake_up_time: string
+  sleep_duration_hours: string | number
+  sleep_quality_score: number
+  is_nap: number
+  wake_up_times: number
+  sleep_feeling: string
+  created_at: string
+  updated_at: string
+  suggestion: string
+  evaluation: string
+  type: 'sleep'
+}
+
+// 通用历史记录类型
+export type HistoryRecord = MealRecord | ExerciseRecord | SleepRecord
 
 export function useHistory() {
   const records = ref<HistoryRecord[]>([])
@@ -41,9 +96,9 @@ export function useHistory() {
     { label: '饮食', value: 'meal' },
     { label: '运动', value: 'exercise' },
     { label: '睡眠', value: 'sleep' },
-    { label: '体重', value: 'weight' },
-    { label: '心情', value: 'mood' },
-    { label: '喝水', value: 'water' }
+    // { label: '体重', value: 'weight' },
+    // { label: '心情', value: 'mood' },
+    // { label: '喝水', value: 'water' }
   ]
 
   // 加载记录
@@ -62,15 +117,18 @@ export function useHistory() {
         search: filters.value.searchText
       })
 
-      const response = await fetchWithRefresh(`/history?${params}`, {
+      const response = await fetchWithRefresh(`${import.meta.env.VITE_API_URL || 'https://cda.api.zbyblq.xin'}/api/history/get?${params}`, {
         method: 'GET'
       })
 
       const data = await response.json()
+      console.log('API response for history records:', data)
 
-      if (response.ok) {
-        records.value = data.records || []
-        totalCount.value = data.total || 0
+      if (response.ok && data.success) {
+        // 将 API 返回的数据正确映射到本地记录
+        const apiRecords = data.data?.records || []
+        records.value = apiRecords as HistoryRecord[]
+        totalCount.value = data.data?.total || 0
       } else {
         errorMsg.value = data.message || '加载失败'
       }
@@ -114,13 +172,13 @@ export function useHistory() {
   }
 
   // 删除单条记录
-  async function deleteRecord(id: string) {
+  async function deleteRecord(id: number | string) {
     if (!confirm('确定要删除这条记录吗？')) {
       return
     }
 
     try {
-      const response = await fetchWithRefresh(`/history/${id}`, {
+      const response = await fetchWithRefresh(`${import.meta.env.VITE_API_URL || 'https://cda.api.zbyblq.xin'}/api/history/${id}`, {
         method: 'DELETE'
       })
 
