@@ -1,164 +1,79 @@
-import { ref, computed } from 'vue'
+import { ref } from 'vue'
 import { fetchWithRefresh } from '../api/http'
 
 export interface DailyCheckin {
   date: string
-  breakfast: string // 早餐内容
-  lunch: string // 午餐内容
-  dinner: string // 晚餐内容
-  midnight_snack: string // 夜宵内容
-  water_intake_ml: number // 每天喝水毫升数
-  exercise_duration_min: number // 运动时长（分钟）
-  sleep_start_time: string // 睡眠开始时间
-  sleep_duration_hours: number // 睡眠时长（小时）
-  body_weight_kg: number // 体重（公斤）
-  energy_level: number // 当日精力水平评分 0-5
-  note: string // 备注
-  mood: string // 心情状态
-  sleep_quality: string // 睡眠质量评分
+  exercise_duration_time: number // min
+  exercise_calories_burned: number // g
+  exercise_ai_summary: string
+  meal_breakfast_type: string // text
+  meal_lunch_type: string
+  meal_dinner_type: string
+  meal_snacks_type: string
+  meal_calories: number // kcal
+  meal_protein: number // g
+  meal_fat: number // g
+  meal_carb: number // g
+  meal_fiber: number // g
+  meal_sugar: number // g
+  meal_water: number // ml
+  meal_ai_summary: string
+  sleep_duration_time: number // hours
+  sleep_start_time: string
+  sleep_wakeup_times: number
+  sleep_ai_summary: string
+  total_ai_summary?: string
 }
 
-export interface DailyCheckinResponse extends DailyCheckin {
-  total_calories_intake: number // 总摄入卡路里
-  total_calories_burned: number // 总消耗卡路里
-  ai_analysis_summary: string // AI分析总结
+export interface AiSummaryResponse {
+  records: Array<{
+    exercise_ai_summary: string
+    meal_ai_summary: string
+    sleep_ai_summary: string
+    total_ai_summary: string
+  }>
 }
 
 export function useDailyCheckin() {
   const form = ref<DailyCheckin>({
     date: new Date().toISOString().split('T')[0],
-    breakfast: '',
-    lunch: '',
-    dinner: '',
-    midnight_snack: '',
-    water_intake_ml: 0,
-    exercise_duration_min: 0,
+    exercise_duration_time: 0,
+    exercise_calories_burned: 0,
+    exercise_ai_summary: '',
+    meal_breakfast_type: '',
+    meal_lunch_type: '',
+    meal_dinner_type: '',
+    meal_snacks_type: '',
+    meal_calories: 0,
+    meal_protein: 0,
+    meal_fat: 0,
+    meal_carb: 0,
+    meal_fiber: 0,
+    meal_sugar: 0,
+    meal_water: 0,
+    meal_ai_summary: '',
+    sleep_duration_time: 0,
     sleep_start_time: '22:00',
-    sleep_duration_hours: 8,
-    body_weight_kg: 70,
-    energy_level: 3,
-    note: '',
-    mood: 'neutral',
-    sleep_quality: 'good'
+    sleep_wakeup_times: 0,
+    sleep_ai_summary: '',
+    total_ai_summary: ''
   })
 
-  const displayData = ref<DailyCheckinResponse | null>(null)
+  // const displayData = ref<DailyCheckin | null>(null)
+  // const loading = ref(false)
+  // const editing = ref(false)
+  // const sleep_duration_time = ref(0)
+  // const sleep_start_time = ref('22:00')
+  // const sleep_wakeup_times = ref(0)
+  // const sleep_ai_summary = ref('')
+
+  // })
+
+  const displayData = ref<DailyCheckin | null>(null)
   const loading = ref(false)
   const editing = ref(false)
   const errorMsg = ref('')
   const successMsg = ref('')
-
-  // 饮食评分选项
-  const mealOptions = [
-    { label: '很健康', value: 'healthy' },
-    { label: '正常', value: 'normal' },
-    { label: '不太健康', value: 'unhealthy' },
-    { label: '很不健康', value: 'very_unhealthy' }
-  ]
-
-  // 运动选项
-  const exerciseOptions = [
-    { label: '没有运动', value: 'none' },
-    { label: '轻度运动', value: 'light' },
-    { label: '中等运动', value: 'moderate' },
-    { label: '剧烈运动', value: 'intense' }
-  ]
-
-  // 睡眠质量选项
-  const sleepQualityOptions = [
-    { label: '很好', value: 'excellent' },
-    { label: '良好', value: 'good' },
-    { label: '一般', value: 'fair' },
-    { label: '很差', value: 'poor' }
-  ]
-
-  // 心情选项
-  const moodOptions = [
-    { label: '很开心', value: 'very_happy' },
-    { label: '开心', value: 'happy' },
-    { label: '平常', value: 'neutral' },
-    { label: '有点低落', value: 'sad' },
-    { label: '很沮丧', value: 'very_sad' }
-  ]
-
-  // 精力选项
-  const energyOptions = [
-    { label: '精力充沛', value: 'very_high' },
-    { label: '精力充足', value: 'high' },
-    { label: '正常', value: 'normal' },
-    { label: '有点疲劳', value: 'tired' },
-    { label: '很疲劳', value: 'very_tired' }
-  ]
-
-  // 验证表单
-  function validateForm(): boolean {
-    errorMsg.value = ''
-
-    if (!form.value.date) {
-      errorMsg.value = '请选择日期'
-      return false
-    }
-
-    if (form.value.body_weight_kg <= 0) {
-      errorMsg.value = '请输入有效的体重'
-      return false
-    }
-
-    if (form.value.sleep_duration_hours < 0 || form.value.sleep_duration_hours > 24) {
-      errorMsg.value = '睡眠时间应在 0-24 小时之间'
-      return false
-    }
-
-    if (form.value.water_intake_ml < 0) {
-      errorMsg.value = '喝水毫升数不能为负'
-      return false
-    }
-
-    return true
-  }
-
-  // 提交表单
-  async function handleSubmit() {
-    if (!validateForm()) {
-      return
-    }
-
-    loading.value = true
-    errorMsg.value = ''
-    successMsg.value = ''
-
-    try {
-      const url_base = import.meta.env.VITE_API_URL || 'https://cda.api.zbyblq.xin'
-      const response = await fetchWithRefresh(`${url_base}/api/daily-checkin/update`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(form.value)
-      })
-
-      const data = await response.json()
-
-      if (response.ok) {
-        displayData.value = data
-        successMsg.value = '打卡成功！'
-        editing.value = false
-        // 重置表单
-        form.value.date = new Date().toISOString().split('T')[0]
-        form.value.note = ''
-        setTimeout(() => {
-          successMsg.value = ''
-        }, 3000)
-      } else {
-        errorMsg.value = data.message || '保存失败，请重试'
-      }
-    } catch (error) {
-      errorMsg.value = '网络错误，请检查连接后重试'
-      console.error('Submit error:', error)
-    } finally {
-      loading.value = false
-    }
-  }
 
   // 加载数据
   async function loadDailyCheckin() {
@@ -167,19 +82,37 @@ export function useDailyCheckin() {
 
     try {
       const url_base = import.meta.env.VITE_API_URL || 'https://cda.api.zbyblq.xin'
-      const response = await fetchWithRefresh(`${url_base}/api/daily-checkin/get`, {
-        method: 'GET'
-      })
 
-      const data = await response.json()
+      const exerciseData = await loadCheckin(url_base, '/api/exercise-checkin/checkin/exercise/summary');
+      const mealData = await loadCheckin(url_base, '/api/meal-checkin/checkin/meal/summary');
+      const sleepData = await loadCheckin(url_base, '/api/sleep-checkin/checkin/sleep/summary');
 
-      if (response.ok && data) {
-        displayData.value = data.data.checkinData
-        form.value = { ...data.data.checkinData }
-        console.log('Loaded daily check-in data:', data.data.checkinData)
-      } else {
-        errorMsg.value = data.message || '加载失败'
-      }
+      const aiSummary = await loadCheckin(url_base, '/api/exercise-checkin/checkin/exercise/ai-summary');
+      console.log('AI Summary response:', aiSummary);
+      form.value.exercise_duration_time = (exerciseData as DailyCheckin).exercise_duration_time || 0
+      form.value.exercise_calories_burned = (exerciseData as DailyCheckin).exercise_calories_burned || 0
+      form.value.exercise_ai_summary = (aiSummary as AiSummaryResponse).records[0].exercise_ai_summary || ''
+      form.value.meal_breakfast_type = (mealData as DailyCheckin).meal_breakfast_type || ''
+      form.value.meal_lunch_type = (mealData as DailyCheckin).meal_lunch_type || ''
+      form.value.meal_dinner_type = (mealData as DailyCheckin).meal_dinner_type || ''
+      form.value.meal_calories = (mealData as DailyCheckin).meal_calories || 0
+      form.value.meal_protein = (mealData as DailyCheckin).meal_protein || 0
+      form.value.meal_fat = (mealData as DailyCheckin).meal_fat || 0
+      form.value.meal_carb = (mealData as DailyCheckin).meal_carb || 0
+      form.value.meal_fiber = (mealData as DailyCheckin).meal_fiber || 0
+      form.value.meal_sugar = (mealData as DailyCheckin).meal_sugar || 0
+      form.value.meal_water = (mealData as DailyCheckin).meal_water || 0
+      form.value.meal_ai_summary = (aiSummary as AiSummaryResponse).records[0].meal_ai_summary || ''
+      form.value.sleep_duration_time = (sleepData as DailyCheckin).sleep_duration_time || 0
+      form.value.sleep_start_time = (sleepData as DailyCheckin).sleep_start_time || '22:00'
+      form.value.sleep_wakeup_times = (sleepData as DailyCheckin).sleep_wakeup_times || 0
+      form.value.sleep_ai_summary = (aiSummary as AiSummaryResponse).records[0].sleep_ai_summary || ''
+      form.value.total_ai_summary = (aiSummary as AiSummaryResponse).records[0].total_ai_summary || ''
+
+      console.log('Loaded daily check-in data:', form.value);
+      console.log('ai summary:', aiSummary);
+      // console.log('Meal summary:', aiSummary);
+      // console.log('Sleep summary:', aiSummary);
     } catch (error) {
       errorMsg.value = '网络错误，请检查连接后重试'
       console.error('Load error:', error)
@@ -188,33 +121,23 @@ export function useDailyCheckin() {
     }
   }
 
-  // 进入编辑模式
-  function enterEditMode() {
-    editing.value = true
-    if (displayData.value) {
-      form.value = { ...displayData.value }
+  async function loadCheckin(url_base: string, endpoint: string): Promise<object> {
+    try {
+      const response = await fetchWithRefresh(`${url_base}${endpoint}`, { method: 'GET' })
+      const data = await response.json()
+      if (response.ok && data) {
+        loading.value = false
+        return data.data || {};
+      } else {
+        errorMsg.value = data.message || '加载失败'
+      }
+    } catch (error) {
+      errorMsg.value = '网络错误，请检查连接后重试'
+      console.error('Load error:', error)
     }
+    loading.value = false
+    return {};
   }
-
-  // 取消编辑
-  function cancelEdit() {
-    editing.value = false
-    if (displayData.value) {
-      form.value = { ...displayData.value }
-    }
-  }
-
-  // 计算完成度
-  const completedFields = computed(() => {
-    let count = 0
-    if (form.value.date) count++
-    if (form.value.body_weight_kg > 0) count++
-    if (form.value.sleep_duration_hours >= 0) count++
-    if (form.value.water_intake_ml >= 0) count++
-    if (form.value.exercise_duration_min >= 0) count++
-    if (form.value.mood) count++
-    return count
-  })
 
   function toMealCheckin() {
     window.location.href = '/meal/checkin'
@@ -228,11 +151,6 @@ export function useDailyCheckin() {
     window.location.href = '/exercise/checkin'
   }
 
-  const totalFields = 6
-  const completionPercentage = computed(
-    () => Math.round((completedFields.value / totalFields) * 100)
-  )
-
   return {
     form,
     displayData,
@@ -240,20 +158,10 @@ export function useDailyCheckin() {
     loading,
     errorMsg,
     successMsg,
-    mealOptions,
-    exerciseOptions,
-    sleepQualityOptions,
-    moodOptions,
-    energyOptions,
-    validateForm,
-    handleSubmit,
     loadDailyCheckin,
-    enterEditMode,
-    cancelEdit,
+    loadCheckin,
     toMealCheckin,
     toSleepCheckin,
     toExerciseCheckin,
-    completedFields,
-    completionPercentage
   }
 }

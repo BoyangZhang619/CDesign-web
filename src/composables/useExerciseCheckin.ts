@@ -170,7 +170,7 @@ export function useExerciseCheckin() {
 
       if (response.ok) {
         const rawRecords = data.data || []
-        records.value = rawRecords.map((record: any) => ({
+        records.value = (rawRecords as any[]).map((record: any) => ({
           ...record,
           duration_min: Number(record.duration_min) || 0,
           calories_burned: record.calories_burned ? Number(record.calories_burned) : null,

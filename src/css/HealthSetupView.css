@@ -2,20 +2,43 @@
 
 /* =============== 颜色系统 - Modern European Minimalist =============== */
 :root {
-  --color-text-primary: #3a3a3a;
-  --color-text-secondary: #8a8a8a;
-  --color-border: #e8e8e8;
-  --color-bg-primary: #fafaf9;
-  --color-bg-white: #ffffff;
-  --color-accent: #3a3a3a;
-  --color-success: #4a7a6a;
-  --color-error: #8b4545;
+  --hs-color-text-primary: #3a3a3a;
+  --hs-color-text-secondary: #8a8a8a;
+  --hs-color-border: #e8e8e8;
+  --hs-color-bg-primary: #fafaf9;
+  --hs-color-bg-white: #ffffff;
+  --hs-color-accent: #3a3a3a;
+  --hs-color-success: #4a7a6a;
+  --hs-color-error: #8b4545;
+}
+
+/* =============== 表单字段容器 =============== */
+.form-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 32px;
+}
+
+.form-row.full-width,
+.form-group.full-width {
+  grid-column: 1 / -1;
+}
+
+.form-fields {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 32px;
+}
+
+.form-fields.full-width,
+.form-group.full-width {
+  grid-column: 1 / -1;
 }
 
 /* =============== 页面布局 =============== */
 .page {
   min-height: 100vh;
-  background-color: var(--color-bg-primary);
+  background-color: var(--hs-color-bg-primary);
   display: flex;
   flex-direction: column;
 }
@@ -31,8 +54,7 @@
 
 /* =============== 表单容器 =============== */
 .form-wrapper {
-  /* width: 100%; */
-  margin: 20px;
+  width: 100%;
 }
 
 /* =============== 表单头部 =============== */
@@ -46,7 +68,7 @@
   font-size: 48px;
   font-weight: 600;
   letter-spacing: 0.6px;
-  color: var(--color-text-primary);
+  color: var(--hs-color-text-primary);
   margin: 0 0 12px 0;
   line-height: 1.2;
 }
@@ -56,15 +78,15 @@
   font-size: 14px;
   font-weight: 400;
   letter-spacing: 0.2px;
-  color: var(--color-text-secondary);
+  color: var(--hs-color-text-secondary);
   margin: 0;
   line-height: 1.6;
 }
 
 /* 进度条 */
 .progress-bar {
-  height: 2px;
-  background: var(--color-border);
+  height: 4px;
+  background: #f0f0f0;
   border-radius: 0;
   overflow: hidden;
   margin-top: 24px;
@@ -72,7 +94,7 @@
 
 .progress-fill {
   height: 100%;
-  background: var(--color-accent);
+  background: #3a3a3a;
   border-radius: 0;
   transition: width 0.4s ease;
 }
@@ -82,7 +104,7 @@
   font-size: 11px;
   font-weight: 600;
   letter-spacing: 0.3px;
-  color: var(--color-text-secondary);
+  color: var(--hs-color-text-secondary);
   text-align: right;
   margin-top: 8px;
   text-transform: uppercase;
@@ -97,8 +119,8 @@
 
 /* 表单部分 */
 .form-section {
-  background-color: var(--color-bg-white);
-  border: 1px solid var(--color-border);
+  background-color: var(--hs-color-bg-white);
+  border: 1px solid var(--hs-color-border);
   padding: 40px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
   box-sizing: border-box;
@@ -111,8 +133,8 @@
 /* 章节头部 */
 .section-header {
   display: flex;
-  align-items: flex-start;
-  gap: 16px;
+  flex-direction: column;
+  gap: 8px;
   margin-bottom: 32px;
 }
 
@@ -121,9 +143,9 @@
   font-size: 32px;
   font-weight: 600;
   letter-spacing: 0.6px;
-  color: var(--color-text-primary);
-  min-width: 40px;
+  color: var(--hs-color-text-primary);
   line-height: 1.2;
+  margin: 0;
 }
 
 .section-title {
@@ -131,12 +153,22 @@
   font-size: 24px;
   font-weight: 600;
   letter-spacing: 0.6px;
-  color: var(--color-text-primary);
+  color: var(--hs-color-text-primary);
   margin: 0;
   line-height: 1.2;
 }
 
-/* 表单行 */
+.section-subtitle {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 13px;
+  font-weight: 400;
+  letter-spacing: 0.2px;
+  color: var(--hs-color-text-secondary);
+  margin: 0;
+  line-height: 1.6;
+}
+
+/* 表单�?*/
 .form-row {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
@@ -160,7 +192,7 @@
   font-size: 12px;
   font-weight: 600;
   letter-spacing: 0.3px;
-  color: var(--color-text-primary);
+  color: var(--hs-color-text-primary);
   text-transform: uppercase;
   line-height: 1.4;
 }
@@ -172,9 +204,9 @@
   font-size: 14px;
   font-weight: 400;
   letter-spacing: 0.2px;
-  color: var(--color-text-primary);
-  background-color: var(--color-bg-primary);
-  border: 1px solid var(--color-border);
+  color: var(--hs-color-text-primary);
+  background-color: var(--hs-color-bg-primary);
+  border: 1px solid var(--hs-color-border);
   padding: 12px 16px;
   line-height: 1.6;
   transition: border-color 0.3s ease, box-shadow 0.3s ease;
@@ -185,14 +217,14 @@
 .form-input::placeholder,
 .form-select::placeholder,
 .form-textarea::placeholder {
-  color: var(--color-text-secondary);
+  color: var(--hs-color-text-secondary);
 }
 
 .form-input:focus,
 .form-select:focus,
 .form-textarea:focus {
   outline: none;
-  border-color: var(--color-accent);
+  border-color: var(--hs-color-accent);
   box-shadow: 0 0 0 3px rgba(58, 58, 58, 0.05);
 }
 
@@ -226,34 +258,35 @@ select.form-select {
   font-size: 14px;
   font-weight: 400;
   letter-spacing: 0.2px;
-  color: var(--color-text-primary);
+  color: var(--hs-color-text-primary);
   transition: color 0.3s ease;
 }
 
 .radio-label:hover {
-  color: var(--color-accent);
+  color: var(--hs-color-accent);
 }
 
 .radio-input {
-  appearance: none;
+  /* appearance: none; */
   width: 18px;
   height: 18px;
-  border: 1px solid var(--color-border);
+  accent-color: #404040;
+  border: 1px solid var(--hs-color-border);
   border-radius: 50%;
   cursor: pointer;
   transition: all 0.3s ease;
-  background: var(--color-bg-white);
+  background: white;
   flex-shrink: 0;
 }
 
 .radio-input:hover {
-  border-color: var(--color-accent);
+  border-color: var(--hs-color-accent);
 }
 
 .radio-input:checked {
-  background: var(--color-accent);
-  border-color: var(--color-accent);
-  box-shadow: inset 0 0 0 4px var(--color-bg-white);
+  background: var(--hs-color-accent);
+  border-color: var(--hs-color-accent);
+  box-shadow: inset 0 0 0 4px var(--hs-color-bg-white);
 }
 
 /* 复选框 */
@@ -272,53 +305,45 @@ select.form-select {
   font-size: 13px;
   font-weight: 400;
   letter-spacing: 0.2px;
-  color: var(--color-text-primary);
+  color: var(--hs-color-text-primary);
   transition: color 0.3s ease;
 }
 
 .checkbox-label:hover {
-  color: var(--color-accent);
+  color: var(--hs-color-accent);
 }
 
 .checkbox-input {
-  appearance: none;
+  /* appearance: none; */
+  accent-color: #404040;
   width: 16px;
   height: 16px;
-  border: 1px solid var(--color-border);
+  border: 1px solid var(--hs-color-border);
   border-radius: 0;
   cursor: pointer;
   transition: all 0.3s ease;
-  background: var(--color-bg-white);
+  background: transparent;
   flex-shrink: 0;
   box-sizing: border-box;
 }
 
 .checkbox-input:hover {
-  border-color: var(--color-accent);
+  border-color: var(--hs-color-accent);
 }
 
 .checkbox-input:checked {
-  background: var(--color-accent);
-  border-color: var(--color-accent);
-}
-
-.checkbox-input:checked::after {
-  content: '✓';
-  color: var(--color-bg-white);
-  font-size: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  background: var(--hs-color-accent);
+  border-color: var(--hs-color-accent);
 }
 
 /* =============== 操作按钮 =============== */
 .form-actions {
   display: flex;
   gap: 16px;
-  justify-content: flex-end;
+  justify-content: center;
   margin-top: 40px;
   padding-top: 32px;
-  border-top: 1px solid var(--color-border);
+  border-top: 1px solid var(--hs-color-border);
   border-radius: 8px;
   flex-wrap: wrap;
 }
@@ -332,27 +357,23 @@ select.form-select {
   text-transform: uppercase;
   padding: 0 32px;
   height: 44px;
-  border: 1px solid var(--color-border);
-  border-radius: 0;
+  border: 1px solid #404040;
+  color: black;
   cursor: pointer;
   transition: all 0.3s ease;
   display: flex;
   align-items: center;
   justify-content: center;
+  border-radius: 0;
   line-height: 1;
   white-space: nowrap;
   box-sizing: border-box;
 }
 
-.btn-primary {
-  background-color: #242424 !important;
-  color: var(--color-bg-white);
-  border-color: #000;
-}
-
 .btn-primary:hover:not(:disabled) {
   background-color: #2a2a2a;
   border-color: #2a2a2a;
+  color: white;
 }
 
 .btn-primary:disabled {
@@ -360,18 +381,24 @@ select.form-select {
   cursor: not-allowed;
 }
 
+.btn-primary {
+  background-color: var(--hs-color-accent);
+}
+
+
 .btn-secondary {
-  background-color: #000;
-  color: var(--color-text-primary);
-  border-color: var(--color-border);
+  background-color: var(--hs-color-bg-white);
+  color: var(--hs-color-text-primary);
+  border-color: var(--hs-color-border);
 }
 
-.btn-secondary:hover {
-  border-color: var(--color-accent);
-  background-color: var(--color-bg-white);
+.btn-secondary:hover:not(:disabled) {
+  background-color: #2a2a2a;
+  color: #fff;
+  border-color: #2a2a2a;
 }
 
-/* =============== 提示框 =============== */
+/* =============== 提示�?=============== */
 .error-box,
 .success-box {
   padding: 16px 20px;
@@ -387,14 +414,14 @@ select.form-select {
 
 .error-box {
   background-color: #fef5f5;
-  border-left-color: var(--color-error);
-  color: var(--color-error);
+  border-left-color: var(--hs-color-error);
+  color: var(--hs-color-error);
 }
 
 .success-box {
   background-color: #f5faf9;
-  border-left-color: var(--color-success);
-  color: var(--color-success);
+  border-left-color: var(--hs-color-success);
+  color: var(--hs-color-success);
 }
 
 @keyframes slideIn {
@@ -408,7 +435,7 @@ select.form-select {
   }
 }
 
-/* =============== 响应式设计 =============== */
+/* =============== 响应式设�?=============== */
 @media (max-width: 768px) {
   .content {
     padding: 24px;
@@ -455,7 +482,6 @@ select.form-select {
 
   .btn-primary,
   .btn-secondary {
-    flex: 1;
     min-width: 100px;
   }
 
@@ -532,7 +558,6 @@ select.form-select {
     height: 40px;
     font-size: 11px;
     padding: 0;
-    flex: 1;
   }
 
   .btn-primary {

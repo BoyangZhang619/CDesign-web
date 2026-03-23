@@ -1,342 +1,283 @@
-/* =============== 颜色系统 =============== */
+﻿@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Montserrat:wght@400;500;600;700&display=swap');
+
+/* ==========================================
+   现代欧式简约风格 - 饮食打卡显示页面
+   ========================================== */
+
 :root {
-  --color-bg-primary: #fafaf9;
-  --color-bg-secondary: #f5f4f0;
-  --color-card-bg: #ffffff;
-  --color-text-primary: #2d2d2a;
-  --color-text-secondary: #6f6f6a;
-  --color-text-tertiary: #999993;
-  --color-border: #e8e3dd;
-  --color-border-light: #f0ebe5;
-  --color-accent-warm: #d8a88f;
-  --color-accent-cool: #8fb3d4;
-  --color-accent-green: #a8c7a0;
-  --color-success: #8fb3a8;
-  --color-error: #c89b9b;
+  /* 莫兰迪色系 - 主色调 */
+  --color-cream: #faf9f7;
+  --color-ivory: #f5f3f0;
+  --color-oatmeal: #e8e5e0;
+  --color-warm-gray: #d4cfc8;
+  --color-cool-gray: #c9c5bf;
+  
+  /* 点缀色 - 高雅沉静 */
+  --color-prussian-blue: #384759;
+  --color-sage-green: #8b9a7f;
+  --color-champagne-gold: #d4af8f;
+  --color-burgundy: #7a4a5a;
+  --color-soft-taupe: #a89480;
+  
+  /* 文本色 */
+  --color-text-primary: #3d3a37;
+  --color-text-secondary: #7a7a77;
+  --color-text-light: #9a9a97;
+  --color-border: #e8e5e0;
+  
+  /* 功能色 */
+  --color-error: #c85a54;
+  --color-success: #8b9a7f;
+  
+  /* 阴影 - 极细微的柔和阴影 */
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08);
+  --shadow-md: 0 2px 6px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
-/* =============== 页面布局 =============== */
-.page {
+/* ==========================================
+   页面基础布局
+   ========================================== */
+
+.meal-display-page {
+  background: linear-gradient(180deg, var(--color-cream) 0%, var(--color-ivory) 50%, var(--color-oatmeal) 100%);
   min-height: 100vh;
-  background: var(--color-bg-primary);
-  display: flex;
-  flex-direction: column;
-}
-
-.content {
-  flex: 1;
-  padding: 24px;
-  overflow-y: auto;
-}
-
-/* =============== 容器 =============== */
-.meal-wrapper {
-  max-width: 900px;
-  margin: 0 auto;
-  width: 100%;
-}
-
-/* =============== 页面头部 =============== */
-.page-header {
-  margin-bottom: 32px;
-  animation: fadeInDown 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.page-title {
-  margin: 0 0 8px 0;
-  font-size: 32px;
-  font-weight: 400;
   color: var(--color-text-primary);
-  letter-spacing: -0.5px;
+  font-family: 'Lato', 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 }
 
-.page-subtitle {
+.meal-display-main {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 0;
+}
+
+/* 顶部装饰线 */
+.page-divider {
+  height: 1px;
+  background: linear-gradient(90deg, 
+    transparent 0%,
+    var(--color-border) 20%,
+    var(--color-border) 80%,
+    transparent 100%);
   margin: 0;
-  font-size: 14px;
-  color: var(--color-text-secondary);
+}
+
+/* ==========================================
+   标题区
+   ========================================== */
+
+.meal-title-section {
+  padding: 60px 40px;
+  text-align: center;
+  border-bottom: 1px solid var(--color-border);
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.title-container {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.meal-title {
+  font-family: 'Playfair Display', 'Bodoni Moda', serif;
+  font-size: 52px;
+  font-weight: 500;
+  letter-spacing: 2px;
+  margin: 0 0 12px 0;
+  color: var(--color-prussian-blue);
+  line-height: 1.2;
+}
+
+.meal-subtitle {
+  font-size: 16px;
   font-weight: 300;
+  color: var(--color-text-secondary);
+  margin: 0 0 20px 0;
+  letter-spacing: 0.5px;
 }
 
-/* 章节部分通用样式 */
-.form-section,
-.records-section,
-.summary-section {
-  background: var(--color-card-bg);
-  border: 1px solid var(--color-border-light);
-  border-radius: 16px;
-  padding: 28px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
-  margin-bottom: 24px;
-  animation: slideUp 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-  transition: padding 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+.date-display {
+  font-size: 13px;
+  color: var(--color-text-light);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  font-weight: 500;
 }
 
-.form-section:hover,
-.records-section:hover,
-.summary-section:hover {
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-  transition: box-shadow 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+/* ==========================================
+   新增打卡按钮区
+   ========================================== */
+
+.meal-add-section {
+  padding: 60px 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-/* 折叠状态 */
-.form-section.collapsed,
-.records-section.collapsed,
-.summary-section.collapsed {
-  padding: 16px 28px;
-}
-
-.form-section.collapsed .section-header,
-.records-section.collapsed .section-header,
-.summary-section.collapsed .section-header {
-  margin-bottom: 0;
-}
-
-/* 章节头部 */
-.section-header {
+.add-record-btn {
   display: flex;
   align-items: center;
   gap: 12px;
-  margin-bottom: 24px;
+  padding: 16px 40px;
+  background: white;
+  border: 2px solid var(--color-prussian-blue);
+  color: var(--color-prussian-blue);
+  font-size: 16px;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  border-radius: 2px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  font-family: 'Montserrat', sans-serif;
 }
 
-.expand-icon {
-  margin-left: auto;
-  font-size: 12px;
-  color: var(--color-text-secondary);
-  transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.section-number {
+.add-icon {
   font-size: 24px;
   font-weight: 300;
-  color: var(--color-accent-warm);
-  opacity: 0.7;
+  line-height: 1;
+}
+
+.add-record-btn:hover {
+  background: var(--color-prussian-blue);
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.add-record-btn:active {
+  transform: translateY(0);
+}
+
+/* ==========================================
+   记录列表区
+   ========================================== */
+
+.meal-records-section {
+  padding: 60px 40px;
+  background: transparent;
+}
+
+.section-title-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 40px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--color-border);
 }
 
 .section-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 28px;
+  font-weight: 500;
   margin: 0;
-  font-size: 16px;
-  font-weight: 400;
-  color: var(--color-text-primary);
+  color: var(--color-prussian-blue);
+  letter-spacing: 1px;
 }
 
-/* =============== 表单元素 =============== */
-.form-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 16px;
-  margin-bottom: 16px;
-}
-
-.form-row:last-child {
-  margin-bottom: 0;
-}
-
-.form-row.full-width {
-  grid-template-columns: 1fr;
-}
-
-@media (max-width: 768px) {
-  .form-row {
-    grid-template-columns: 1fr;
-  }
-}
-
-/* 表单分组 */
-.form-group {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.form-group.full-width {
-  grid-column: 1 / -1;
-}
-
-.form-label {
+.record-count {
   font-size: 13px;
-  font-weight: 400;
-  color: var(--color-text-primary);
-  letter-spacing: 0.3px;
+  color: var(--color-text-secondary);
+  background: var(--color-ivory);
+  padding: 6px 12px;
+  border-radius: 2px;
+  font-weight: 500;
 }
 
-.form-input,
-.form-textarea {
-  padding: 12px 16px;
-  border: 1px solid var(--color-border-light);
-  background: var(--color-card-bg);
-  color: var(--color-text-primary);
-  border-radius: 12px;
-  font-size: 14px;
-  font-weight: 300;
-  font-family: inherit;
-  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.form-input:focus,
-.form-textarea:focus {
-  outline: none;
-  border-color: var(--color-accent-warm);
-  box-shadow: 0 0 0 3px rgba(216, 168, 143, 0.1);
-}
-
-.form-input::placeholder,
-.form-textarea::placeholder {
-  color: var(--color-text-tertiary);
-}
-
-/* =============== 记录列表 =============== */
-.records-section {
-  background: var(--color-card-bg);
-  border: 1px solid var(--color-border-light);
-  border-radius: 16px;
-  padding: 28px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
-  margin-bottom: 24px;
-  animation: slideUp 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-  animation-delay: 0.1s;
-}
-
-.records-list,
-.records-list-edit {
+.records-container {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 24px;
+  margin-bottom: 32px;
 }
 
-.record-card,
-.record-item {
-  background: var(--color-bg-secondary);
-  border: 1px solid var(--color-border-light);
-  border-radius: 12px;
-  padding: 16px;
-  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+.record-card {
+  background: white;
+  border: 1px solid var(--color-border);
+  padding: 32px;
+  border-radius: 2px;
+  box-shadow: var(--shadow-sm);
+  transition: all 0.3s ease;
 }
 
-.record-card:hover,
-.record-item:hover {
-  background: var(--color-card-bg);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-  border-color: var(--color-accent-warm);
+.record-card:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-1px);
 }
 
-.record-item {
-  cursor: pointer;
-  display: flex;
-  gap: 16px;
-  align-items: flex-start;
-}
-
-.record-select {
-  padding-top: 4px;
-}
-
-.radio-input {
-  appearance: none;
-  width: 18px;
-  height: 18px;
-  border: 2px solid var(--color-border);
-  border-radius: 50%;
-  cursor: pointer;
-  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-  background: var(--color-card-bg);
-}
-
-.radio-input:hover {
-  border-color: var(--color-accent-warm);
-}
-
-.radio-input:checked {
-  background: linear-gradient(135deg, var(--color-accent-warm), var(--color-accent-cool));
-  border-color: var(--color-accent-warm);
-  box-shadow: inset 0 0 0 4px var(--color-card-bg);
-}
-
-/* 记录头部 */
 .record-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 12px;
+  margin-bottom: 20px;
 }
 
 .record-meta {
   display: flex;
-  gap: 8px;
+  align-items: center;
+  gap: 12px;
   flex-wrap: wrap;
 }
 
-.record-time {
-  font-size: 12px;
-  color: var(--color-text-tertiary);
-}
-
-/* 徽章 */
 .meal-type-badge,
-.food-source-badge,
-.badge {
-  display: inline-block;
-  padding: 4px 10px;
-  border-radius: 6px;
-  font-size: 12px;
-  font-weight: 400;
-  background: rgba(216, 168, 143, 0.1);
-  color: var(--color-accent-warm);
-}
-
 .food-source-badge {
-  background: rgba(143, 179, 212, 0.1);
-  color: var(--color-accent-cool);
+  font-family: 'Montserrat', sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
+  padding: 6px 12px;
+  border: 1px solid var(--color-border);
+  background: var(--color-cream);
+  color: var(--color-text-primary);
+  border-radius: 2px;
 }
 
-.badge.calculating {
-  background: rgba(168, 199, 160, 0.1);
-  color: var(--color-accent-green);
+.record-time {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 12px;
+  color: var(--color-text-secondary);
+  letter-spacing: 0.2px;
+  margin-left: auto;
 }
 
-/* 记录内容 */
 .record-content {
-  margin-bottom: 16px;
+  margin-bottom: 20px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--color-border);
 }
 
 .food-name {
+  font-family: 'Playfair Display', serif;
+  font-size: 20px;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  color: var(--color-prussian-blue);
   margin: 0 0 8px 0;
-  font-size: 14px;
-  font-weight: 400;
-  color: var(--color-text-primary);
+  line-height: 1.2;
 }
 
 .food-detail {
-  margin: 0;
+  font-family: 'Montserrat', sans-serif;
   font-size: 13px;
   color: var(--color-text-secondary);
-  line-height: 1.5;
+  letter-spacing: 0.2px;
+  line-height: 1.6;
+  margin: 0;
 }
 
-.record-info {
-  flex: 1;
-  min-width: 0;
-}
+/* ==========================================
+   营养信息网格
+   ========================================== */
 
-.record-nutrition {
-  display: flex;
-  gap: 8px;
-  white-space: nowrap;
-}
-
-/* 营养信息 */
 .nutrition-info {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding-top: 12px;
-  border-top: 1px solid var(--color-border-light);
+  padding: 0;
 }
 
 .calculating {
   display: flex;
   align-items: center;
   gap: 8px;
+  font-family: 'Montserrat', sans-serif;
   font-size: 13px;
   color: var(--color-text-secondary);
 }
@@ -345,10 +286,10 @@
   display: inline-block;
   width: 12px;
   height: 12px;
-  border: 2px solid rgba(216, 168, 143, 0.3);
-  border-top-color: var(--color-accent-warm);
+  border: 2px solid var(--color-border);
+  border-top-color: var(--color-champagne-gold);
   border-radius: 50%;
-  animation: spin 0.8s linear infinite;
+  animation: spin 0.6s linear infinite;
 }
 
 @keyframes spin {
@@ -359,190 +300,212 @@
 
 .nutrition-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 12px;
-  width: 100%;
+  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+  gap: 16px;
 }
 
 .nutrition-item {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 4px;
-  padding: 8px;
-  background: var(--color-bg-primary);
-  border-radius: 8px;
+  gap: 6px;
+  text-align: center;
+  padding: 12px;
+  background: var(--color-cream);
+  border-radius: 2px;
 }
 
 .nutrition-label {
+  font-family: 'Montserrat', sans-serif;
   font-size: 11px;
-  color: var(--color-text-tertiary);
-  font-weight: 400;
+  font-weight: 600;
+  letter-spacing: 0.2px;
+  color: var(--color-text-secondary);
+  text-transform: uppercase;
 }
 
 .nutrition-value {
-  font-size: 16px;
-  font-weight: 400;
-  color: var(--color-accent-warm);
+  font-family: 'Playfair Display', serif;
+  font-size: 22px;
+  font-weight: 500;
+  color: var(--color-prussian-blue);
+  line-height: 1.2;
 }
 
 .nutrition-unit {
+  font-family: 'Montserrat', sans-serif;
   font-size: 11px;
-  color: var(--color-text-secondary);
+  color: var(--color-text-light);
+  letter-spacing: 0.2px;
 }
 
-/* =============== 汇总统计 =============== */
-.summary-section {
-  background: var(--color-card-bg);
-  border: 1px solid var(--color-border-light);
-  border-radius: 16px;
-  padding: 28px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
-  margin-bottom: 24px;
-  animation: slideUp 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-  animation-delay: 0.2s;
+/* ==========================================
+   显示全部按钮
+   ========================================== */
+
+.show-all-container {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 32px;
+}
+
+.show-all-btn {
+  padding: 12px 32px;
+  border: 1px solid var(--color-border);
+  background: white;
+  color: var(--color-prussian-blue);
+  font-family: 'Montserrat', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  cursor: pointer;
+  border-radius: 2px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.show-all-btn:hover {
+  background: var(--color-prussian-blue);
+  color: white;
+  border-color: var(--color-prussian-blue);
+}
+
+/* ==========================================
+   汇总统计区
+   ========================================== */
+
+.meal-summary-section {
+  padding: 60px 40px;
+  background: linear-gradient(135deg, 
+    rgba(131, 71, 89, 0.03) 0%,
+    rgba(212, 175, 143, 0.03) 100%);
+  border-top: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--color-border);
 }
 
 .summary-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-  gap: 16px;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 24px;
 }
 
 .summary-item {
-  background: linear-gradient(135deg, rgba(216, 168, 143, 0.05), rgba(143, 179, 212, 0.05));
-  border: 1px solid var(--color-border-light);
-  border-radius: 12px;
-  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
   text-align: center;
+  padding: 24px;
+  background: white;
+  border: 1px solid var(--color-border);
+  border-radius: 2px;
+  box-shadow: var(--shadow-sm);
+  transition: all 0.3s ease;
+}
+
+.summary-item:hover {
+  box-shadow: var(--shadow-md);
 }
 
 .summary-label {
-  font-size: 12px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
   color: var(--color-text-secondary);
-  margin-bottom: 8px;
-  font-weight: 400;
+  text-transform: uppercase;
 }
 
 .summary-value {
-  font-size: 24px;
-  font-weight: 400;
-  color: var(--color-accent-warm);
-  margin-bottom: 4px;
+  font-family: 'Playfair Display', serif;
+  font-size: 32px;
+  font-weight: 500;
+  color: var(--color-prussian-blue);
+  line-height: 1.2;
 }
 
 .summary-unit {
-  font-size: 12px;
-  color: var(--color-text-tertiary);
+  font-family: 'Montserrat', sans-serif;
+  font-size: 11px;
+  color: var(--color-text-light);
+  letter-spacing: 0.2px;
 }
 
-/* =============== 操作按钮 =============== */
-.form-actions {
-  display: flex;
-  gap: 12px;
-  margin-top: 24px;
-  padding-top: 24px;
-  border-top: 1px solid var(--color-border-light);
-}
+/* ==========================================
+   空状态
+   ========================================== */
 
-.btn-primary,
-.btn-secondary {
-  flex: 1;
-  padding: 12px 24px;
-  border: none;
-  border-radius: 12px;
-  font-size: 14px;
-  font-weight: 400;
-  cursor: pointer;
-  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-  text-align: center;
-}
-
-.btn-primary {
-  /* background: linear-gradient(135deg, var(--color-accent-warm), var(--color-accent-cool)); */
-  color: white;
-  box-shadow: 0 2px 8px rgba(216, 168, 143, 0.2);
-}
-
-.btn-primary:hover:not(:disabled) {
-  box-shadow: 0 4px 12px rgba(216, 168, 143, 0.3);
-  transform: translateY(-2px);
-}
-
-.btn-primary:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-
-.btn-secondary {
-  background: var(--color-bg-secondary);
-  color: var(--color-text-primary);
-  border: 1px solid var(--color-border-light);
-}
-
-.btn-secondary:hover {
-  background: var(--color-border-light);
-}
-
-/* =============== 提示框 =============== */
-.error-box,
-.success-box {
-  padding: 14px 16px;
-  border-radius: 12px;
-  font-size: 13px;
-  margin: 16px 0;
-  border-left: 4px solid;
-  animation: slideDown 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.error-box {
-  background: rgba(200, 155, 155, 0.08);
-  border-left-color: var(--color-error);
-  color: var(--color-error);
-}
-
-.success-box {
-  background: rgba(168, 199, 160, 0.08);
-  border-left-color: var(--color-success);
-  color: var(--color-success);
-}
-
-/* =============== 空状态 =============== */
 .empty-state {
   text-align: center;
-  padding: 60px 20px;
-  animation: fadeIn 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  padding: 100px 40px;
+  background: white;
+  border: 1px solid var(--color-border);
+  margin: 60px 40px;
+  border-radius: 2px;
+  box-shadow: var(--shadow-sm);
 }
 
 .empty-icon {
-  font-size: 48px;
-  margin-bottom: 16px;
-  opacity: 0.5;
+  font-size: 64px;
+  margin-bottom: 20px;
+  line-height: 1;
 }
 
 .empty-title {
-  margin: 0 0 8px 0;
-  font-size: 18px;
-  font-weight: 400;
-  color: var(--color-text-primary);
+  font-family: 'Playfair Display', serif;
+  font-size: 24px;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  color: var(--color-prussian-blue);
+  margin: 0 0 12px 0;
+  line-height: 1.2;
 }
 
 .empty-text {
-  margin: 0;
+  font-family: 'Montserrat', sans-serif;
   font-size: 14px;
   color: var(--color-text-secondary);
+  letter-spacing: 0.2px;
+  margin: 0;
+  line-height: 1.6;
 }
 
-/* =============== 动画 =============== */
-@keyframes fadeInDown {
+/* ==========================================
+   浮窗模态框
+   ========================================== */
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(61, 58, 55, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
   from {
     opacity: 0;
-    transform: translateY(-20px);
   }
   to {
     opacity: 1;
-    transform: translateY(0);
   }
+}
+
+.modal-content {
+  background: white;
+  border: 1px solid var(--color-border);
+  border-radius: 2px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+  max-height: 90vh;
+  overflow-y: auto;
+  animation: slideUp 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  width: 100%;
+  max-width: 600px;
 }
 
 @keyframes slideUp {
@@ -556,6 +519,156 @@
   }
 }
 
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 32px 40px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.modal-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 24px;
+  font-weight: 500;
+  margin: 0;
+  color: var(--color-prussian-blue);
+  letter-spacing: 0.5px;
+}
+
+.modal-close {
+  background: none;
+  border: none;
+  font-size: 24px;
+  color: var(--color-text-light);
+  cursor: pointer;
+  transition: color 0.3s ease;
+  padding: 0;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-close:hover {
+  color: var(--color-prussian-blue);
+}
+
+/* ==========================================
+   表单样式
+   ========================================== */
+
+.meal-form {
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.form-label {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  color: var(--color-text-primary);
+  text-transform: uppercase;
+}
+
+.button-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.toggle-btn {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.2px;
+  padding: 10px 20px;
+  border: 1px solid var(--color-border);
+  background: white;
+  color: var(--color-text-primary);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border-radius: 2px;
+  text-transform: uppercase;
+}
+
+.toggle-btn:hover {
+  border-color: var(--color-prussian-blue);
+  background: var(--color-cream);
+}
+
+.toggle-btn.active {
+  background: var(--color-prussian-blue);
+  color: white;
+  border-color: var(--color-prussian-blue);
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+}
+
+.form-group.full-width {
+  grid-column: 1 / -1;
+}
+
+.form-input,
+.form-textarea {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 14px;
+  color: var(--color-text-primary);
+  background: var(--color-cream);
+  border: 1px solid var(--color-border);
+  padding: 12px 16px;
+  border-radius: 2px;
+  transition: all 0.3s ease;
+  box-sizing: border-box;
+}
+
+.form-input::placeholder,
+.form-textarea::placeholder {
+  color: var(--color-text-light);
+}
+
+.form-input:focus,
+.form-textarea:focus {
+  outline: none;
+  background: white;
+  border-color: var(--color-prussian-blue);
+  box-shadow: 0 0 0 3px rgba(56, 71, 89, 0.05);
+}
+
+.form-textarea {
+  resize: vertical;
+  min-height: 100px;
+  font-family: 'Montserrat', sans-serif;
+}
+
+/* ==========================================
+   错误/成功提示
+   ========================================== */
+
+.error-box,
+.success-box {
+  padding: 16px 20px;
+  border-left: 3px solid;
+  border-radius: 2px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 13px;
+  animation: slideDown 0.3s ease;
+}
+
 @keyframes slideDown {
   from {
     opacity: 0;
@@ -567,93 +680,310 @@
   }
 }
 
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
+.error-box {
+  background: rgba(200, 90, 84, 0.08);
+  border-left-color: var(--color-error);
+  color: var(--color-error);
 }
 
-/* =============== 响应式设计 =============== */
+.success-box {
+  background: rgba(139, 154, 127, 0.08);
+  border-left-color: var(--color-success);
+  color: var(--color-success);
+}
+
+/* ==========================================
+   按钮操作
+   ========================================== */
+
+.form-actions {
+  display: flex;
+  gap: 16px;
+  justify-content: flex-end;
+  margin-top: 24px;
+  padding-top: 24px;
+  border-top: 1px solid var(--color-border);
+}
+
+.btn-primary,
+.btn-secondary {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  padding: 12px 32px;
+  height: 44px;
+  border-radius: 2px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+  box-sizing: border-box;
+}
+
+.btn-primary {
+  border: 1px solid var(--color-prussian-blue);
+  background: var(--color-prussian-blue);
+  color: white;
+}
+
+.btn-primary:hover:not(:disabled) {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+
+.btn-primary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.btn-secondary {
+  border: 1px solid var(--color-border);
+  background: white;
+  color: var(--color-text-primary);
+}
+
+.btn-secondary:hover {
+  background: var(--color-cream);
+  border-color: var(--color-prussian-blue);
+}
+
+/* ==========================================
+   底部空白
+   ========================================== */
+
+.meal-footer {
+  height: 60px;
+}
+
+/* ==========================================
+   过渡动画
+   ========================================== */
+
+.modal-fade-enter-active,
+.modal-fade-leave-active {
+  transition: opacity 0.3s ease;
+}
+
+.modal-fade-enter-from,
+.modal-fade-leave-to {
+  opacity: 0;
+}
+
+/* ==========================================
+   响应式设计
+   ========================================== */
+
 @media (max-width: 768px) {
-  .content {
-    padding: 16px;
+  .meal-title-section {
+    padding: 40px 20px;
   }
 
-  .page-title {
-    font-size: 24px;
+  .meal-title {
+    font-size: 36px;
   }
 
-  .form-section,
-  .records-section,
-  .summary-section {
-    padding: 20px;
+  .meal-add-section {
+    padding: 40px 20px;
+  }
+
+  .add-record-btn {
+    padding: 14px 28px;
+    font-size: 14px;
+  }
+
+  .meal-records-section {
+    padding: 40px 20px;
+  }
+
+  .record-card {
+    padding: 24px;
+  }
+
+  .section-title {
+    font-size: 22px;
+  }
+
+  .food-name {
+    font-size: 18px;
+  }
+
+  .meal-summary-section {
+    padding: 40px 20px;
   }
 
   .summary-grid {
     grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+
+  .summary-item {
+    padding: 20px;
+  }
+
+  .summary-value {
+    font-size: 24px;
+  }
+
+  .modal-content {
+    max-width: 90%;
+  }
+
+  .modal-header {
+    padding: 24px 20px;
+  }
+
+  .modal-title {
+    font-size: 20px;
+  }
+
+  .meal-form {
+    padding: 24px;
+  }
+
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+
+  .empty-state {
+    margin: 40px 20px;
+    padding: 60px 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .meal-title-section {
+    padding: 32px 16px;
+  }
+
+  .meal-title {
+    font-size: 28px;
+  }
+
+  .meal-subtitle {
+    font-size: 14px;
+  }
+
+  .meal-add-section {
+    padding: 32px 16px;
+  }
+
+  .add-record-btn {
+    padding: 12px 24px;
+    font-size: 13px;
+    width: 100%;
+    justify-content: center;
+  }
+
+  .meal-records-section {
+    padding: 32px 16px;
+  }
+
+  .record-card {
+    padding: 20px;
+  }
+
+  .section-title {
+    font-size: 18px;
+  }
+
+  .record-meta {
+    gap: 8px;
+  }
+
+  .meal-type-badge,
+  .food-source-badge {
+    font-size: 10px;
+    padding: 4px 8px;
+  }
+
+  .food-name {
+    font-size: 16px;
   }
 
   .nutrition-grid {
     grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
   }
 
-  .form-row {
+  .nutrition-value {
+    font-size: 18px;
+  }
+
+  .meal-summary-section {
+    padding: 32px 16px;
+  }
+
+  .summary-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .summary-item {
+    padding: 16px;
+  }
+
+  .summary-value {
+    font-size: 20px;
+  }
+
+  .modal-content {
+    max-width: 100%;
+    border-radius: 8px 8px 0 0;
+  }
+
+  .modal-header {
+    padding: 20px 16px;
+  }
+
+  .modal-title {
+    font-size: 18px;
+  }
+
+  .meal-form {
+    padding: 20px;
+    gap: 16px;
+  }
+
+  .form-label {
+    font-size: 11px;
+  }
+
+  .form-input,
+  .form-textarea {
+    font-size: 13px;
+    padding: 10px 12px;
+  }
+
+  .form-actions {
+    flex-direction: column-reverse;
     gap: 12px;
   }
 
   .btn-primary,
   .btn-secondary {
-    padding: 10px 16px;
-    font-size: 13px;
+    width: 100%;
+    height: 40px;
+    font-size: 11px;
   }
-}
 
-@media (max-width: 480px) {
-  .page-title {
+  .empty-state {
+    margin: 32px 16px;
+    padding: 60px 16px;
+  }
+
+  .empty-icon {
+    font-size: 48px;
+  }
+
+  .empty-title {
     font-size: 20px;
   }
 
-  .form-section,
-  .records-section,
-  .summary-section {
-    padding: 16px;
-  }
-
-  .record-item {
-    flex-direction: column;
-  }
-
-  .record-info {
-    order: 2;
-  }
-
-  .record-select {
-    order: 1;
-  }
-
-  .record-nutrition {
-    order: 3;
-    width: 100%;
-    margin-top: 8px;
-  }
-
-  .summary-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .nutrition-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .form-actions {
-    flex-direction: column;
-  }
-
-  .btn-primary,
-  .btn-secondary {
-    width: 100%;
+  .empty-text {
+    font-size: 13px;
   }
 }

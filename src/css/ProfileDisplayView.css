@@ -1,23 +1,23 @@
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Montserrat:wght@400;500;600;700&display=swap');
 
 :root {
-  --color-text-primary: #3a3a3a;
-  --color-text-secondary: #8a8a8a;
-  --color-border: #e8e8e8;
-  --color-bg-primary: #fafaf9;
-  --color-bg-white: #ffffff;
-  --color-accent: #3a3a3a;
-  --color-success: #4a7a6a;
-  --color-error: #8b4545;
+  --prof-color-text-primary: #3a3a3a;
+  --prof-color-text-secondary: #8a8a8a;
+  --prof-color-border: #e8e8e8;
+  --prof-color-bg-primary: #fafaf9;
+  --prof-color-bg-white: #ffffff;
+  --prof-color-accent: #3a3a3a;
+  --prof-color-success: #4a7a6a;
+  --prof-color-error: #8b4545;
 }
 
 .page {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  background-color: var(--color-bg-primary);
+  background-color: var(--prof-color-bg-primary);
   font-family: 'Montserrat', sans-serif;
-  color: var(--color-text-primary);
+  color: var(--prof-color-text-primary);
 }
 
 .profile-content {
@@ -42,8 +42,8 @@
 .loading-spinner {
   width: 40px;
   height: 40px;
-  border: 2px solid var(--color-border);
-  border-top-color: var(--color-text-primary);
+  border: 2px solid var(--prof-color-border);
+  border-top-color: var(--prof-color-text-primary);
   border-radius: 50%;
   animation: spin 0.8s linear infinite;
 }
@@ -55,7 +55,7 @@
 }
 
 .loading-state p {
-  color: var(--color-text-secondary);
+  color: var(--prof-color-text-secondary);
   font-size: 14px;
 }
 
@@ -65,7 +65,7 @@
   align-items: center;
   justify-content: center;
   min-height: 400px;
-  color: var(--color-text-secondary);
+  color: var(--prof-color-text-secondary);
   font-size: 14px;
 }
 
@@ -82,8 +82,8 @@
   align-items: flex-start;
   gap: 24px;
   padding: 40px;
-  background-color: var(--color-bg-white);
-  border: 1px solid var(--color-border);
+  background-color: var(--prof-color-bg-white);
+  border: 1px solid var(--prof-color-border);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
   animation: slideIn 0.4s ease;
 }
@@ -95,8 +95,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: var(--color-bg-primary);
-  border: 1px solid var(--color-border);
+  background-color: var(--prof-color-bg-primary);
+  border: 1px solid var(--prof-color-border);
   overflow: hidden;
 }
 
@@ -112,8 +112,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--color-text-secondary);
-  background-color: var(--color-bg-primary);
+  color: var(--prof-color-text-secondary);
+  background-color: var(--prof-color-bg-primary);
 }
 
 .avatar-placeholder svg {
@@ -140,14 +140,14 @@
 
 .user-email {
   font-size: 13px;
-  color: var(--color-text-secondary);
+  color: var(--prof-color-text-secondary);
   margin: 0;
   word-break: break-all;
 }
 
 .user-phone {
   font-size: 13px;
-  color: var(--color-text-secondary);
+  color: var(--prof-color-text-secondary);
   margin: 0;
 }
 
@@ -162,7 +162,7 @@
   font-weight: 600;
   letter-spacing: 0.6px;
   margin: 0 0 24px 0;
-  color: var(--color-text-primary);
+  color: var(--prof-color-text-primary);
 }
 
 /* 账户信息网格 */
@@ -177,14 +177,14 @@
   flex-direction: column;
   gap: 8px;
   padding: 20px;
-  background-color: var(--color-bg-white);
-  border: 1px solid var(--color-border);
+  background-color: var(--prof-color-bg-white);
+  border: 1px solid var(--prof-color-border);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
 }
 
 .info-label {
   font-size: 12px;
-  color: var(--color-text-secondary);
+  color: var(--prof-color-text-secondary);
   text-transform: uppercase;
   letter-spacing: 0.2px;
   font-weight: 600;
@@ -192,7 +192,7 @@
 
 .info-value {
   font-size: 14px;
-  color: var(--color-text-primary);
+  color: var(--prof-color-text-primary);
   font-weight: 500;
   word-break: break-word;
 }
@@ -209,8 +209,8 @@
   flex-direction: column;
   gap: 12px;
   padding: 20px;
-  background-color: var(--color-bg-white);
-  border: 1px solid var(--color-border);
+  background-color: var(--prof-color-bg-white);
+  border: 1px solid var(--prof-color-border);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
   align-items: center;
   text-align: center;
@@ -218,7 +218,7 @@
 
 .status-label {
   font-size: 12px;
-  color: var(--color-text-secondary);
+  color: var(--prof-color-text-secondary);
   text-transform: uppercase;
   letter-spacing: 0.2px;
   font-weight: 600;
@@ -233,29 +233,29 @@
 }
 
 .status-badge.active {
-  color: var(--color-success);
-  border: 1px solid var(--color-success);
+  color: var(--prof-color-success);
+  border: 1px solid var(--prof-color-success);
 }
 
 .status-badge.inactive {
-  color: var(--color-error);
-  border: 1px solid var(--color-error);
+  color: var(--prof-color-error);
+  border: 1px solid var(--prof-color-error);
 }
 
 .status-badge.admin {
-  color: var(--color-accent);
-  border: 1px solid var(--color-accent);
+  color: var(--prof-color-accent);
+  border: 1px solid var(--prof-color-accent);
 }
 
 .status-badge.normal {
-  color: var(--color-text-secondary);
-  border: 1px solid var(--color-border);
+  color: var(--prof-color-text-secondary);
+  border: 1px solid var(--prof-color-border);
 }
 
 .status-value-large {
   font-size: 24px;
   font-weight: 600;
-  color: var(--color-accent);
+  color: var(--prof-color-accent);
 }
 
 /* 时间信息网格 */
@@ -270,14 +270,14 @@
   flex-direction: column;
   gap: 8px;
   padding: 20px;
-  background-color: var(--color-bg-white);
-  border: 1px solid var(--color-border);
+  background-color: var(--prof-color-bg-white);
+  border: 1px solid var(--prof-color-border);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
 }
 
 .time-label {
   font-size: 12px;
-  color: var(--color-text-secondary);
+  color: var(--prof-color-text-secondary);
   text-transform: uppercase;
   letter-spacing: 0.2px;
   font-weight: 600;
@@ -285,20 +285,20 @@
 
 .time-value {
   font-size: 14px;
-  color: var(--color-text-primary);
+  color: var(--prof-color-text-primary);
   font-weight: 500;
 }
 
 .time-detail {
   font-size: 12px;
-  color: var(--color-text-secondary);
+  color: var(--prof-color-text-secondary);
 }
 
 /* 底部操作栏 */
 .profile-footer {
   padding: 24px;
-  background-color: var(--color-bg-white);
-  border-top: 1px solid var(--color-border);
+  background-color: var(--prof-color-bg-white);
+  border-top: 1px solid var(--prof-color-border);
   display: flex;
   justify-content: center;
   gap: 12px;
@@ -306,10 +306,10 @@
 
 .btn-edit {
   padding: 12px 32px;
-  border: 1px solid var(--color-border);
-  background-color: var(--color-text-primary) !important;
-  color: var(--color-bg-white);
-  border-color: var(--color-text-primary);
+  border: 1px solid var(--prof-color-border);
+  background-color: var(--prof-color-text-primary) !important;
+  color: var(--prof-color-bg-white);
+  border-color: var(--prof-color-text-primary);
   font-family: 'Montserrat', sans-serif;
   font-size: 13px;
   font-weight: 600;
@@ -324,7 +324,7 @@
 }
 
 .btn-edit:hover {
-  border-color: var(--color-accent);
+  border-color: var(--prof-color-accent);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
 

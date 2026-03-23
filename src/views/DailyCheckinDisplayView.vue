@@ -1,211 +1,246 @@
 <template>
-  <div class="display-page">
-    <AppHeader v-if="displayData" />
-
-    <main class="display-content" v-if="displayData">
-      <!-- 基础数据可视化 -->
-      <section class="viz-section">
-        <div class="stat-visual">
-          <div class="stat-box weight" @click="toMealCheckin">
-            <div class="stat-icon">⚖</div>
-            <div class="stat-text">体重</div>
-            <div class="stat-main">{{ displayData.body_weight_kg }}</div>
-            <div class="stat-unit">kg</div>
-          </div>
-          <div class="stat-box sleep" @click="toSleepCheckin">
-            <div class="stat-icon">◆</div>
-            <div class="stat-text">睡眠</div>
-            <div class="stat-main">{{ displayData.sleep_duration_hours }}</div>
-            <div class="stat-unit">小时</div>
-          </div>
-          <div class="stat-box exercise" @click="toExerciseCheckin">
-            <div class="stat-icon">▲</div>
-            <div class="stat-text">运动</div>
-            <div class="stat-main">{{ displayData.exercise_duration_min }}</div>
-            <div class="stat-unit">分钟</div>
-          </div>
-          <div class="stat-box water" @click="toMealCheckin">
-            <div class="stat-icon">—</div>
-            <div class="stat-text">饮水</div>
-            <div class="stat-main">{{ displayData.water_intake_ml }}</div>
-            <div class="stat-unit">ml</div>
-          </div>
+  <div class="daily-display-page">
+    <AppHeader />
+    
+    <main class="daily-display-main">
+      <!-- 顶部装饰线 -->
+      <div class="page-divider"></div>
+      
+      <!-- 页面标题区 -->
+      <section class="daily-title-section">
+        <div class="title-container">
+          <h1 class="daily-title">每日健康总结</h1>
+          <p class="daily-subtitle">您今日的健康数据概览</p>
+          <div class="date-display">{{ formatDate(form.date) }}</div>
         </div>
       </section>
 
-      <!-- 能量可视化 -->
-      <section class="viz-section">
-        <div class="energy-visual">
-          <div class="energy-chart">
-            <div class="energy-bar-group">
-              <div class="energy-label">摄入</div>
-              <div class="energy-bar intake-bar"
-                :style="{ height: getEnergyHeight(displayData.total_calories_intake, maxCalories) }">
-                <span class="energy-value">{{ displayData.total_calories_intake }}</span>
+      <!-- 核心数据区 - 三大支柱 -->
+      <section class="daily-core-metrics">
+        <!-- 运动数据 -->
+        <div class="metric-card metric-exercise" :class="{ 'loading': loading }">
+          <div class="metric-header">
+            <span class="metric-icon">🏃</span>
+            <h3 class="metric-title">运动</h3>
+          </div>
+          <div class="metric-content">
+            <div class="metric-main">
+              <div class="metric-value">{{ form.exercise_duration_time }}</div>
+              <div class="metric-unit">分钟</div>
+            </div>
+            <div class="metric-secondary">
+              <div class="metric-item">
+                <span class="label">消耗</span>
+                <span class="value">{{ form.exercise_calories_burned }}</span>
+                <span class="unit">kcal</span>
               </div>
-              <div class="energy-amount">kcal</div>
             </div>
-            <div class="energy-bar-group">
-              <div class="energy-label">消耗</div>
-              <div class="energy-bar burned-bar"
-                :style="{ height: getEnergyHeight(displayData.total_calories_burned, maxCalories) }">
-                <span class="energy-value">{{ displayData.total_calories_burned }}</span>
+          </div>
+          <button class="metric-button" @click="toExerciseCheckin">查看详情</button>
+        </div>
+
+        <!-- 饮食数据 -->
+        <div class="metric-card metric-meal" :class="{ 'loading': loading }">
+          <div class="metric-header">
+            <span class="metric-icon">🍽️</span>
+            <h3 class="metric-title">饮食</h3>
+          </div>
+          <div class="metric-content">
+            <div class="metric-main">
+              <div class="metric-value">{{ form.meal_calories }}</div>
+              <div class="metric-unit">kcal</div>
+            </div>
+            <div class="metric-secondary">
+              <div class="metric-item">
+                <span class="label">蛋白</span>
+                <span class="value">{{ form.meal_protein }}</span>
+                <span class="unit">g</span>
               </div>
-              <div class="energy-amount">kcal</div>
+              <div class="metric-item">
+                <span class="label">脂肪</span>
+                <span class="value">{{ form.meal_fat }}</span>
+                <span class="unit">g</span>
+              </div>
+              <div class="metric-item">
+                <span class="label">碳水</span>
+                <span class="value">{{ form.meal_carb }}</span>
+                <span class="unit">g</span>
+              </div>
             </div>
-            <div class="balance-indicator" :class="calorieBalance > 0 ? 'surplus' : 'deficit'">
-              <div class="balance-label">{{ calorieBalance > 0 ? '盈余' : '赤字' }}</div>
-              <div class="balance-value">{{ Math.abs(calorieBalance) }}</div>
-              <div class="balance-unit">kcal</div>
+          </div>
+          <button class="metric-button" @click="toMealCheckin">查看详情</button>
+        </div>
+
+        <!-- 睡眠数据 -->
+        <div class="metric-card metric-sleep" :class="{ 'loading': loading }">
+          <div class="metric-header">
+            <span class="metric-icon">😴</span>
+            <h3 class="metric-title">睡眠</h3>
+          </div>
+          <div class="metric-content">
+            <div class="metric-main">
+              <div class="metric-value">{{ form.sleep_duration_time }}</div>
+              <div class="metric-unit">小时</div>
+            </div>
+            <div class="metric-secondary">
+              <div class="metric-item">
+                <span class="label">就寝</span>
+                <span class="value">{{ form.sleep_start_time }}</span>
+              </div>
+              <div class="metric-item">
+                <span class="label">夜醒</span>
+                <span class="value">{{ form.sleep_wakeup_times }}</span>
+                <span class="unit">次</span>
+              </div>
+            </div>
+          </div>
+          <button class="metric-button" @click="toSleepCheckin">查看详情</button>
+        </div>
+      </section>
+
+      <!-- AI 总结区 -->
+      <section class="daily-ai-section" v-if="form.total_ai_summary">
+        <div class="ai-card">
+          <div class="ai-header">
+            <span class="ai-badge">✨ AI 分析</span>
+            <h2 class="ai-title">您的今日总结</h2>
+          </div>
+          
+          <!-- AI 总体评价 -->
+          <div class="ai-content">
+            <p class="ai-text">{{ form.total_ai_summary }}</p>
+          </div>
+
+          <!-- 各领域 AI 分析 -->
+          <div class="ai-details">
+            <!-- 运动分析 -->
+            <div v-if="form.exercise_ai_summary" class="ai-detail-item">
+              <div class="ai-detail-title">🏃 运动分析</div>
+              <p class="ai-detail-text">{{ form.exercise_ai_summary }}</p>
+            </div>
+
+            <!-- 饮食分析 -->
+            <div v-if="form.meal_ai_summary" class="ai-detail-item">
+              <div class="ai-detail-title">🍽️ 饮食分析</div>
+              <p class="ai-detail-text">{{ form.meal_ai_summary }}</p>
+            </div>
+
+            <!-- 睡眠分析 -->
+            <div v-if="form.sleep_ai_summary" class="ai-detail-item">
+              <div class="ai-detail-title">😴 睡眠分析</div>
+              <p class="ai-detail-text">{{ form.sleep_ai_summary }}</p>
             </div>
           </div>
         </div>
       </section>
 
-      <!-- 健康状态可视化 -->
-      <section class="viz-section">
-        <div class="health-visual">
-          <div class="health-item">
-            <div class="health-circle sleep-quality">●</div>
-            <div class="health-label">睡眠</div>
-            <div class="health-value">{{ getSleepQualityText(displayData.sleep_quality) }}</div>
+      <!-- 详细数据区 -->
+      <section class="daily-detail-section">
+        <!-- 饮食详情 -->
+        <div class="detail-card">
+          <h3 class="detail-title">🍽️ 饮食详情</h3>
+          <div class="detail-grid">
+            <div class="detail-item">
+              <span class="detail-label">早餐</span>
+              <span class="detail-value">{{ form.meal_breakfast_type || '未记录' }}</span>
+            </div>
+            <div class="detail-item">
+              <span class="detail-label">午餐</span>
+              <span class="detail-value">{{ form.meal_lunch_type || '未记录' }}</span>
+            </div>
+            <div class="detail-item">
+              <span class="detail-label">晚餐</span>
+              <span class="detail-value">{{ form.meal_dinner_type || '未记录' }}</span>
+              </div>
+            <div class="detail-item">
+              <span class="detail-label">零食</span>
+              <span class="detail-value">{{ form.meal_snacks_type || '未记录' }}</span>
+            </div>
           </div>
-          <div class="health-item">
-            <div class="health-circle mood">◆</div>
-            <div class="health-label">心情</div>
-            <div class="health-value">{{ getMoodText(displayData.mood) }}</div>
-          </div>
-          <div class="health-item">
-            <div class="health-circle energy">▲</div>
-            <div class="health-label">精力</div>
-            <div class="health-value">{{ displayData.energy_level }}/5</div>
-          </div>
-          <div class="health-item">
-            <div class="health-circle time">—</div>
-            <div class="health-label">睡眠时间</div>
-            <div class="health-value">{{ displayData.sleep_start_time }}</div>
+        </div>
+
+        <!-- 营养详情 -->
+        <div class="detail-card">
+          <h3 class="detail-title">📊 营养详情</h3>
+          <div class="nutrition-grid">
+            <div class="nutrition-item">
+              <div class="nutrition-bar">
+                <div class="nutrition-fill" :style="{ width: getPercentage(form.meal_protein, 50) + '%' }"></div>
+              </div>
+              <span class="nutrition-label">蛋白 {{ form.meal_protein }}g</span>
+            </div>
+            <div class="nutrition-item">
+              <div class="nutrition-bar">
+                <div class="nutrition-fill" :style="{ width: getPercentage(form.meal_fat, 80) + '%' }"></div>
+              </div>
+              <span class="nutrition-label">脂肪 {{ form.meal_fat }}g</span>
+            </div>
+            <div class="nutrition-item">
+              <div class="nutrition-bar">
+                <div class="nutrition-fill" :style="{ width: getPercentage(form.meal_carb, 300) + '%' }"></div>
+              </div>
+              <span class="nutrition-label">碳水 {{ form.meal_carb }}g</span>
+            </div>
+            <div class="nutrition-item">
+              <div class="nutrition-bar">
+                <div class="nutrition-fill" :style="{ width: getPercentage(form.meal_fiber, 30) + '%' }"></div>
+              </div>
+              <span class="nutrition-label">纤维 {{ form.meal_fiber }}g</span>
+            </div>
+            <div class="nutrition-item">
+              <div class="nutrition-bar">
+                <div class="nutrition-fill" :style="{ width: getPercentage(form.meal_sugar, 50) + '%' }"></div>
+              </div>
+              <span class="nutrition-label">糖分 {{ form.meal_sugar }}g</span>
+            </div>
+            <div class="nutrition-item">
+              <div class="nutrition-bar">
+                <div class="nutrition-fill" :style="{ width: getPercentage(form.meal_water, 2500) + '%' }"></div>
+              </div>
+              <span class="nutrition-label">饮水 {{ form.meal_water }}ml</span>
+            </div>
           </div>
         </div>
       </section>
 
-      <!-- 饮食可视化 -->
-      <section v-if="hasMeals" class="viz-section">
-        <div class="meal-visual">
-          <div v-if="displayData.breakfast" class="meal-item">
-            <div class="meal-time">早</div>
-            <div class="meal-name">早餐</div>
-            <div class="meal-detail">{{ displayData.breakfast }}</div>
-          </div>
-          <div v-if="displayData.lunch" class="meal-item">
-            <div class="meal-time">午</div>
-            <div class="meal-name">午餐</div>
-            <div class="meal-detail">{{ displayData.lunch }}</div>
-          </div>
-          <div v-if="displayData.dinner" class="meal-item">
-            <div class="meal-time">晚</div>
-            <div class="meal-name">晚餐</div>
-            <div class="meal-detail">{{ displayData.dinner }}</div>
-          </div>
-          <div v-if="displayData.midnight_snack" class="meal-item">
-            <div class="meal-time">宵</div>
-            <div class="meal-name">宵夜</div>
-            <div class="meal-detail">{{ displayData.midnight_snack }}</div>
-          </div>
-        </div>
-      </section>
+      <!-- 错误提示 -->
+      <div v-if="errorMsg" class="error-message">
+        <span class="error-icon">⚠️</span>
+        <span class="error-text">{{ errorMsg }}</span>
+      </div>
 
-      <!-- AI分析可视化 -->
-      <section v-if="displayData.ai_analysis_summary" class="viz-section">
-        <div class="ai-visual">
-          <div class="ai-icon">●</div>
-          <div class="ai-text">{{ displayData.ai_analysis_summary }}</div>
-        </div>
-      </section>
-
-      <!-- 备注可视化 -->
-      <section v-if="displayData.note" class="viz-section">
-        <div class="note-visual">
-          <div class="note-icon">◆</div>
-          <div class="note-text">{{ displayData.note }}</div>
-        </div>
-      </section>
+      <!-- 底部空白 -->
+      <div class="daily-footer"></div>
     </main>
-
-    <footer class="display-footer">
-      <button @click="goToEdit" class="edit-btn-large">编辑这个打卡</button>
-    </footer>
   </div>
 </template>
 
 <script setup lang="ts">
 import AppHeader from '../components/AppHeader.vue'
-import { onMounted, computed } from 'vue'
-import { useRouter } from 'vue-router'
+import { onMounted } from 'vue'
 import { useDailyCheckin } from '../composables/useDailyCheckin'
 
-const router = useRouter()
+const { form, loading, errorMsg, loadDailyCheckin, toExerciseCheckin, toMealCheckin, toSleepCheckin } = useDailyCheckin()
 
-const {
-  displayData,
-  loadDailyCheckin,
-  toMealCheckin,
-  toSleepCheckin,
-  toExerciseCheckin
-
-} = useDailyCheckin()
-
-const maxCalories = 3000
-
-// const formatDate = (dateStr: string) => {
-//   const date = new Date(dateStr + 'T00:00:00')
-//   return date.toLocaleDateString('zh-CN', {
-//     year: 'numeric',
-//     month: '2-digit',
-//     day: '2-digit',
-//     weekday: 'long'
-//   }).replace(/\//g, '-')
-// }
-
-const getEnergyHeight = (calories: number, max: number) => {
-  return Math.min((calories / max) * 100, 100) + '%'
+// 格式化日期
+function formatDate(dateStr: string): string {
+  const date = new Date(dateStr)
+  const year = date.getFullYear()
+  const month = String(date.getMonth() + 1).padStart(2, '0')
+  const day = String(date.getDate()).padStart(2, '0')
+  const weekDays = ['周日', '周一', '周二', '周三', '周四', '周五', '周六']
+  const weekDay = weekDays[date.getDay()]
+  return `${year}-${month}-${day} ${weekDay}`
 }
 
-const calorieBalance = computed(() => {
-  if (!displayData.value) return 0
-  return displayData.value.total_calories_intake - displayData.value.total_calories_burned
-})
-
-const hasMeals = computed(() => {
-  if (!displayData.value) return false
-  return !!(displayData.value.breakfast || displayData.value.lunch || displayData.value.dinner || displayData.value.midnight_snack)
-})
-
-// 睡眠质量和心情状态文本映射
-const sleepQualityTextMap = {
-  excellent: '很好',
-  good: '良好',
-  fair: '一般',
-  poor: '很差'
+// 计算百分比
+function getPercentage(value: number, max: number): number {
+  return Math.min((value / max) * 100, 100)
 }
 
-const getSleepQualityText = (value: string) => sleepQualityTextMap[value as keyof typeof sleepQualityTextMap] || value
-
-const moodTextMap = {
-  very_happy: '很开心',
-  happy: '开心',
-  neutral: '平常',
-  sad: '有点低落',
-  very_sad: '很沮丧'
-}
-
-const getMoodText = (value: string) => moodTextMap[value as keyof typeof moodTextMap] || value
-
-const goToEdit = () => {
-  router.push('/health/daily-checkin-edit')
-}
-
-onMounted(() => {
-  loadDailyCheckin()
+// 页面加载时触发数据加载
+onMounted(async () => {
+  await loadDailyCheckin()
 })
 </script>
 
