@@ -79,6 +79,7 @@ http.interceptors.response.use(
       try {
         // 调用刷新Token接口
         // 注意：刷新接口不需要传入参数，使用Cookie中的refreshToken
+        console.log("api url:", `${import.meta.env.VITE_API_URL}`)
         const response = await axios.post(
           `${import.meta.env.VITE_API_URL || 'https://cda.api.zbyblq.xin'}/api/auth/refresh`,
           {},
