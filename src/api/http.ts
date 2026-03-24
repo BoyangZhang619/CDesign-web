@@ -150,7 +150,7 @@ export async function fetchWithRefresh(url: string, options: RequestInit = {}) {
     'Authorization': `Bearer ${authStore.token}`
   }
 
-  let response = await fetch(url, {
+  let response = await fetch(`${import.meta.env.VITE_API_URL || 'https://cda.api.zbyblq.xin'}${url}`, {
     ...options,
     headers,
     credentials: 'include'
@@ -180,7 +180,7 @@ export async function fetchWithRefresh(url: string, options: RequestInit = {}) {
           'Authorization': `Bearer ${newToken}`
         }
 
-        response = await fetch(url, {
+        response = await fetch(`${import.meta.env.VITE_API_URL || 'https://cda.api.zbyblq.xin'}${url}`, {
           ...options,
           headers: newHeaders,
           credentials: 'include'
