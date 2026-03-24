@@ -111,7 +111,7 @@ http.interceptors.response.use(
         authStore.userInfo = null
         removeToken()
         // 重定向到登录页
-        window.location.href = '/login'
+        window.location.href = '/auth'
         return Promise.reject(refreshError)
       } finally {
         isRefreshing = false
