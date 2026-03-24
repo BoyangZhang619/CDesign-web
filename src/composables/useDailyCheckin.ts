@@ -91,13 +91,11 @@ export function useDailyCheckin() {
     errorMsg.value = ''
 
     try {
-      const url_base = import.meta.env.VITE_API_URL || 'https://cda.api.zbyblq.xin'
+      const exerciseData = await loadCheckin('/api/exercise-checkin/checkin/exercise/summary');
+      const mealData = await loadCheckin('/api/meal-checkin/checkin/meal/summary');
+      const sleepData = await loadCheckin('/api/sleep-checkin/checkin/sleep/summary');
 
-      const exerciseData = await loadCheckin(url_base, '/api/exercise-checkin/checkin/exercise/summary');
-      const mealData = await loadCheckin(url_base, '/api/meal-checkin/checkin/meal/summary');
-      const sleepData = await loadCheckin(url_base, '/api/sleep-checkin/checkin/sleep/summary');
-
-      const aiSummary = await loadCheckin(url_base, '/api/exercise-checkin/checkin/exercise/ai-summary');
+      const aiSummary = await loadCheckin('/api/exercise-checkin/checkin/exercise/ai-summary');
       console.log('AI Summary response:', aiSummary);
       form.value.exercise_duration_time = (exerciseData as DailyCheckin).exercise_duration_time || 0
       form.value.exercise_calories_burned = (exerciseData as DailyCheckin).exercise_calories_burned || 0
@@ -131,9 +129,9 @@ export function useDailyCheckin() {
     }
   }
 
-  async function loadCheckin(url_base: string, endpoint: string): Promise<object> {
+  async function loadCheckin(endpoint: string): Promise<object> {
     try {
-      const response = await fetchWithRefresh(`${url_base}${endpoint}`, { method: 'GET' })
+      const response = await fetchWithRefresh(endpoint, { method: 'GET' })
       const data = await response.json()
       if (response.ok && data) {
         loading.value = false

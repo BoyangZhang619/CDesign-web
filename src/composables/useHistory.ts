@@ -117,7 +117,7 @@ export function useHistory() {
         search: filters.value.searchText
       })
 
-      const response = await fetchWithRefresh(`${import.meta.env.VITE_API_URL || 'https://cda.api.zbyblq.xin'}/api/history/get?${params}`, {
+      const response = await fetchWithRefresh(`/api/history/get?${params}`, {
         method: 'GET'
       })
 
@@ -178,7 +178,7 @@ export function useHistory() {
     }
 
     try {
-      const response = await fetchWithRefresh(`${import.meta.env.VITE_API_URL || 'https://cda.api.zbyblq.xin'}/api/history/${id}`, {
+      const response = await fetchWithRefresh(`/api/history/${id}`, {
         method: 'DELETE'
       })
 

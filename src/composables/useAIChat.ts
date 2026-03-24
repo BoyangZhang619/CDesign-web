@@ -29,7 +29,7 @@ export function useAIChat() {
   async function sendCommonMessage(): Promise<number> {
     try {
       const response = await fetchWithRefresh(
-        `${import.meta.env.VITE_API_URL || 'https://cda.api.zbyblq.xin'}/api/ai/ptio/common`,
+        `/api/ai/ptio/common`,
         {
           method: 'POST',
           headers: {
@@ -73,7 +73,7 @@ export function useAIChat() {
   async function sendStreamMessage(): Promise<number> {
     try {
       const response = await fetchWithRefresh(
-        `${import.meta.env.VITE_API_URL || 'https://cda.api.zbyblq.xin'}/api/ai/ptio/stream`,
+        `/api/ai/ptio/stream`,
         {
           method: 'POST',
           headers: {
