@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
+
 import HomeView from '../views/HomeView.vue'
 import AuthView from '../views/AuthView.vue'
 import HealthSetupView from '../views/HealthSetupView.vue'
@@ -11,6 +12,14 @@ import MealCheckinDisplayView from '../views/MealCheckinDisplayView.vue'
 import SleepCheckinDisplayView from '../views/SleepCheckinDisplayView.vue'
 import ExerciseCheckinDisplayView from '../views/ExerciseCheckinDisplayView.vue'
 import PortraitView from '../views/PortraitView.vue'
+import RecommendationsView from '../views/RecommendationsView.vue'
+import TrendsView from '../views/TrendsView.vue'
+import ForecastView from '../views/ForecastView.vue'
+import SimulationView from '../views/SimulationView.vue'
+import GoalsView from '../views/GoalsView.vue'
+import CampusDietView from '../views/CampusDietView.vue'
+import NotificationsView from '../views/NotificationsView.vue'
+
 import { useAuthStore } from '../stores/auth'
 
 const routes = [
@@ -126,6 +135,69 @@ const routes = [
     meta: {
       requiresAuth: true,
       title: 'StuHeal - 健康画像'
+    }
+  },
+  {
+    path: '/recommendations',
+    name: 'recommendations',
+    component: RecommendationsView,
+    meta: {
+      requiresAuth: true,
+      title: 'StuHeal - 个性化建议'
+    }
+  },
+  {
+    path: '/analysis/trends',
+    name: 'trends',
+    component: TrendsView,
+    meta: {
+      requiresAuth: true,
+      title: 'StuHeal - 健康趋势'
+    }
+  },
+  {
+    path: '/analysis/forecast',
+    name: 'forecast',
+    component: ForecastView,
+    meta: {
+      requiresAuth: true,
+      title: 'StuHeal - 健康预测'
+    }
+  },
+  {
+    path: '/analysis/simulation',
+    name: 'simulation',
+    component: SimulationView,
+    meta: {
+      requiresAuth: true,
+      title: 'StuHeal - 健康模拟'
+    }
+  },
+  {
+    path: '/goals',
+    name: 'goals',
+    component: GoalsView,
+    meta: {
+      requiresAuth: true,
+      title: 'StuHeal - 目标设定'
+    }
+  },
+  {
+    path: '/recommendations/campus-diet',
+    name: 'campus-diet',
+    component: CampusDietView,
+    meta: {
+      requiresAuth: true,
+      title: 'StuHeal - 校园饮食推荐'
+    }
+  },
+  {
+    path: '/notifications',
+    name: 'notifications',
+    component: NotificationsView,
+    meta: {
+      requiresAuth: true,
+      title: 'StuHeal - 通知中心'
     }
   }
 ]
