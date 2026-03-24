@@ -1,164 +1,185 @@
 <template>
   <div class="page">
     <AppHeader />
+    
+    <main class="home-main">
+      <!-- 欢迎时段卡片 -->
+      <section class="greeting-section">
+        <div class="greeting-card" :style="{ borderLeftColor: timeOfDay.color }">
+          <div class="greeting-header">
+            <span class="greeting-emoji">{{ timeOfDay.emoji }}</span>
+            <div class="greeting-text">
+              <h2 class="greeting-title">{{ generateDynamicGreeting() }}</h2>
+              <p class="greeting-time">{{ currentDate }}</p>
+            </div>
+          </div>
+          <div class="greeting-footer">
+            <p class="quote">「{{ motivationalQuote.text }}」</p>
+          </div>
+        </div>
+      </section>
 
-    <main class="content">
-      <!-- 页面标题区 -->
-      <div class="header-section">
-        <h1 class="main-title">健康数字孪生系统</h1>
-        <p class="subtitle">以数据驱动个性化健康管理，构建您的专属数字模型</p>
-      </div>
+      <!-- 健康指数卡片 -->
+      <section class="health-score-section">
+        <div class="health-score-card">
+          <div class="score-visual">
+            <div class="score-meter">
+              <div class="meter-fill" :style="{ width: healthScore.score + '%' }"></div>
+              <div class="meter-label">{{ healthScore.score }}/100</div>
+            </div>
+          </div>
+          <div class="score-info">
+            <h3 class="score-title">{{ healthScore.emoji }} {{ healthScore.level }}</h3>
+            <p class="score-description">{{ healthScore.description }}</p>
+            <!-- 薄弱点提示 -->
+            <div v-if="healthScore.weakPoints && healthScore.weakPoints.length > 0" class="weak-points-warning">
+              <div v-for="(point, index) in healthScore.weakPoints" :key="index" class="weak-point-item">
+                <span class="weak-point-indicator">•</span>
+                <span class="weak-point-text">{{ point }}</span>
+              </div>
+            </div>
+            <div class="score-tags">
+              <span class="tag">运动: {{ exerciseCheckin.records.value.length }}次</span>
+              <span class="tag">饮食: {{ mealCheckin.records.value.length }}顿</span>
+              <span class="tag">睡眠: {{ sleepCheckin.records.value.length > 0 ? parseFloat(String(sleepCheckin.records.value[0].sleep_duration_hours)).toFixed(1) : '0' }}h</span>
+            </div>
+          </div>
+        </div>
+      </section>
 
-      <!-- 核心功能区 -->
-      <section class="features-section">
-        <div class="section-label">核心功能</div>
+      <!-- 今日统计卡片 -->
+      <section v-if="todayStats.length > 0" class="stats-section">
+        <div class="stats-header">
+          <h3 class="section-title">📊 今日打卡统计</h3>
+          <button class="add-checkin-btn" @click="showCheckinMenu = true">+ 添加打卡</button>
+        </div>
+        <div class="stats-grid">
+          <div v-for="stat in todayStats" :key="stat.label" class="stat-card">
+            <div class="stat-icon-wrapper">
+              <span class="stat-icon">{{ getStatIcon(stat.label) }}</span>
+            </div>
+            <div class="stat-info">
+              <div class="stat-label">{{ stat.label }}</div>
+              <div class="stat-value">{{ stat.value }}<span class="stat-unit">{{ stat.unit }}</span></div>
+            </div>
+          </div>
+        </div>
+      </section>
 
-        <div class="feature-grid">
-          <!-- 01 个人基础信息 -->
-          <router-link to="/profile" class="feature-card">
-            <div class="card-number">01</div>
-            <h3 class="card-title">个人基础信息</h3>
-            <p class="card-description">配置健康模型初始参数，采集身体与目标数据</p>
-            <div class="card-badge">初始化</div>
+      <!-- 快速导航 -->
+      <section class="quick-nav-section">
+        <h3 class="section-title">⚡ 快速导航</h3>
+        <div class="nav-grid">
+          <router-link to="/exercise/checkin" class="nav-card exercise">
+            <span class="nav-icon">💪</span>
+            <span class="nav-label">运动打卡</span>
+            <span class="nav-arrow">→</span>
           </router-link>
-
-          <!-- 02 健康打卡 -->
-          <router-link to="/health/daily-checkin" class="feature-card">
-            <div class="card-number">02</div>
-            <h3 class="card-title">健康打卡</h3>
-            <p class="card-description">记录每日饮食、运动、体重、睡眠等实时数据</p>
-            <div class="card-badge">数据采集</div>
+          <router-link to="/meal/checkin" class="nav-card meal">
+            <span class="nav-icon">🍽️</span>
+            <span class="nav-label">饮食打卡</span>
+            <span class="nav-arrow">→</span>
           </router-link>
-
-          <!-- 03 历史记录 -->
-          <router-link to="/health/history" class="feature-card">
-            <div class="card-number">03</div>
-            <h3 class="card-title">历史记录</h3>
-            <p class="card-description">查询历史打卡详情，按类型和时间筛选</p>
-            <div class="card-badge">数据回溯</div>
+          <router-link to="/sleep/checkin" class="nav-card sleep">
+            <span class="nav-icon">😴</span>
+            <span class="nav-label">睡眠打卡</span>
+            <span class="nav-arrow">→</span>
           </router-link>
-
-          <!-- 04 健康画像 -->
-          <router-link to="/analysis/portrait" class="feature-card">
-            <div class="card-number">04</div>
-            <h3 class="card-title">健康画像</h3>
-            <p class="card-description">查看数字孪生模型，展示多维健康指标</p>
-            <div class="card-badge">模型展示</div>
-          </router-link>
-
-          <!-- 05 趋势分析 -->
-          <router-link to="/analysis/trends" class="feature-card">
-            <div class="card-number">05</div>
-            <h3 class="card-title">趋势分析</h3>
-            <p class="card-description">分析体重、摄入、运动等指标的变化趋势</p>
-            <div class="card-badge">演化过程</div>
-          </router-link>
-
-          <!-- 06 未来预测 -->
-          <router-link to="/analysis/forecast" class="feature-card">
-            <div class="card-number">06</div>
-            <h3 class="card-title">未来预测</h3>
-            <p class="card-description">预测体重与健康评分变化，识别潜在风险</p>
-            <div class="card-badge">预测能力</div>
-          </router-link>
-
-          <!-- 07 情景模拟 -->
-          <router-link to="/analysis/simulation" class="feature-card">
-            <div class="card-number">07</div>
-            <h3 class="card-title">情景模拟</h3>
-            <p class="card-description">调整变量查看不同生活方式的健康结果</p>
-            <div class="card-badge">可实验性</div>
-          </router-link>
-
-          <!-- 08 个性化建议 -->
-          <router-link to="/recommendations" class="feature-card">
-            <div class="card-number">08</div>
-            <h3 class="card-title">个性化建议</h3>
-            <p class="card-description">获取基于分析的饮食、运动、作息建议</p>
-            <div class="card-badge">干预指导</div>
-          </router-link>
-
-          <!-- 09 健康目标 -->
-          <router-link to="/goals" class="feature-card">
-            <div class="card-number">09</div>
-            <h3 class="card-title">健康目标</h3>
-            <p class="card-description">设定和跟踪健康目标，展示完成进度</p>
-            <div class="card-badge">目标导向</div>
-          </router-link>
-
-          <!-- 10 校园饮食推荐 -->
-          <router-link to="/recommendations/campus-diet" class="feature-card">
-            <div class="card-number">10</div>
-            <h3 class="card-title">校园饮食推荐</h3>
-            <p class="card-description">提供食堂搭配、外卖选择和宿舍方案</p>
-            <div class="card-badge">落地方案</div>
-          </router-link>
-
-          <!-- 11 消息与提醒 -->
-          <router-link to="/notifications" class="feature-card">
-            <div class="card-number">11</div>
-            <h3 class="card-title">消息与提醒</h3>
-            <p class="card-description">打卡提醒、健康警告和周期性总结推送</p>
-            <div class="card-badge">行为引导</div>
-          </router-link>
-
-          <!-- 12 AI 对话 -->
-          <router-link to="/ai-chat" class="feature-card">
-            <div class="card-number">12</div>
-            <h3 class="card-title">AI 对话</h3>
-            <p class="card-description">与AI助手交互获取个性化健康咨询</p>
-            <div class="card-badge">智能助手</div>
+          <router-link to="/health/history" class="nav-card history">
+            <span class="nav-icon">📈</span>
+            <span class="nav-label">历史记录</span>
+            <span class="nav-arrow">→</span>
           </router-link>
         </div>
       </section>
 
-      <!-- 快速开始 -->
-      <section class="quick-start">
-        <div class="section-label">快速开始</div>
-        <div class="quick-start-cards">
-          <div class="quick-card">
-            <span class="step">1</span>
-            <h4>完成基础信息</h4>
-            <p>设置初始健康参数</p>
-          </div>
-          <div class="quick-card">
-            <span class="step">2</span>
-            <h4>开始每日打卡</h4>
-            <p>持续记录健康数据</p>
-          </div>
-          <div class="quick-card">
-            <span class="step">3</span>
-            <h4>查看健康画像</h4>
-            <p>了解您的数字孪生</p>
-          </div>
-          <div class="quick-card">
-            <span class="step">4</span>
-            <h4>获取个性化建议</h4>
-            <p>执行健康行动方案</p>
+      <!-- 最近打卡 -->
+      <section v-if="recentRecords.length > 0" class="recent-section">
+        <div class="recent-header">
+          <h3 class="section-title">🎯 最近打卡</h3>
+          <router-link to="/health/history" class="view-all">查看全部 →</router-link>
+        </div>
+        <div class="recent-list">
+          <div v-for="(record, index) in recentRecords.slice(0, 5)" :key="index" class="recent-item">
+            <div class="recent-type">{{ record.type }}</div>
+            <div class="recent-info">
+              <div class="recent-title">{{ record.title }}</div>
+              <div class="recent-time">{{ record.time }}</div>
+            </div>
+            <div class="recent-value">{{ record.value }}</div>
           </div>
         </div>
       </section>
+
+      <!-- 底部空白 -->
+      <div class="home-footer-spacing"></div>
+
+      <!-- 打卡浮窗 -->
+      <Teleport to="body" v-if="showCheckinMenu">
+        <div class="checkin-modal-overlay" @click="showCheckinMenu = false">
+          <div class="checkin-modal" @click.stop>
+            <button class="modal-close" @click="showCheckinMenu = false">✕</button>
+            <h3 class="modal-title">选择打卡类型</h3>
+            <div class="checkin-options">
+              <button class="checkin-option" @click="openExerciseCheckin">
+                <span class="option-icon">◆</span>
+                <span class="option-label">运动打卡</span>
+              </button>
+              <button class="checkin-option" @click="openMealCheckin">
+                <span class="option-icon">▤</span>
+                <span class="option-label">饮食打卡</span>
+              </button>
+              <button class="checkin-option" @click="openSleepCheckin">
+                <span class="option-icon">◇</span>
+                <span class="option-label">睡眠打卡</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </Teleport>
     </main>
+
+    <AppFooter />
   </div>
 </template>
 
 <script setup lang="ts">
+import { onMounted } from 'vue'
 import AppHeader from '../components/AppHeader.vue'
-import { useAuthStore } from '../stores/auth'
+import AppFooter from '../components/AppFooter.vue'
+import { useHomePageLogic } from '../composables/useHomePageLogic'
 
-const authStore = useAuthStore()
-
-// 加载用户信息
-async function loadUserInfo() {
-  try {
-    await authStore.fetchUserInfo()
-  } catch (error) {
-    console.error('获取用户信息失败:', error)
-  }
-}
+const {
+  timeOfDay,
+  currentDate,
+  motivationalQuote,
+  healthScore,
+  todayStats,
+  recentRecords,
+  showCheckinMenu,
+  exerciseCheckin,
+  mealCheckin,
+  sleepCheckin,
+  generateDynamicGreeting,
+  getStatIcon,
+  openExerciseCheckin,
+  openMealCheckin,
+  openSleepCheckin,
+  loadAllData,
+  refreshTimeData
+} = useHomePageLogic()
 
 // 初始化
-loadUserInfo()
+onMounted(() => {
+  loadAllData()
+  
+  // 每分钟更新一次时间和日期
+  const timer = setInterval(() => {
+    refreshTimeData()
+  }, 60000)
+
+  return () => clearInterval(timer)
+})
 </script>
 
 <style scoped>

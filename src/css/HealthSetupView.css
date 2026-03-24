@@ -531,7 +531,7 @@ select.form-select {
 
   .form-actions {
     gap: 10px;
-    flex-direction: column;
+    /* flex-direction: column; */
     margin-top: 32px;
     padding-top: 20px;
     border-top: 1px solid var(--color-border);

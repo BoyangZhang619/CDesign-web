@@ -1,6 +1,16 @@
 import { ref, computed } from 'vue'
 import { fetchWithRefresh } from '../api/http'
 
+// 获取本地时间的 ISO 字符串（不转换为 UTC）
+function getLocalISOString(date: Date): string {
+  const year = date.getFullYear()
+  const month = String(date.getMonth() + 1).padStart(2, '0')
+  const day = String(date.getDate()).padStart(2, '0')
+  const hours = String(date.getHours()).padStart(2, '0')
+  const minutes = String(date.getMinutes()).padStart(2, '0')
+  return `${year}-${month}-${day}T${hours}:${minutes}`
+}
+
 export interface MealRecord {
   id: string
   meal_type: 'breakfast' | 'lunch' | 'dinner' | 'snack'
@@ -42,7 +52,7 @@ export function useMealCheckin() {
     food_source: 'canteen',
     food_name: '',
     food_detail: '',
-    meal_time: new Date().toISOString().slice(0, 16),
+    meal_time: getLocalISOString(new Date()),
     calories: 0,
     protein_g: 0,
     fat_g: 0,
@@ -58,6 +68,26 @@ export function useMealCheckin() {
   const errorMsg = ref('')
   const successMsg = ref('')
   const pollIntervalId = ref<number | null>(null)
+
+  // 初始化表单时间
+  const initializeForm = () => {
+    const now = new Date()
+    form.value = {
+      meal_type: 'breakfast',
+      food_source: 'canteen',
+      food_name: '',
+      food_detail: '',
+      meal_time: getLocalISOString(now),
+      calories: 0,
+      protein_g: 0,
+      fat_g: 0,
+      carbohydrate_g: 0,
+      fiber_g: 0,
+      sugar_g: 0,
+      ai_recognition_flag: false,
+      image_id: null
+    }
+  }
 
   // 选项
   const mealTypeOptions = [
@@ -141,7 +171,7 @@ export function useMealCheckin() {
           food_source: 'canteen',
           food_name: '',
           food_detail: '',
-          meal_time: new Date().toISOString().slice(0, 16),
+          meal_time: getLocalISOString(new Date()),
           calories: 0,
           protein_g: 0,
           fat_g: 0,
@@ -272,6 +302,7 @@ export function useMealCheckin() {
     stopPolling,
     getMealTypeText,
     getFoodSourceText,
-    isCalculating
+    isCalculating,
+    initializeForm
   }
 }

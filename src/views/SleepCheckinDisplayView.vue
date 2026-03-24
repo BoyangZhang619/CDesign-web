@@ -231,7 +231,8 @@ const {
   stopPolling,
   formatSleepDuration,
   getNapTypeText,
-  isCalculating
+  isCalculating,
+  initializeForm
 } = useSleepCheckin()
 
 // 计算显示的记录
@@ -261,6 +262,7 @@ const formatTime = (timeStr: string) => {
 }
 
 const openFormModal = () => {
+  initializeForm()
   isFormOpen.value = true
 }
 

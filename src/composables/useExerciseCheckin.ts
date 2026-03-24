@@ -1,6 +1,16 @@
 import { ref, computed } from 'vue'
 import { fetchWithRefresh } from '../api/http'
 
+// 获取本地时间的 ISO 字符串（不转换为 UTC）
+function getLocalISOString(date: Date): string {
+  const year = date.getFullYear()
+  const month = String(date.getMonth() + 1).padStart(2, '0')
+  const day = String(date.getDate()).padStart(2, '0')
+  const hours = String(date.getHours()).padStart(2, '0')
+  const minutes = String(date.getMinutes()).padStart(2, '0')
+  return `${year}-${month}-${day}T${hours}:${minutes}`
+}
+
 export interface ExerciseRecord {
   exercise_record_id: string | number
   user_id: number
@@ -49,8 +59,8 @@ export function useExerciseCheckin() {
     form.value = {
       activity_type: '跑步',
       intensity: 'medium',
-      start_time: now.toISOString().slice(0, 16),
-      end_time: endTime.toISOString().slice(0, 16),
+      start_time: getLocalISOString(now),
+      end_time: getLocalISOString(endTime),
       note: ''
     }
   }
@@ -169,7 +179,7 @@ export function useExerciseCheckin() {
       const data = await response.json()
 
       if (response.ok) {
-        const rawRecords = data.data || []
+        const rawRecords = data.data.records || []
         records.value = (rawRecords as any[]).map((record: any) => ({
           ...record,
           duration_min: Number(record.duration_min) || 0,

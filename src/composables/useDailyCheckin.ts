@@ -1,6 +1,16 @@
 import { ref } from 'vue'
 import { fetchWithRefresh } from '../api/http'
 
+// 获取本地时间的 ISO 字符串（不转换为 UTC）
+function getLocalISOString(date: Date): string {
+  const year = date.getFullYear()
+  const month = String(date.getMonth() + 1).padStart(2, '0')
+  const day = String(date.getDate()).padStart(2, '0')
+  const hours = String(date.getHours()).padStart(2, '0')
+  const minutes = String(date.getMinutes()).padStart(2, '0')
+  return `${year}-${month}-${day}T${hours}:${minutes}`
+}
+
 export interface DailyCheckin {
   date: string
   exercise_duration_time: number // min
@@ -36,7 +46,7 @@ export interface AiSummaryResponse {
 
 export function useDailyCheckin() {
   const form = ref<DailyCheckin>({
-    date: new Date().toISOString().split('T')[0],
+    date: getLocalISOString(new Date()).split('T')[0],
     exercise_duration_time: 0,
     exercise_calories_burned: 0,
     exercise_ai_summary: '',

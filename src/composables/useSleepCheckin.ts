@@ -1,6 +1,16 @@
 import { ref, computed } from 'vue'
 import { fetchWithRefresh } from '../api/http'
 
+// 获取本地时间的 ISO 字符串（不转换为 UTC）
+function getLocalISOString(date: Date): string {
+  const year = date.getFullYear()
+  const month = String(date.getMonth() + 1).padStart(2, '0')
+  const day = String(date.getDate()).padStart(2, '0')
+  const hours = String(date.getHours()).padStart(2, '0')
+  const minutes = String(date.getMinutes()).padStart(2, '0')
+  return `${year}-${month}-${day}T${hours}:${minutes}`
+}
+
 export interface SleepRecord {
   id: string
   user_id: number
@@ -60,8 +70,8 @@ export function useSleepCheckin() {
   const initializeForm = () => {
     const now = new Date()
     form.value = {
-      sleep_start_time: now.toISOString().slice(0, 16),
-      wake_up_time: new Date(now.getTime() + 8 * 60 * 60 * 1000).toISOString().slice(0, 16),
+      sleep_start_time: getLocalISOString(now),
+      wake_up_time: getLocalISOString(new Date(now.getTime() + 8 * 60 * 60 * 1000)),
       is_nap: 0,
       wake_up_times: 0,
       sleep_feeling: ''

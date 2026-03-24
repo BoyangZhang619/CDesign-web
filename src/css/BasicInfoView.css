@@ -415,7 +415,7 @@ select.form-input {
 
   .form-actions {
     gap: 8px;
-    flex-direction: column-reverse;
+    /* flex-direction: column-reverse; */
     margin-top: 32px;
     padding-top: 24px;
   }

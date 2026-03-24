@@ -238,7 +238,8 @@ const {
   formatCaloriesBurned,
   getActivityTypeText,
   getIntensityText,
-  isCalculating
+  isCalculating,
+  initializeForm
 } = useExerciseCheckin()
 
 // 计算显示的记录
@@ -268,6 +269,7 @@ const formatTime = (timeStr: string) => {
 }
 
 const openFormModal = () => {
+  initializeForm()
   isFormOpen.value = true
 }
 

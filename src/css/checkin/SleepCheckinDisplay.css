@@ -690,10 +690,6 @@
     grid-column: 1;
   }
 
-  .button-group {
-    flex-direction: column;
-  }
-
   .toggle-btn {
     width: 100%;
   }
@@ -721,9 +717,9 @@
     gap: 8px;
   }
 
-  .form-actions {
+  /* .form-actions {
     flex-direction: column-reverse;
-  }
+  } */
 
   .btn-secondary,
   .btn-primary {
