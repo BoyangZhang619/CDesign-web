@@ -29,3 +29,5 @@ md
 .env.local
 .env.production
 .env.development
+
+android/
