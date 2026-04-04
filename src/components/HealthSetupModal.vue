@@ -199,7 +199,13 @@
 
           <!-- 操作按钮 -->
           <div class="form-actions">
-            <button type="button" class="btn btn-secondary" @click="handleSkipClick" :disabled="loading">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              @click="handleSkipClick"
+              :disabled="loading || props.forceComplete"
+              :title="props.forceComplete ? '此页面需要完成健康档案设置' : ''"
+            >
               稍后设置
             </button>
             <button
@@ -222,6 +228,7 @@ import { useHealthSetup } from '../composables/useHealthSetup'
 
 const props = defineProps<{
   show: boolean
+  forceComplete?: boolean
 }>()
 
 const emit = defineEmits<{

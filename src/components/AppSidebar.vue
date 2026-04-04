@@ -141,9 +141,9 @@ const navigationItems = [
     },
     {
         id: '10',
-        title: '校园饮食推荐',
-        path: '/recommendations/campus-diet',
-        badge: '落地方案'
+        title: 'Todo List',
+        path: '/todolist',
+        badge: '任务清单'
     },
     {
         id: '11',

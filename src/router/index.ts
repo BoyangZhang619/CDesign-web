@@ -18,6 +18,7 @@ import SimulationView from '../views/SimulationView.vue'
 import GoalsView from '../views/GoalsView.vue'
 import CampusDietView from '../views/CampusDietView.vue'
 import NotificationsView from '../views/NotificationsView.vue'
+import TodolistView from '../views/TodolistView.vue'
 
 import { useAuthStore } from '../stores/auth'
 
@@ -188,6 +189,15 @@ const routes = [
     meta: {
       requiresAuth: true,
       title: 'StuHeal - 通知中心'
+    }
+  },
+  {
+    path: '/todolist',
+    name: 'todolist',
+    component: TodolistView,
+    meta: {
+      requiresAuth: true,
+      title: 'StuHeal - TodoList'
     }
   }
 ]
