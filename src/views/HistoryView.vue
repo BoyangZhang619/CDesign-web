@@ -319,7 +319,8 @@
 <script setup lang="ts">
 import { onMounted, watch, ref } from 'vue'
 import AppHeader from '../components/AppHeader.vue'
-import { useHistory } from '../composables/useHistory'
+import { useHistory} from '../composables/useHistory'
+import { getCurrentDate, formatTime } from '../utils/dateTime'
 import type { HistoryRecord } from '../composables/useHistory'
 
 // 筛选面板折叠状态（默认关闭）
@@ -327,27 +328,6 @@ const isFilterPanelOpen = ref(false)
 
 // 选中的记录（用于显示详情弹窗）
 const selectedRecord = ref<HistoryRecord | null>(null)
-
-// 获取当前日期的 YYYY-MM-DD 格式
-function getCurrentDate(): string {
-  const today = new Date()
-  const year = today.getFullYear()
-  const month = String(today.getMonth() + 1).padStart(2, '0')
-  const day = String(today.getDate()).padStart(2, '0')
-  return `${year}-${month}-${day}`
-}
-
-// 格式化时间 HH:MM
-function formatTime(dateStr: string): string {
-  try {
-    const date = new Date(dateStr)
-    const hours = String(date.getHours()).padStart(2, '0')
-    const minutes = String(date.getMinutes()).padStart(2, '0')
-    return `${hours}:${minutes}`
-  } catch {
-    return dateStr
-  }
-}
 
 const todayDate = getCurrentDate()
 

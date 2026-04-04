@@ -218,27 +218,11 @@
 <script setup lang="ts">
 import AppHeader from '../components/AppHeader.vue'
 import { onMounted } from 'vue'
-import { useDailyCheckin } from '../composables/useDailyCheckin'
+import { useDailyCheckin} from '../composables/useDailyCheckin'
+import { formatDate, getPercentage } from '../utils/dateTime'
 
 const { form, loading, errorMsg, loadDailyCheckin, toExerciseCheckin, toMealCheckin, toSleepCheckin } = useDailyCheckin()
 
-// 格式化日期
-function formatDate(dateStr: string): string {
-  const date = new Date(dateStr)
-  const year = date.getFullYear()
-  const month = String(date.getMonth() + 1).padStart(2, '0')
-  const day = String(date.getDate()).padStart(2, '0')
-  const weekDays = ['周日', '周一', '周二', '周三', '周四', '周五', '周六']
-  const weekDay = weekDays[date.getDay()]
-  return `${year}-${month}-${day} ${weekDay}`
-}
-
-// 计算百分比
-function getPercentage(value: number, max: number): number {
-  return Math.min((value / max) * 100, 100)
-}
-
-// 页面加载时触发数据加载
 onMounted(async () => {
   await loadDailyCheckin()
 })

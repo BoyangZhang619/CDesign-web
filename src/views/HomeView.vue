@@ -17,6 +17,7 @@ import AppHeader from '../components/AppHeader.vue'
 import HealthSetupModal from '../components/HealthSetupModal.vue'
 import { useHomePageLogic } from '../composables/useHomePageLogic'
 import { useAuthForm } from '../composables/useAuthForm'
+// import { getCurrentDate, formatTime } from '../utils/dateTime'
 
 const {
   loadAllData,
@@ -58,6 +59,11 @@ function handleHealthSetupSuccess() {
   // 可选：重新加载数据或显示成功消息
   console.log('健康档案设置完成！')
 }
+
+// export {
+//   getCurrentDate,
+//   formatTime
+// }
 </script>
 
 <style scoped>

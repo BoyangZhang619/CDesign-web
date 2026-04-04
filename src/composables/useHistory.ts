@@ -66,6 +66,27 @@ export interface SleepRecord {
 // 通用历史记录类型
 export type HistoryRecord = MealRecord | ExerciseRecord | SleepRecord
 
+// 获取当前日期的 YYYY-MM-DD 格式
+export function getCurrentDate(): string {
+  const today = new Date()
+  const year = today.getFullYear()
+  const month = String(today.getMonth() + 1).padStart(2, '0')
+  const day = String(today.getDate()).padStart(2, '0')
+  return `${year}-${month}-${day}`
+}
+
+// 格式化时间 HH:MM
+export function formatTime(dateStr: string): string {
+  try {
+    const date = new Date(dateStr)
+    const hours = String(date.getHours()).padStart(2, '0')
+    const minutes = String(date.getMinutes()).padStart(2, '0')
+    return `${hours}:${minutes}`
+  } catch {
+    return dateStr
+  }
+}
+
 export function useHistory() {
   const records = ref<HistoryRecord[]>([])
   const loading = ref(false)
