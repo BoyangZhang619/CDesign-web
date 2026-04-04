@@ -112,12 +112,13 @@ export function useAuthForm() {
         password: loginForm.password
       })
 
-      const needsHealthInfo = await checkHealthInfoNeeded()
-      if (needsHealthInfo) {
-        router.push('/health-setup')
-      } else {
-        router.push('/home')
-      }
+      // const needsHealthInfo = await checkHealthInfoNeeded()
+      // if (needsHealthInfo) {
+      //   router.push('/health-setup')
+      // } else {
+      //   router.push('/home')
+      // }
+      router.push('/home')
     } catch (error: any) {
       errorMsg.value =
         error?.response?.data?.message ||
@@ -166,6 +167,7 @@ export function useAuthForm() {
     registerForm,
     toggleMode,
     handleLogin,
-    handleRegister
+    handleRegister,
+    checkHealthInfoNeeded
   }
 }
