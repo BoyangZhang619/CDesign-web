@@ -1,9 +1,14 @@
 <template>
   <header class="app-header">
     <div class="header-container">
-      <!-- 左侧：Logo + 菜单按钮 -->
+      <!-- 左侧：菜单按钮 + Logo -->
       <div class="header-left">
-        <button class="logo" @click="toggleSidebar" title="打开侧栏导航">
+        <button class="menu-toggle" @click="toggleSidebar" title="打开菜单">
+          <svg viewBox="0 0 24 24" fill="currentColor">
+            <path d="M3 6h18v2H3V6zm0 5h18v2H3v-2zm0 5h18v2H3v-2z" />
+          </svg>
+        </button>
+        <button class="logo" @click="goToHome" title="返回首页">
           <span class="logo-text">StuHeal</span>
         </button>
       </div>
@@ -41,10 +46,11 @@
           aria-label="用户头像"
         >
           <img
-            v-if="authStore.userInfo?.avatar"
+            v-if="authStore.userInfo?.avatar && headerAvatarLoaded"
             :src="authStore.userInfo.avatar"
             :alt="authStore.userInfo.email"
             class="user-avatar-img"
+            @error="handleHeaderAvatarError"
           />
           <svg
             v-else
@@ -102,6 +108,8 @@ const authStore = useAuthStore()
 const sidebarOpen = ref(false)
 const moreMenuOpen = ref(false)
 const loading = ref(false)
+const headerAvatarLoaded = ref(true)
+const headerAvatarRetry = ref(0)
 
 // 切换侧栏
 function toggleSidebar() {
@@ -124,11 +132,36 @@ function closeMenus() {
   moreMenuOpen.value = false
 }
 
+// 处理头像加载失败（Header）
+function handleHeaderAvatarError() {
+  headerAvatarRetry.value++
+  if (headerAvatarRetry.value < 3) {
+    // 重试最多3次，延迟后重新加载
+    setTimeout(() => {
+      headerAvatarLoaded.value = false
+      setTimeout(() => {
+        headerAvatarLoaded.value = true
+      }, 100)
+    }, 500 * headerAvatarRetry.value)
+  } else {
+    // 3次都失败，显示默认头像
+    headerAvatarLoaded.value = false
+    console.warn(`头像加载失败已重试${headerAvatarRetry.value}次，已放弃`)
+  }
+}
+
 // 跳转到 AI 聊天
 function goToAIChat() {
   closeSidebar()
   closeMenus()
   router.push('/ai-chat')
+}
+
+// 跳转到首页
+function goToHome() {
+  closeSidebar()
+  closeMenus()
+  router.push('/')
 }
 
 // 跳转到个人资料

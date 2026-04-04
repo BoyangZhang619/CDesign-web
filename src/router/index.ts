@@ -2,7 +2,6 @@ import { createRouter, createWebHistory } from 'vue-router'
 
 import HomeView from '../views/HomeView.vue'
 import AuthView from '../views/AuthView.vue'
-import HealthSetupView from '../views/HealthSetupView.vue'
 import ProfileDisplayView from '../views/ProfileDisplayView.vue'
 import ProfileEditView from '../views/ProfileEditView.vue'
 import AIChatView from '../views/AIChatView.vue'
@@ -45,15 +44,6 @@ const routes = [
     component: AuthView,
     meta: {
       title: 'StuHeal - 登录/注册'
-    }
-  },
-  {
-    path: '/health-setup',
-    name: 'health-setup',
-    component: HealthSetupView,
-    meta: {
-      requiresAuth: true,
-      title: 'StuHeal - 健康档案设置'
     }
   },
   {

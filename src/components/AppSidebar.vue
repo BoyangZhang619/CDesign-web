@@ -30,7 +30,13 @@
             <!-- 用户信息区 -->
             <div v-if="userInfo" class="sidebar-user-info">
                 <div class="user-info-avatar">
-                    <img v-if="userInfo.avatar" :src="userInfo.avatar" :alt="userInfo.email" class="user-info-img" />
+                    <img
+                        v-if="userInfo.avatar && sidebarAvatarLoaded"
+                        :src="userInfo.avatar"
+                        :alt="userInfo.email"
+                        class="user-info-img"
+                        @error="handleSidebarAvatarError"
+                    />
                     <svg v-else viewBox="0 0 24 24" fill="currentColor" class="user-info-default">
                         <path
                             d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
@@ -48,7 +54,7 @@
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import { useAuthStore } from '../stores/auth'
 
 const authStore = useAuthStore()
@@ -66,6 +72,10 @@ const emit = defineEmits(['close'])
 
 // 用户信息
 const userInfo = computed(() => authStore.userInfo)
+
+// 头像加载状态
+const sidebarAvatarLoaded = ref(true)
+const sidebarAvatarRetry = ref(0)
 
 // 12 个核心功能导航项
 const navigationItems = [
@@ -148,6 +158,24 @@ const navigationItems = [
         badge: '智能助手'
     }
 ]
+
+// 处理头像加载失败（Sidebar）
+function handleSidebarAvatarError() {
+    sidebarAvatarRetry.value++
+    if (sidebarAvatarRetry.value < 3) {
+        // 重试最多3次，延迟后重新加载
+        setTimeout(() => {
+            sidebarAvatarLoaded.value = false
+            setTimeout(() => {
+                sidebarAvatarLoaded.value = true
+            }, 100)
+        }, 500 * sidebarAvatarRetry.value)
+    } else {
+        // 3次都失败，显示默认头像
+        sidebarAvatarLoaded.value = false
+        console.warn(`侧栏头像加载失败已重试${sidebarAvatarRetry.value}次，已放弃`)
+    }
+}
 
 // 关闭侧栏
 function closeSidebar() {

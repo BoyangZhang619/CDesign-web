@@ -34,6 +34,36 @@
   flex-shrink: 0;
 }
 
+/* 菜单切换按钮 */
+.menu-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  color: var(--color-text-primary);
+}
+
+.menu-toggle svg {
+  width: 24px;
+  height: 24px;
+}
+
+.menu-toggle:hover {
+  opacity: 0.7;
+  background: var(--color-bg-hover);
+  border-radius: 4px;
+}
+
+.menu-toggle:active {
+  opacity: 0.5;
+}
+
 /* Logo */
 .logo {
   display: flex;
@@ -357,7 +387,7 @@
     flex: 0;
     max-width: none;
     position: absolute;
-    left: 50%;
+    left: 60%;
     transform: translateX(-50%);
   }
 
