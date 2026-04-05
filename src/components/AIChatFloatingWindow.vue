@@ -96,12 +96,9 @@
 
 <script setup lang="ts">
 import { ref, onMounted, nextTick } from 'vue'
-import { fetchWithRefresh } from '../api/http'
-
-interface Message {
-  role: 'user' | 'assistant'
-  content: string
-}
+import { useAIChat } from '../composables/useAIChat'
+import { useAuthStore } from '../stores/auth'
+import { sessionAPI } from '../api/modules/aiChat'
 
 const props = defineProps<{
   isOpen: boolean
@@ -111,10 +108,18 @@ const emit = defineEmits<{
   close: []
 }>()
 
-const inputMessage = ref('')
-const messages = ref<Message[]>([])
-const loading = ref(false)
-const errorMsg = ref('')
+const authStore = useAuthStore()
+
+const { 
+  messages, 
+  loading, 
+  errorMsg, 
+  inputMessage, 
+  chatConfig,
+  handleSendMessage: composableHandleSendMessage, 
+  clearMessages
+} = useAIChat()
+
 const messagesContainer = ref<HTMLElement | null>(null)
 
 // 快速提问列表
@@ -129,86 +134,62 @@ const quickPrompts = [
 function closeWindow() {
   emit('close')
   setTimeout(() => {
-    inputMessage.value = ''
-    messages.value = []
-    errorMsg.value = ''
+    clearMessages()
   }, 300)
 }
 
 // 处理键盘事件
 function handleKeyDown(event: KeyboardEvent) {
-  // 检测是否在桌面端（通过 UA 判断）
   const isDesktop = !/mobile|android|iphone|ipad|phone/i.test(navigator.userAgent.toLowerCase())
   
   if (isDesktop && event.key === 'Enter' && !event.shiftKey) {
-    // 桌面端：Enter 发送，Shift+Enter 转行
     event.preventDefault()
     handleSendMessage()
-  } else if (event.key === 'Enter' && event.shiftKey) {
-    // 任何平台：Shift+Enter 转行
-    // 让默认行为进行
   }
-  // 移动端不处理 Enter 事件
 }
 
 // 发送消息
 async function handleSendMessage() {
+  if (!authStore.userInfo) {
+    errorMsg.value = '请先登录'
+    return
+  }
+  
   if (!inputMessage.value.trim() || loading.value) return
 
-  const userMessage = inputMessage.value
-  inputMessage.value = ''
-  errorMsg.value = ''
-
-  // 添加用户消息
-  messages.value.push({
-    role: 'user',
-    content: userMessage
-  })
-
-  loading.value = true
-  try {
-    // 调用 AI Chat API
-    const response = await fetchWithRefresh(
-      `/api/ai/ptio/common`,
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          message: userMessage,
-          model: 'qwen3.5-flash',
-          response_language: 'Chinese'
-        })
-      }
-    )
-
-    if (!response.ok) {
-      const errorData = await response.json().catch(() => ({}))
-      throw new Error(errorData.message || `HTTP error! status: ${response.status}`)
-    }
-
-    const data = await response.json()
-
-    if (data?.success) {
-      // 添加 AI 响应
-      messages.value.push({
-        role: 'assistant',
-        content: data.data.content
+  // 如果还没有会话ID，先创建会话
+  if (!chatConfig.sessionId) {
+    try {
+      const response = await sessionAPI.createSession({
+        session_name: '浮窗聊天',
+        ai_model: 'dashscope',
+        temperature: 0.7,
+        max_tokens: 2048
       })
-    } else {
-      throw new Error(data?.message || 'AI 回复失败')
+      
+      // 响应结构：response.data.data.data.id
+      if (response.data?.success && response.data?.data?.data?.id) {
+        chatConfig.sessionId = response.data.data.data.id
+      } else {
+        errorMsg.value = '创建会话失败'
+        return
+      }
+    } catch (error) {
+      errorMsg.value = '创建会话失败'
+      return
     }
-  } catch (error: any) {
-    errorMsg.value = error.message || 'AI 回复失败，请重试'
-    console.error('AI Chat 错误:', error)
-    // 移除用户消息，因为请求失败
-    messages.value.pop()
-  } finally {
-    loading.value = false
-    await nextTick()
-    scrollToBottom()
   }
+
+  // 使用真实的用户额度
+  const result = await composableHandleSendMessage(authStore.userInfo.credits || 0)
+  
+  // 更新用户额度
+  if (result.success && authStore.userInfo) {
+    authStore.userInfo.credits -= result.tokensUsed
+  }
+  
+  await nextTick()
+  scrollToBottom()
 }
 
 // 发送快速提问
@@ -227,9 +208,7 @@ function scrollToBottom() {
   }
 }
 
-// 监听消息列表变化
 onMounted(() => {
-  // 初始化时也滚动到底部
   nextTick(() => {
     scrollToBottom()
   })

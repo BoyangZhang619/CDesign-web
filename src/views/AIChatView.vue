@@ -4,7 +4,7 @@
 
     <!-- 聊天历史侧栏遮罩 - 使用 Transition 组件确保淡入淡出效果 -->
     <Transition name="fade-overlay">
-      <div v-if="showHistorySidebarScreen" class="history-overlay" @click="closeHistorySidebar"></div>
+      <div v-if="showHistorySidebar" class="history-overlay" @click="closeHistorySidebar"></div>
     </Transition>
 
     <!-- 聊天历史侧栏 -->
@@ -95,7 +95,35 @@
               <div class="message-header">
                 <span class="message-role">{{ msg.role === 'user' ? '您' : 'AI' }}</span>
               </div>
+              
+              <!-- 思考过程（只在 AIChat 页显示） -->
+              <div v-if="msg.reasoning" class="reasoning-section">
+                <details :class="['reasoning-details', `state-${msg.reasoningState}`]" :open="msg.reasoningState !== 'collapsed'">
+                  <summary class="reasoning-summary">
+                    <span class="reasoning-icon">&nbsp;|&nbsp;</span>
+                    <span class="reasoning-label">思考过程</span>
+                    <span v-if="msg.reasoningState === 'collapsed' && msg.requestTime" class="reasoning-meta">
+                      {{ (msg.requestTime / 1000).toFixed(1) }}s · {{ msg.tokensUsed }} tokens
+                    </span>
+                  </summary>
+                  <div class="reasoning-content">{{ msg.reasoning }}</div>
+                </details>
+              </div>
+              
+              <!-- 主要回复内容 -->
               <div class="message-content">{{ msg.content }}</div>
+            </div>
+
+            <!-- 加载动画 - 当等待AI回复时显示 -->
+            <div v-if="loading && messages.length > 0 && messages[messages.length - 1].role === 'user'" class="message-bubble msg-assistant">
+              <div class="message-header">
+                <span class="message-role">AI</span>
+              </div>
+              <div class="message-loading">
+                <span class="loading-dot"></span>
+                <span class="loading-dot"></span>
+                <span class="loading-dot"></span>
+              </div>
             </div>
           </div>
         </div>
@@ -127,8 +155,7 @@
           </div>
 
           <!-- 配置栏 - 自定义块选择 -->
-          <div class="config-section">
-            <!-- 模型选择块 -->
+          <div class="config-section" style="display: none;">
             <div class="config-block">
               <span class="config-block-label">模型:</span>
               <select v-model="chatConfig.model" class="config-select"
@@ -137,12 +164,6 @@
                 <option value="qwen3.5-plus">Qwen Plus</option>
               </select>
             </div>
-
-            <!-- 流式输出切换块 -->
-            <label class="config-checkbox-label">
-              <input v-model="chatConfig.useStream" type="checkbox" />
-              <span>流式输出</span>
-            </label>
 
             <!-- 清除历史按钮 -->
             <button v-if="messages.length > 0" @click="handleClearMessages" class="btn-clear-history">
@@ -160,6 +181,7 @@ import { onMounted, ref } from 'vue'
 import AppHeader from '../components/AppHeader.vue'
 import { useAuthStore } from '../stores/auth'
 import { useAIChat } from '../composables/useAIChat'
+import { sessionAPI, messageAPI } from '../api/modules/aiChat'
 
 const authStore = useAuthStore()
 const {
@@ -183,7 +205,6 @@ const getHoursIcon = () => {
 
 // 聊天记录侧栏
 const showHistorySidebar = ref(false)
-const showHistorySidebarScreen = ref(false) // 用于控制遮罩显示，避免侧栏动画时遮罩过早消失
 const currentChatId = ref<string | null>(null)
 const chatHistories = ref<Array<{
   id: string
@@ -192,36 +213,35 @@ const chatHistories = ref<Array<{
   timestamp: number
 }>>([])
 
-// 初始化聊天记录（mock 数据）
-function initializeChatHistories() {
-  const now = Date.now()
-  chatHistories.value = [
-    {
-      id: '1',
-      title: '最近的对话',
-      preview: '关于最近的健康状况...',
-      timestamp: now - 3600000
-    },
-    {
-      id: '2',
-      title: '运动建议',
-      preview: '如何制定合理的运动计划...',
-      timestamp: now - 86400000
-    },
-    {
-      id: '3',
-      title: '饮食咨询',
-      preview: '关于如何保持均衡饮食...',
-      timestamp: now - 172800000
-    },
-    {
-      id: '4',
-      title: '睡眠改善',
-      preview: '有什么方法可以改善睡眠...',
-      timestamp: now - 259200000
+// 初始化聊天记录
+async function initializeChatHistories() {
+  try {
+    // 获取用户的所有会话
+    const response = await sessionAPI.getSessions({
+      limit: 50,  // 获取最近50个会话
+      page: 1
+    })
+
+    if (response.data?.success && response.data?.data?.data && Array.isArray(response.data.data.data)) {
+      // 将会话转换为侧栏展示的格式
+      chatHistories.value = response.data.data.data
+        .map((session: any) => ({
+          id: session.id?.toString() || session.uuid,
+          title: session.session_name || '未命名对话',
+          preview: session.message_count > 0 ? `${session.message_count} 条消息` : '暂无消息',
+          timestamp: session.last_message_at ? new Date(session.last_message_at).getTime() : new Date(session.created_at).getTime()
+        }))
+        .sort((a: any, b: any) => b.timestamp - a.timestamp)  // 按时间倒序排列
+      
+      console.log('✅ 已加载聊天历史，共', chatHistories.value.length, '个会话')
+    } else {
+      console.warn('获取会话列表失败:', response.data?.message)
+      chatHistories.value = []
     }
-  ]
-  currentChatId.value = '1'
+  } catch (error) {
+    console.warn('获取聊天历史时出错:', error)
+    chatHistories.value = []
+  }
 }
 
 // 格式化时间
@@ -247,23 +267,83 @@ function formatTime(timestamp: number): string {
 }
 
 // 切换聊天
-function switchChat(id: string) {
-  currentChatId.value = id
-  // 这里可以加载对应 ID 的聊天记录
-  console.log('切换到聊天记录:', id)
-  closeHistorySidebar()
+async function switchChat(id: string) {
+  try {
+    currentChatId.value = id
+    
+    // 获取会话的消息记录
+    const sessionId = parseInt(id)
+    const response = await sessionAPI.getSessionDetail(sessionId)
+    
+    if (response.data?.success && response.data?.data?.data) {
+      const session = response.data.data.data
+      
+      // 更新当前会话ID
+      chatConfig.sessionId = session.id
+      
+      // 获取该会话的消息
+      const messagesRes = await messageAPI.getMessages(sessionId, { limit: 100 })
+      
+      if (messagesRes.data?.success && Array.isArray(messagesRes.data?.data?.data)) {
+        // 清除当前消息，加载新的消息
+        clearMessages()
+        
+        // 将消息添加到消息列表
+        messagesRes.data.data.data.forEach((msg: any) => {
+          messages.value.push({
+            role: msg.role,
+            content: msg.content,
+            reasoning: msg.reasoning,
+            reasoningState: 'collapsed',
+            tokensUsed: msg.total_tokens,
+            messageId: msg.id
+          })
+        })
+        
+        console.log('✅ 已加载会话消息，共', messages.value.length, '条')
+      }
+    }
+    
+    closeHistorySidebar()
+  } catch (error) {
+    errorMsg.value = '加载会话失败'
+    console.error('加载会话失败:', error)
+  }
 }
 
-// 新建对话
-function handleNewChat() {
-  clearMessages()
+// 新建对话 - 创建新会话
+async function handleNewChat() {
+  try {
+    clearMessages()
+    errorMsg.value = ''
+    
+    // 创建新会话
+    const response = await sessionAPI.createSession({
+      session_name: '新聊天 ' + new Date().toLocaleString(),
+      ai_model: 'dashscope',
+      temperature: 0.7,
+      max_tokens: 2048
+    })
+    
+    // 响应结构：response.data.data.data.id
+    if (response.data?.success && response.data?.data?.data?.id) {
+      chatConfig.sessionId = response.data.data.data.id
+      console.log('✅ 新会话已创建，ID:', chatConfig.sessionId)
+    } else {
+      errorMsg.value = response.data?.message || '创建会话失败'
+      console.error('创建会话失败:', response.data)
+    }
+  } catch (error) {
+    errorMsg.value = '创建会话失败，请检查网络连接'
+    console.error('创建会话错误:', error)
+  }
+  
   currentChatId.value = null
   closeHistorySidebar()
 }
 
 async function closeHistorySidebar() {
   showHistorySidebar.value = !showHistorySidebar.value
-  setTimeout(() => { showHistorySidebarScreen.value = !showHistorySidebarScreen.value }, 300)
 }
 
 // 加载用户信息
@@ -280,6 +360,32 @@ async function handleSendChat() {
   if (!authStore.userInfo) {
     errorMsg.value = '请先登录'
     return
+  }
+
+  // 如果还没有会话ID，先创建会话
+  if (!chatConfig.sessionId) {
+    try {
+      const response = await sessionAPI.createSession({
+        session_name: '新聊天 ' + new Date().toLocaleString(),
+        ai_model: 'dashscope',
+        temperature: 0.7,
+        max_tokens: 2048
+      })
+      
+      // 响应结构：response.data.data.data.id
+      if (response.data?.success && response.data?.data?.data?.id) {
+        chatConfig.sessionId = response.data.data.data.id
+        console.log('✅ 会话已创建，ID:', chatConfig.sessionId)
+      } else {
+        errorMsg.value = response.data?.message || '创建会话失败'
+        console.error('创建会话失败:', response.data)
+        return
+      }
+    } catch (error) {
+      errorMsg.value = '创建会话失败，请检查网络连接'
+      console.error('创建会话错误:', error)
+      return
+    }
   }
 
   const result = await handleSendMessage(authStore.userInfo.credits || 0)
@@ -312,9 +418,12 @@ function handleClearMessages() {
   }
 }
 
-onMounted(() => {
-  loadUserInfo()
+onMounted(async () => {
+  await loadUserInfo()
   initializeChatHistories()
+  
+  // 延迟创建会话，等到用户发送第一条消息时再创建
+  // 这样可以避免重复创建会话
 })
 </script>
 
