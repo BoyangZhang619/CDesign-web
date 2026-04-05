@@ -60,8 +60,8 @@
 
           <!-- 输入框 -->
           <div class="input-box">
-            <textarea v-model="inputMessage" @keydown.enter.ctrl="handleSendChat" :disabled="loading"
-              class="chat-textarea" placeholder="输入您的问题... (Ctrl+Enter 发送)" rows="3"></textarea>
+            <textarea v-model="inputMessage" @keydown="handleKeyDown" :disabled="loading"
+              class="chat-textarea" placeholder="输入您的问题... (Enter 发送，Shift+Enter 转行)"></textarea>
             <button @click="handleSendChat" :disabled="loading || !inputMessage.trim()" class="btn-submit">
               <svg v-if="!loading" viewBox="0 0 24 24" fill="currentColor">
                 <path
@@ -135,6 +135,22 @@ async function handleSendChat() {
   if (result.success && authStore.userInfo) {
     authStore.userInfo.credits -= result.tokensUsed
   }
+}
+
+// 处理键盘事件
+function handleKeyDown(event: KeyboardEvent) {
+  // 检测是否在桌面端（通过 UA 判断）
+  const isDesktop = !/mobile|android|iphone|ipad|phone/i.test(navigator.userAgent.toLowerCase())
+  
+  if (isDesktop && event.key === 'Enter' && !event.shiftKey) {
+    // 桌面端：Enter 发送，Shift+Enter 转行
+    event.preventDefault()
+    handleSendChat()
+  } else if (event.key === 'Enter' && event.shiftKey) {
+    // 任何平台：Shift+Enter 转行
+    // 让默认行为进行
+  }
+  // 移动端不处理 Enter 事件
 }
 
 // 处理清除历史

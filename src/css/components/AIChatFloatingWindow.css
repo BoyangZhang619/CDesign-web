@@ -1,0 +1,517 @@
+
+/* ============================================
+   浮窗遮罩
+   ============================================ */
+.float-window-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(4px);
+  z-index: 999;
+}
+
+/* ============================================
+   浮窗主体
+   ============================================ */
+.ai-float-window {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 450px;
+  max-height: 600px;
+  background: var(--color-cream);
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow: var(--shadow-lg);
+  z-index: 1000;
+  animation: float-pop 0.3s ease-out;
+}
+
+@keyframes float-pop {
+  from {
+    transform: scale(0.95);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* ============================================
+   浮窗头部
+   ============================================ */
+.float-header {
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--color-border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+  background: linear-gradient(
+    135deg,
+    var(--color-cream) 0%,
+    var(--color-ivory) 100%
+  );
+}
+
+.float-header-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.float-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 18px;
+  font-weight: 500;
+  letter-spacing: 0.3px;
+  margin: 0;
+  color: var(--color-text-primary);
+  line-height: 1.2;
+}
+
+.float-subtitle {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 0.2px;
+  color: var(--color-text-secondary);
+  margin: 4px 0 0 0;
+  line-height: 1.4;
+}
+
+.float-close {
+  width: 32px;
+  height: 32px;
+  border: none;
+  background: transparent;
+  color: var(--color-text-secondary);
+  font-size: 24px;
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.float-close:hover {
+  background: var(--color-oatmeal);
+  color: var(--color-text-primary);
+}
+
+/* ============================================
+   消息区域
+   ============================================ */
+.float-messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  background: var(--color-cream);
+}
+
+.float-messages::-webkit-scrollbar {
+  width: 6px;
+}
+
+.float-messages::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.float-messages::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: 3px;
+}
+
+.float-messages::-webkit-scrollbar-thumb:hover {
+  background: var(--color-taupe);
+}
+
+/* 空状态 */
+.float-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  gap: 12px;
+  color: var(--color-text-secondary);
+}
+
+.float-empty-icon {
+  font-size: 48px;
+  opacity: 0.6;
+}
+
+.float-empty-text {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 13px;
+  font-weight: 400;
+  margin: 0;
+}
+
+/* 消息列表 */
+.float-messages-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.float-message {
+  display: flex;
+  animation: slide-in 0.3s ease-out;
+}
+
+@keyframes slide-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.float-msg-user {
+  justify-content: flex-end;
+}
+
+.float-msg-assistant {
+  justify-content: flex-start;
+}
+
+.float-message-content {
+  max-width: 85%;
+  padding: 10px 12px;
+  border-radius: 8px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.5;
+  word-break: break-word;
+}
+
+.float-msg-user .float-message-content {
+  background: var(--color-accent-primary);
+  color: white;
+  border-bottom-right-radius: 2px;
+}
+
+.float-msg-assistant .float-message-content {
+  background: var(--color-oatmeal);
+  color: var(--color-text-primary);
+  border-bottom-left-radius: 2px;
+}
+
+/* ============================================
+   加载指示器
+   ============================================ */
+.float-loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+  padding: 12px 0;
+  height: 40px;
+}
+
+.float-loading-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--color-accent-primary);
+  animation: pulse 1.4s infinite;
+}
+
+.float-loading-dot:nth-child(1) {
+  animation-delay: 0s;
+}
+
+.float-loading-dot:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.float-loading-dot:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 0.3;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.2);
+  }
+}
+
+/* ============================================
+   输入区域
+   ============================================ */
+.float-input-area {
+  padding: 16px;
+  border-top: 1px solid var(--color-border);
+  background: var(--color-cream);
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* 错误提示 */
+.float-error-box {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  background: #fff5f5;
+  border: 1px solid #fca5a5;
+  border-radius: 6px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 12px;
+  color: #c53030;
+  animation: slide-in-error 0.3s ease-out;
+}
+
+@keyframes slide-in-error {
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.float-error-icon {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}
+
+/* 输入框包装 */
+.float-input-wrapper {
+  display: flex;
+  gap: 8px;
+  align-items: stretch;
+}
+
+.float-textarea {
+  flex: 1;
+  padding: 10px 12px;
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--color-text-primary);
+  background: white;
+  resize: none;
+  min-height: auto;
+  max-height: 100px;
+  transition: border-color 0.2s ease;
+  line-height: 1.5;
+  height: 36px;
+  display: flex;
+  align-items: center;
+}
+
+.float-textarea:focus {
+  outline: none;
+  border-color: var(--color-accent-primary);
+}
+
+.float-textarea:disabled {
+  background: var(--color-oatmeal);
+  color: var(--color-text-secondary);
+  cursor: not-allowed;
+}
+
+/* 发送按钮 */
+.float-btn-submit {
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border: none;
+  background: var(--color-accent-primary);
+  color: white;
+  border-radius: 6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 12px;
+}
+
+.float-btn-submit:hover:not(:disabled) {
+  background: var(--color-accent-secondary);
+  transform: translateY(-2px);
+}
+
+.float-btn-submit:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.float-btn-submit:disabled {
+  background: var(--color-taupe);
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.float-btn-submit svg {
+  width: 16px;
+  height: 16px;
+}
+
+.float-sending {
+  font-size: 11px;
+}
+
+/* 快速提问按钮 */
+.float-quick-prompts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.float-quick-btn {
+  flex: 1;
+  min-width: 100px;
+  padding: 8px 10px;
+  border: 1px solid var(--color-border);
+  background: white;
+  color: var(--color-text-primary);
+  border-radius: 6px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 11px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.float-quick-btn:hover:not(:disabled) {
+  background: var(--color-oatmeal);
+  border-color: var(--color-taupe);
+}
+
+.float-quick-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ============================================
+   动画过渡
+   ============================================ */
+.float-fade-enter-active,
+.float-fade-leave-active {
+  transition: opacity 0.3s ease;
+}
+
+.float-fade-enter-from,
+.float-fade-leave-to {
+  opacity: 0;
+}
+
+.float-slide-up-enter-active,
+.float-slide-up-leave-active {
+  transition: all 0.3s ease;
+}
+
+.float-slide-up-enter-from {
+  transform: translateY(20px);
+  opacity: 0;
+}
+
+.float-slide-up-leave-to {
+  transform: translateY(20px);
+  opacity: 0;
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.2s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+
+/* ============================================
+   响应式设计
+   ============================================ */
+@media (max-width: 768px) {
+  .ai-float-window {
+    width: calc(100% - 40px);
+    max-height: 70vh;
+    right: 20px;
+    bottom: 20px;
+  }
+
+  .float-messages {
+    max-height: 300px;
+  }
+
+  .float-message-content {
+    max-width: 90%;
+    font-size: 11px;
+  }
+
+  .float-quick-prompts {
+    flex-direction: column;
+  }
+
+  .float-quick-btn {
+    min-width: auto;
+  }
+
+  .float-textarea {
+    font-size: 11px;
+  }
+}
+
+@media (max-width: 480px) {
+  .ai-float-window {
+    width: calc(100% - 32px);
+    max-height: 80vh;
+    right: 16px;
+    bottom: 16px;
+    border-radius: 8px;
+  }
+
+  .float-title {
+    font-size: 16px;
+  }
+
+  .float-subtitle {
+    font-size: 10px;
+  }
+
+  .float-close {
+    width: 28px;
+    height: 28px;
+    font-size: 20px;
+  }
+}

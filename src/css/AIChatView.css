@@ -395,7 +395,7 @@
 .input-box {
   display: flex;
   gap: 12px;
-  align-items: flex-end;
+  align-items: stretch;
 }
 
 .chat-textarea {
@@ -409,10 +409,10 @@
   font-weight: 400;
   letter-spacing: 0.2px;
   color: var(--color-text-primary);
-  resize: vertical;
+  resize: none;
   height: 48px;
   min-height: 48px;
-  max-height: 120px;
+  max-height: 48px;
   transition: all 0.3s ease;
   line-height: 1.5;
 }

@@ -86,10 +86,10 @@ const navigationItems = [
         badge: '首页'
     },
     {
-        id: '01',
-        title: '个人基础信息',
-        path: '/profile',
-        badge: '初始化'
+        id: '07',
+        title: 'TodoList',
+        path: '/todolist',
+        badge: '任务清单'
     },
     {
         id: '02',
@@ -116,47 +116,41 @@ const navigationItems = [
         badge: '演化过程'
     },
     {
-        id: '06',
-        title: '未来预测',
-        path: '/analysis/forecast',
-        badge: '预测能力'
-    },
-    {
-        id: '07',
-        title: '情景模拟',
-        path: '/analysis/simulation',
-        badge: '可实验性'
-    },
-    {
         id: '08',
-        title: '个性化建议',
-        path: '/recommendations',
-        badge: '干预指导'
-    },
-    {
-        id: '09',
-        title: '健康目标',
-        path: '/goals',
-        badge: '目标导向'
-    },
-    {
-        id: '10',
-        title: 'Todo List',
-        path: '/todolist',
-        badge: '任务清单'
-    },
-    {
-        id: '11',
-        title: '消息与提醒',
-        path: '/notifications',
-        badge: '行为引导'
-    },
-    {
-        id: '12',
         title: 'AI 对话',
         path: '/ai-chat',
         badge: '智能助手'
-    }
+    },
+    {
+        id: '01',
+        title: '个人基础信息',
+        path: '/profile',
+        badge: '初始化'
+    },
+    // {
+    //     id: '06',
+    //     title: '健康目标',
+    //     path: '/goals',
+    //     badge: '目标导向'
+    // },
+    // {
+    //     id: '06',
+    //     title: '未来预测',
+    //     path: '/analysis/forecast',
+    //     badge: '预测能力'
+    // },
+    // {
+    //     id: '07',
+    //     title: '情景模拟',
+    //     path: '/analysis/simulation',
+    //     badge: '可实验性'
+    // },
+    // {
+    //     id: '08',
+    //     title: '个性化建议',
+    //     path: '/recommendations',
+    //     badge: '干预指导'
+    // },
 ]
 
 // 处理头像加载失败（Sidebar）

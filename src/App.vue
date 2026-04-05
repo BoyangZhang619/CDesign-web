@@ -16,6 +16,10 @@
   --color-sage-green: #8b9a7f;
   --color-champagne-gold: #d4af8f;
   --color-burgundy: #7a4a5a;
+  --color-taupe: #b9a796;
+  --color-border: #e0d9d1;
+  --color-accent-primary: #a79368;
+  --color-accent-secondary: #8b7355;
 
   /* Text Colors */
   --color-text-primary: #3d3a37;

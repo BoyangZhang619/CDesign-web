@@ -30,8 +30,7 @@
             type="text"
             class="search-input"
             placeholder="搜索或与 AI 聊天..."
-            @focus="goToAIChat"
-            @keydown.enter="goToAIChat"
+            @focus="showAIChatWindow = true"
             readonly
           />
         </div>
@@ -93,6 +92,9 @@
 
     <!-- 侧栏组件 -->
     <AppSidebar :isOpen="sidebarOpen" @close="closeSidebar" />
+
+    <!-- AI Chat 浮窗 -->
+    <AIChatFloatingWindow :isOpen="showAIChatWindow" @close="showAIChatWindow = false" />
   </header>
 </template>
 
@@ -101,6 +103,7 @@ import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '../stores/auth'
 import AppSidebar from './AppSidebar.vue'
+import AIChatFloatingWindow from './AIChatFloatingWindow.vue'
 
 const router = useRouter()
 const authStore = useAuthStore()
@@ -110,6 +113,7 @@ const moreMenuOpen = ref(false)
 const loading = ref(false)
 const headerAvatarLoaded = ref(true)
 const headerAvatarRetry = ref(0)
+const showAIChatWindow = ref(false)
 
 // 切换侧栏
 function toggleSidebar() {
@@ -148,13 +152,6 @@ function handleHeaderAvatarError() {
     headerAvatarLoaded.value = false
     console.warn(`头像加载失败已重试${headerAvatarRetry.value}次，已放弃`)
   }
-}
-
-// 跳转到 AI 聊天
-function goToAIChat() {
-  closeSidebar()
-  closeMenus()
-  router.push('/ai-chat')
 }
 
 // 跳转到首页
