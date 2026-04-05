@@ -1,0 +1,683 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600&family=Montserrat:wght@400;500;600&display=swap');
+
+/* ============================================
+   页面布局
+   ============================================ */
+.portrait-page {
+  min-height: 100vh;
+  background: linear-gradient(135deg, var(--color-cream) 0%, var(--color-ivory) 50%, var(--color-oatmeal) 100%);
+  display: flex;
+  flex-direction: column;
+}
+
+.portrait-main {
+  flex: 1;
+  padding: 40px 24px;
+  overflow-y: auto;
+}
+
+/* ============================================
+   页面头部
+   ============================================ */
+.portrait-header {
+  text-align: center;
+  margin-bottom: 40px;
+  padding: 20px 0;
+}
+
+.header-content {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.page-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 42px;
+  font-weight: 500;
+  letter-spacing: 0.6px;
+  margin: 0 0 12px 0;
+  color: var(--color-text-primary);
+  line-height: 1.2;
+}
+
+.page-subtitle {
+  font-size: 15px;
+  font-weight: 400;
+  letter-spacing: 0.3px;
+  color: var(--color-text-secondary);
+  margin: 0;
+  line-height: 1.6;
+}
+
+/* ============================================
+   评分卡片
+   ============================================ */
+.portrait-score-card {
+  max-width: 1000px;
+  margin: 0 auto 40px;
+  background: var(--color-cream);
+  border: 1px solid var(--color-border);
+  border-radius: 0;
+  padding: 40px;
+  box-shadow: var(--shadow-md);
+}
+
+.score-container {
+  display: flex;
+  align-items: center;
+  gap: 60px;
+}
+
+.score-circle {
+  position: relative;
+  flex-shrink: 0;
+  width: 150px;
+  height: 150px;
+}
+
+.score-ring {
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+}
+
+.score-ring-bg {
+  fill: none;
+  stroke: var(--color-border);
+  stroke-width: 8;
+}
+
+.score-ring-progress {
+  fill: none;
+  stroke: var(--color-accent-primary);
+  stroke-width: 8;
+  stroke-dasharray: 339.3;
+  stroke-linecap: round;
+  transition: stroke-dashoffset 0.8s ease;
+}
+
+.score-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+}
+
+.score-value {
+  font-family: 'Playfair Display', serif;
+  font-size: 36px;
+  font-weight: 600;
+  color: var(--color-accent-primary);
+}
+
+.score-label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  color: var(--color-text-secondary);
+  text-transform: uppercase;
+  margin-top: 4px;
+}
+
+.score-details {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.score-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.score-icon {
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+.score-name {
+  min-width: 40px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+
+.score-bar {
+  flex: 1;
+  height: 6px;
+  background: var(--color-border);
+  border-radius: 3px;
+  overflow: hidden;
+  min-width: 100px;
+}
+
+.score-fill {
+  height: 100%;
+  border-radius: 3px;
+  transition: width 0.6s ease;
+}
+
+.score-fill.exercise {
+  background: linear-gradient(90deg, #e8b4b8 0%, #d48a91 100%);
+}
+
+.score-fill.meal {
+  background: linear-gradient(90deg, #daa76f 0%, #c9944d 100%);
+}
+
+.score-fill.sleep {
+  background: linear-gradient(90deg, #a79368 0%, #8b7355 100%);
+}
+
+.score-num {
+  min-width: 30px;
+  text-align: right;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-accent-primary);
+}
+
+/* ============================================
+   雷达图部分
+   ============================================ */
+.portrait-radar-section {
+  max-width: 1000px;
+  margin: 0 auto 40px;
+  background: var(--color-cream);
+  border: 1px solid var(--color-border);
+  border-radius: 0;
+  padding: 40px;
+  box-shadow: var(--shadow-md);
+}
+
+.section-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 24px;
+  font-weight: 500;
+  letter-spacing: 0.4px;
+  margin: 0 0 32px 0;
+  color: var(--color-text-primary);
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.radar-container {
+  display: flex;
+  align-items: center;
+  gap: 40px;
+  justify-content: center;
+}
+
+.radar-chart {
+  flex-shrink: 0;
+  max-width: 300px;
+  height: auto;
+}
+
+.radar-legend {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 150px;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--color-text-secondary);
+}
+
+.legend-color {
+  width: 16px;
+  height: 16px;
+  border-radius: 2px;
+}
+
+/* ============================================
+   身体指标卡片
+   ============================================ */
+.portrait-metrics {
+  max-width: 1000px;
+  margin: 0 auto 40px;
+}
+
+.metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
+  margin-top: 24px;
+}
+
+.metric-card {
+  background: var(--color-cream);
+  border: 1px solid var(--color-border);
+  border-radius: 0;
+  padding: 24px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  box-shadow: var(--shadow-sm);
+  transition: all 0.3s ease;
+}
+
+.metric-card:hover {
+  box-shadow: var(--shadow-md);
+  border-color: var(--color-accent-primary);
+}
+
+.metric-card.normal {
+  border-left: 4px solid var(--color-accent-primary);
+}
+
+.metric-card.good {
+  border-left: 4px solid #7cb342;
+}
+
+.metric-card.warning {
+  border-left: 4px solid #f57f17;
+}
+
+.metric-card.danger {
+  border-left: 4px solid #c62828;
+}
+
+.metric-icon {
+  font-size: 32px;
+  flex-shrink: 0;
+}
+
+.metric-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.metric-label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  color: var(--color-text-secondary);
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+
+.metric-value {
+  font-family: 'Playfair Display', serif;
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  margin-bottom: 4px;
+}
+
+.metric-status {
+  font-size: 12px;
+  color: var(--color-text-secondary);
+}
+
+/* ============================================
+   健康建议
+   ============================================ */
+.portrait-recommendations {
+  max-width: 1000px;
+  margin: 0 auto 40px;
+  background: var(--color-cream);
+  border: 1px solid var(--color-border);
+  border-radius: 0;
+  padding: 40px;
+  box-shadow: var(--shadow-md);
+}
+
+.recommendations-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin-top: 24px;
+}
+
+.recommendation-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 20px;
+  background: white;
+  border: 1px solid var(--color-border);
+  border-radius: 0;
+  transition: all 0.3s ease;
+}
+
+.recommendation-item:hover {
+  box-shadow: var(--shadow-sm);
+}
+
+.rec-icon {
+  font-size: 24px;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.rec-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.rec-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  margin: 0 0 8px 0;
+}
+
+.rec-description {
+  font-size: 13px;
+  color: var(--color-text-secondary);
+  margin: 0;
+  line-height: 1.5;
+}
+
+.rec-priority {
+  flex-shrink: 0;
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  white-space: nowrap;
+  text-transform: uppercase;
+}
+
+.rec-priority.高 {
+  background: rgba(198, 40, 40, 0.1);
+  color: #c62828;
+}
+
+.rec-priority.中 {
+  background: rgba(245, 127, 23, 0.1);
+  color: #f57f17;
+}
+
+.rec-priority.低 {
+  background: rgba(124, 179, 66, 0.1);
+  color: #7cb342;
+}
+
+/* ============================================
+   健康进度时间轴
+   ============================================ */
+.portrait-timeline {
+  max-width: 1000px;
+  margin: 0 auto 40px;
+  background: var(--color-cream);
+  border: 1px solid var(--color-border);
+  border-radius: 0;
+  padding: 40px;
+  box-shadow: var(--shadow-md);
+}
+
+.timeline {
+  margin-top: 32px;
+  position: relative;
+  padding-left: 40px;
+}
+
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: var(--color-border);
+}
+
+.timeline-item {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 28px;
+  position: relative;
+}
+
+.timeline-item:last-child {
+  margin-bottom: 0;
+}
+
+.timeline-marker {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 3px solid var(--color-border);
+  background: white;
+  flex-shrink: 0;
+  margin-top: 2px;
+  margin-left: -29px;
+  position: relative;
+  z-index: 1;
+  transition: all 0.3s ease;
+}
+
+.timeline-marker.completed {
+  background: var(--color-accent-primary);
+  border-color: var(--color-accent-primary);
+}
+
+.timeline-marker.in-progress {
+  background: white;
+  border-color: var(--color-accent-primary);
+  width: 20px;
+  height: 20px;
+  margin-left: -32px;
+  margin-top: 0;
+}
+
+.timeline-content {
+  padding: 16px;
+  background: white;
+  border: 1px solid var(--color-border);
+  border-radius: 0;
+  flex: 1;
+}
+
+.timeline-date {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  color: var(--color-text-secondary);
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+
+.timeline-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  margin-bottom: 6px;
+}
+
+.timeline-description {
+  font-size: 13px;
+  color: var(--color-text-secondary);
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* ============================================
+   响应式设计
+   ============================================ */
+@media (max-width: 768px) {
+  .portrait-main {
+    padding: 24px 16px;
+  }
+
+  .page-title {
+    font-size: 32px;
+  }
+
+  .portrait-score-card {
+    padding: 24px;
+  }
+
+  .score-container {
+    flex-direction: column;
+    align-items: center;
+    gap: 40px;
+    text-align: center;
+  }
+
+  .score-circle {
+    width: 120px;
+    height: 120px;
+  }
+
+  .score-value {
+    font-size: 28px;
+  }
+
+  .score-details {
+    width: 100%;
+    max-width: 300px;
+  }
+
+  .score-item {
+    justify-content: space-between;
+  }
+
+  .score-bar {
+    min-width: 60px;
+  }
+
+  .radar-container {
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  .metrics-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .portrait-score-card,
+  .portrait-radar-section,
+  .portrait-recommendations,
+  .portrait-timeline {
+    padding: 24px;
+  }
+
+  .section-title {
+    font-size: 20px;
+  }
+
+  .recommendation-item {
+    flex-direction: column;
+  }
+
+  .rec-priority {
+    align-self: flex-start;
+  }
+
+  .timeline {
+    padding-left: 32px;
+  }
+
+  .timeline-marker {
+    margin-left: -25px;
+  }
+
+  .timeline-marker.in-progress {
+    margin-left: -28px;
+  }
+}
+
+@media (max-width: 480px) {
+  .portrait-main {
+    padding: 16px;
+  }
+
+  .page-title {
+    font-size: 24px;
+    margin-bottom: 8px;
+  }
+
+  .page-subtitle {
+    font-size: 13px;
+  }
+
+  .portrait-score-card,
+  .portrait-radar-section,
+  .portrait-recommendations,
+  .portrait-timeline {
+    padding: 16px;
+    border-radius: 0;
+    margin-bottom: 24px;
+  }
+
+  .score-circle {
+    width: 100px;
+    height: 100px;
+  }
+
+  .score-value {
+    font-size: 24px;
+  }
+
+  .score-label {
+    font-size: 10px;
+  }
+
+  .section-title {
+    font-size: 18px;
+    margin-bottom: 20px;
+  }
+
+  .metric-card {
+    padding: 16px;
+    gap: 12px;
+  }
+
+  .metric-icon {
+    font-size: 28px;
+  }
+
+  .metric-value {
+    font-size: 18px;
+  }
+
+  .recommendation-item {
+    padding: 16px;
+    gap: 12px;
+  }
+
+  .rec-icon {
+    font-size: 20px;
+  }
+
+  .timeline {
+    padding-left: 24px;
+  }
+
+  .timeline-marker {
+    width: 12px;
+    height: 12px;
+    margin-left: -20px;
+  }
+
+  .timeline-marker.in-progress {
+    width: 16px;
+    height: 16px;
+    margin-left: -22px;
+  }
+
+  .timeline-content {
+    padding: 12px;
+  }
+
+  .timeline-title {
+    font-size: 13px;
+  }
+
+  .timeline-description {
+    font-size: 12px;
+  }
+}
