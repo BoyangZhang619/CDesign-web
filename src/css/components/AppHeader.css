@@ -5,12 +5,12 @@
    ============================================ */
 
 .app-header {
-  background: #fff;
+  background: var(--color-cream, #faf8f3);
   border-bottom: 1px solid var(--color-border);
   position: sticky;
   top: 0;
   z-index: 1000;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
 }
 
 .header-container {

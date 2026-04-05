@@ -1,0 +1,576 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Montserrat:wght@400;500;600;700&display=swap');
+
+/* ============================================
+   页面布局 - Morandi 风格
+   ============================================ */
+
+.auth-page {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  min-height: 100vh;
+  background: linear-gradient(135deg, var(--color-cream) 0%, var(--color-ivory) 50%, var(--color-oatmeal) 100%);
+  font-family: 'Montserrat', sans-serif;
+  overflow: hidden;
+}
+
+/* ============================================
+   左侧 - 品牌区域
+   ============================================ */
+
+.auth-brand {
+  background: linear-gradient(135deg, rgba(250, 248, 243, 0.9) 0%, rgba(245, 237, 232, 0.9) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 40px;
+  overflow: hidden;
+  position: relative;
+  border-right: 1px solid var(--color-border);
+}
+
+.auth-brand::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -20%;
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle at center, rgba(167, 147, 104, 0.06) 0%, rgba(167, 147, 104, 0.02) 40%, transparent 70%);
+  border-radius: 50%;
+  pointer-events: none;
+  animation: floatBlob 15s ease-in-out infinite;
+}
+
+.auth-brand::after {
+  content: '';
+  position: absolute;
+  bottom: -100px;
+  left: -150px;
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle at center, rgba(185, 167, 150, 0.05) 0%, rgba(185, 167, 150, 0.02) 40%, transparent 70%);
+  border-radius: 50%;
+  pointer-events: none;
+  animation: floatBlob 20s ease-in-out infinite reverse;
+}
+
+@keyframes floatBlob {
+  0%, 100% {
+    transform: translate(0, 0);
+  }
+  33% {
+    transform: translate(30px, -20px);
+  }
+  66% {
+    transform: translate(-20px, 30px);
+  }
+}
+
+.brand-content {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  color: var(--color-text-primary);
+  max-width: 480px;
+}
+
+/* ============================================
+   装饰元素
+   ============================================ */
+
+.brand-decorations {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.decoration {
+  position: absolute;
+  opacity: 0;
+  animation: decorationFadeIn 1.2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+@keyframes decorationFadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.decoration-1 {
+  width: 100px;
+  height: 100px;
+  background: linear-gradient(135deg, rgba(167, 147, 104, 0.08), transparent);
+  border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%;
+  top: 15%;
+  right: 15%;
+  animation-delay: 0.1s;
+}
+
+.decoration-2 {
+  width: 70px;
+  height: 70px;
+  background: linear-gradient(45deg, rgba(185, 167, 150, 0.06), transparent);
+  border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+  bottom: 25%;
+  left: 12%;
+  animation-delay: 0.2s;
+}
+
+.decoration-3 {
+  width: 50px;
+  height: 50px;
+  background: linear-gradient(120deg, rgba(180, 165, 150, 0.05), transparent);
+  border-radius: 45%;
+  top: 55%;
+  right: 18%;
+  animation-delay: 0.3s;
+}
+
+.decoration-4 {
+  width: 90px;
+  height: 5px;
+  background: linear-gradient(90deg, transparent, rgba(167, 147, 104, 0.12), transparent);
+  border-radius: 3px;
+  top: 35%;
+  left: 18%;
+  animation-delay: 0.25s;
+}
+
+.decoration-5 {
+  width: 6px;
+  height: 6px;
+  background: rgba(167, 147, 104, 0.2);
+  border-radius: 50%;
+  top: 70%;
+  right: 25%;
+  animation-delay: 0.35s;
+  box-shadow: 
+    25px -35px 0 -3px rgba(185, 167, 150, 0.12),
+    -20px 30px 0 -4px rgba(180, 165, 150, 0.1),
+    45px 15px 0 -5px rgba(167, 147, 104, 0.08);
+}
+
+.decoration-6 {
+  width: 80px;
+  height: 80px;
+  background: linear-gradient(160deg, rgba(185, 167, 150, 0.05), transparent);
+  border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+  top: 20%;
+  left: 10%;
+  animation-delay: 0.15s;
+}
+
+.decoration-7 {
+  width: 60px;
+  height: 60px;
+  background: linear-gradient(200deg, rgba(167, 147, 104, 0.06), transparent);
+  border-radius: 70% 30% 40% 60% / 40% 60% 30% 70%;
+  bottom: 15%;
+  right: 20%;
+  animation-delay: 0.22s;
+}
+
+/* ============================================
+   品牌标题和描述
+   ============================================ */
+
+.brand-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 48px;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  margin: 0 0 12px 0;
+  color: var(--color-accent-primary);
+  line-height: 1.2;
+}
+
+.brand-subtitle {
+  font-family: 'Playfair Display', serif;
+  font-size: 18px;
+  font-weight: 500;
+  letter-spacing: 0.4px;
+  margin: 0 0 20px 0;
+  color: var(--color-text-primary);
+  line-height: 1.4;
+}
+
+.brand-description {
+  font-size: 14px;
+  font-weight: 300;
+  letter-spacing: 0.2px;
+  color: var(--color-text-secondary);
+  margin: 0;
+  line-height: 1.8;
+}
+
+/* ============================================
+   右侧 - 认证表单区域
+   ============================================ */
+
+.auth-form-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 40px;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.6) 0%, rgba(245, 237, 232, 0.4) 100%);
+  backdrop-filter: blur(8px);
+}
+
+.auth-form-wrapper {
+  width: 100%;
+  max-width: 420px;
+}
+
+/* ============================================
+   表单头部
+   ============================================ */
+
+.form-header {
+  margin-bottom: 32px;
+  text-align: center;
+}
+
+.form-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 32px;
+  font-weight: 600;
+  letter-spacing: 0.6px;
+  margin: 0 0 8px 0;
+  color: var(--color-text-primary);
+  line-height: 1.2;
+}
+
+.form-subtitle {
+  font-size: 13px;
+  font-weight: 300;
+  letter-spacing: 0.3px;
+  color: var(--color-text-secondary);
+  margin: 0;
+  line-height: 1.6;
+}
+
+/* ============================================
+   表单元素
+   ============================================ */
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.form-label {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  color: var(--color-text-secondary);
+  text-transform: uppercase;
+}
+
+.form-input {
+  padding: 12px 14px;
+  border: 1px solid var(--color-border);
+  background: white;
+  border-radius: 4px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 13px;
+  color: var(--color-text-primary);
+  transition: all 0.3s ease;
+}
+
+.form-input::placeholder {
+  color: var(--color-text-secondary);
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: var(--color-accent-primary);
+  box-shadow: 0 0 0 3px rgba(167, 147, 104, 0.1);
+  background: white;
+}
+
+.form-input:hover:not(:focus) {
+  border-color: rgba(167, 147, 104, 0.4);
+}
+
+/* ============================================
+   按钮
+   ============================================ */
+
+.form-button {
+  padding: 12px 16px;
+  margin-top: 8px;
+  background: var(--color-accent-primary);
+  color: white;
+  border: 1px solid var(--color-accent-primary);
+  border-radius: 4px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+}
+
+.form-button:hover:not(:disabled) {
+  background: var(--color-accent-secondary);
+  border-color: var(--color-accent-secondary);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-sm);
+}
+
+.form-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.form-button:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+/* ============================================
+   分割线和切换按钮
+   ============================================ */
+
+.form-divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 16px 0;
+  font-size: 12px;
+  color: var(--color-text-secondary);
+}
+
+.form-divider::before,
+.form-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--color-border);
+}
+
+.form-toggle-btn {
+  padding: 12px 16px;
+  background: transparent;
+  color: var(--color-accent-primary);
+  border: 1px solid var(--color-accent-primary);
+  border-radius: 4px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+}
+
+.form-toggle-btn:hover {
+  background: rgba(167, 147, 104, 0.08);
+  border-color: var(--color-accent-secondary);
+  color: var(--color-accent-secondary);
+}
+
+.form-toggle-btn:active {
+  transform: scale(0.98);
+}
+
+/* ============================================
+   消息提示
+   ============================================ */
+
+.form-error {
+  padding: 10px 12px;
+  background: rgba(198, 40, 40, 0.08);
+  border: 1px solid rgba(198, 40, 40, 0.2);
+  border-radius: 4px;
+  color: #c62828;
+  font-size: 12px;
+  margin: 0;
+  line-height: 1.5;
+}
+
+.form-success {
+  padding: 10px 12px;
+  background: rgba(124, 179, 66, 0.08);
+  border: 1px solid rgba(124, 179, 66, 0.2);
+  border-radius: 4px;
+  color: #7cb342;
+  font-size: 12px;
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* ============================================
+   响应式设计
+   ============================================ */
+
+@media (max-width: 1024px) {
+  .auth-page {
+    grid-template-columns: 1fr;
+  }
+
+  .auth-brand {
+    min-height: 300px;
+    padding: 40px 30px;
+    border-right: none;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .brand-title {
+    font-size: 36px;
+  }
+
+  .brand-subtitle {
+    font-size: 16px;
+  }
+
+  .brand-description {
+    font-size: 13px;
+  }
+
+  .auth-form-container {
+    padding: 40px 30px;
+  }
+
+  .form-title {
+    font-size: 28px;
+  }
+}
+
+@media (max-width: 768px) {
+  .auth-page {
+    min-height: auto;
+    grid-template-columns: 1fr;
+  }
+
+  .auth-brand {
+    min-height: 250px;
+    padding: 32px 24px;
+    order: 1;
+  }
+
+  .auth-form-container {
+    padding: 32px 24px;
+    order: 2;
+  }
+
+  .auth-form-wrapper {
+    max-width: 100%;
+  }
+
+  .brand-title {
+    font-size: 28px;
+  }
+
+  .brand-subtitle {
+    font-size: 14px;
+  }
+
+  .form-header {
+    margin-bottom: 24px;
+  }
+
+  .form-title {
+    font-size: 24px;
+  }
+
+  .form-subtitle {
+    font-size: 12px;
+  }
+
+  .auth-form {
+    gap: 12px;
+  }
+
+  .form-input {
+    font-size: 12px;
+    padding: 10px 12px;
+  }
+
+  .form-button,
+  .form-toggle-btn {
+    font-size: 12px;
+    padding: 10px 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .auth-page {
+    min-height: 100vh;
+    grid-template-columns: 1fr;
+  }
+  
+  .auth-form-container {
+    padding: 20px 16px;
+    min-height: 100vh;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding-top: 40px;
+  }
+
+  .auth-form-wrapper {
+    width: 100%;
+  }
+
+  .form-header {
+    margin-bottom: 20px;
+  }
+
+  .form-title {
+    font-size: 20px;
+  }
+
+  .form-subtitle {
+    font-size: 11px;
+  }
+
+  .auth-form {
+    gap: 10px;
+  }
+
+  .form-group {
+    gap: 6px;
+  }
+
+  .form-label {
+    font-size: 11px;
+  }
+
+  .form-input {
+    font-size: 12px;
+    padding: 10px 12px;
+  }
+
+  .form-button,
+  .form-toggle-btn {
+    font-size: 11px;
+    padding: 10px 12px;
+  }
+
+  .form-divider {
+    margin: 12px 0;
+  }
+
+  .form-error,
+  .form-success {
+    font-size: 11px;
+    padding: 8px 10px;
+  }
+}

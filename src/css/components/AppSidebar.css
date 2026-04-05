@@ -37,7 +37,7 @@
   left: 0;
   bottom: 0;
   width: 280px;
-  background: #fff;
+  background: var(--color-cream, #faf8f3);
   border-right: 1px solid var(--color-border);
   z-index: 1001;
   overflow-y: auto;
@@ -45,7 +45,7 @@
   transition: transform 0.4s ease;
   display: flex;
   flex-direction: column;
-  box-shadow: 2px 0 12px rgba(0, 0, 0, 0.08);
+  box-shadow: 2px 0 12px rgba(0, 0, 0, 0.04);
 }
 
 .sidebar.open {

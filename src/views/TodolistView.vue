@@ -117,9 +117,6 @@
                 <div v-else-if="filteredTasks.length === 0" class="empty-state">
                     <div class="empty-icon">📭</div>
                     <p class="empty-text">暂无任务</p>
-                    <button @click="showCreateModal = true" class="btn btn-outline">
-                        创建第一个任务
-                    </button>
                 </div>
 
                 <!-- 任务列表 -->
@@ -213,6 +210,25 @@
                     </div>
                 </div>
             </section>
+
+            <!-- 分页 -->
+            <div v-if="!loading && filteredTasks.length > 0" class="pagination">
+              <button 
+                @click="currentPage--" 
+                :disabled="currentPage <= 1" 
+                class="pagination-btn"
+              >
+                ← 上一页
+              </button>
+              <span class="page-indicator">第 {{ currentPage }} / {{ totalPages }} 页</span>
+              <button 
+                @click="currentPage++" 
+                :disabled="currentPage >= totalPages" 
+                class="pagination-btn"
+              >
+                下一页 →
+              </button>
+            </div>
 
             <!-- 错误提示 -->
             <div v-if="error" class="error-banner">
@@ -439,7 +455,7 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref, computed } from 'vue'
+import { onMounted, ref, computed, watch } from 'vue'
 import AppHeader from '../components/AppHeader.vue'
 import HealthSetupModal from '../components/HealthSetupModal.vue'
 import { useAuthForm } from '../composables/useAuthForm'
@@ -471,6 +487,27 @@ const showCreateModal = ref(false)
 const showTypeSelector = ref(false)
 const editingTask = ref<Task | null>(null)
 const selectedTaskType = ref<'checkin_exercise' | 'checkin_meal' | 'checkin_sleep' | 'ai_suggested' | 'custom' | null>(null)
+
+// 分页
+const currentPage = ref(1)
+const pageSize = 10  // 每页显示10条任务
+
+// 计算总页数
+const totalPages = computed(() => {
+    return Math.ceil((filteredTasks.value.length || 0) / pageSize)
+})
+
+// 获取当前页的任务
+const paginatedTasks = computed(() => {
+    const start = (currentPage.value - 1) * pageSize
+    const end = start + pageSize
+    return filteredTasks.value.slice(start, end)
+})
+
+// 当filteredTasks变化时，重置到第一页
+watch(filteredTasks, () => {
+    currentPage.value = 1
+})
 
 // 获取今天的日期（ISO 8601格式）
 function getTodayDate(): string {
@@ -628,17 +665,17 @@ function closeModal() {
     }
 }
 
-// 计算过滤后的任务列表
+// 计算过滤后的任务列表（分页后）
 const checkinTasksFiltered = computed(() => {
-    return filteredTasks.value.filter(t => t?.type?.startsWith('checkin_'))
+    return paginatedTasks.value.filter(t => t?.type?.startsWith('checkin_'))
 })
 
 const aiSuggestedTasksFiltered = computed(() => {
-    return filteredTasks.value.filter(t => t?.type === 'ai_suggested')
+    return paginatedTasks.value.filter(t => t?.type === 'ai_suggested')
 })
 
 const customTasksFiltered = computed(() => {
-    return filteredTasks.value.filter(t => t?.type === 'custom')
+    return paginatedTasks.value.filter(t => t?.type === 'custom')
 })
 
 // 获取打卡任务类型
