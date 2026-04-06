@@ -1,18 +1,125 @@
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600&family=Montserrat:wght@400;500;600&display=swap');
 
 /* ============================================
+   可折叠 Section 样式 - 参考 filter-panel 设计
+   ============================================ */
+.collapsible-section {
+  background: var(--color-cream);
+  border: 1px solid var(--color-border);
+  border-radius: 0;
+  margin-bottom: 12px;
+  box-shadow: var(--shadow-sm);
+  animation: fadeInUp 0.5s cubic-bezier(0.4, 0, 0.2, 1) 0.1s both;
+  overflow: hidden;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 24px;
+  cursor: pointer;
+  user-select: none;
+  border-bottom: 1px solid var(--color-border);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.section-header:hover {
+  background: rgba(56, 71, 89, 0.02);
+}
+
+.section-title-group {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  flex: 1;
+}
+
+.section-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-prussian-blue);
+  margin: 0;
+  font-family: 'Montserrat', sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.toggle-icon {
+  font-size: 12px;
+  color: var(--color-warm-gray);
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  display: inline-block;
+  flex-shrink: 0;
+  margin-left: auto;
+}
+
+.toggle-icon.collapsed {
+  transform: rotate(180deg);
+}
+
+.section-content {
+  padding: 24px;
+  max-height: 3000px;
+  overflow: hidden;
+  opacity: 1;
+  animation: slideDown 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.section-content.collapsed {
+  max-height: 0;
+  padding: 0 24px;
+  opacity: 0;
+  overflow: hidden;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ============================================
    页面布局
    ============================================ */
 .trends-page {
   min-height: 100vh;
-  background: linear-gradient(135deg, var(--color-cream) 0%, var(--color-ivory) 50%, var(--color-oatmeal) 100%);
+  background: linear-gradient(135deg, var(--color-cream), var(--color-ivory), var(--color-oatmeal));
   display: flex;
   flex-direction: column;
 }
 
 .trends-main {
   flex: 1;
-  padding: 40px 24px;
+  padding: 60px 24px 40px;
   overflow-y: auto;
 }
 
@@ -20,114 +127,119 @@
    页面头部
    ============================================ */
 .trends-header {
-  text-align: center;
-  margin-bottom: 40px;
-  padding: 20px 0;
+  margin-bottom: 32px;
+  animation: fadeInDown 0.6s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .header-content {
-  max-width: 1000px;
+  max-width: 1200px;
   margin: 0 auto;
 }
 
 .page-title {
-  font-family: 'Playfair Display', serif;
-  font-size: 42px;
+  font-size: 36px;
   font-weight: 500;
-  letter-spacing: 0.6px;
-  margin: 0 0 12px 0;
-  color: var(--color-text-primary);
+  color: var(--color-prussian-blue);
+  font-family: 'Playfair Display', serif;
+  letter-spacing: -0.5px;
+  margin: 0 0 8px 0;
   line-height: 1.2;
 }
 
 .page-subtitle {
-  font-size: 15px;
-  font-weight: 400;
-  letter-spacing: 0.3px;
-  color: var(--color-text-secondary);
   margin: 0;
-  line-height: 1.6;
+  font-size: 14px;
+  color: var(--color-warm-gray);
+  font-weight: 500;
+  font-family: 'Montserrat', sans-serif;
 }
 
 /* ============================================
    控制条
    ============================================ */
 .trends-controls {
-  max-width: 1000px;
-  margin: 0 auto 40px;
+  margin-bottom: 12px;
   background: var(--color-cream);
   border: 1px solid var(--color-border);
   border-radius: 0;
-  padding: 20px;
-  box-shadow: var(--shadow-md);
+  padding: 16px 24px;
+  box-shadow: var(--shadow-sm);
+  animation: fadeInUp 0.5s cubic-bezier(0.4, 0, 0.2, 1) 0.05s both;
 }
 
 .date-range-selector {
   display: flex;
-  gap: 12px;
+  gap: 8px;
   flex-wrap: wrap;
 }
 
 .range-btn {
-  padding: 10px 20px;
+  padding: 10px 16px;
   border: 1px solid var(--color-border);
-  background: white;
-  color: var(--color-text-primary);
+  background: var(--color-ivory);
+  color: var(--color-warm-gray);
   border-radius: 0;
   font-family: 'Montserrat', sans-serif;
-  font-size: 13px;
-  font-weight: 600;
-  letter-spacing: 0.3px;
+  font-size: 12px;
+  font-weight: 500;
   cursor: pointer;
-  transition: all 0.3s ease;
-  text-transform: uppercase;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .range-btn:hover {
-  border-color: var(--color-accent-primary);
-  color: var(--color-accent-primary);
+  border-color: var(--color-prussian-blue);
+  background: rgba(56, 71, 89, 0.05);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
 }
 
 .range-btn.active {
-  background: var(--color-accent-primary);
-  color: white;
-  border-color: var(--color-accent-primary);
+  background: var(--color-burgundy);
+  color: #ffffff;
+  border-color: var(--color-burgundy);
+  box-shadow: var(--shadow-md);
 }
 
 /* ============================================
    图表卡片
    ============================================ */
 .trends-charts {
-  max-width: 1000px;
-  margin: 0 auto 40px;
   display: grid;
   grid-template-columns: 1fr;
-  gap: 24px;
+  gap: 0;
 }
 
 .chart-card {
   background: var(--color-cream);
   border: 1px solid var(--color-border);
   border-radius: 0;
-  padding: 32px;
-  box-shadow: var(--shadow-md);
+  padding: 24px;
+  box-shadow: var(--shadow-sm);
+  margin-bottom: 0;
+}
+
+.chart-card:not(:last-child) {
+  border-bottom: none;
 }
 
 .chart-header {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  margin-bottom: 24px;
+  margin-bottom: 20px;
   gap: 20px;
 }
 
 .chart-title {
-  font-family: 'Playfair Display', serif;
-  font-size: 20px;
-  font-weight: 500;
-  letter-spacing: 0.3px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-prussian-blue);
   margin: 0;
-  color: var(--color-text-primary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 .chart-stats {
@@ -172,9 +284,7 @@
   font-size: 24px;
   font-weight: 500;
   letter-spacing: 0.4px;
-  margin: 0 0 28px 0;
   color: var(--color-text-primary);
-  padding-bottom: 16px;
   border-bottom: 1px solid var(--color-border);
 }
 
@@ -519,7 +629,6 @@
 
   .section-title {
     font-size: 18px;
-    margin-bottom: 20px;
   }
 
   .metrics-grid {

@@ -2,7 +2,7 @@
   <div class="trends-page">
     <AppHeader />
 
-    <!-- 健康档案设置浮窗（必须完成） -->
+    <!-- 健康档案设置浮窗 -->
     <HealthSetupModal
       :show="showHealthSetupModal"
       :force-complete="true"
@@ -35,188 +35,219 @@
       </section>
 
       <!-- 三大指标趋势图 -->
-      <section class="trends-charts">
-        <!-- 运动趋势 -->
-        <div class="chart-card">
-          <div class="chart-header">
-            <h2 class="chart-title">🏃 运动趋势</h2>
-            <div class="chart-stats">
-              <span class="stat">平均: {{ stats.avgExercise }}分钟</span>
-              <span class="stat">最高: {{ stats.maxExercise }}分钟</span>
-            </div>
-          </div>
-          <div class="chart-container">
-            <canvas ref="exerciseChart" class="chart"></canvas>
+      <section class="collapsible-section">
+        <div class="section-header" @click="toggleSection('charts')">
+          <div class="section-title-group">
+            <h2 class="section-title">三大指标趋势</h2>
+            <span class="toggle-icon" :class="{ collapsed: !expandedSections.charts }">▼</span>
           </div>
         </div>
-
-        <!-- 饮食趋势 -->
-        <div class="chart-card">
-          <div class="chart-header">
-            <h2 class="chart-title">🍽️ 饮食趋势</h2>
-            <div class="chart-stats">
-              <span class="stat">平均: {{ stats.avgMealCalories }}kcal</span>
-              <span class="stat">最高: {{ stats.maxMealCalories }}kcal</span>
+        <div class="section-content" :class="{ collapsed: !expandedSections.charts }">
+          <div class="trends-charts">
+            <!-- 运动趋势 -->
+            <div class="chart-card">
+              <div class="chart-header">
+                <h2 class="chart-title">运动趋势</h2>
+                <div class="chart-stats">
+                  <span class="stat">平均: {{ `${stats.avgExercise}` }}分钟</span>
+                  <span class="stat">最高: {{ `${stats.maxExercise}` }}分钟</span>
+                </div>
+              </div>
+              <div class="chart-container">
+                <canvas ref="exerciseChart" class="chart"></canvas>
+              </div>
             </div>
-          </div>
-          <div class="chart-container">
-            <canvas ref="mealChart" class="chart"></canvas>
-          </div>
-        </div>
 
-        <!-- 睡眠趋势 -->
-        <div class="chart-card">
-          <div class="chart-header">
-            <h2 class="chart-title">😴 睡眠趋势</h2>
-            <div class="chart-stats">
-              <span class="stat">平均: {{ stats.avgSleep }}小时</span>
-              <span class="stat">最高: {{ stats.maxSleep }}小时</span>
+            <!-- 饮食趋势 -->
+            <div class="chart-card">
+              <div class="chart-header">
+                <h2 class="chart-title">饮食趋势</h2>
+                <div class="chart-stats">
+                  <span class="stat">平均: {{ `${stats.avgMealCalories}` }}kcal</span>
+                  <span class="stat">最高: {{ `${stats.maxMealCalories}` }}kcal</span>
+                </div>
+              </div>
+              <div class="chart-container">
+                <canvas ref="mealChart" class="chart"></canvas>
+              </div>
             </div>
-          </div>
-          <div class="chart-container">
-            <canvas ref="sleepChart" class="chart"></canvas>
+
+            <!-- 睡眠趋势 -->
+            <div class="chart-card">
+              <div class="chart-header">
+                <h2 class="chart-title">睡眠趋势</h2>
+                <div class="chart-stats">
+                  <span class="stat">平均: {{ `${stats.avgSleep}` }}小时</span>
+                  <span class="stat">最高: {{ `${stats.maxSleep}` }}小时</span>
+                </div>
+              </div>
+              <div class="chart-container">
+                <canvas ref="sleepChart" class="chart"></canvas>
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
       <!-- 关键指标卡片 -->
-      <section class="trends-metrics">
-        <h2 class="section-title">关键指标变化</h2>
-        <div class="metrics-grid">
-          <div class="metric-trend-card">
-            <div class="metric-header">
-              <span class="metric-icon">🔥</span>
-              <span class="metric-name">卡路里消耗</span>
-            </div>
-            <div class="metric-value">{{ stats.totalCalories }}</div>
-            <div class="metric-unit">kcal/周</div>
-            <div class="trend-indicator" :class="{ up: stats.caloriesTrend > 0 }">
-              {{ stats.caloriesTrend > 0 ? '↑' : '↓' }}
-              {{ Math.abs(stats.caloriesTrend) }}%
-            </div>
+      <section class="collapsible-section">
+        <div class="section-header" @click="toggleSection('metrics')">
+          <div class="section-title-group">
+            <h2 class="section-title">关键指标变化</h2>
+            <span class="toggle-icon" :class="{ collapsed: !expandedSections.metrics }">▼</span>
           </div>
+        </div>
+        <div class="section-content" :class="{ collapsed: !expandedSections.metrics }">
+          <div class="metrics-grid">
+            <div class="metric-trend-card">
+              <div class="metric-header">
+                <span class="metric-icon">🔥</span>
+                <span class="metric-name">卡路里消耗</span>
+              </div>
+              <div class="metric-value">{{ `${stats.totalCalories}` }}</div>
+              <div class="metric-unit">kcal/周</div>
+              <div class="trend-indicator" :class="{ up: stats.caloriesTrend > 0 }">
+                {{ stats.caloriesTrend > 0 ? '↑' : '↓' }}
+                {{ Math.abs(stats.caloriesTrend) }}%
+              </div>
+            </div>
 
-          <div class="metric-trend-card">
-            <div class="metric-header">
-              <span class="metric-icon">⏱️</span>
-              <span class="metric-name">运动时长</span>
+            <div class="metric-trend-card">
+              <div class="metric-header">
+                <span class="metric-icon">⏱️</span>
+                <span class="metric-name">运动时长</span>
+              </div>
+              <div class="metric-value">{{ `${stats.totalExerciseTime}` }}</div>
+              <div class="metric-unit">小时/周</div>
+              <div class="trend-indicator" :class="{ up: stats.exerciseTrend > 0 }">
+                {{ stats.exerciseTrend > 0 ? '↑' : '↓' }}
+                {{ Math.abs(stats.exerciseTrend) }}%
+              </div>
             </div>
-            <div class="metric-value">{{ stats.totalExerciseTime }}</div>
-            <div class="metric-unit">小时/周</div>
-            <div class="trend-indicator" :class="{ up: stats.exerciseTrend > 0 }">
-              {{ stats.exerciseTrend > 0 ? '↑' : '↓' }}
-              {{ Math.abs(stats.exerciseTrend) }}%
-            </div>
-          </div>
 
-          <div class="metric-trend-card">
-            <div class="metric-header">
-              <span class="metric-icon">💤</span>
-              <span class="metric-name">睡眠时长</span>
+            <div class="metric-trend-card">
+              <div class="metric-header">
+                <span class="metric-icon">💤</span>
+                <span class="metric-name">睡眠时长</span>
+              </div>
+              <div class="metric-value">{{ `${stats.totalSleepTime}` }}</div>
+              <div class="metric-unit">小时/周</div>
+              <div class="trend-indicator" :class="{ up: stats.sleepTrend > 0 }">
+                {{ stats.sleepTrend > 0 ? '↑' : '↓' }}
+                {{ Math.abs(stats.sleepTrend) }}%
+              </div>
             </div>
-            <div class="metric-value">{{ stats.totalSleepTime }}</div>
-            <div class="metric-unit">小时/周</div>
-            <div class="trend-indicator" :class="{ up: stats.sleepTrend > 0 }">
-              {{ stats.sleepTrend > 0 ? '↑' : '↓' }}
-              {{ Math.abs(stats.sleepTrend) }}%
-            </div>
-          </div>
 
-          <div class="metric-trend-card">
-            <div class="metric-header">
-              <span class="metric-icon">📊</span>
-              <span class="metric-name">综合评分</span>
-            </div>
-            <div class="metric-value">{{ stats.healthScore }}</div>
-            <div class="metric-unit">分</div>
-            <div class="trend-indicator" :class="{ up: stats.scoreTrend > 0 }">
-              {{ stats.scoreTrend > 0 ? '↑' : '↓' }}
-              {{ Math.abs(stats.scoreTrend) }}%
+            <div class="metric-trend-card">
+              <div class="metric-header">
+                <span class="metric-icon">📊</span>
+                <span class="metric-name">综合评分</span>
+              </div>
+              <div class="metric-value">{{ `${stats.healthScore}` }}</div>
+              <div class="metric-unit">分</div>
+              <div class="trend-indicator" :class="{ up: stats.scoreTrend > 0 }">
+                {{ stats.scoreTrend > 0 ? '↑' : '↓' }}
+                {{ Math.abs(stats.scoreTrend) }}%
+              </div>
             </div>
           </div>
         </div>
       </section>
 
       <!-- 习惯养成进度 -->
-      <section class="trends-habits">
-        <h2 class="section-title">习惯养成进度</h2>
-        <div class="habits-list">
-          <div
-            v-for="habit in habits"
-            :key="habit.id"
-            class="habit-card"
-            :class="{ completed: habit.progress === 100 }"
-          >
-            <div class="habit-header">
-              <div class="habit-info">
-                <h3 class="habit-title">{{ habit.title }}</h3>
-                <p class="habit-description">{{ habit.description }}</p>
+      <section class="collapsible-section">
+        <div class="section-header" @click="toggleSection('habits')">
+          <div class="section-title-group">
+            <h2 class="section-title">习惯养成进度</h2>
+            <span class="toggle-icon" :class="{ collapsed: !expandedSections.habits }">▼</span>
+          </div>
+        </div>
+        <div class="section-content" :class="{ collapsed: !expandedSections.habits }">
+          <div class="habits-list">
+            <div
+              v-for="habit in habits"
+              :key="habit.id"
+              class="habit-card"
+              :class="{ completed: habit.progress === 100 }"
+            >
+              <div class="habit-header">
+                <div class="habit-info">
+                  <h3 class="habit-title">{{ habit.title }}</h3>
+                  <p class="habit-description">{{ habit.description }}</p>
+                </div>
+                <div class="habit-days">{{ habit.days }}天</div>
               </div>
-              <div class="habit-days">{{ habit.days }}天</div>
-            </div>
-            <div class="habit-progress-bar">
-              <div class="habit-progress" :style="{ width: habit.progress + '%' }"></div>
-            </div>
-            <div class="habit-stats">
-              <span class="stat">{{ habit.progress }}% 完成</span>
-              <span class="stat">目标: {{ habit.target }}天</span>
+              <div class="habit-progress-bar">
+                <div class="habit-progress" :style="{ width: habit.progress + '%' }"></div>
+              </div>
+              <div class="habit-stats">
+                <span class="stat">{{ habit.progress }}% 完成</span>
+                <span class="stat">目标: {{ habit.target }}天</span>
+              </div>
             </div>
           </div>
         </div>
       </section>
 
       <!-- 对比分析 -->
-      <section class="trends-comparison">
-        <h2 class="section-title">本周 vs 上周</h2>
-        <div class="comparison-grid">
-          <div class="comparison-card">
-            <h3 class="comparison-title">运动频率</h3>
-            <div class="comparison-stats">
-              <div class="stats-item">
-                <span class="label">本周</span>
-                <span class="value">5天</span>
-              </div>
-              <div class="stats-item">
-                <span class="label">上周</span>
-                <span class="value">4天</span>
-              </div>
-            </div>
-            <div class="comparison-result positive">
-              <span>↑ 25% 增长</span>
-            </div>
+      <section class="collapsible-section">
+        <div class="section-header" @click="toggleSection('comparison')">
+          <div class="section-title-group">
+            <h2 class="section-title">本周 vs 上周</h2>
+            <span class="toggle-icon" :class="{ collapsed: !expandedSections.comparison }">▼</span>
           </div>
+        </div>
+        <div class="section-content" :class="{ collapsed: !expandedSections.comparison }">
+          <div class="comparison-grid">
+            <div class="comparison-card">
+              <h3 class="comparison-title">运动频率</h3>
+              <div class="comparison-stats">
+                <div class="stats-item">
+                  <span class="label">本周</span>
+                  <span class="value">{{ `${comparison.exerciseFrequencyCurrent}` }}天</span>
+                </div>
+                <div class="stats-item">
+                  <span class="label">上周</span>
+                  <span class="value">{{ `${Math.round(comparison.exerciseFrequencyPrev)}` }}天</span>
+                </div>
+              </div>
+              <div class="comparison-result" :class="{ positive: comparison.exerciseTrend >= 0, negative: comparison.exerciseTrend < 0 }">
+                <span>{{ comparison.exerciseTrend > 0 ? '↑' : '↓' }} {{ Math.abs(comparison.exerciseTrend) }}% 增长</span>
+              </div>
+            </div>
 
-          <div class="comparison-card">
-            <h3 class="comparison-title">平均睡眠</h3>
-            <div class="comparison-stats">
-              <div class="stats-item">
-                <span class="label">本周</span>
-                <span class="value">7.2h</span>
+            <div class="comparison-card">
+              <h3 class="comparison-title">平均睡眠</h3>
+              <div class="comparison-stats">
+                <div class="stats-item">
+                  <span class="label">本周</span>
+                  <span class="value">{{ `${comparison.sleepCurrent}` }}h</span>
+                </div>
+                <div class="stats-item">
+                  <span class="label">上周</span>
+                  <span class="value">{{ `${comparison.sleepPrev}` }}h</span>
+                </div>
               </div>
-              <div class="stats-item">
-                <span class="label">上周</span>
-                <span class="value">6.8h</span>
+              <div class="comparison-result" :class="{ positive: comparison.sleepTrend >= 0, negative: comparison.sleepTrend < 0 }">
+                <span>{{ comparison.sleepTrend > 0 ? '↑' : '↓' }} {{ Math.abs(comparison.sleepTrend) }}% 增长</span>
               </div>
             </div>
-            <div class="comparison-result positive">
-              <span>↑ 5.9% 增长</span>
-            </div>
-          </div>
 
-          <div class="comparison-card">
-            <h3 class="comparison-title">饮食均衡度</h3>
-            <div class="comparison-stats">
-              <div class="stats-item">
-                <span class="label">本周</span>
-                <span class="value">78分</span>
+            <div class="comparison-card">
+              <h3 class="comparison-title">饮食均衡度</h3>
+              <div class="comparison-stats">
+                <div class="stats-item">
+                  <span class="label">本周</span>
+                  <span class="value">{{ `${comparison.mealBalanceCurrent}` }}分</span>
+                </div>
+                <div class="stats-item">
+                  <span class="label">上周</span>
+                  <span class="value">{{ `${Math.round(comparison.mealBalancePrev)}` }}分</span>
+                </div>
               </div>
-              <div class="stats-item">
-                <span class="label">上周</span>
-                <span class="value">75分</span>
+              <div class="comparison-result" :class="{ positive: comparison.mealTrend >= 0, negative: comparison.mealTrend < 0 }">
+                <span>{{ comparison.mealTrend > 0 ? '↑' : '↓' }} {{ Math.abs(comparison.mealTrend) }}% 增长</span>
               </div>
-            </div>
-            <div class="comparison-result positive">
-              <span>↑ 4% 增长</span>
             </div>
           </div>
         </div>
@@ -226,7 +257,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, nextTick } from 'vue'
+import { ref, onMounted, nextTick, watch } from 'vue'
 import AppHeader from '../components/AppHeader.vue'
 import HealthSetupModal from '../components/HealthSetupModal.vue'
 import { useAuthForm } from '../composables/useAuthForm'
@@ -242,6 +273,9 @@ const exerciseChart = ref<HTMLCanvasElement | null>(null)
 const mealChart = ref<HTMLCanvasElement | null>(null)
 const sleepChart = ref<HTMLCanvasElement | null>(null)
 
+// 每日数据用于图表 - 初始为空
+const chartData = ref<Array<{date: string; exercise: number; meal: number; sleep: number}>>([])
+
 // 时间范围选项
 const dateRanges = [
   { label: '本周', value: 'week' },
@@ -250,59 +284,52 @@ const dateRanges = [
   { label: '本年', value: 'year' }
 ]
 
-// 统计数据
-const stats = ref({
-  avgExercise: 35,
-  maxExercise: 60,
-  avgMealCalories: 2000,
-  maxMealCalories: 2800,
-  avgSleep: 7.2,
-  maxSleep: 8.5,
-  totalCalories: 12500,
-  totalExerciseTime: 5.5,
-  totalSleepTime: 50.4,
-  healthScore: 78,
-  caloriesTrend: 12,
-  exerciseTrend: 8,
-  sleepTrend: 5,
-  scoreTrend: 6
+// Section 展开状态
+const expandedSections = ref({
+  charts: true,
+  metrics: true,
+  habits: true,
+  comparison: true
 })
 
-// 习惯养成数据
-const habits = ref([
-  {
-    id: 1,
-    title: '坚持运动',
-    description: '每周至少运动4次',
-    days: 42,
-    progress: 84,
-    target: 50
-  },
-  {
-    id: 2,
-    title: '规律作息',
-    description: '每日22:30前入睡',
-    days: 28,
-    progress: 64,
-    target: 44
-  },
-  {
-    id: 3,
-    title: '均衡饮食',
-    description: '每周蔬果摄入充足',
-    days: 35,
-    progress: 70,
-    target: 50
-  },
-  {
-    id: 4,
-    title: '补充水分',
-    description: '每日饮水8杯以上',
-    days: 21,
-    progress: 42,
-    target: 50
-  }
-])
+// 统计数据 - 初始为空
+const stats = ref({
+  avgExercise: 0,
+  maxExercise: 0,
+  avgMealCalories: 0,
+  maxMealCalories: 0,
+  avgSleep: 0,
+  maxSleep: 0,
+  totalCalories: 0,
+  totalExerciseTime: 0,
+  totalSleepTime: 0,
+  healthScore: 0,
+  caloriesTrend: 0,
+  exerciseTrend: 0,
+  sleepTrend: 0,
+  scoreTrend: 0
+})
+
+// 习惯养成数据 - 初始为空
+const habits = ref<Array<{id: number; title: string; description: string; days: number; progress: number; target: number}>>([])
+
+// 对比数据
+const comparison = ref({
+  exerciseFrequencyCurrent: 0,
+  exerciseFrequencyPrev: 0,
+  exerciseTrend: 0,
+  sleepCurrent: 0,
+  sleepPrev: 0,
+  sleepTrend: 0,
+  mealBalanceCurrent: 0,
+  mealBalancePrev: 0,
+  mealTrend: 0
+})
+
+// Toggle section 展开/折叠
+function toggleSection(section: keyof typeof expandedSections.value) {
+  expandedSections.value[section] = !expandedSections.value[section]
+}
 
 // 处理健康档案关闭
 function handleHealthSetupClose() {
@@ -321,7 +348,7 @@ async function loadTrendsData() {
   loading.value = true
   try {
     const response = await fetchWithRefresh(
-      `/api/health/trends?range=${selectedRange.value}`,
+      `/api/analysis/trends?range=${selectedRange.value}`,
       {
         method: 'GET',
         headers: {
@@ -333,7 +360,53 @@ async function loadTrendsData() {
     if (response.ok) {
       const data = await response.json()
       if (data?.success && data.data) {
-        Object.assign(stats.value, data.data)
+        const trendsData = data.data
+        Object.assign(stats.value, {
+          avgExercise: trendsData.avgExercise || 0,
+          maxExercise: trendsData.maxExercise || 0,
+          avgMealCalories: trendsData.avgMealCalories || 0,
+          maxMealCalories: trendsData.maxMealCalories || 0,
+          avgSleep: trendsData.avgSleep || 0,
+          maxSleep: trendsData.maxSleep || 0,
+          totalCalories: trendsData.totalCalories || 0,
+          totalExerciseTime: trendsData.totalExerciseTime || 0,
+          totalSleepTime: trendsData.totalSleepTime || 0,
+          healthScore: trendsData.healthScore || 0,
+          caloriesTrend: trendsData.caloriesTrend || 0,
+          exerciseTrend: trendsData.exerciseTrend || 0,
+          sleepTrend: trendsData.sleepTrend || 0,
+          scoreTrend: trendsData.scoreTrend || 0
+        });
+
+        // 更新对比数据
+        if (trendsData.weekComparison) {
+          const wc = trendsData.weekComparison
+          Object.assign(comparison.value, {
+            exerciseFrequencyCurrent: wc.exerciseFrequency || 0,
+            exerciseFrequencyPrev: wc.exerciseFrequencyPrev || 0,
+            exerciseTrend: wc.exerciseFrequencyTrend || 0,
+            sleepCurrent: wc.avgSleepCurrent || 0,
+            sleepPrev: wc.avgSleepPrev || 0,
+            sleepTrend: wc.sleepTrend || 0,
+            mealBalanceCurrent: wc.mealBalance || 0,
+            mealBalancePrev: (wc.mealBalance || 0) * (1 - (wc.mealBalanceTrend || 0) / 100),
+            mealTrend: wc.mealBalanceTrend || 0
+          })
+        }
+
+        // 更新每日数据用于图表
+        if (trendsData.dailyData && trendsData.dailyData.length > 0) {
+          chartData.value = trendsData.dailyData
+          await nextTick()
+          initCharts()
+        }
+
+        // 更新习惯养成数据
+        if (trendsData.habits && trendsData.habits.length > 0) {
+          habits.value = trendsData.habits
+        } else {
+          habits.value = []
+        }
       }
     }
   } catch (error) {
@@ -343,39 +416,22 @@ async function loadTrendsData() {
   }
 }
 
-// 初始化
-onMounted(async () => {
-  try {
-    const needsHealthInfo = await checkHealthInfoNeeded()
-    if (needsHealthInfo) {
-      showHealthSetupModal.value = true
-      return
-    }
-
-    await loadTrendsData()
-    await nextTick()
-    initCharts()
-  } catch (err) {
-    console.error('页面初始化错误:', err)
-  }
-})
-
 // 初始化图表
 function initCharts() {
-  const dates = ['周一', '周二', '周三', '周四', '周五', '周六', '周日']
-  const exerciseData = [30, 40, 35, 50, 45, 60, 55]
-  const mealData = [2000, 2200, 1900, 2400, 2100, 2300, 2000]
-  const sleepData = [7, 6.5, 7.5, 8, 7.2, 7.8, 7.5]
+  const dates = chartData.value.map(d => d.date)
+  const exerciseData = chartData.value.map(d => d.exercise)
+  const mealData = chartData.value.map(d => d.meal)
+  const sleepData = chartData.value.map(d => d.sleep)
 
-  if (exerciseChart.value) {
+  if (exerciseChart.value && exerciseData.length > 0) {
     drawChart(exerciseChart.value, dates, exerciseData, '#e8b4b8')
   }
 
-  if (mealChart.value) {
+  if (mealChart.value && mealData.length > 0) {
     drawChart(mealChart.value, dates, mealData, '#daa76f')
   }
 
-  if (sleepChart.value) {
+  if (sleepChart.value && sleepData.length > 0) {
     drawChart(sleepChart.value, dates, sleepData, '#a79368')
   }
 }
@@ -387,6 +443,8 @@ function drawChart(
   data: number[],
   color: string
 ) {
+  if (data.length === 0) return
+
   const ctx = canvas.getContext('2d')
   if (!ctx) return
 
@@ -465,6 +523,32 @@ function drawChart(
     ctx.fillText(date, x, canvas.height - padding + 10)
   })
 }
+
+// 初始化
+onMounted(async () => {
+  try {
+    const needsHealthInfo = await checkHealthInfoNeeded()
+    if (needsHealthInfo) {
+      showHealthSetupModal.value = true
+      return
+    }
+
+    await loadTrendsData()
+    await nextTick()
+    if (chartData.value.length > 0) {
+      initCharts()
+    }
+  } catch (err) {
+    console.error('页面初始化错误:', err)
+  }
+})
+
+// 监听时间范围变化
+watch(selectedRange, async () => {
+  await loadTrendsData()
+})
+
+
 </script>
 
 <style scoped>
