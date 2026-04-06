@@ -86,43 +86,43 @@ const navigationItems = [
         badge: '首页'
     },
     {
-        id: '07',
+        id: '01',
         title: 'TodoList',
         path: '/todolist',
         badge: '任务清单'
     },
     {
-        id: '02',
+        id: '03',
         title: '健康打卡',
         path: '/health/daily-checkin',
         badge: '数据采集'
     },
     {
-        id: '03',
+        id: '04',
         title: '历史记录',
         path: '/health/history',
         badge: '数据回溯'
     },
     {
-        id: '04',
+        id: '05',
         title: '健康画像',
         path: '/analysis/portrait',
         badge: '模型展示'
     },
     {
-        id: '05',
+        id: '06',
         title: '趋势分析',
         path: '/analysis/trends',
         badge: '演化过程'
     },
     {
-        id: '08',
+        id: '07',
         title: 'AI 对话',
         path: '/ai-chat',
         badge: '智能助手'
     },
     {
-        id: '01',
+        id: '08',
         title: '个人基础信息',
         path: '/profile',
         badge: '初始化'

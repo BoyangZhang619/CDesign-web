@@ -12,246 +12,232 @@
 
     <!-- 主内容区 -->
     <main class="trends-main" v-if="!showHealthSetupModal">
-      <!-- 页面标题 -->
-      <section class="trends-header">
-        <div class="header-content">
-          <h1 class="page-title">趋势分析</h1>
-          <p class="page-subtitle">了解您的健康数据变化演进</p>
+      <div class="trends-wrapper">
+        <!-- 页面头部 -->
+        <div class="trends-header">
+          <h1 class="trends-title">健康趋势</h1>
+          <p class="trends-subtitle">追踪您的健康数据变化演进</p>
         </div>
-      </section>
 
-      <!-- 时间范围选择 -->
-      <section class="trends-controls">
-        <div class="date-range-selector">
-          <button
-            v-for="range in dateRanges"
-            :key="range.value"
-            @click="selectedRange = range.value"
-            :class="['range-btn', { active: selectedRange === range.value }]"
-          >
-            {{ range.label }}
-          </button>
-        </div>
-      </section>
+        <!-- 控制面板 -->
+        <div class="control-panel">
+          <div class="control-panel-header" @click="isControlPanelOpen = !isControlPanelOpen">
+            <span class="control-panel-title">时间范围</span>
+            <span class="control-panel-toggle" :class="{ open: isControlPanelOpen }">▼</span>
+          </div>
 
-      <!-- 三大指标趋势图 -->
-      <section class="collapsible-section">
-        <div class="section-header" @click="toggleSection('charts')">
-          <div class="section-title-group">
-            <h2 class="section-title">三大指标趋势</h2>
-            <span class="toggle-icon" :class="{ collapsed: !expandedSections.charts }">▼</span>
+          <div v-show="isControlPanelOpen" class="control-panel-content">
+            <div class="range-buttons">
+              <button
+                v-for="range in dateRanges"
+                :key="range.value"
+                @click="selectRange(range.value)"
+                :class="['range-btn', { active: selectedRange === range.value }]"
+              >
+                {{ range.label }}
+              </button>
+            </div>
           </div>
         </div>
-        <div class="section-content" :class="{ collapsed: !expandedSections.charts }">
-          <div class="trends-charts">
-            <!-- 运动趋势 -->
-            <div class="chart-card">
-              <div class="chart-header">
-                <h2 class="chart-title">运动趋势</h2>
+
+        <!-- 健康概览卡片 -->
+        <div class="overview-card">
+          <div class="overview-header">
+            <h2 class="overview-title">健康概览</h2>
+            <div class="loading-indicator" v-if="loading">
+              <span class="spinner"></span>
+              <span>加载中...</span>
+            </div>
+          </div>
+
+          <div class="overview-grid">
+            <div class="overview-stat">
+              <div class="stat-icon">🏃</div>
+              <div class="stat-content">
+                <div class="stat-label">平均运动</div>
+                <div class="stat-value">{{ Math.round(stats.avgExercise) }}</div>
+                <div class="stat-unit">分钟/天</div>
+              </div>
+              <div class="stat-trend" :class="{ positive: stats.exerciseTrend >= 0 }">
+                <span class="trend-arrow">{{ stats.exerciseTrend > 0 ? '↑' : '↓' }}</span>
+                <span class="trend-value">{{ Math.abs(stats.exerciseTrend) }}%</span>
+              </div>
+            </div>
+
+            <div class="overview-stat">
+              <div class="stat-icon">🍽️</div>
+              <div class="stat-content">
+                <div class="stat-label">平均热量</div>
+                <div class="stat-value">{{ Math.round(stats.avgMealCalories) }}</div>
+                <div class="stat-unit">kcal/天</div>
+              </div>
+              <div class="stat-trend" :class="{ positive: stats.caloriesTrend >= 0 }">
+                <span class="trend-arrow">{{ stats.caloriesTrend > 0 ? '↑' : '↓' }}</span>
+                <span class="trend-value">{{ Math.abs(stats.caloriesTrend) }}%</span>
+              </div>
+            </div>
+
+            <div class="overview-stat">
+              <div class="stat-icon">😴</div>
+              <div class="stat-content">
+                <div class="stat-label">平均睡眠</div>
+                <div class="stat-value">{{ stats.avgSleep.toFixed(1) }}</div>
+                <div class="stat-unit">小时/天</div>
+              </div>
+              <div class="stat-trend" :class="{ positive: stats.sleepTrend >= 0 }">
+                <span class="trend-arrow">{{ stats.sleepTrend > 0 ? '↑' : '↓' }}</span>
+                <span class="trend-value">{{ Math.abs(stats.sleepTrend) }}%</span>
+              </div>
+            </div>
+
+            <div class="overview-stat">
+              <div class="stat-icon">⭐</div>
+              <div class="stat-content">
+                <div class="stat-label">健康评分</div>
+                <div class="stat-value">{{ Math.round(stats.healthScore) }}</div>
+                <div class="stat-unit">总体得分</div>
+              </div>
+              <div class="stat-trend" :class="{ positive: stats.scoreTrend >= 0 }">
+                <span class="trend-arrow">{{ stats.scoreTrend > 0 ? '↑' : '↓' }}</span>
+                <span class="trend-value">{{ Math.abs(stats.scoreTrend) }}%</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 趋势图表区 -->
+        <div class="chart-section">
+          <h2 class="section-heading">趋势图表</h2>
+          <div class="charts-grid">
+            <!-- 运动趋势图 -->
+            <div class="chart-container-card">
+              <div class="chart-card-header">
+                <h3 class="chart-card-title">运动趋势</h3>
                 <div class="chart-stats">
-                  <span class="stat">平均: {{ `${stats.avgExercise}` }}分钟</span>
-                  <span class="stat">最高: {{ `${stats.maxExercise}` }}分钟</span>
+                  <span class="stat-badge">最高: {{ Math.round(stats.maxExercise) }}分钟</span>
                 </div>
               </div>
-              <div class="chart-container">
-                <canvas ref="exerciseChart" class="chart"></canvas>
+              <div class="chart-body">
+                <canvas ref="exerciseChart" class="chart-canvas"></canvas>
               </div>
             </div>
 
-            <!-- 饮食趋势 -->
-            <div class="chart-card">
-              <div class="chart-header">
-                <h2 class="chart-title">饮食趋势</h2>
+            <!-- 饮食趋势图 -->
+            <div class="chart-container-card">
+              <div class="chart-card-header">
+                <h3 class="chart-card-title">饮食趋势</h3>
                 <div class="chart-stats">
-                  <span class="stat">平均: {{ `${stats.avgMealCalories}` }}kcal</span>
-                  <span class="stat">最高: {{ `${stats.maxMealCalories}` }}kcal</span>
+                  <span class="stat-badge">最高: {{ Math.round(stats.maxMealCalories) }}kcal</span>
                 </div>
               </div>
-              <div class="chart-container">
-                <canvas ref="mealChart" class="chart"></canvas>
+              <div class="chart-body">
+                <canvas ref="mealChart" class="chart-canvas"></canvas>
               </div>
             </div>
 
-            <!-- 睡眠趋势 -->
-            <div class="chart-card">
-              <div class="chart-header">
-                <h2 class="chart-title">睡眠趋势</h2>
+            <!-- 睡眠趋势图 -->
+            <div class="chart-container-card">
+              <div class="chart-card-header">
+                <h3 class="chart-card-title">睡眠趋势</h3>
                 <div class="chart-stats">
-                  <span class="stat">平均: {{ `${stats.avgSleep}` }}小时</span>
-                  <span class="stat">最高: {{ `${stats.maxSleep}` }}小时</span>
+                  <span class="stat-badge">最高: {{ stats.maxSleep.toFixed(1) }}小时</span>
                 </div>
               </div>
-              <div class="chart-container">
-                <canvas ref="sleepChart" class="chart"></canvas>
+              <div class="chart-body">
+                <canvas ref="sleepChart" class="chart-canvas"></canvas>
               </div>
             </div>
           </div>
         </div>
-      </section>
 
-      <!-- 关键指标卡片 -->
-      <section class="collapsible-section">
-        <div class="section-header" @click="toggleSection('metrics')">
-          <div class="section-title-group">
-            <h2 class="section-title">关键指标变化</h2>
-            <span class="toggle-icon" :class="{ collapsed: !expandedSections.metrics }">▼</span>
-          </div>
-        </div>
-        <div class="section-content" :class="{ collapsed: !expandedSections.metrics }">
-          <div class="metrics-grid">
-            <div class="metric-trend-card">
-              <div class="metric-header">
-                <span class="metric-icon">🔥</span>
-                <span class="metric-name">卡路里消耗</span>
-              </div>
-              <div class="metric-value">{{ `${stats.totalCalories}` }}</div>
-              <div class="metric-unit">kcal/周</div>
-              <div class="trend-indicator" :class="{ up: stats.caloriesTrend > 0 }">
-                {{ stats.caloriesTrend > 0 ? '↑' : '↓' }}
-                {{ Math.abs(stats.caloriesTrend) }}%
-              </div>
-            </div>
-
-            <div class="metric-trend-card">
-              <div class="metric-header">
-                <span class="metric-icon">⏱️</span>
-                <span class="metric-name">运动时长</span>
-              </div>
-              <div class="metric-value">{{ `${stats.totalExerciseTime}` }}</div>
-              <div class="metric-unit">小时/周</div>
-              <div class="trend-indicator" :class="{ up: stats.exerciseTrend > 0 }">
-                {{ stats.exerciseTrend > 0 ? '↑' : '↓' }}
-                {{ Math.abs(stats.exerciseTrend) }}%
-              </div>
-            </div>
-
-            <div class="metric-trend-card">
-              <div class="metric-header">
-                <span class="metric-icon">💤</span>
-                <span class="metric-name">睡眠时长</span>
-              </div>
-              <div class="metric-value">{{ `${stats.totalSleepTime}` }}</div>
-              <div class="metric-unit">小时/周</div>
-              <div class="trend-indicator" :class="{ up: stats.sleepTrend > 0 }">
-                {{ stats.sleepTrend > 0 ? '↑' : '↓' }}
-                {{ Math.abs(stats.sleepTrend) }}%
-              </div>
-            </div>
-
-            <div class="metric-trend-card">
-              <div class="metric-header">
-                <span class="metric-icon">📊</span>
-                <span class="metric-name">综合评分</span>
-              </div>
-              <div class="metric-value">{{ `${stats.healthScore}` }}</div>
-              <div class="metric-unit">分</div>
-              <div class="trend-indicator" :class="{ up: stats.scoreTrend > 0 }">
-                {{ stats.scoreTrend > 0 ? '↑' : '↓' }}
-                {{ Math.abs(stats.scoreTrend) }}%
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- 习惯养成进度 -->
-      <section class="collapsible-section">
-        <div class="section-header" @click="toggleSection('habits')">
-          <div class="section-title-group">
-            <h2 class="section-title">习惯养成进度</h2>
-            <span class="toggle-icon" :class="{ collapsed: !expandedSections.habits }">▼</span>
-          </div>
-        </div>
-        <div class="section-content" :class="{ collapsed: !expandedSections.habits }">
-          <div class="habits-list">
+        <!-- 习惯养成 -->
+        <div v-if="habits.length > 0" class="habits-section">
+          <h2 class="section-heading">习惯养成进度</h2>
+          <div class="habits-grid">
             <div
               v-for="habit in habits"
               :key="habit.id"
-              class="habit-card"
-              :class="{ completed: habit.progress === 100 }"
+              class="habit-item"
+              :class="{ completed: habit.progress >= 100 }"
             >
               <div class="habit-header">
-                <div class="habit-info">
-                  <h3 class="habit-title">{{ habit.title }}</h3>
-                  <p class="habit-description">{{ habit.description }}</p>
+                <h3 class="habit-title">{{ habit.title }}</h3>
+                <div class="habit-progress-badge">{{ habit.progress }}%</div>
+              </div>
+              <p class="habit-description">{{ habit.description }}</p>
+              <div class="habit-progress-container">
+                <div class="habit-progress-bar">
+                  <div class="habit-progress-fill" :style="{ width: habit.progress + '%' }"></div>
                 </div>
-                <div class="habit-days">{{ habit.days }}天</div>
               </div>
-              <div class="habit-progress-bar">
-                <div class="habit-progress" :style="{ width: habit.progress + '%' }"></div>
-              </div>
-              <div class="habit-stats">
-                <span class="stat">{{ habit.progress }}% 完成</span>
-                <span class="stat">目标: {{ habit.target }}天</span>
+              <div class="habit-footer">
+                <span class="habit-target">目标: {{ habit.target }}天</span>
+                <span class="habit-current">已坚持: {{ habit.days }}天</span>
               </div>
             </div>
           </div>
         </div>
-      </section>
 
-      <!-- 对比分析 -->
-      <section class="collapsible-section">
-        <div class="section-header" @click="toggleSection('comparison')">
-          <div class="section-title-group">
-            <h2 class="section-title">本周 vs 上周</h2>
-            <span class="toggle-icon" :class="{ collapsed: !expandedSections.comparison }">▼</span>
-          </div>
-        </div>
-        <div class="section-content" :class="{ collapsed: !expandedSections.comparison }">
+        <!-- 周期对比 -->
+        <div class="comparison-section">
+          <h2 class="section-heading">周期对比分析</h2>
           <div class="comparison-grid">
-            <div class="comparison-card">
-              <h3 class="comparison-title">运动频率</h3>
-              <div class="comparison-stats">
-                <div class="stats-item">
-                  <span class="label">本周</span>
-                  <span class="value">{{ `${comparison.exerciseFrequencyCurrent}` }}天</span>
+            <div class="comparison-item">
+              <div class="comparison-label">本期运动</div>
+              <div class="comparison-values">
+                <div class="comparison-value">
+                  <span class="value">{{ Math.round(comparison.exerciseFrequencyCurrent) }}</span>
+                  <span class="unit">天</span>
                 </div>
-                <div class="stats-item">
-                  <span class="label">上周</span>
-                  <span class="value">{{ `${Math.round(comparison.exerciseFrequencyPrev)}` }}天</span>
-                </div>
-              </div>
-              <div class="comparison-result" :class="{ positive: comparison.exerciseTrend >= 0, negative: comparison.exerciseTrend < 0 }">
-                <span>{{ comparison.exerciseTrend > 0 ? '↑' : '↓' }} {{ Math.abs(comparison.exerciseTrend) }}% 增长</span>
-              </div>
-            </div>
-
-            <div class="comparison-card">
-              <h3 class="comparison-title">平均睡眠</h3>
-              <div class="comparison-stats">
-                <div class="stats-item">
-                  <span class="label">本周</span>
-                  <span class="value">{{ `${comparison.sleepCurrent}` }}h</span>
-                </div>
-                <div class="stats-item">
-                  <span class="label">上周</span>
-                  <span class="value">{{ `${comparison.sleepPrev}` }}h</span>
+                <div class="comparison-vs">VS</div>
+                <div class="comparison-value secondary">
+                  <span class="value">{{ Math.round(comparison.exerciseFrequencyPrev) }}</span>
+                  <span class="unit">天</span>
                 </div>
               </div>
-              <div class="comparison-result" :class="{ positive: comparison.sleepTrend >= 0, negative: comparison.sleepTrend < 0 }">
-                <span>{{ comparison.sleepTrend > 0 ? '↑' : '↓' }} {{ Math.abs(comparison.sleepTrend) }}% 增长</span>
+              <div class="comparison-trend" :class="{ up: comparison.exerciseTrend > 0, down: comparison.exerciseTrend < 0 }">
+                {{ comparison.exerciseTrend > 0 ? '↑' : '↓' }} {{ Math.abs(comparison.exerciseTrend) }}%
               </div>
             </div>
 
-            <div class="comparison-card">
-              <h3 class="comparison-title">饮食均衡度</h3>
-              <div class="comparison-stats">
-                <div class="stats-item">
-                  <span class="label">本周</span>
-                  <span class="value">{{ `${comparison.mealBalanceCurrent}` }}分</span>
+            <div class="comparison-item">
+              <div class="comparison-label">本期睡眠</div>
+              <div class="comparison-values">
+                <div class="comparison-value">
+                  <span class="value">{{ comparison.sleepCurrent.toFixed(1) }}</span>
+                  <span class="unit">h</span>
                 </div>
-                <div class="stats-item">
-                  <span class="label">上周</span>
-                  <span class="value">{{ `${Math.round(comparison.mealBalancePrev)}` }}分</span>
+                <div class="comparison-vs">VS</div>
+                <div class="comparison-value secondary">
+                  <span class="value">{{ comparison.sleepPrev.toFixed(1) }}</span>
+                  <span class="unit">h</span>
                 </div>
               </div>
-              <div class="comparison-result" :class="{ positive: comparison.mealTrend >= 0, negative: comparison.mealTrend < 0 }">
-                <span>{{ comparison.mealTrend > 0 ? '↑' : '↓' }} {{ Math.abs(comparison.mealTrend) }}% 增长</span>
+              <div class="comparison-trend" :class="{ up: comparison.sleepTrend > 0, down: comparison.sleepTrend < 0 }">
+                {{ comparison.sleepTrend > 0 ? '↑' : '↓' }} {{ Math.abs(comparison.sleepTrend) }}%
+              </div>
+            </div>
+
+            <div class="comparison-item">
+              <div class="comparison-label">本期饮食</div>
+              <div class="comparison-values">
+                <div class="comparison-value">
+                  <span class="value">{{ Math.round(comparison.mealBalanceCurrent) }}</span>
+                  <span class="unit">分</span>
+                </div>
+                <div class="comparison-vs">VS</div>
+                <div class="comparison-value secondary">
+                  <span class="value">{{ Math.round(comparison.mealBalancePrev) }}</span>
+                  <span class="unit">分</span>
+                </div>
+              </div>
+              <div class="comparison-trend" :class="{ up: comparison.mealTrend > 0, down: comparison.mealTrend < 0 }">
+                {{ comparison.mealTrend > 0 ? '↑' : '↓' }} {{ Math.abs(comparison.mealTrend) }}%
               </div>
             </div>
           </div>
         </div>
-      </section>
+      </div>
     </main>
   </div>
 </template>
@@ -268,12 +254,13 @@ const { checkHealthInfoNeeded } = useAuthForm()
 const showHealthSetupModal = ref(false)
 const loading = ref(false)
 const selectedRange = ref('month')
+const isControlPanelOpen = ref(true)
 
 const exerciseChart = ref<HTMLCanvasElement | null>(null)
 const mealChart = ref<HTMLCanvasElement | null>(null)
 const sleepChart = ref<HTMLCanvasElement | null>(null)
 
-// 每日数据用于图表 - 初始为空
+// 每日数据用于图表
 const chartData = ref<Array<{date: string; exercise: number; meal: number; sleep: number}>>([])
 
 // 时间范围选项
@@ -284,15 +271,7 @@ const dateRanges = [
   { label: '本年', value: 'year' }
 ]
 
-// Section 展开状态
-const expandedSections = ref({
-  charts: true,
-  metrics: true,
-  habits: true,
-  comparison: true
-})
-
-// 统计数据 - 初始为空
+// 统计数据
 const stats = ref({
   avgExercise: 0,
   maxExercise: 0,
@@ -310,7 +289,7 @@ const stats = ref({
   scoreTrend: 0
 })
 
-// 习惯养成数据 - 初始为空
+// 习惯养成数据
 const habits = ref<Array<{id: number; title: string; description: string; days: number; progress: number; target: number}>>([])
 
 // 对比数据
@@ -326,11 +305,6 @@ const comparison = ref({
   mealTrend: 0
 })
 
-// Toggle section 展开/折叠
-function toggleSection(section: keyof typeof expandedSections.value) {
-  expandedSections.value[section] = !expandedSections.value[section]
-}
-
 // 处理健康档案关闭
 function handleHealthSetupClose() {
   console.log('用户选择稍后设置健康档案')
@@ -341,6 +315,11 @@ function handleHealthSetupSuccess() {
   showHealthSetupModal.value = false
   console.log('用户完成了健康档案设置！')
   loadTrendsData()
+}
+
+// 选择时间范围
+function selectRange(range: string) {
+  selectedRange.value = range
 }
 
 // 加载趋势数据
@@ -376,7 +355,7 @@ async function loadTrendsData() {
           exerciseTrend: trendsData.exerciseTrend || 0,
           sleepTrend: trendsData.sleepTrend || 0,
           scoreTrend: trendsData.scoreTrend || 0
-        });
+        })
 
         // 更新对比数据
         if (trendsData.weekComparison) {
@@ -547,8 +526,6 @@ onMounted(async () => {
 watch(selectedRange, async () => {
   await loadTrendsData()
 })
-
-
 </script>
 
 <style scoped>
