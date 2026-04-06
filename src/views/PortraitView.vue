@@ -40,8 +40,8 @@
               />
             </svg>
             <div class="score-text">
-              <div class="score-value">{{ healthScore }}</div>
-              <div class="score-label">总体评分</div>
+              <div class="score-value">{{ healthScore > 0 ? healthScore : '--' }}</div>
+              <div class="score-label">{{ healthScore > 0 ? '总体评分' : '待评分' }}</div>
             </div>
           </div>
 
@@ -112,8 +112,8 @@
             <div class="metric-icon">📏</div>
             <div class="metric-info">
               <div class="metric-label">BMI 指数</div>
-              <div class="metric-value">{{ portraitData.bmi }}</div>
-              <div class="metric-status">{{ portraitData.bmiStatus }}</div>
+              <div class="metric-value">{{ portraitData.bmi > 0 ? portraitData.bmi : '待更新' }}</div>
+              <div class="metric-status">{{ portraitData.bmi > 0 ? portraitData.bmiStatus : '请完成基本信息设置' }}</div>
             </div>
           </div>
 
@@ -123,7 +123,7 @@
             <div class="metric-info">
               <div class="metric-label">心肺功能</div>
               <div class="metric-value">{{ portraitData.cardioLevel }}</div>
-              <div class="metric-status">{{ portraitData.cardioStatus }}</div>
+              <div class="metric-status">{{ portraitData.cardioLevel === '未评估' ? '坚持运动即可提升' : portraitData.cardioStatus }}</div>
             </div>
           </div>
 
@@ -132,8 +132,8 @@
             <div class="metric-icon">⚡</div>
             <div class="metric-info">
               <div class="metric-label">代谢指数</div>
-              <div class="metric-value">{{ portraitData.metabolism }}</div>
-              <div class="metric-status">{{ portraitData.metabolismStatus }}</div>
+              <div class="metric-value">{{ portraitData.metabolism > 0 ? portraitData.metabolism : '待评估' }}</div>
+              <div class="metric-status">{{ portraitData.metabolism > 0 ? portraitData.metabolismStatus : '记录运动数据后评估' }}</div>
             </div>
           </div>
 
@@ -142,8 +142,8 @@
             <div class="metric-icon">🌙</div>
             <div class="metric-info">
               <div class="metric-label">睡眠质量</div>
-              <div class="metric-value">{{ portraitData.sleepQuality }}</div>
-              <div class="metric-status">{{ portraitData.sleepQualityStatus }}</div>
+              <div class="metric-value">{{ portraitData.sleepScore > 0 ? portraitData.sleepQuality : '待评估' }}</div>
+              <div class="metric-status">{{ portraitData.sleepScore > 0 ? portraitData.sleepQualityStatus : '开始记录睡眠数据' }}</div>
             </div>
           </div>
         </div>
@@ -324,13 +324,116 @@ async function loadPortraitData() {
 
     if (response.ok) {
       const data = await response.json()
-      if (data?.success && data.data) {
-        // 合并后端返回的数据
-        Object.assign(portraitData.value, data.data)
+      // 注意：响应格式是 data.data.data（嵌套结构）
+      if (data?.success && data.data?.data) {
+        const portraitInfo = data.data.data
+        
+        // 处理分数数据（如果为0则使用默认值）
+        const processScore = (score: number, defaultValue: number = 0) => {
+          return score > 0 ? score : defaultValue
+        }
+        
+        // 处理建议优先级转换（英文 → 中文）
+        const processPriority = (priority: string): string => {
+          const priorityMap: { [key: string]: string } = {
+            'high': '高',
+            'medium': '中',
+            'low': '低'
+          }
+          return priorityMap[priority] || '中'
+        }
+        
+        // 处理建议列表
+        const processedRecommendations = (portraitInfo.recommendations || []).map((rec: any) => ({
+          icon: rec.icon || '💡',
+          title: rec.title || '健康建议',
+          description: rec.description || '持续改进你的健康生活方式',
+          priority: processPriority(rec.priority)
+        }))
+        
+        // 如果没有建议，使用默认建议
+        const recommendations = processedRecommendations.length > 0 
+          ? processedRecommendations 
+          : [
+              {
+                icon: '🏃',
+                title: '增加有氧运动',
+                description: '建议每周进行3-5次有氧运动，每次30分钟以上，可以有效提升心肺功能和整体健康水平',
+                priority: '高'
+              },
+              {
+                icon: '🥗',
+                title: '均衡膳食结构',
+                description: '增加蔬菜水果摄入，减少高热量食物，保持营养均衡，三餐规律',
+                priority: '高'
+              },
+              {
+                icon: '🌙',
+                title: '规律作息',
+                description: '建议22:30前入睡，保证7-8小时睡眠时间，养成规律的作息习惯',
+                priority: '高'
+              },
+              {
+                icon: '💧',
+                title: '适当补水',
+                description: '每天建议饮用8杯水，保持身体水分平衡，促进新陈代谢',
+                priority: '低'
+              }
+            ]
+        
+        // 生成默认时间轴（如果没有时间轴数据）
+        const timeline = (portraitInfo.timeline && portraitInfo.timeline.length > 0)
+          ? portraitInfo.timeline
+          : [
+              {
+                date: new Date().toLocaleDateString('zh-CN'),
+                title: '健康档案已建立',
+                description: '您的个人健康档案已成功创建，开始记录您的健康数据吧',
+                status: 'completed'
+              },
+              {
+                date: '即将开始',
+                title: '运动习惯养成',
+                description: '坚持运动打卡，逐步提升运动评分',
+                status: 'in-progress'
+              },
+              {
+                date: '即将开始',
+                title: '饮食质量改善',
+                description: '记录饮食信息，养成健康饮食习惯',
+                status: 'pending'
+              },
+              {
+                date: '即将开始',
+                title: '睡眠质量优化',
+                description: '建立规律作息，改善睡眠质量',
+                status: 'pending'
+              }
+            ]
+        
+        // 合并数据到本地state
+        portraitData.value = {
+          exerciseScore: processScore(portraitInfo.exerciseScore, 0),
+          mealScore: processScore(portraitInfo.mealScore, 0),
+          sleepScore: processScore(portraitInfo.sleepScore, 0),
+          bmi: typeof portraitInfo.bmi === 'string' ? parseFloat(portraitInfo.bmi) : portraitInfo.bmi,
+          bmiStatus: portraitInfo.bmiStatus || 'normal',
+          cardioLevel: portraitInfo.cardioLevel || '未评估',
+          cardioStatus: portraitInfo.cardioStatus || 'normal',
+          metabolism: processScore(portraitInfo.metabolism, 0),
+          metabolismStatus: portraitInfo.metabolismStatus || 'normal',
+          sleepQuality: portraitInfo.sleepQuality || '未评估',
+          sleepQualityStatus: portraitInfo.sleepQualityStatus || 'normal',
+          recommendations,
+          timeline
+        }
+        
+        console.log('✅ 健康画像数据已加载:', portraitData.value)
       }
     }
   } catch (error) {
     console.error('加载健康画像数据失败:', error)
+    // 加载失败时使用默认数据
   } finally {
     loading.value = false
   }
@@ -371,14 +474,21 @@ function initRadarChart() {
   radarChart.value.height = 300
 
   const labels = ['运动', '饮食', '睡眠', '心肺', '代谢', '压力管理']
+  
+  // 当前数据：从 portraitData 获取，如果为0则使用默认值
   const currentData = [
-    portraitData.value.exerciseScore,
-    portraitData.value.mealScore,
-    portraitData.value.sleepScore,
-    75,
-    portraitData.value.metabolism,
-    70
+    portraitData.value.exerciseScore || 0,
+    portraitData.value.mealScore || 0,
+    portraitData.value.sleepScore || 0,
+    portraitData.value.cardioStatus === 'excellent' ? 85 : 
+    portraitData.value.cardioStatus === 'good' ? 70 : 
+    portraitData.value.cardioStatus === 'normal' ? 50 : 30,
+    portraitData.value.metabolism || 0,
+    // 压力管理 = (运动分 * 0.4 + 睡眠分 * 0.6)
+    Math.round((portraitData.value.exerciseScore * 0.4 + portraitData.value.sleepScore * 0.6)) || 0
   ]
+  
+  // 理想数据
   const idealData = [85, 85, 85, 85, 85, 85]
 
   const angles = labels.map((_, i) => (i / labels.length) * Math.PI * 2 - Math.PI / 2)
