@@ -22,6 +22,28 @@
 
       <!-- 健康评分卡 -->
       <section class="portrait-score-card">
+        <!-- 卡片操作栏 -->
+        <div class="card-header">
+          <div class="card-title">健康评分</div>
+          <div class="card-actions">
+            <!-- 加载动画 -->
+            <div v-if="isRefreshing" class="loading-spinner">
+              <div class="spinner"></div>
+              <span>数据分析中...</span>
+            </div>
+            <!-- 刷新按钮 -->
+            <button 
+              v-else
+              @click="handleRefreshClick"
+              class="btn-refresh"
+              :disabled="isRefreshing"
+              title="刷新数据会使用AI重新分析您的打卡数据，可能需要较长时间"
+            >
+              刷新
+            </button>
+          </div>
+        </div>
+
         <div class="score-container">
           <div class="score-circle">
             <svg viewBox="0 0 120 120" class="score-ring">
@@ -203,80 +225,31 @@ const { checkHealthInfoNeeded } = useAuthForm()
 
 const showHealthSetupModal = ref(false)
 const loading = ref(false)
+const isRefreshing = ref(false)
 const radarChart = ref<HTMLCanvasElement | null>(null)
 
-// 健康画像数据
+// 健康画像数据 - 初始为空
 const portraitData = ref({
   // 评分
-  exerciseScore: 75,
-  mealScore: 68,
-  sleepScore: 82,
+  exerciseScore: 0,
+  mealScore: 0,
+  sleepScore: 0,
 
   // 身体指标
-  bmi: 22.5,
+  bmi: 0,
   bmiStatus: 'normal',
-  cardioLevel: '良好',
-  cardioStatus: 'good',
-  metabolism: 85,
+  cardioLevel: '待评估',
+  cardioStatus: 'normal',
+  metabolism: 0,
   metabolismStatus: 'normal',
-  sleepQuality: '较好',
-  sleepQualityStatus: 'good',
+  sleepQuality: '待评估',
+  sleepQualityStatus: 'normal',
 
   // 建议
-  recommendations: [
-    {
-      icon: '🏃',
-      title: '增加有氧运动',
-      description: '建议每周进行3-5次有氧运动，每次30分钟，可以有效提升心肺功能',
-      priority: '高'
-    },
-    {
-      icon: '🥗',
-      title: '均衡膳食结构',
-      description: '增加蔬菜水果摄入，减少高热量食物，保持营养均衡',
-      priority: '中'
-    },
-    {
-      icon: '🌙',
-      title: '规律作息',
-      description: '建议22:30前入睡，保证7-8小时睡眠，提升睡眠质量',
-      priority: '高'
-    },
-    {
-      icon: '💧',
-      title: '适当补水',
-      description: '每天建议饮用8杯水，保持身体水分平衡',
-      priority: '低'
-    }
-  ],
+  recommendations: [] as Array<{icon: string; title: string; description: string; priority: string}>,
 
   // 时间轴
-  timeline: [
-    {
-      date: '2024年3月',
-      title: '健康数据初始化',
-      description: '完成基础信息和体检数据录入，建立个人健康档案',
-      status: 'completed'
-    },
-    {
-      date: '2024年4月',
-      title: '运动习惯养成',
-      description: '连续30天运动打卡，运动评分从60提升到75',
-      status: 'completed'
-    },
-    {
-      date: '2024年5月',
-      title: '睡眠质量改善',
-      description: '通过规律作息，睡眠评分从70提升到82',
-      status: 'completed'
-    },
-    {
-      date: '2024年6月',
-      title: '综合健康优化',
-      description: '三大维度均衡发展，总体评分目标达到85分',
-      status: 'in-progress'
-    }
-  ]
+  timeline: [] as Array<{date: string; title: string; description: string; status: string}>
 })
 
 // 计算健康总分
@@ -295,17 +268,175 @@ const scoreOffset = computed(() => {
   return circumference - (healthScore.value / 100) * circumference
 })
 
-// 处理健康档案关闭
+// 处理健康档案关闭 - 强制不允许关闭
 function handleHealthSetupClose() {
-  console.log('用户选择稍后设置健康档案')
+  console.log('用户尝试关闭健康档案设置 - 但必须完成')
+  // 不进行任何操作，强制用户完成设置
 }
 
-// 处理健康档案成功
-function handleHealthSetupSuccess() {
+// 处理健康档案成功 - 完成后立即调用后端刷新数据
+async function handleHealthSetupSuccess() {
   showHealthSetupModal.value = false
-  console.log('用户完成了健康档案设置！')
-  // 重新加载数据
-  loadPortraitData()
+  console.log('用户完成了健康档案设置！准备刷新健康画像数据...')
+  
+  // 立即调用后端接口，让后端调用 aiChat 分析打卡数据
+  try {
+    const response = await fetchWithRefresh(
+      '/api/health/refresh-from-checkin',
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      }
+    )
+    
+    if (!response.ok) {
+      console.warn('后端数据刷新请求失败', response.status)
+    } else {
+      console.log('后端已触发 aiChat 分析，数据已更新到数据库')
+    }
+  } catch (err) {
+    console.error('调用后端刷新接口出错:', err)
+  }
+  
+  // 立即开始轮询获取数据直到有效
+  await pollForPortraitData()
+}
+
+// 轮询获取健康画像数据，直到获取到有效数据
+async function pollForPortraitData() {
+  let attempts = 0
+  const maxAttempts = 30 // 最多轮询30次
+  const baseDelay = 500 // 初始延迟 500ms
+  
+  while (attempts < maxAttempts) {
+    try {
+      const response = await fetchWithRefresh(
+        '/api/health/portrait',
+        {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        }
+      )
+      
+      if (response.ok) {
+        const data = await response.json()
+        
+        // 检查是否获得有效数据（至少有一项分数不为0）
+        const hasValidData = data?.data?.exerciseScore > 0 || 
+                           data?.data?.mealScore > 0 || 
+                           data?.data?.sleepScore > 0
+        
+        if (hasValidData) {
+          console.log('获取到有效的健康画像数据，停止轮询')
+          await loadPortraitData()
+          return
+        }
+      }
+    } catch (err) {
+      console.error('轮询出错:', err)
+    }
+    
+    attempts++
+    
+    // 指数退避：500ms, 1s, 1.5s, 2s...
+    const delayMs = baseDelay * (attempts > 5 ? 2 : 1.2 ** attempts)
+    console.log(`轮询第 ${attempts} 次，等待 ${delayMs}ms 后重试...`)
+    await new Promise(resolve => setTimeout(resolve, delayMs))
+  }
+  
+  console.warn('轮询超时，未获取到有效数据')
+  // 最后再加载一次显示当前数据
+  await loadPortraitData()
+}
+
+// 处理刷新按钮点击 - 强制使用 AI 重新分析
+async function handleRefreshClick() {
+  console.log('用户点击刷新按钮，准备强制刷新数据...')
+  
+  isRefreshing.value = true
+  
+  try {
+    const response = await fetchWithRefresh(
+      '/api/health/force-refresh',
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      }
+    )
+    
+    if (!response.ok) {
+      console.error('强制刷新请求失败', response.status)
+      alert('数据刷新失败，请稍后重试')
+      return
+    }
+
+    console.log('强制刷新请求已发送，等待 AI 分析结果...')
+    
+    // 轮询获取更新后的数据
+    await pollForRefreshData()
+  } catch (err) {
+    console.error('调用强制刷新接口出错:', err)
+    alert('刷新出错，请稍后重试')
+  } finally {
+    isRefreshing.value = false
+  }
+}
+
+// 轮询获取刷新后的数据
+async function pollForRefreshData() {
+  let attempts = 0
+  const maxAttempts = 60 // 刷新轮询最多 60 次（约 3 分钟）
+  const baseDelay = 500 // 初始延迟 500ms
+  
+  while (attempts < maxAttempts) {
+    try {
+      const response = await fetchWithRefresh(
+        '/api/health/portrait',
+        {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        }
+      )
+      
+      if (response.ok) {
+        const data = await response.json()
+        const portraitInfo = data?.data
+        
+        // 检查是否获得有效数据（至少有一项分数不为0）
+        const hasValidData = portraitInfo?.exerciseScore > 0 || 
+                           portraitInfo?.mealScore > 0 || 
+                           portraitInfo?.sleepScore > 0
+        
+        if (hasValidData) {
+          console.log('获取到最新的健康画像数据')
+          await loadPortraitData()
+          alert('数据刷新成功！')
+          return
+        }
+      }
+    } catch (err) {
+      console.error('轮询出错:', err)
+    }
+    
+    attempts++
+    
+    // 指数退避
+    const delayMs = baseDelay * (attempts > 5 ? 2 : 1.2 ** attempts)
+    console.log(`轮询第 ${attempts} 次，等待 ${delayMs}ms 后重试...`)
+    await new Promise(resolve => setTimeout(resolve, delayMs))
+  }
+  
+  console.warn('轮询超时，AI 分析可能未完成')
+  // 最后再加载一次显示当前数据
+  await loadPortraitData()
 }
 
 // 加载健康画像数据
@@ -324,9 +455,9 @@ async function loadPortraitData() {
 
     if (response.ok) {
       const data = await response.json()
-      // 注意：响应格式是 data.data.data（嵌套结构）
-      if (data?.success && data.data?.data) {
-        const portraitInfo = data.data.data
+      // 注意：响应格式是 data.data（嵌套结构）
+      if (data?.success && data.data) {
+        const portraitInfo = data.data
         
         // 处理分数数据（如果为0则使用默认值）
         const processScore = (score: number, defaultValue: number = 0) => {
@@ -442,15 +573,18 @@ async function loadPortraitData() {
 // 初始化
 onMounted(async () => {
   try {
-    // 检查是否需要完成健康档案设置
+    // 强制检查并要求完成健康档案设置
     const needsHealthInfo = await checkHealthInfoNeeded()
     if (needsHealthInfo) {
+      // 必须完成健康档案设置后才能继续
       showHealthSetupModal.value = true
       return
     }
 
-    // 加载数据
+    // 健康档案已完成，直接加载现有数据（不自动刷新）
+    console.log('健康档案已完成，加载现有数据...')
     await loadPortraitData()
+    
     await nextTick()
     initRadarChart()
   } catch (err) {
@@ -462,16 +596,17 @@ onMounted(async () => {
 function initRadarChart() {
   if (!radarChart.value) return
 
+  // 设置画布尺寸
+  const size = 320
+  radarChart.value.width = size
+  radarChart.value.height = size
+
   const ctx = radarChart.value.getContext('2d')
   if (!ctx) return
 
-  const centerX = radarChart.value.width / 2
-  const centerY = radarChart.value.height / 2
-  const radius = 80
-
-  // 设置雷达图尺寸
-  radarChart.value.width = 300
-  radarChart.value.height = 300
+  const centerX = size / 2
+  const centerY = size / 2
+  const radius = 90
 
   const labels = ['运动', '饮食', '睡眠', '心肺', '代谢', '压力管理']
   
