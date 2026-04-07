@@ -101,6 +101,27 @@
             </div>
           </div>
         </section>
+        
+        <!-- 今日提示 -->
+        <section class="tips-section">
+          <h2 class="section-title">今日提示</h2>
+          <div class="tips-card">
+            <ul class="tips-list">
+              <li class="tip-item" :class="{ done: exerciseCount > 0 }">
+                完成一次<strong>运动打卡</strong>
+              </li>
+              <li class="tip-item" :class="{ done: mealCount > 0 }">
+                记录<strong>三餐</strong>饮食
+              </li>
+              <li class="tip-item" :class="{ done: sleepCount > 0 }">
+                记录<strong>睡眠</strong>时间
+              </li>
+              <li class="tip-item">
+                查看<strong>健康画像</strong>和分析
+              </li>
+            </ul>
+          </div>
+        </section>
 
         <!-- 功能导航 -->
         <section class="nav-section">
@@ -144,26 +165,6 @@
           </div>
         </section>
 
-        <!-- 今日提示 -->
-        <section class="tips-section">
-          <div class="tips-card">
-            <h3 class="tips-title">💡 今日提示</h3>
-            <ul class="tips-list">
-              <li class="tip-item" :class="{ done: exerciseCount > 0 }">
-                完成一次<strong>运动打卡</strong>
-              </li>
-              <li class="tip-item" :class="{ done: mealCount > 0 }">
-                记录<strong>三餐</strong>饮食
-              </li>
-              <li class="tip-item" :class="{ done: sleepCount > 0 }">
-                记录<strong>睡眠</strong>时间
-              </li>
-              <li class="tip-item">
-                查看<strong>健康画像</strong>和分析
-              </li>
-            </ul>
-          </div>
-        </section>
       </div>
     </main>
   </div>
