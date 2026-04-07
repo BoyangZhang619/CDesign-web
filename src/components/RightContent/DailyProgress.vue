@@ -1,0 +1,84 @@
+<template>
+  <section class="daily-progress">
+    <h3 class="section-title">Daily progress</h3>
+    <p class="progress-subtitle">Keep improving the quality of your health</p>
+
+    <div class="progress-circle">
+      <svg viewBox="0 0 120 120" class="circle-svg">
+        <circle cx="60" cy="60" r="50" class="circle-background"></circle>
+        <circle cx="60" cy="60" r="50" class="circle-progress" style="stroke-dashoffset: 62.8"></circle>
+      </svg>
+      <div class="circle-content">
+        <span class="progress-percentage">80%</span>
+      </div>
+    </div>
+  </section>
+</template>
+
+<script setup lang="ts">
+</script>
+
+<style scoped>
+.daily-progress {
+  background: linear-gradient(135deg, #a8d5ba 0%, #7ec8a3 100%);
+  border-radius: 12px;
+  padding: 20px;
+  color: white;
+}
+
+.section-title {
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0 0 5px 0;
+}
+
+.progress-subtitle {
+  font-size: 12px;
+  margin: 5px 0 15px 0;
+  opacity: 0.9;
+}
+
+.progress-circle {
+  position: relative;
+  width: 100px;
+  height: 100px;
+  margin: 0 auto;
+}
+
+.circle-svg {
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+}
+
+.circle-background {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.2);
+  stroke-width: 4;
+}
+
+.circle-progress {
+  fill: none;
+  stroke: white;
+  stroke-width: 4;
+  stroke-dasharray: 314;
+  stroke-linecap: round;
+  transition: stroke-dashoffset 0.5s ease;
+}
+
+.circle-content {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.progress-percentage {
+  font-size: 24px;
+  font-weight: 700;
+}
+</style>

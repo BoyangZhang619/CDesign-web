@@ -21,6 +21,7 @@
                 <div class="sidebar-section-label">核心功能</div>
                 <router-link v-for="item in navigationItems" :key="item.id" :to="item.path" class="sidebar-link"
                     @click="closeSidebar">
+                    <span class="sidebar-link-icon">{{ item.icon }}</span>
                     <span class="sidebar-link-number">{{ item.id }}</span>
                     <span class="sidebar-link-title">{{ item.title }}</span>
                     <span class="sidebar-link-badge">{{ item.badge }}</span>
@@ -83,74 +84,58 @@ const navigationItems = [
         id: '00',
         title: '主页',
         path: '/home',
-        badge: '首页'
+        badge: '首页',
+        icon: '🏠'
     },
     {
         id: '01',
         title: 'TodoList',
         path: '/todolist',
-        badge: '任务清单'
+        badge: '任务清单',
+        icon: '✓'
     },
     {
         id: '03',
         title: '健康打卡',
         path: '/health/daily-checkin',
-        badge: '数据采集'
+        badge: '数据采集',
+        icon: '✓'
     },
     {
         id: '04',
         title: '历史记录',
         path: '/health/history',
-        badge: '数据回溯'
+        badge: '数据回溯',
+        icon: '📋'
     },
     {
         id: '05',
         title: '健康画像',
         path: '/analysis/portrait',
-        badge: '模型展示'
+        badge: '模型展示',
+        icon: '🎨'
     },
     {
         id: '06',
         title: '趋势分析',
         path: '/analysis/trends',
-        badge: '演化过程'
+        badge: '演化过程',
+        icon: '📈'
     },
     {
         id: '07',
         title: 'AI 对话',
         path: '/ai-chat',
-        badge: '智能助手'
+        badge: '智能助手',
+        icon: '💬'
     },
     {
         id: '08',
         title: '个人基础信息',
         path: '/profile',
-        badge: '初始化'
+        badge: '初始化',
+        icon: '👤'
     },
-    // {
-    //     id: '06',
-    //     title: '健康目标',
-    //     path: '/goals',
-    //     badge: '目标导向'
-    // },
-    // {
-    //     id: '06',
-    //     title: '未来预测',
-    //     path: '/analysis/forecast',
-    //     badge: '预测能力'
-    // },
-    // {
-    //     id: '07',
-    //     title: '情景模拟',
-    //     path: '/analysis/simulation',
-    //     badge: '可实验性'
-    // },
-    // {
-    //     id: '08',
-    //     title: '个性化建议',
-    //     path: '/recommendations',
-    //     badge: '干预指导'
-    // },
 ]
 
 // 处理头像加载失败（Sidebar）

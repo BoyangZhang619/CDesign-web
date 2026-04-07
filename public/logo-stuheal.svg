@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <defs>
+    <!-- 阴影效果 -->
+    <filter id="shadow" x="-50%" y="-50%" width="200%" height="200%">
+      <feDropShadow dx="2" dy="2" stdDeviation="3" flood-opacity="0.3"/>
+    </filter>
+    <!-- 内阴影 -->
+    <filter id="innerShadow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="2" result="blur"/>
+      <feOffset in="blur" dx="1" dy="1" result="offset"/>
+      <feFlood flood-color="#000000" flood-opacity="0.2" result="color"/>
+      <feComposite in="color" in2="offset" operator="in" result="shadow"/>
+      <feComposite in="shadow" in2="SourceGraphic" operator="in" result="innerShadow"/>
+      <feComposite in="innerShadow" in2="SourceGraphic" operator="arithmetic" k2="1" result="result"/>
+    </filter>
+    <!-- 渐变 -->
+    <linearGradient id="greenGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#8FD9B8;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#6EB59F;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="orangeGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#FFB84D;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#FF9500;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- 装饰光圈背景 -->
+  <!-- <circle cx="50" cy="50" r="48" fill="none" stroke="rgba(255, 165, 2, 0.1)" stroke-width="1" opacity="0.6"/>
+  <circle cx="50" cy="50" r="44" fill="none" stroke="rgba(126, 200, 163, 0.1)" stroke-width="1" opacity="0.6"/> -->
+  
+  <!-- 绿色竖条 - 带渐变和阴影 -->
+  <rect x="40" y="15" width="20" height="70" fill="url(#greenGrad)" rx="4" filter="url(#shadow)"/>
+  <!-- 绿色竖条高光 -->
+  <rect x="42" y="17" width="8" height="66" fill="white" rx="3" opacity="0.2"/>
+  
+  <!-- 橙色横条 - 带渐变和阴影 -->
+  <rect x="15" y="40" width="70" height="20" fill="url(#orangeGrad)" rx="4" filter="url(#shadow)"/>
+  <!-- 橙色横条高光 -->
+  <rect x="17" y="42" width="66" height="8" fill="white" rx="3" opacity="0.2"/>
+  
+  <!-- 中心交叉点装饰 -->
+  <circle cx="50" cy="50" r="4.5" fill="white" opacity="0.3"/>
+  <circle cx="50" cy="50" r="3" fill="white" opacity="0.5"/>
+  
+  <!-- 四个角的小点缀 -->
+  <!-- <circle cx="35" cy="20" r="2" fill="#FFB84D" opacity="0.4"/>
+  <circle cx="65" cy="20" r="2" fill="#FFB84D" opacity="0.4"/>
+  <circle cx="35" cy="80" r="2" fill="#7EC8A3" opacity="0.4"/>
+  <circle cx="65" cy="80" r="2" fill="#7EC8A3" opacity="0.4"/> -->
+  
+  <!-- 脉搏装饰线 -->
+  <line x1="40" y1="95" x2="60" y2="95" stroke="#7EC8A3" stroke-width="1.5" opacity="0.3" stroke-linecap="round"/>
+  <line x1="45" y1="93" x2="55" y2="93" stroke="#FFB84D" stroke-width="1" opacity="0.3" stroke-linecap="round"/>
+</svg>
