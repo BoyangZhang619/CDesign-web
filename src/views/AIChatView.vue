@@ -1,7 +1,7 @@
 <template>
   <div class="ai-chat-layout">
-    <!-- 侧栏 - 聊天历史 -->
-    <Sidebar ref="sidebarRef" :customSidebarContent="chatHistoriesSidebar" />
+    <!-- 侧栏 - 左侧导航 -->
+    <Sidebar ref="sidebarRef" />
     
     <div class="main-content">
       <!-- 头部 -->
@@ -17,6 +17,18 @@
               <p class="chat-subtitle">个性化健康咨询 · 随时为您服务</p>
             </div>
             <div class="header-actions">
+              <button @click="handleNewChat" class="btn-new-chat" title="新建对话">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <line x1="12" y1="5" x2="12" y2="19"></line>
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                </svg>
+                <span>新建</span>
+              </button>
+              <button @click="toggleHistoryPanel" class="btn-history" title="聊天历史">
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/>
+                </svg>
+              </button>
               <div v-if="authStore.userInfo" class="credits-info">
                 <div class="credits-label">剩余额度</div>
                 <div class="credits-value">{{ authStore.userInfo.credits || 0 }}</div>
@@ -109,6 +121,48 @@
         </div>
       </div>
     </div>
+
+    <!-- 右侧栏 - 聊天历史 -->
+    <transition name="slide-right">
+      <div v-if="showHistoryPanel" class="history-panel">
+        <div class="history-header">
+          <h3 class="history-title">聊天历史</h3>
+          <button @click="toggleHistoryPanel" class="btn-close-history" title="关闭">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+              <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/>
+            </svg>
+          </button>
+        </div>
+
+        <div class="history-list">
+          <div v-if="chatHistories.length === 0" class="empty-history">
+            <div class="empty-history-icon">📭</div>
+            <p class="empty-history-text">暂无对话历史</p>
+          </div>
+
+          <div v-else>
+            <div 
+              v-for="chat in chatHistories" 
+              :key="chat.id"
+              :class="['history-item', { active: currentChatId === chat.id }]"
+              @click="loadChatHistory(chat.id)"
+            >
+              <div class="history-item-title">{{ chat.title }}</div>
+              <div class="history-item-time">{{ formatTime(chat.createdAt) }}</div>
+              <button 
+                @click.stop="deleteChat(chat.id)" 
+                class="btn-delete-chat"
+                title="删除"
+              >
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-9l-1 1H5v2h14V4z"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </transition>
   </div>
 </template>
 
@@ -119,6 +173,13 @@ import TopHeader from '../components/homeView/TopHeader.vue'
 import { useAuthStore } from '../stores/auth'
 import { useAIChat } from '../composables/useAIChat'
 import { sessionAPI } from '../api/modules/aiChat'
+
+interface ChatHistory {
+  id: string
+  title: string
+  createdAt: string
+  sessionId?: number
+}
 
 const authStore = useAuthStore()
 const sidebarRef = ref<InstanceType<typeof Sidebar>>()
@@ -134,13 +195,67 @@ const {
 } = useAIChat()
 
 // 聊天历史 - 侧栏内容
-const chatHistoriesSidebar = ref(false)
-const chatHistories = ref([])
+const showHistoryPanel = ref(false)
+const chatHistories = ref<ChatHistory[]>([])
 const currentChatId = ref<string | null>(null)
 
 // 切换侧栏
 const toggleSidebar = () => {
   sidebarRef.value?.toggleSidebarFromHeader()
+}
+
+// 切换历史记录面板
+const toggleHistoryPanel = () => {
+  showHistoryPanel.value = !showHistoryPanel.value
+}
+
+// 新建聊天
+const handleNewChat = () => {
+  clearMessages()
+  currentChatId.value = null
+  chatConfig.sessionId = undefined
+  showHistoryPanel.value = false
+}
+
+// 加载聊天历史
+const loadChatHistory = (chatId: string) => {
+  currentChatId.value = chatId
+  const chat = chatHistories.value.find(c => c.id === chatId)
+  if (chat) {
+    clearMessages()
+    chatConfig.sessionId = chat.sessionId
+    // 这里可以加载对应 session 的历史消息
+  }
+}
+
+// 删除聊天记录
+const deleteChat = (chatId: string) => {
+  if (confirm('确定要删除这条对话吗？')) {
+    chatHistories.value = chatHistories.value.filter(c => c.id !== chatId)
+    if (currentChatId.value === chatId) {
+      handleNewChat()
+    }
+  }
+}
+
+// 格式化时间
+const formatTime = (timeStr: string): string => {
+  try {
+    const date = new Date(timeStr)
+    const now = new Date()
+    const diff = now.getTime() - date.getTime()
+    const minutes = Math.floor(diff / 60000)
+    const hours = Math.floor(diff / 3600000)
+    const days = Math.floor(diff / 86400000)
+
+    if (minutes < 1) return '刚刚'
+    if (minutes < 60) return `${minutes}分钟前`
+    if (hours < 24) return `${hours}小时前`
+    if (days < 7) return `${days}天前`
+    return date.toLocaleDateString('zh-CN')
+  } catch {
+    return '未知'
+  }
 }
 
 // 处理回车发送
@@ -197,15 +312,9 @@ async function handleSendChat() {
   }, 100)
 }
 
-// 清空消息
-function handleClearMessages() {
-  if (confirm('确定要清除所有对话吗？')) {
-    clearMessages()
-  }
-}
-
 onMounted(() => {
   // 初始化聊天历史等
+  // loadChatHistories()
 })
 </script>
 
