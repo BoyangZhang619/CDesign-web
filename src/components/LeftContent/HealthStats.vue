@@ -3,16 +3,16 @@
     <div class="stat-item">
       <div class="stat-icon">📊</div>
       <div class="stat-text">
-        <p class="stat-label">Health Status</p>
-        <p class="stat-value">Good</p>
+        <p class="stat-label">健康状态</p>
+        <p class="stat-value">良好</p>
       </div>
     </div>
     <div class="stat-divider"></div>
     <div class="stat-item">
       <div class="stat-icon">✓</div>
       <div class="stat-text">
-        <p class="stat-label">Status</p>
-        <p class="stat-value">Completed</p>
+        <p class="stat-label">完成度</p>
+        <p class="stat-value">已完成</p>
       </div>
     </div>
   </section>
@@ -23,7 +23,7 @@
 
 <style scoped>
 .health-stats {
-  background: white;
+  background: linear-gradient(135deg, #FEFCFA 0%, #F8F6F3 100%);
   border-radius: 12px;
   padding: 20px;
   display: flex;
@@ -41,7 +41,7 @@
 
 .stat-icon {
   font-size: 28px;
-  background: #f0f7f0;
+  background: #E8F0ED;
   width: 50px;
   height: 50px;
   border-radius: 12px;
@@ -66,6 +66,6 @@
 .stat-divider {
   width: 1px;
   height: 60px;
-  background: #ecf0f1;
+  background: #D4C4B0;
 }
 </style>

@@ -1,16 +1,16 @@
 <template>
   <section class="appointments-calendar">
     <div class="list-header">
-      <h3 class="section-title">List of appointments</h3>
+      <h3 class="section-title">预约列表</h3>
       <div class="tabs">
-        <button class="tab-btn active">Monthly</button>
-        <button class="tab-btn">Daily</button>
+        <button class="tab-btn active">月度</button>
+        <button class="tab-btn">每日</button>
       </div>
     </div>
 
     <div class="calendar">
       <div class="calendar-header">
-        <h4>October 2022</h4>
+        <h4>2022年10月</h4>
         <div class="calendar-nav">
           <button class="nav-btn">←</button>
           <button class="nav-btn">→</button>
@@ -18,7 +18,7 @@
       </div>
 
       <div class="weekdays">
-        <div class="weekday" v-for="day in ['S', 'M', 'T', 'W', 'T', 'F', 'S']" :key="day">
+        <div class="weekday" v-for="day in ['日', '一', '二', '三', '四', '五', '六']" :key="day">
           {{ day }}
         </div>
       </div>
@@ -38,24 +38,24 @@
 
     <div class="appointments-list">
       <div class="appointment-list-item">
-        <img src="https://via.placeholder.com/40" alt="Avatar" class="item-avatar">
+        <div class="item-avatar"></div>
         <div class="item-content">
-          <p class="item-title">Manage stress</p>
-          <p class="item-time">10:00pm - 12:00 pm</p>
+          <p class="item-title">压力管理</p>
+          <p class="item-time">22:00 - 00:00</p>
         </div>
         <span class="item-arrow">→</span>
       </div>
       <div class="appointment-list-item">
-        <img src="https://via.placeholder.com/40" alt="Avatar" class="item-avatar">
+        <div class="item-avatar"></div>
         <div class="item-content">
-          <p class="item-title">Physiotherapy</p>
-          <p class="item-time">09:00am - 10:00 am</p>
+          <p class="item-title">物理治疗</p>
+          <p class="item-time">09:00am - 10:00am</p>
         </div>
         <span class="item-arrow">→</span>
       </div>
     </div>
 
-    <button class="see-more-btn">See More Schedule →</button>
+    <button class="see-more-btn">查看完整日程 →</button>
   </section>
 </template>
 
@@ -64,7 +64,7 @@
 
 <style scoped>
 .appointments-calendar {
-  background: white;
+  background: linear-gradient(135deg, #FEFCFA 0%, #F8F6F3 100%);
   border-radius: 12px;
   padding: 20px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
@@ -101,9 +101,9 @@
 }
 
 .tab-btn.active {
-  background: #a8d5ba;
+  background: #9DB4A0;
   color: white;
-  border-color: #a8d5ba;
+  border-color: #9DB4A0;
 }
 
 /* Calendar */
@@ -184,12 +184,12 @@
 }
 
 .date-cell.today {
-  background: #f39c12;
+  background: #C9B89C;
   color: white;
 }
 
 .date-cell.selected {
-  background: #a8d5ba;
+  background: #9DB4A0;
   color: white;
 }
 
@@ -199,7 +199,7 @@
 
 /* Appointments List */
 .appointments-list {
-  border-top: 1px solid #f0f0f0;
+  border-top: 1px solid #D4C4B0;
   padding-top: 15px;
   margin-bottom: 15px;
 }
@@ -223,7 +223,8 @@
   width: 40px;
   height: 40px;
   border-radius: 8px;
-  object-fit: cover;
+  background: linear-gradient(135deg, #C9B89C 0%, #A9787B 100%);
+  flex-shrink: 0;
 }
 
 .item-content {
@@ -261,6 +262,6 @@
 }
 
 .see-more-btn:hover {
-  color: #a8d5ba;
+  color: #9DB4A0;
 }
 </style>

@@ -1,7 +1,7 @@
 <template>
   <section class="daily-progress">
-    <h3 class="section-title">Daily progress</h3>
-    <p class="progress-subtitle">Keep improving the quality of your health</p>
+    <h3 class="section-title">每日进度</h3>
+    <p class="progress-subtitle">保持改善你的健康质量</p>
 
     <div class="progress-circle">
       <svg viewBox="0 0 120 120" class="circle-svg">
@@ -20,7 +20,7 @@
 
 <style scoped>
 .daily-progress {
-  background: linear-gradient(135deg, #a8d5ba 0%, #7ec8a3 100%);
+  background: linear-gradient(135deg, #5A7A87 0%, #7A8F95 100%);
   border-radius: 12px;
   padding: 20px;
   color: white;

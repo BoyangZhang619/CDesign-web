@@ -1,13 +1,11 @@
 <template>
   <div class="right-content">
-    <UpcomingAppointment />
     <AppointmentsSection />
     <DailyProgress />
   </div>
 </template>
 
 <script setup lang="ts">
-import UpcomingAppointment from './RightContent/UpcomingAppointment.vue'
 import AppointmentsSection from './RightContent/AppointmentsSection.vue'
 import DailyProgress from './RightContent/DailyProgress.vue'
 </script>

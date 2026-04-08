@@ -1,8 +1,8 @@
 <template>
   <section class="patient-activities">
     <div class="section-header">
-      <h3 class="section-title">Patient activities</h3>
-      <p class="section-date">Today, 6 October 2022</p>
+      <h3 class="section-title">患者活动</h3>
+      <p class="section-date">今天，2022年10月6日</p>
     </div>
 
     <div class="activities-chart">
@@ -16,8 +16,8 @@
 
     <div class="activity-detail">
       <span class="detail-icon">💚</span>
-      <span class="detail-text">Good conditions</span>
-      <span class="detail-label">Anxiety & wellness</span>
+      <span class="detail-text">良好状况</span>
+      <span class="detail-label">焦虑与健康</span>
       <span class="detail-arrow">→</span>
     </div>
   </section>
@@ -36,7 +36,7 @@ function getBarHeight(index: number): number {
 
 <style scoped>
 .patient-activities {
-  background: white;
+  background: linear-gradient(135deg, #FEFCFA 0%, #F8F6F3 100%);
   border-radius: 12px;
   padding: 25px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
@@ -62,30 +62,39 @@ function getBarHeight(index: number): number {
 /* Chart */
 .activities-chart {
   margin-bottom: 20px;
+  width: 100%;
 }
 
 .chart-bars {
   display: flex;
   align-items: flex-end;
-  justify-content: space-between;
-  gap: 10px;
+  justify-content: space-around;
+  gap: 8px;
   height: 150px;
   padding-bottom: 10px;
+  width: 100%;
 }
 
 .bar-group {
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
   flex: 1;
+  min-width: 0;
+  max-width: 60px;
+  height: 100%;
 }
 
 .bar {
   width: 100%;
-  background: linear-gradient(to top, #a8d5ba, #7ec8a3);
+  min-width: 24px;
+  max-width: 45px;
+  background: linear-gradient(to top, #9DB4A0, #7FA08F);
   border-radius: 8px 8px 0 0;
-  margin-bottom: 8px;
   transition: all 0.3s ease;
+  align-self: flex-end;
 }
 
 .bar:hover {
@@ -99,7 +108,7 @@ function getBarHeight(index: number): number {
 
 /* Activity Detail */
 .activity-detail {
-  background: #f0f7f0;
+  background: #E8F0ED;
   border-radius: 12px;
   padding: 15px;
   display: flex;
@@ -110,7 +119,7 @@ function getBarHeight(index: number): number {
 }
 
 .activity-detail:hover {
-  background: #e8f4ed;
+  background: #DFE8E5;
 }
 
 .detail-icon {
@@ -130,7 +139,7 @@ function getBarHeight(index: number): number {
 }
 
 .detail-arrow {
-  color: #7ec8a3;
+  color: #9DB4A0;
   font-size: 16px;
 }
 </style>

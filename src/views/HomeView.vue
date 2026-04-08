@@ -1,8 +1,8 @@
 <template>
   <div class="home-layout">
-    <Sidebar />
+    <Sidebar ref="sidebarRef" />
     <div class="main-content">
-      <TopHeader />
+      <TopHeader @toggle-sidebar="toggleSidebar" />
       <div class="content-area">
         <LeftContent />
         <RightContent />
@@ -12,17 +12,31 @@
 </template>
 
 <script setup lang="ts">
+import { ref } from 'vue'
 import Sidebar from '../components/Sidebar.vue'
 import TopHeader from '../components/TopHeader.vue'
 import LeftContent from '../components/LeftContent.vue'
 import RightContent from '../components/RightContent.vue'
+
+const sidebarRef = ref<InstanceType<typeof Sidebar>>()
+
+// 用于手机端切换侧栏
+const toggleSidebar = () => {
+  sidebarRef.value?.toggleSidebarFromHeader()
+}
 </script>
 
 <style scoped>
 .home-layout {
+  margin: 0 auto;
   display: flex;
-  height: 100vh;
-  background: #f5f7fa;
+  height: calc(100vh - 10px);
+  background: linear-gradient(135deg, #D4C4B0 0%, #E8DDD0 100%);
+  border: 5px solid #5A7A87;
+  border-radius: 20px;
+  overflow: hidden;
+  border-radius: 20px;
+  box-sizing: content-box;
 }
 
 .main-content {
@@ -30,7 +44,6 @@ import RightContent from '../components/RightContent.vue'
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  margin-left: 100px;
   transition: margin-left 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
@@ -58,5 +71,23 @@ import RightContent from '../components/RightContent.vue'
 
 .content-area::-webkit-scrollbar-thumb:hover {
   background: #b0b0b0;
+}
+
+/* ============================================
+   响应式设计 - 手机端
+   ============================================ */
+
+@media (max-width: 768px) {
+  .home-layout {
+    border: none;
+    border-radius: 0;
+    height: 100vh;
+  }
+
+  .content-area {
+    flex-direction: column;
+    padding: 15px 20px;
+    gap: 15px;
+  }
 }
 </style>

@@ -1,5 +1,7 @@
 <template>
-  <router-view />
+  <div class="app-wrapper">
+    <router-view />
+  </div>
 </template>
 
 <script setup>
@@ -19,7 +21,7 @@
   --color-taupe: #b9a796;
   --color-border: #e0d9d1;
   --color-accent-primary: #a79368;
-  --color-accent-secondary: #8b7355;
+  --color-accent-secondary: #5b717e;
 
   /* Text Colors */
   --color-text-primary: #3d3a37;
@@ -57,7 +59,6 @@
 body {
   margin: 0;
   font-family: Arial, Helvetica, sans-serif;
-  background: #f5f6f7;
   color: #222;
 }
 
@@ -96,5 +97,19 @@ body {
 * {
   scrollbar-width: none !important;
   -ms-overflow-style: none !important;
+}
+
+.app-wrapper {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin: 0 auto;
+  padding: 0;
+  display: flex;
+  border-radius: 20px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
 }
 </style>
