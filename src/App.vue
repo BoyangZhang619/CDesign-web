@@ -50,6 +50,23 @@
   --morandi-burgundy: #7a4a5a;
   --morandi-dusty-rose: #c49f9a;
   --morandi-muted-blue: #6b8896;
+  
+  --color-deep-blue-gray: #5A7A87;
+  --color-warm-beige: #D4C4B0;
+  --color-soft-beige: #E8DDD0;
+  --color-light-cream: #FEFCFA;
+  --color-pale-cream: #F8F6F3;
+  --color-soft-green: #9DB4A0;
+  --color-dusty-rose: #A9787B;
+  --color-light-gold: #C9B89C;
+  
+  --color-text-primary: #2c3e50;
+  --color-text-secondary: #7f8c8d;
+  --color-border: #D4C4B0;
+  
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
+  --shadow-lg: 0 10px 40px rgba(0, 0, 0, 0.1);
 }
 
 * {
@@ -111,5 +128,12 @@ body {
   border-radius: 20px;
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
   overflow: hidden;
+}
+
+@media screen and (max-width: 768px) {
+  .app-wrapper {
+    border-radius: 0;
+  }
+  
 }
 </style>

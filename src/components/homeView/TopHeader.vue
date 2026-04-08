@@ -10,17 +10,19 @@
 
             <div class="header-left">
                 <h1 class="greeting">Hi, {{ currentUser.name }}</h1>
-                <p class="subtitle">Let's track your health daily!</p>
+                <p class="subtitle">既来之则安(da)之(ka)!</p>
             </div>
             <div class="header-right">
-                <img src="/noun-main-topbar-search.svg" class="search-btn" alt="">
+                <div @click="toggleAIChat" class="search-btn-wrapper" title="AI 健康助手">
+                    <img src="/noun-main-topbar-search.svg" class="search-btn" alt="AI 助手">
+                </div>
                 <div class="notification-wrapper">
                     <img src="/noun-main-topbar-bell.svg" class="notification-btn" alt="">
                     <span class="notification-badge">{{ notificationCount }}</span>
                 </div>
                 <div class="user-profile">
                     <img v-if="currentUser.avatar" :src="currentUser.avatar" :alt="currentUser.name" class="profile-avatar" />
-                    <div v-else class="profile-avatar"></div>
+                    <img v-else :src="`/noun-main-topbar-user.svg`" :alt="currentUser.name" class="profile-avatar" />
                 </div>
             </div>
         </div>
@@ -29,9 +31,14 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
-import { useAuthStore } from '../stores/auth'
+import { useAuthStore } from '../../stores/auth'
 
 const authStore = useAuthStore()
+
+const emit = defineEmits<{
+  'toggle-sidebar': []
+  'toggle-ai-chat': []
+}>()
 
 // 从认证 store 获取用户信息
 const currentUser = computed(() => ({
@@ -41,6 +48,11 @@ const currentUser = computed(() => ({
 }))
 
 const notificationCount = ref(3)
+
+// 切换 AI 聊天
+function toggleAIChat() {
+  emit('toggle-ai-chat')
+}
 
 // 页面挂载时获取用户信息
 onMounted(async () => {
@@ -142,10 +154,11 @@ onMounted(async () => {
     width: 40px;
     height: 40px;
     border-radius: 50%;
-    background: linear-gradient(135deg, #C9B89C 0%, #A9787B 100%);
+    /* background: linear-gradient(135deg, #C9B89C 0%, #A9787B 100%); */
     border: 2px solid #9DB4A0;
     cursor: pointer;
     transition: transform 0.3s ease;
+    transform: translateY(0) scale(.9);
     object-fit: cover;
 }
 

@@ -2,7 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 
 import HomeView from '../views/HomeView.vue'
 import AuthView from '../views/AuthView.vue'
-import ProfileDisplayView from '../views/ProfileDisplayView.vue'
+import ProfileView from '../views/ProfileView.vue'
 import ProfileEditView from '../views/ProfileEditView.vue'
 import AIChatView from '../views/AIChatView.vue'
 import DailyCheckinDisplayView from '../views/DailyCheckinDisplayView.vue'
@@ -45,7 +45,7 @@ const routes = [
   {
     path: '/profile',
     name: 'profile',
-    component: ProfileDisplayView,
+    component: ProfileView,
     meta: {
       requiresAuth: true,
       title: 'StuHeal - 个人中心'

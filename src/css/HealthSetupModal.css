@@ -1,21 +1,4 @@
-/* 健康档案设置浮窗 - 基于 HealthSetupView.css 的样式 */
-
-:root {
-  --color-cream: #f5f1ed;
-  --color-ivory: #f9f7f5;
-  --color-oatmeal: #faf8f6;
-  --color-warm-gray: #9b8b7e;
-  --color-text-primary: #3c3c3c;
-  --color-text-secondary: #7a7a7a;
-  --color-border: #e8dfd8;
-  --color-sage-green: #9eb5a4;
-  --color-prussian-blue: #3d4f62;
-  --color-success: #7cb342;
-  --color-error: #d32f2f;
-  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.08);
-  --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.12);
-  --shadow-lg: 0 8px 16px rgba(0, 0, 0, 0.15);
-}
+/* 健康档案设置浮窗 - 与主页风格一致 */
 
 .health-setup-modal-overlay {
   position: fixed;
@@ -23,12 +6,13 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0.4);
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 1000;
-  animation: fadeIn 0.3s ease-in-out;
+  z-index: 2000;
+  animation: fadeIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  backdrop-filter: blur(2px);
 }
 
 @keyframes fadeIn {
@@ -52,31 +36,32 @@
 }
 
 .health-setup-modal {
-  background: linear-gradient(135deg, var(--color-cream) 0%, var(--color-ivory) 50%, var(--color-oatmeal) 100%);
-  border-radius: 12px;
-  box-shadow: var(--shadow-lg);
+  overflow: hidden;
+  background: linear-gradient(135deg, var(--color-light-cream) 0%, var(--color-pale-cream) 100%);
+  border-radius: 20px;
+  box-shadow: var(--shadow-lg), 0 4px 12px rgba(0, 0, 0, 0.06);
+  border: 2px solid rgba(255, 255, 255, 0.8);
   max-width: 500px;
   width: 90%;
   max-height: 85vh;
   display: flex;
   flex-direction: column;
-  animation: slideUp 0.3s ease-in-out;
-  font-family: 'Montserrat', sans-serif;
+  animation: slideUp 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
 /* 模态框头部 */
 .modal-header {
   padding: 32px 28px 24px;
-  border-bottom: 1px solid var(--color-border);
-  background: linear-gradient(135deg, var(--color-cream) 0%, var(--color-ivory) 100%);
+  border-bottom: 2px solid var(--color-border);
+  background: linear-gradient(135deg, #FEFCFA 0%, #F8F6F3 100%);
 }
 
 .modal-title {
   font-size: 24px;
-  font-weight: 600;
-  color: var(--color-text-primary);
+  font-weight: 700;
+  color: var(--color-deep-blue-gray);
   margin: 0 0 8px 0;
-  font-family: 'Playfair Display', serif;
 }
 
 .modal-subtitle {
@@ -94,16 +79,17 @@
 }
 
 .progress-bar {
-  height: 4px;
-  background: var(--color-border);
-  border-radius: 2px;
+  height: 6px;
+  background: linear-gradient(90deg, #E8DDD0 0%, #D4C4B0 100%);
+  border-radius: 3px;
   overflow: hidden;
 }
 
 .progress-fill {
   height: 100%;
-  background: var(--color-sage-green);
+  background: linear-gradient(90deg, #9DB4A0 0%, #7FA08F 100%);
   transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: 3px;
 }
 
 .progress-text {
@@ -111,7 +97,7 @@
   color: var(--color-text-secondary);
   margin: 0;
   text-align: right;
-  font-weight: 500;
+  font-weight: 600;
 }
 
 /* 模态框内容 */
@@ -149,10 +135,9 @@
 
 .step-title {
   font-size: 16px;
-  font-weight: 600;
-  color: var(--color-text-primary);
+  font-weight: 700;
+  color: var(--color-deep-blue-gray);
   margin: 0 0 4px 0;
-  font-family: 'Playfair Display', serif;
   letter-spacing: 0.5px;
 }
 
@@ -178,7 +163,7 @@
   font-weight: 600;
   color: var(--color-text-primary);
   margin-bottom: 10px;
-  letter-spacing: 0.3px;
+  letter-spacing: 0.5px;
   text-transform: uppercase;
 }
 
@@ -186,39 +171,41 @@
 .form-textarea,
 .form-select {
   width: 100%;
-  padding: 11px 12px;
-  border: 1px solid var(--color-border);
-  background: white;
+  padding: 12px 16px;
+  border: 2px solid var(--color-border);
+  background: linear-gradient(135deg, #FEFCFA 0%, #F8F6F3 100%);
   color: var(--color-text-primary);
-  font-family: 'Montserrat', sans-serif;
-  font-size: 13px;
-  border-radius: 0;
-  transition: all 0.3s ease;
+  font-family: inherit;
+  font-size: 14px;
+  border-radius: 10px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .form-input:focus,
 .form-textarea:focus,
 .form-select:focus {
   outline: none;
-  border-color: var(--color-sage-green);
-  box-shadow: 0 0 0 3px rgba(158, 181, 164, 0.1);
+  border-color: var(--color-soft-green);
+  box-shadow: 0 0 0 3px rgba(157, 180, 160, 0.1);
+  background: white;
 }
 
 .form-input::placeholder {
-  color: var(--color-text-secondary);
+  color: #A9A9A9;
 }
 
 .form-textarea {
   resize: vertical;
-  font-family: 'Montserrat', sans-serif;
+  font-family: inherit;
+  font-size: 14px;
 }
 
 .form-select {
   cursor: pointer;
   appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%233c3c3c' d='M1 1l5 5 5-5'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%235A7A87' d='M1 1l5 5 5-5'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
-  background-position: right 10px center;
+  background-position: right 12px center;
   padding-right: 30px;
 }
 
@@ -241,7 +228,7 @@
   width: 18px;
   height: 18px;
   cursor: pointer;
-  accent-color: var(--color-sage-green);
+  accent-color: var(--color-soft-green);
 }
 
 .radio-text {
@@ -286,13 +273,14 @@
 /* 错误提示框 */
 .error-box {
   padding: 12px 14px;
-  background: #fff3cd;
-  border: 1px solid #ffc107;
-  border-radius: 4px;
-  color: #856404;
+  background: rgba(169, 120, 123, 0.1);
+  border: 2px solid #A9787B;
+  border-radius: 8px;
+  color: #A9787B;
   font-size: 13px;
   margin-bottom: 20px;
-  animation: slideUp 0.3s ease-in-out;
+  animation: slideUp 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  font-weight: 500;
 }
 
 /* 表单操作按钮 */
@@ -304,62 +292,72 @@
 }
 
 .btn {
-  padding: 11px 24px;
-  border: 1px solid var(--color-border);
-  background-color: transparent;
+  padding: 12px 24px;
+  border: 2px solid var(--color-border);
+  background-color: linear-gradient(135deg, #F5F2ED 0%, #EBE5DF 100%);
   color: var(--color-text-primary);
-  font-family: 'Montserrat', sans-serif;
-  font-size: 12px;
+  font-family: inherit;
+  font-size: 14px;
   font-weight: 600;
   letter-spacing: 0.5px;
   text-transform: uppercase;
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  border-radius: 0;
+  border-radius: 10px;
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 40px;
+  min-height: 44px;
 }
 
 .btn:hover:not(:disabled) {
-  border-color: var(--color-warm-gray);
-  background-color: var(--color-ivory);
-  box-shadow: var(--shadow-md);
+  border-color: var(--color-soft-green);
+  background: linear-gradient(135deg, #EBE5DF 0%, #E1DBD4 100%);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
   transform: translateY(-2px);
 }
 
 .btn:active:not(:disabled) {
   transform: translateY(0);
-  box-shadow: var(--shadow-sm);
 }
 
 .btn:disabled {
-  opacity: 0.5;
+  opacity: 0.6;
   cursor: not-allowed;
 }
 
 .btn-primary {
-  background-color: var(--color-prussian-blue);
-  color: var(--color-cream);
-  border-color: var(--color-prussian-blue);
+  background: linear-gradient(135deg, #9DB4A0 0%, #7FA08F 100%);
+  color: white;
+  border-color: transparent;
 }
 
 .btn-primary:hover:not(:disabled) {
-  background-color: #2d3d4f;
-  border-color: #2d3d4f;
-  box-shadow: var(--shadow-lg);
+  background: linear-gradient(135deg, #8FA591 0%, #759E7F 100%);
+  box-shadow: 0 6px 16px rgba(157, 180, 160, 0.25);
+  border-color: transparent;
+}
+
+.btn-primary:focus {
+  outline: 2px solid transparent;
+  outline-offset: 2px;
 }
 
 .btn-secondary {
-  background-color: transparent;
+  background: linear-gradient(135deg, #F5F2ED 0%, #EBE5DF 100%);
   color: var(--color-text-primary);
   border-color: var(--color-border);
 }
 
 .btn-secondary:hover:not(:disabled) {
-  background-color: var(--color-ivory);
-  border-color: var(--color-warm-gray);
+  background: linear-gradient(135deg, #EBE5DF 0%, #E1DBD4 100%);
+  border-color: var(--color-soft-green);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.btn-secondary:focus {
+  outline: 2px solid var(--color-soft-green);
+  outline-offset: 2px;
 }
 
 /* 响应式设计 */

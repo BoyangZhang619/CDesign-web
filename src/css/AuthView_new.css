@@ -212,6 +212,12 @@
   align-items: center;
   margin: 20px 0;
   gap: 12px;
+  cursor: pointer;
+}
+
+.form-divider>span:hover {
+  color: #5A7A87;
+  text-decoration: underline;
 }
 
 .form-divider::before,

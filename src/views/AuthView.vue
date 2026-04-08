@@ -51,13 +51,13 @@
 
               <p v-if="errorMsg" class="form-error">{{ errorMsg }}</p>
 
-              <div class="form-divider">
+              <div class="form-divider" @click="toggleMode">
                 <span>没有账户？</span>
               </div>
-
+<!-- 
               <button type="button" class="form-toggle-btn" @click="toggleMode">
                 创建新账户
-              </button>
+              </button> -->
             </form>
           </template>
 
@@ -105,23 +105,23 @@
               <p v-if="errorMsg" class="form-error">{{ errorMsg }}</p>
               <p v-if="successMsg" class="form-success">{{ successMsg }}</p>
 
-              <div class="form-divider">
+              <div class="form-divider" @click="toggleMode">
                 <span>已有账户？</span>
               </div>
 
-              <button type="button" class="form-toggle-btn" @click="toggleMode">
+              <!-- <button type="button" class="form-toggle-btn" @click="toggleMode">
                 返回登录
-              </button>
+              </button> -->
             </form>
           </template>
         </div>
 
         <!-- 品牌描述 -->
-        <div class="auth-footer">
+        <!-- <div class="auth-footer">
           <p class="auth-description">
             精准的健康数据分析，专业的个性化建议，让您的健康之路更清晰
           </p>
-        </div>
+        </div> -->
       </div>
     </div>
   </div>

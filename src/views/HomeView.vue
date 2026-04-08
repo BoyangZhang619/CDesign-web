@@ -2,27 +2,45 @@
   <div class="home-layout">
     <Sidebar ref="sidebarRef" />
     <div class="main-content">
-      <TopHeader @toggle-sidebar="toggleSidebar" />
+      <TopHeader @toggle-sidebar="toggleSidebar" @toggle-ai-chat="toggleAIChat" />
       <div class="content-area">
         <LeftContent />
         <RightContent />
       </div>
     </div>
+
+    <!-- AI 聊天浮窗 -->
+    <AIChatFloatingWindow :isOpen="isAIChatOpen" @close="closeAIChat" />
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import Sidebar from '../components/Sidebar.vue'
-import TopHeader from '../components/TopHeader.vue'
-import LeftContent from '../components/LeftContent.vue'
-import RightContent from '../components/RightContent.vue'
+import Sidebar from '../components/homeView/Sidebar.vue'
+import TopHeader from '../components/homeView/TopHeader.vue'
+import LeftContent from '../components/homeView/LeftContent.vue'
+import RightContent from '../components/homeView/RightContent.vue'
+import AIChatFloatingWindow from '../components/AIChatFloatingWindow.vue'
 
 const sidebarRef = ref<InstanceType<typeof Sidebar>>()
+const isAIChatOpen = ref(false)
 
 // 用于手机端切换侧栏
 const toggleSidebar = () => {
   sidebarRef.value?.toggleSidebarFromHeader()
+}
+
+// 切换 AI 聊天浮窗
+const toggleAIChat = () => {
+  isAIChatOpen.value = !isAIChatOpen.value
+  if (!isAIChatOpen.value) {
+    closeAIChat()
+  }
+}
+
+// 关闭 AI 聊天浮窗
+const closeAIChat = () => {
+  isAIChatOpen.value = false
 }
 </script>
 
