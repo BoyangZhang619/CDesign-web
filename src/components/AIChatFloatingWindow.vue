@@ -269,11 +269,11 @@ async function handleSendMessage() {
 }
 
 // 发送快速提问
-async function sendQuickPrompt(text: string) {
-  inputMessage.value = text
-  await nextTick()
-  await handleSendMessage()
-}
+// async function sendQuickPrompt(text: string) {
+//   inputMessage.value = text
+//   await nextTick()
+//   await handleSendMessage()
+// }
 
 // 自动滚动到底部
 function scrollToBottom() {
