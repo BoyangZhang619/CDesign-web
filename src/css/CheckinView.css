@@ -3,7 +3,7 @@
 /* ============================================
    Checkin View - 基于主页结构的设计
    ============================================ */
-/* 
+
 :root {
   --color-deep-blue: #5A7A87;
   --color-warm-beige: #D4C4B0;
@@ -12,7 +12,7 @@
   --color-soft-green: #9DB4A0;
   --color-dusty-rose: #A9787B;
   --color-light-gold: #C9B89C;
-} */
+}
 
 /* ============================================
    主布局容器
@@ -213,7 +213,6 @@
     opacity: 0;
     transform: translateX(10px);
   }
-
   to {
     opacity: 1;
     transform: translateX(0);

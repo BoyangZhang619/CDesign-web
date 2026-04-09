@@ -1,1048 +1,703 @@
-/* ==================== 页面布局 ==================== */
-.todolist-page {
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-    background: linear-gradient(135deg, var(--color-cream) 0%, var(--color-ivory) 50%, var(--color-oatmeal) 100%);
-    padding-bottom: 100px;
-    font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600&family=Montserrat:wght@400;500;600&display=swap');
+
+/* ============================================
+   Todolist View - 基于主页结构的设计
+   ============================================ */
+
+:root {
+  --color-deep-blue: #5A7A87;
+  --color-warm-beige: #D4C4B0;
+  --color-soft-cream: #FEFCFA;
+  --color-cream-light: #F8F6F3;
+  --color-soft-green: #9DB4A0;
+  --color-dusty-rose: #A9787B;
+  --color-light-gold: #C9B89C;
 }
 
-.todolist-main {
-    flex: 1;
-    padding: 32px 20px;
-    max-width: 1200px;
-    margin: 0 auto;
-    width: 100%;
+/* ============================================
+   主布局容器
+   ============================================ */
+
+.todolist-layout {
+  margin: 0 auto;
+  display: flex;
+  height: calc(100vh - 10px);
+  background: linear-gradient(135deg, #D4C4B0 0%, #E8DDD0 100%);
+  border: 5px solid #5A7A87;
+  border-radius: 20px;
+  overflow: hidden;
+  box-sizing: content-box;
 }
 
-/* 装饰�?*/
-.page-divider {
-    height: 1px;
-    background: var(--color-border);
-    margin-bottom: 32px;
+.main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
 }
 
-/* ==================== 页面标题 ==================== */
+.content-area {
+  flex: 1;
+  display: flex;
+  overflow-y: auto;
+  padding: 0;
+}
+
+.todolist-wrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(135deg, #FEFCFA 0%, #F8F6F3 100%);
+  padding: 20px 30px;
+  gap: 20px;
+}
+
+/* 滚动条 */
+.content-area::-webkit-scrollbar {
+  width: 8px;
+}
+
+.content-area::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.content-area::-webkit-scrollbar-thumb {
+  background: #d0d0d0;
+  border-radius: 4px;
+}
+
+.content-area::-webkit-scrollbar-thumb:hover {
+  background: #b0b0b0;
+}
+
+/* ============================================
+   头部区域
+   ============================================ */
+
 .todolist-header {
-    margin-bottom: 36px;
-    animation: fadeInDown 0.6s ease-out;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 10px;
 }
 
-.title-container {
-    background: rgba(255, 255, 255, 0.7);
-    padding: 24px 28px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-    border-left: 4px solid var(--color-accent-primary);
-    border-radius: 4px;
-    backdrop-filter: blur(8px);
+.header-info {
+  flex: 1;
 }
 
-.page-title {
-    font-size: 36px;
-    font-weight: 500;
-    color: var(--color-text-primary);
-    margin: 0 0 8px 0;
-    letter-spacing: -0.3px;
-    font-family: 'Playfair Display', serif;
+.todolist-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 28px;
+  font-weight: 600;
+  color: #5A7A87;
+  margin: 0 0 4px 0;
+  letter-spacing: 0.5px;
 }
 
-.page-subtitle {
-    font-size: 14px;
-    color: var(--color-text-secondary);
-    font-weight: 400;
-    font-family: 'Montserrat', sans-serif;
+.todolist-subtitle {
+  font-size: 13px;
+  color: #9DB4A0;
+  margin: 0;
+  font-weight: 500;
 }
 
-/* ==================== 统计面板 ==================== */
-.todolist-stats {
-    display: grid;
-    grid-template-columns: repeat(4, minmax(200px, 1fr));
-    gap: 16px;
-    margin-bottom: 18px;
+.header-actions {
+  display: flex;
+  gap: 12px;
+}
+
+.btn-create-task {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  background: linear-gradient(135deg, #9DB4A0 0%, #8FA591 100%);
+  color: white;
+  border: 2px solid #8FA591;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.btn-create-task:hover {
+  background: linear-gradient(135deg, #8FA591 0%, #7F9581 100%);
+  border-color: #7F9581;
+  box-shadow: 0 4px 12px rgba(157, 180, 160, 0.2);
+  transform: translateY(-2px);
+}
+
+.btn-create-task svg {
+  width: 16px;
+  height: 16px;
+}
+
+/* ============================================
+   统计卡片
+   ============================================ */
+
+.stats-section {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 12px;
 }
 
 .stat-card {
-    background: white;
-    padding: 20px;
-    text-align: center;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-    border-top: 3px solid var(--color-border);
-    border-radius: 4px;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px;
+  background: linear-gradient(135deg, #EFE9E0 0%, #E8E1D6 100%);
+  border: 2px solid #9DB4A0;
+  border-radius: 8px;
+  transition: all 0.3s ease;
 }
 
 .stat-card:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  background: linear-gradient(135deg, #E8E1D6 0%, #E1DAD0 100%);
+  border-color: #8FA591;
+  transform: translateY(-2px);
 }
 
-.stat-card.total {
-    border-top-color: var(--color-accent-primary);
+.stat-icon {
+  font-size: 24px;
+  flex-shrink: 0;
 }
 
-.stat-card.completed {
-    border-top-color: var(--color-accent-primary);
-}
-
-.stat-card.pending {
-    border-top-color: var(--color-accent-secondary);
-}
-
-.stat-card.overdue {
-    border-top-color: #c62828;
-}
-
-.stat-value {
-    font-size: 32px;
-    font-weight: 700;
-    color: var(--color-text-primary);
-    margin-bottom: 8px;
+.stat-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
 }
 
 .stat-label {
-    font-size: 12px;
-    color: var(--color-text-secondary);
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
+  font-size: 11px;
+  color: #5A7A87;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.2px;
 }
 
-/* ==================== 进度�?==================== */
-.todolist-progress {
-    background: white;
-    /* border-radius: 12px; */
-    padding: 20px 24px;
-    margin-bottom: 28px;
-    box-shadow: 0 2px 8px rgba(56, 71, 89, 0.06);
+.stat-value {
+  font-size: 18px;
+  font-weight: 600;
+  color: #9DB4A0;
+}
+
+/* ============================================
+   进度条区域
+   ============================================ */
+
+.progress-section {
+  padding: 16px;
+  background: linear-gradient(135deg, #EFE9E0 0%, #E8E1D6 100%);
+  border: 2px solid #9DB4A0;
+  border-radius: 8px;
 }
 
 .progress-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
 }
 
 .progress-label {
-    font-size: 13px;
-    font-weight: 600;
-    color: var(--color-text-primary);
+  font-size: 12px;
+  font-weight: 600;
+  color: #5A7A87;
+  text-transform: uppercase;
+  letter-spacing: 0.2px;
 }
 
 .progress-percentage {
-    font-size: 18px;
-    font-weight: 700;
-    color: var(--color-accent-primary);
+  font-size: 16px;
+  font-weight: 600;
+  color: #9DB4A0;
 }
 
 .progress-bar-container {
-    background-color: var(--color-oatmeal);
-    height: 6px;
-    /* border-radius: 3px; */
-    overflow: hidden;
+  width: 100%;
+  height: 8px;
+  background: rgba(157, 180, 160, 0.15);
+  border-radius: 4px;
+  overflow: hidden;
 }
 
 .progress-bar {
-    background: linear-gradient(to right,
-            var(--color-accent-primary),
-            var(--color-border));
-    height: 100%;
-    /* border-radius: 3px; */
-    transition: width 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  height: 100%;
+  background: linear-gradient(90deg, #9DB4A0 0%, #8FA591 100%);
+  border-radius: 4px;
+  transition: width 0.3s ease;
 }
 
-/* ==================== 操作�?==================== */
-.todolist-toolbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 16px;
-    margin-bottom: 24px;
-}
+/* ============================================
+   工具栏区域
+   ============================================ */
 
-.toolbar-left {
-    flex: 1;
-    min-width: 280px;
-}
-
-.toolbar-right {
-    display: flex;
-    gap: 12px;
-}
-
-.search-wrapper {
-    position: relative;
-    display: flex;
-    align-items: center;
-}
-
-.search-icon {
-    position: absolute;
-    left: 12px;
-    width: 18px;
-    height: 18px;
-    color: var(--color-text-secondary);
-    pointer-events: none;
+.toolbar-section {
+  display: flex;
+  gap: 16px;
+  align-items: center;
 }
 
 .search-input {
-    width: 100%;
-    padding: 10px 12px 10px 40px;
-    border: 1px solid var(--color-oatmeal);
-    /* border-radius: 8px; */
-    font-size: 13px;
-    background-color: white;
-    color: var(--color-text-primary);
-    transition: all 0.3s ease;
-}
-
-.search-input::placeholder {
-    color: var(--color-text-secondary);
+  flex: 1;
+  padding: 10px 14px;
+  border: 2px solid #C9B89C;
+  background: #FEFCFA;
+  border-radius: 4px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 12px;
+  color: #5A7A87;
+  outline: none;
+  transition: all 0.3s ease;
 }
 
 .search-input:focus {
-    outline: none;
-    border-color: var(--color-accent-primary);
-    box-shadow: 0 0 0 3px rgba(139, 154, 127, 0.1);
+  border-color: #8FA591;
+  box-shadow: 0 0 0 3px rgba(143, 165, 145, 0.15);
 }
 
-/* ==================== 按钮 ==================== */
-.btn {
-    padding: 10px 18px;
-    border: none;
-    /* border-radius: 8px; */
-    font-size: 13px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    text-transform: none;
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
+.search-input::placeholder {
+  color: #A9A9A9;
 }
 
-.btn-primary {
-    background-color: var(--color-accent-primary);
-    color: white;
-}
-
-.btn-primary:hover:not(:disabled) {
-    background-color: var(--color-accent-secondary);
-    transform: translateY(-1px);
-    box-shadow: var(--shadow-sm);
-}
-
-.btn-secondary {
-    background-color: var(--color-ivory);
-    color: var(--color-text-primary);
-}
-
-.btn-secondary:hover:not(:disabled) {
-    background-color: var(--color-accent-primary);
-    color: white;
-    transform: translateY(-1px);
-    box-shadow: var(--shadow-sm);
-}
-
-.btn-cancel {
-    background-color: var(--color-oatmeal);
-    color: var(--color-text-primary);
-}
-
-.btn-cancel:hover {
-    background-color: var(--color-ivory);
-    transform: translateY(-1px);
-}
-
-.btn:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-}
-
-/* ==================== 筛选按�?==================== */
-.todolist-filters {
-    display: flex;
-    gap: 12px;
-    margin-bottom: 18px;
-    flex-wrap: wrap;
-    align-items: center;
+.filter-buttons {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
 }
 
 .filter-btn {
-    padding: 8px 16px;
-    border: 1px solid var(--color-border);
-    background-color: white;
-    font-size: 12px;
-    font-weight: 600;
-    color: var(--color-text-secondary);
-    cursor: pointer;
-    border-radius: 4px;
-    transition: all 0.3s ease;
+  padding: 8px 12px;
+  background: transparent;
+  border: 2px solid #E8E1D6;
+  border-radius: 4px;
+  color: #5A7A87;
+  cursor: pointer;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.2px;
+  transition: all 0.3s ease;
 }
 
 .filter-btn:hover {
-    border-color: var(--color-accent-primary);
-    color: var(--color-accent-primary);
-    background: rgba(167, 147, 104, 0.03);
+  background: rgba(157, 180, 160, 0.08);
+  border-color: #8FA591;
 }
 
 .filter-btn.active {
-    background-color: var(--color-accent-primary);
-    color: white;
-    border-color: var(--color-accent-primary);
-    box-shadow: 0 2px 8px rgba(167, 147, 104, 0.2);
+  background: linear-gradient(135deg, #9DB4A0 0%, #8FA591 100%);
+  border-color: #8FA591;
+  color: white;
 }
 
-.filter-separator {
-    width: 1px;
-    height: 20px;
-    background-color: var(--color-border);
-    margin: 0 4px;
+/* ============================================
+   任务容器
+   ============================================ */
+
+.tasks-container {
+  flex: 1;
+  overflow-y: auto;
 }
 
-/* ==================== 任务列表 ==================== */
-.todolist-content {
-    animation: fadeInUp 0.5s ease-out 0.2s both;
+.tasks-container::-webkit-scrollbar {
+  width: 6px;
 }
 
-.loading-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 60px 20px;
+.tasks-container::-webkit-scrollbar-track {
+  background: transparent;
 }
 
-.loading-spinner {
-    width: 40px;
-    height: 40px;
-    border: 3px solid var(--color-oatmeal);
-    border-top-color: var(--color-accent-primary);
-    /* border-radius: 50%; */
-    animation: spin 0.8s linear infinite;
+.tasks-container::-webkit-scrollbar-thumb {
+  background: #D4C4B0;
+  border-radius: 3px;
 }
 
-@keyframes spin {
-    to {
-        transform: rotate(360deg);
-    }
+.tasks-container::-webkit-scrollbar-thumb:hover {
+  background: #C9B89C;
 }
 
-.loading-container p {
-    margin-top: 16px;
-    color: var(--color-text-secondary);
-    font-size: 14px;
-}
-
+/* 空状态 */
 .empty-state {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 60px 20px;
-    background: white;
-    /* border-radius: 12px; */
-    box-shadow: 0 2px 8px rgba(56, 71, 89, 0.06);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  gap: 12px;
 }
 
 .empty-icon {
-    font-size: 64px;
-    margin-bottom: 16px;
+  font-size: 48px;
+  line-height: 1;
+  opacity: 0.6;
+}
+
+.empty-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 20px;
+  font-weight: 600;
+  color: #5A7A87;
+  margin: 0;
 }
 
 .empty-text {
-    font-size: 16px;
-    color: var(--color-text-secondary);
-    margin-bottom: 24px;
-    font-weight: 500;
+  font-size: 12px;
+  color: #8B8B8B;
+  margin: 0;
 }
+
+/* ============================================
+   任务列表
+   ============================================ */
 
 .task-list {
-    display: flex;
-    flex-direction: column;
-    gap: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
 }
 
-/* 任务�?*/
 .task-group {
-    animation: slideUp 0.4s ease-out;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
 .group-title {
-    font-size: 14px;
-    font-weight: 700;
-    color: var(--color-text-primary);
-    margin: 0 0 12px 0;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    padding-left: 4px;
+  font-family: 'Playfair Display', serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: #5A7A87;
+  margin: 0;
+  padding: 0 10px;
+  letter-spacing: 0.5px;
 }
 
 .group-tasks {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
-/* 任务�?*/
 .task-item {
-    display: flex;
-    align-items: flex-start;
-    gap: 12px;
-    padding: 16px;
-    background: white;
-    border-left: 4px solid var(--color-border);
-    border-radius: 4px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
-    transition: all 0.3s ease;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px 14px;
+  background: linear-gradient(135deg, #EFE9E0 0%, #E8E1D6 100%);
+  border: 2px solid #E1D9D0;
+  border-radius: 4px;
+  transition: all 0.3s ease;
 }
 
 .task-item:hover {
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-    transform: translateX(2px);
+  background: linear-gradient(135deg, #E8E1D6 0%, #E1DAD0 100%);
+  box-shadow: 0 2px 8px rgba(157, 180, 160, 0.12);
 }
 
 .task-item.completed {
-    background-color: var(--color-ivory);
-    opacity: 0.7;
-}
-
-.task-item.completed .task-title {
-    text-decoration: line-through;
-    color: var(--color-text-secondary);
+  opacity: 0.6;
+  border-color: #DDD4C4;
 }
 
 .task-item.overdue {
-    border-left-color: #c62828;
-    background-color: rgba(198, 40, 40, 0.03);
+  background: linear-gradient(135deg, #E8C1C1 0%, #E1B7B7 100%);
+  border-color: #A9787B;
 }
 
-.task-item.ai-suggested {
-    border-left-color: var(--color-text-secondary);
+.task-item.ai-task {
+  background: linear-gradient(135deg, #E8E8E0 0%, #E1E1D8 100%);
 }
 
-.task-item.custom {
-    border-left-color: var(--color-accent-primary);
-}
-
+/* 复选框 */
 .task-checkbox {
-    flex-shrink: 0;
-    padding-top: 2px;
+  flex-shrink: 0;
+  margin-top: 3px;
 }
 
-.task-checkbox input[type='checkbox'] {
-    width: 18px;
-    height: 18px;
-    cursor: pointer;
-    accent-color: var(--color-accent-primary);
+.task-checkbox input {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+  accent-color: #9DB4A0;
 }
 
+/* 任务内容 */
 .task-content {
-    flex: 1;
-    min-width: 0;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
 }
 
 .task-title {
-    font-size: 14px;
-    font-weight: 600;
-    color: var(--color-text-primary);
-    margin: 0 0 6px 0;
-    word-break: break-word;
+  font-size: 13px;
+  font-weight: 600;
+  color: #5A7A87;
+}
+
+.task-item.completed .task-title {
+  text-decoration: line-through;
+  opacity: 0.7;
 }
 
 .task-description {
-    font-size: 12px;
-    color: var(--color-text-secondary);
-    margin: 4px 0;
-    line-height: 1.4;
+  font-size: 11px;
+  color: #8B8B8B;
+  line-height: 1.4;
 }
 
 .task-reason {
-    font-size: 12px;
-    color: var(--color-text-secondary);
-    margin: 6px 0 0 0;
-    padding: 8px 0;
-    border-top: 1px solid var(--color-oatmeal);
-    padding-top: 8px;
+  font-size: 11px;
+  color: #9DB4A0;
+  background: rgba(157, 180, 160, 0.08);
+  padding: 4px 8px;
+  border-radius: 3px;
+  border-left: 2px solid #9DB4A0;
+  line-height: 1.4;
 }
 
 .task-meta {
-    display: flex;
-    gap: 12px;
-    align-items: center;
-    margin-top: 8px;
+  display: flex;
+  gap: 8px;
+  font-size: 11px;
 }
 
 .task-date {
-    font-size: 11px;
-    color: var(--color-text-secondary);
-    font-weight: 500;
+  color: #A9A9A9;
 }
 
 .task-priority {
-    font-size: 10px;
-    font-weight: 700;
-    padding: 3px 8px;
-    /* border-radius: 4px; */
-    text-transform: uppercase;
-    letter-spacing: 0.3px;
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.2px;
 }
 
 .task-priority.high {
-    background-color: rgba(212, 175, 143, 0.2);
-    color: var(--color-border);
+  background: rgba(169, 120, 123, 0.15);
+  color: #8B6B75;
 }
 
 .task-priority.medium {
-    background-color: rgba(139, 154, 127, 0.2);
-    color: var(--color-accent-primary);
+  background: rgba(201, 184, 156, 0.2);
+  color: #996633;
 }
 
 .task-priority.low {
-    background-color: rgba(107, 136, 150, 0.1);
-    color: var(--color-text-secondary);
+  background: rgba(157, 180, 160, 0.15);
+  color: #6B8B77;
 }
 
+/* 任务操作 */
 .task-actions {
-    display: flex;
-    gap: 8px;
-    flex-shrink: 0;
+  display: flex;
+  gap: 6px;
+  flex-shrink: 0;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.task-item:hover .task-actions {
+  opacity: 1;
+}
+
+.btn-action,
+.btn-accept,
+.btn-reject,
+.btn-edit,
+.btn-delete {
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+  font-size: 11px;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .btn-action {
-    width: 28px;
-    height: 28px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border: none;
-    background-color: var(--color-ivory);
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 14px;
-    transition: all 0.3s ease;
+  background: transparent;
+  color: #5A7A87;
+  border: 1px solid #E8E1D6;
 }
 
 .btn-action:hover {
-    background-color: var(--color-oatmeal);
-    transform: scale(1.05);
+  background: rgba(157, 180, 160, 0.1);
+  border-color: #9DB4A0;
 }
 
-.btn-action.accept {
-    background-color: rgba(167, 147, 104, 0.08);
+.btn-accept {
+  background: rgba(157, 180, 160, 0.15);
+  color: #6B8B77;
+  border: 1px solid #9DB4A0;
 }
 
-.btn-action.accept:hover {
-    background-color: rgba(167, 147, 104, 0.15);
+.btn-accept:hover {
+  background: rgba(157, 180, 160, 0.25);
+  border-color: #8FA591;
 }
 
-.btn-action.reject {
-    background-color: rgba(198, 40, 40, 0.08);
+.btn-reject {
+  background: rgba(169, 120, 123, 0.15);
+  color: #8B6B75;
+  border: 1px solid #A9787B;
 }
 
-.btn-action.reject:hover {
-    background-color: rgba(198, 40, 40, 0.15);
+.btn-reject:hover {
+  background: rgba(169, 120, 123, 0.25);
+  border-color: #997688;
 }
 
-.btn-action.delete:hover {
-    background-color: rgba(198, 40, 40, 0.15);
+.btn-edit {
+  background: rgba(201, 184, 156, 0.15);
+  color: #996633;
+  border: 1px solid #C9B89C;
 }
 
-/* ==================== 模态对话框 ==================== */
-.modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(0, 0, 0, 0.4);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 1000;
-    padding: 20px;
-    animation: fadeIn 0.3s ease;
+.btn-edit:hover {
+  background: rgba(201, 184, 156, 0.25);
+  border-color: #996633;
 }
 
-.modal-content {
-    background: white;
-    /* border-radius: 12px; */
-    box-shadow: 0 10px 40px rgba(56, 71, 89, 0.15);
-    max-width: 500px;
-    width: 100%;
-    max-height: 90vh;
-    overflow-y: auto;
-    animation: slideUp 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+.btn-delete {
+  background: transparent;
+  color: #A9787B;
+  border: 1px solid #E8E1D6;
 }
 
-.modal-content.type-selector-modal {
-    max-width: 600px;
+.btn-delete:hover {
+  background: rgba(169, 120, 123, 0.1);
+  border-color: #A9787B;
 }
 
-.modal-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 24px;
-    border-bottom: 1px solid var(--color-oatmeal);
+.btn-delete svg {
+  width: 14px;
+  height: 14px;
 }
 
-.modal-title {
-    font-size: 18px;
-    font-weight: 700;
-    color: var(--color-text-primary);
-    margin: 0;
-}
+/* ============================================
+   响应式设计
+   ============================================ */
 
-.modal-close {
-    width: 32px;
-    height: 32px;
+@media (max-width: 768px) {
+  .todolist-layout {
     border: none;
-    background: none;
+    border-radius: 0;
+    height: 100vh;
+  }
+
+  .todolist-wrapper {
+    padding: 16px 20px;
+  }
+
+  .todolist-title {
     font-size: 24px;
-    color: var(--color-text-secondary);
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
+  }
 
-.modal-close:hover {
-    color: var(--color-text-primary);
-    transform: rotate(90deg);
-}
+  .stats-section {
+    grid-template-columns: repeat(2, 1fr);
+  }
 
-/* ==================== 类型选择�?==================== */
-.type-options {
-    padding: 24px;
-}
-
-.type-option-group {
-    margin-bottom: 28px;
-}
-
-.type-option-group:last-child {
-    margin-bottom: 0;
-}
-
-.type-group-title {
-    font-size: 14px;
-    font-weight: 700;
-    color: var(--color-text-primary);
-    margin: 0 0 16px 0;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
-
-.type-option-row {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-    gap: 12px;
-}
-
-.type-option-btn {
-    display: flex;
+  .toolbar-section {
     flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    padding: 16px 12px;
-    background: white;
-    border: 2px solid var(--color-oatmeal);
-    /* border-radius: 10px; */
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-.type-option-btn:hover {
-    border-color: var(--color-accent-primary);
-    background-color: rgba(139, 154, 127, 0.05);
-    transform: translateY(-2px);
-}
-
-.type-icon {
-    font-size: 32px;
-    line-height: 1;
-}
-
-.type-name {
-    font-size: 13px;
-    font-weight: 600;
-    color: var(--color-text-primary);
-    text-align: center;
-}
-
-.type-desc {
-    font-size: 11px;
-    color: var(--color-text-secondary);
-    text-align: center;
-    line-height: 1.3;
-}
-
-/* ==================== 表单 ==================== */
-.task-form {
-    padding: 24px;
-}
-
-.form-group {
-    margin-bottom: 20px;
-}
-
-.form-group.checkbox {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.form-label {
-    display: block;
-    font-size: 13px;
-    font-weight: 600;
-    color: var(--color-text-primary);
-    margin-bottom: 8px;
-}
-
-.form-label .required {
-    color: #c62828;
-}
-
-.form-input,
-.form-textarea,
-.form-select {
-    width: 100%;
-    padding: 10px 12px;
-    border: 1px solid var(--color-oatmeal);
-    /* border-radius: 8px; */
-    font-size: 13px;
-    color: var(--color-text-primary);
-    transition: all 0.3s ease;
-}
-
-.form-input::placeholder,
-.form-textarea::placeholder {
-    color: var(--color-text-secondary);
-}
-
-.form-input:focus,
-.form-textarea:focus,
-.form-select:focus {
-    outline: none;
-    border-color: var(--color-accent-primary);
-    box-shadow: 0 0 0 3px rgba(139, 154, 127, 0.1);
-}
-
-.form-textarea {
-    resize: vertical;
-}
-
-.form-checkbox {
-    width: 18px;
-    height: 18px;
-    cursor: pointer;
-    accent-color: var(--color-accent-primary);
-}
-
-.form-actions {
-    display: flex;
     gap: 12px;
-    justify-content: flex-end;
-    margin-top: 28px;
-    padding-top: 20px;
-    border-top: 1px solid var(--color-oatmeal);
-}
+  }
 
-/* 表单提示文本 */
-.form-hint {
-    font-size: 12px;
-    color: var(--color-text-secondary);
-    margin-top: 8px;
-    padding: 12px;
-    background-color: var(--color-ivory);
-    /* border-radius: 4px; */
-    line-height: 1.5;
-}
+  .filter-buttons {
+    width: 100%;
+  }
 
-/* 打卡类型显示 */
-.checkin-type-display {
-    padding: 12px 16px;
-    background-color: var(--color-ivory);
-    border-left: 4px solid var(--color-accent-primary);
-    /* border-radius: 4px; */
-    font-size: 14px;
-    font-weight: 600;
-    color: var(--color-text-primary);
-}
-
-/* 禁用的表单控�?*/
-.form-textarea:disabled,
-.form-input:disabled {
-    background-color: var(--color-ivory);
-    color: var(--color-text-secondary);
-    cursor: not-allowed;
-}
-
-/* ==================== 错误提示 ==================== */
-.error-banner {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 12px 16px;
-    background-color: rgba(198, 40, 40, 0.08);
-    border-left: 4px solid #c62828;
-    color: #c62828;
-    font-size: 13px;
-    margin-top: 20px;
-}
-
-.btn-close {
-    background: none;
-    border: none;
-    font-size: 18px;
-    color: #c62828;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-.btn-close:hover {
-    transform: scale(1.2);
-}
-
-/* ==================== 动画 ==================== */
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-    }
-
-    to {
-        opacity: 1;
-    }
-}
-
-@keyframes fadeInDown {
-    from {
-        opacity: 0;
-        transform: translateY(-20px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-@keyframes fadeInUp {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-@keyframes slideUp {
-    from {
-        opacity: 0;
-        transform: translateY(12px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-@keyframes slideDown {
-    from {
-        opacity: 0;
-        transform: translateY(-12px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-/* ==================== 响应式设�?==================== */
-@media (max-width: 768px) {
-    .page-title {
-        font-size: 28px;
-    }
-
-    .page-subtitle {
-        font-size: 12px;
-    }
-
-    .todolist-main {
-        padding: 20px 16px;
-    }
-
-    .todolist-stats {
-        grid-template-columns: repeat(4, 1fr);
-        gap: 12px;
-    }
-
-    .stat-value {
-        font-size: 24px;
-    }
-
-    .todolist-title {
-        font-size: 24px;
-    }
-
-    .toolbar-left,
-    .toolbar-right {
-        width: 100%;
-    }
-
-    .toolbar-right {
-        flex-direction: row;
-    }
-
-    .btn {
-        width: 100%;
-        justify-content: center;
-    }
-
-    .todolist-filters {
-        gap: 5px;
-    }
-
-    .filter-btn {
-        padding: 6px 12px;
-        font-size: 11px;
-    }
-
-    .task-item {
-        flex-direction: column;
-    }
-
-    .task-actions {
-        width: 100%;
-        justify-content: flex-start;
-    }
-
-    .modal-content {
-        max-height: 95vh;
-        margin: 20px;
-    }
-
-    .form-actions {
-        flex-direction: column-reverse;
-    }
-
-    .form-actions .btn {
-        width: 100%;
-    }
-}
-
-/* ==================== 分页 ==================== */
-.pagination {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 16px;
-    margin-top: 32px;
-    padding-top: 24px;
-    border-top: 1px solid var(--color-border);
-}
-
-.pagination-btn {
-    padding: 10px 20px;
-    background: white;
-    border: 1px solid var(--color-border);
-    color: var(--color-text-primary);
-    border-radius: 4px;
-    font-size: 12px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    font-family: 'Montserrat', sans-serif;
-}
-
-.pagination-btn:hover:not(:disabled) {
-    background: var(--color-accent-primary);
-    color: white;
-    border-color: var(--color-accent-primary);
-    transform: translateY(-1px);
-    box-shadow: var(--shadow-sm);
-}
-
-.pagination-btn:disabled {
-    opacity: 0.4;
-    cursor: not-allowed;
-}
-
-.page-indicator {
-    font-size: 12px;
-    color: var(--color-text-secondary);
-    font-weight: 600;
-    font-family: 'Montserrat', sans-serif;
-    min-width: 120px;
-    text-align: center;
-}
-
-@media (max-width: 768px) {
-    .pagination {
-        gap: 12px;
-    }
-
-    .pagination-btn {
-        padding: 8px 16px;
-        font-size: 11px;
-    }
-
-    .page-indicator {
-        font-size: 11px;
-        min-width: 100px;
-    }
+  .task-actions {
+    opacity: 1;
+  }
 }
 
 @media (max-width: 480px) {
-    .page-title {
-        font-size: 24px;
-    }
+  .todolist-wrapper {
+    padding: 12px 16px;
+    gap: 16px;
+  }
 
-    .todolist-main {
-        padding: 16px 12px;
-    }
+  .todolist-title {
+    font-size: 20px;
+  }
 
-    .todolist-title {
-        font-size: 20px;
-    }
+  .todolist-subtitle {
+    font-size: 11px;
+  }
 
-    .todolist-stats {
-        grid-template-columns: repeat(4, 1fr);
-    }
+  .stats-section {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
 
-    .stat-value {
-        font-size: 28px;
-    }
+  .stat-card {
+    padding: 12px;
+    font-size: 12px;
+  }
 
-    .stat-label {
-        font-size: 11px;
-    }
+  .stat-label {
+    font-size: 10px;
+  }
 
-    .todolist-header {
-        margin-bottom: 20px;
-    }
+  .stat-value {
+    font-size: 16px;
+  }
 
-    .title-container {
-        padding: 16px;
-    }
+  .btn-create-task {
+    padding: 8px 12px;
+    font-size: 11px;
+  }
 
-    .task-item {
-        padding: 12px;
-    }
+  .btn-create-task span {
+    display: none;
+  }
 
-    .task-title {
-        font-size: 13px;
-    }
+  .search-input {
+    font-size: 11px;
+  }
 
-    .task-meta {
-        gap: 5px;
-        font-size: 10px;
-    }
+  .filter-btn {
+    font-size: 10px;
+    padding: 6px 10px;
+  }
+
+  .task-item {
+    padding: 10px 12px;
+    gap: 10px;
+  }
+
+  .task-title {
+    font-size: 12px;
+  }
+
+  .task-checkbox input {
+    width: 16px;
+    height: 16px;
+  }
+
+  .btn-action,
+  .btn-accept,
+  .btn-reject,
+  .btn-edit,
+  .btn-delete {
+    width: 24px;
+    height: 24px;
+    font-size: 10px;
+  }
+
+  .btn-delete svg {
+    width: 12px;
+    height: 12px;
+  }
 }

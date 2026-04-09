@@ -1,9 +1,15 @@
 <template>
-  <div class="page">
-    <AppHeader />
+  <div class="history-layout">
+    <!-- 侧栏 -->
+    <Sidebar ref="sidebarRef" />
 
-    <main class="content">
-      <div class="history-wrapper">
+    <div class="main-content">
+      <!-- 头部 -->
+      <TopHeader @toggle-sidebar="toggleSidebar" />
+
+      <!-- 内容区 -->
+      <div class="content-area">
+        <div class="history-wrapper">
         <!-- 页面头部 -->
         <div class="history-header">
           <h1 class="history-title">历史记录</h1>
@@ -311,17 +317,22 @@
             下一页 →
           </button>
         </div>
+        </div>
       </div>
-    </main>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { onMounted, watch, ref } from 'vue'
-import AppHeader from '../components/AppHeader.vue'
+import Sidebar from '../components/homeView/Sidebar.vue'
+import TopHeader from '../components/homeView/TopHeader.vue'
 import { useHistory} from '../composables/useHistory'
 import { getCurrentDate, formatTime } from '../utils/dateTime'
 import type { HistoryRecord } from '../composables/useHistory'
+
+// 侧栏引用
+const sidebarRef = ref<InstanceType<typeof Sidebar>>()
 
 // 筛选面板折叠状态（默认关闭）
 const isFilterPanelOpen = ref(false)
@@ -366,6 +377,11 @@ onMounted(() => {
   }
   loadRecords()
 })
+
+// 侧栏切换
+const toggleSidebar = () => {
+  sidebarRef.value?.toggleSidebarFromHeader()
+}
 </script>
 
 <style scoped>

@@ -20,8 +20,9 @@
                     <img src="/noun-main-topbar-bell.svg" class="notification-btn" alt="">
                     <span class="notification-badge">{{ notificationCount }}</span>
                 </div>
-                <div class="user-profile">
-                    <img v-if="currentUser.avatar" :src="currentUser.avatar" :alt="currentUser.name" class="profile-avatar" />
+                <div class="user-profile" @click="openProfile">
+                    <img v-if="currentUser.avatar" :src="currentUser.avatar" :alt="currentUser.name"
+                        class="profile-avatar" />
                     <img v-else :src="`/noun-main-topbar-user.svg`" :alt="currentUser.name" class="profile-avatar" />
                 </div>
             </div>
@@ -32,12 +33,14 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
 import { useAuthStore } from '../../stores/auth'
+import { useRouter } from 'vue-router'
 
 const authStore = useAuthStore()
+const router = useRouter()
 
 const emit = defineEmits<{
-  'toggle-sidebar': []
-  'toggle-ai-chat': []
+    'toggle-sidebar': []
+    'toggle-ai-chat': []
 }>()
 
 // 从认证 store 获取用户信息
@@ -47,11 +50,17 @@ const currentUser = computed(() => ({
     email: authStore.userInfo?.email || 'user@example.com'
 }))
 
+const openProfile = () => {
+    // 这里可以添加打开用户个人信息的逻辑，例如跳转到个人信息页
+    router.push(`/profile`)
+}
+
 const notificationCount = ref(3)
 
 // 切换 AI 聊天
 function toggleAIChat() {
-  emit('toggle-ai-chat')
+    console.log('Toggling AI Chat')
+    emit('toggle-ai-chat')
 }
 
 // 页面挂载时获取用户信息

@@ -2,26 +2,23 @@
   <div class="profile-layout">
     <!-- 侧边栏 -->
     <Sidebar ref="sidebarRef" />
-    
+
     <!-- 主内容区 -->
     <div class="main-content">
-      <TopHeader @toggle-sidebar="toggleSidebar" />
-      
+      <TopHeader @toggle-sidebar="toggleSidebar" @toggle-ai-chat="toggleAIChat" />
+
       <div class="content-area">
         <!-- 左侧: 用户基本信息卡片 -->
         <div class="profile-left">
           <!-- 用户卡片 -->
           <div class="user-card">
             <div class="user-avatar-wrapper">
-              <img 
-                v-if="userInfo?.avatar_url" 
-                :src="userInfo.avatar_url" 
-                :alt="userInfo.nickname || '用户头像'"
-                class="user-avatar"
-              />
+              <img v-if="userInfo?.avatar_url" :src="userInfo.avatar_url" :alt="userInfo.nickname || '用户头像'"
+                class="user-avatar" />
               <div v-else class="user-avatar-empty">
                 <svg viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
+                  <path
+                    d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
                 </svg>
               </div>
             </div>
@@ -138,6 +135,8 @@
       </div>
     </div>
   </div>
+  <!-- AI 聊天浮窗 -->
+  <AIChatFloatingWindow :isOpen="isAIChatOpen" @close="closeAIChat" />
 </template>
 
 <script setup lang="ts">
@@ -147,6 +146,7 @@ import Sidebar from '../components/homeView/Sidebar.vue'
 import TopHeader from '../components/homeView/TopHeader.vue'
 import { useAuthStore } from '../stores/auth'
 import { useUserProfile } from '../composables/useUserProfile'
+import AIChatFloatingWindow from '../components/AIChatFloatingWindow.vue'
 
 const router = useRouter()
 const authStore = useAuthStore()
@@ -179,6 +179,20 @@ const handleLogout = () => {
     authStore.logout()
     router.push('/auth')
   }
+}
+const isAIChatOpen = ref(false)
+
+// 切换 AI 聊天浮窗
+const toggleAIChat = () => {
+  isAIChatOpen.value = !isAIChatOpen.value
+  if (!isAIChatOpen.value) {
+    closeAIChat()
+  }
+}
+
+// 关闭 AI 聊天浮窗
+const closeAIChat = () => {
+  isAIChatOpen.value = false
 }
 
 onMounted(async () => {
