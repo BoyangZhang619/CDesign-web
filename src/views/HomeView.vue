@@ -49,14 +49,27 @@ const closeAIChat = () => {
   margin: 0 auto;
   display: flex;
   height: calc(100vh - 10px);
-  background: linear-gradient(135deg, #D4C4B0 0%, #E8DDD0 100%);
+  background: none;
   border: 5px solid #5A7A87;
   border-radius: 20px;
   overflow: hidden;
-  border-radius: 20px;
   box-sizing: content-box;
+  position: relative;
 }
 
+.home-layout::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: url('/bg.png') center/cover no-repeat;
+  background-attachment: fixed;
+  filter: blur(8px);
+  pointer-events: none;
+  z-index: -1;
+}
 .main-content {
   flex: 1;
   display: flex;

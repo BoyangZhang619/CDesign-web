@@ -2,12 +2,27 @@
 .history-layout {
   margin: 0 auto;
   display: flex;
-  height: calc(100vh - 10px);
-  background: linear-gradient(135deg, #D4C4B0 0%, #E8DDD0 100%);
+  height: calc(100dvh - 10px);
+  background: none;
   border: 5px solid #5A7A87;
   border-radius: 20px;
   overflow: hidden;
   box-sizing: content-box;
+  position: relative;
+}
+
+.history-layout::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: url('/bg.png') center/cover no-repeat;
+  background-attachment: fixed;
+  filter: blur(8px);
+  pointer-events: none;
+  z-index: 0;
 }
 
 .history-layout .main-content {
@@ -15,6 +30,8 @@
   display: flex;
   flex-direction: column;
   transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  z-index: 1;
 }
 
 /* 侧栏展开时 */
@@ -910,7 +927,7 @@
   box-shadow: var(--shadow-xl);
   max-width: 500px;
   width: 100%;
-  max-height: 90vh;
+  max-height: 90dvh;
   overflow-y: auto;
   animation: slideUp 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
@@ -1127,6 +1144,13 @@
 
 /* 响应式调整 */
 @media (max-width: 768px) {
+  .history-layout {
+    width: 100%;
+    border: none;
+    border-radius: 0;
+    height: 100dvh;
+  }
+
   .record-item-content {
     padding: 12px;
     gap: 12px;

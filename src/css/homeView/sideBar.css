@@ -4,7 +4,7 @@
     left: 0;
     top: 0;
     width: 75px;
-    height: calc(100vh - 9px);
+    height: calc(100dvh - 9px);
     background: linear-gradient(135deg, #5A7A87 0%, #7A8F95 100%);
     display: flex;
     flex-direction: column;
@@ -205,7 +205,7 @@
     box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
     max-width: 500px;
     width: 90%;
-    max-height: 80vh;
+    max-height: 80dvh;
     overflow-y: auto;
     animation: slideUp 0.3s ease;
 }
@@ -374,8 +374,8 @@
         left: 0;
         top: 0;
         width: 75px;
-        height: 100vh;
-        transform: translateX(-100%);
+        height: 100dvh;
+        transform: translateX(-120%);
         transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     }
 

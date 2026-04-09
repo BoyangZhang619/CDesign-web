@@ -10,219 +10,25 @@
       <!-- 内容区 -->
       <div class="content-area">
         <div class="todolist-wrapper">
-          <!-- 页面头部 -->
-          <div class="todolist-header">
-            <div class="header-info">
-              <h1 class="todolist-title">任务清单</h1>
-              <p class="todolist-subtitle">管理你的日常任务和健康目标</p>
-            </div>
-            <div class="header-actions">
-              <button @click="handleCreateTask" class="btn-create-task" title="创建任务">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <line x1="12" y1="5" x2="12" y2="19"></line>
-                  <line x1="5" y1="12" x2="19" y2="12"></line>
-                </svg>
-                <span>新任务</span>
-              </button>
-            </div>
-          </div>
-
-          <!-- 统计卡片 -->
-          <div class="stats-section">
-            <div class="stat-card">
-              <div class="stat-icon">📊</div>
-              <div class="stat-info">
-                <div class="stat-label">总任务</div>
-                <div class="stat-value">{{ stats.total }}</div>
-              </div>
-            </div>
-            <div class="stat-card">
-              <div class="stat-icon">✅</div>
-              <div class="stat-info">
-                <div class="stat-label">已完成</div>
-                <div class="stat-value">{{ stats.completed }}</div>
-              </div>
-            </div>
-            <div class="stat-card">
-              <div class="stat-icon">⏳</div>
-              <div class="stat-info">
-                <div class="stat-label">待完成</div>
-                <div class="stat-value">{{ stats.pending }}</div>
-              </div>
-            </div>
-            <div class="stat-card">
-              <div class="stat-icon">⚠️</div>
-              <div class="stat-info">
-                <div class="stat-label">逾期</div>
-                <div class="stat-value">{{ stats.overdue }}</div>
-              </div>
-            </div>
-          </div>
-
-          <!-- 进度条 -->
-          <div class="progress-section">
-            <div class="progress-header">
-              <span class="progress-label">今日完成率</span>
-              <span class="progress-percentage">{{ completionRate }}%</span>
-            </div>
-            <div class="progress-bar-container">
-              <div class="progress-bar" :style="{ width: completionRate + '%' }"></div>
-            </div>
-          </div>
-
-          <!-- 搜索和筛选 -->
-          <div class="toolbar-section">
-            <input 
-              v-model="searchKeyword" 
-              type="text" 
-              class="search-input" 
-              placeholder="🔍 搜索任务..."
-              @input="handleSearch"
-            />
-            <div class="filter-buttons">
-              <button 
-                v-for="status in ['all', 'pending', 'completed', 'overdue']"
-                :key="status"
-                @click="setFilter(status)"
-                :class="['filter-btn', { active: currentFilter === status }]"
-              >
-                {{ statusLabels[status as keyof typeof statusLabels] }}
-              </button>
-            </div>
-          </div>
-
-          <!-- 任务列表 -->
-          <div class="tasks-container">
-            <!-- 空状态 -->
-            <div v-if="filteredTasks.length === 0" class="empty-state">
-              <div class="empty-icon">📭</div>
-              <h3 class="empty-title">暂无任务</h3>
-              <p class="empty-text">创建你的第一个任务来开始吧</p>
-            </div>
-
-            <!-- 任务列表 -->
-            <div v-else class="task-list">
-              <!-- 打卡任务 -->
-              <div v-if="checkinTasks.length > 0" class="task-group">
-                <h3 class="group-title">🎯 打卡任务</h3>
-                <div class="group-tasks">
-                  <div 
-                    v-for="task in checkinTasks" 
-                    :key="task.id"
-                    :class="['task-item', { 
-                      completed: task.status === 'completed', 
-                      overdue: task.status === 'overdue' 
-                    }]"
-                  >
-                    <div class="task-checkbox">
-                      <input 
-                        type="checkbox" 
-                        :checked="task.status === 'completed'"
-                        @change="toggleTask(task.id)"
-                      />
-                    </div>
-                    <div class="task-content">
-                      <div class="task-title">{{ task.title }}</div>
-                      <div class="task-meta">
-                        <span class="task-date">{{ formatDate(task.dueDate) }}</span>
-                        <span :class="['task-priority', task.priority]">{{ task.priority }}</span>
-                      </div>
-                    </div>
-                    <div class="task-actions">
-                      <button @click="openTask(task.id)" class="btn-action" title="查看">
-                        →
-                      </button>
-                      <button @click="deleteTask(task.id)" class="btn-delete" title="删除">
-                        <svg viewBox="0 0 24 24" fill="currentColor">
-                          <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-9l-1 1H5v2h14V4z"/>
-                        </svg>
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <!-- AI 建议任务 -->
-              <div v-if="aiTasks.length > 0" class="task-group">
-                <h3 class="group-title">🤖 AI 建议</h3>
-                <div class="group-tasks">
-                  <div 
-                    v-for="task in aiTasks" 
-                    :key="task.id"
-                    :class="['task-item', 'ai-task', { 
-                      completed: task.status === 'completed', 
-                      overdue: task.status === 'overdue' 
-                    }]"
-                  >
-                    <div class="task-checkbox">
-                      <input 
-                        type="checkbox" 
-                        :checked="task.status === 'completed'"
-                        @change="toggleTask(task.id)"
-                      />
-                    </div>
-                    <div class="task-content">
-                      <div class="task-title">{{ task.title }}</div>
-                      <div v-if="task.reason" class="task-reason">{{ task.reason }}</div>
-                      <div class="task-meta">
-                        <span class="task-date">{{ formatDate(task.dueDate) }}</span>
-                        <span :class="['task-priority', task.priority]">{{ task.priority }}</span>
-                      </div>
-                    </div>
-                    <div class="task-actions">
-                      <button @click="acceptTask(task.id)" class="btn-accept" title="接受">
-                        ✅
-                      </button>
-                      <button @click="rejectTask(task.id)" class="btn-reject" title="驳回">
-                        ❌
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <!-- 自定义任务 -->
-              <div v-if="customTasks.length > 0" class="task-group">
-                <h3 class="group-title">✏️ 自定义任务</h3>
-                <div class="group-tasks">
-                  <div 
-                    v-for="task in customTasks" 
-                    :key="task.id"
-                    :class="['task-item', { 
-                      completed: task.status === 'completed', 
-                      overdue: task.status === 'overdue' 
-                    }]"
-                  >
-                    <div class="task-checkbox">
-                      <input 
-                        type="checkbox" 
-                        :checked="task.status === 'completed'"
-                        @change="toggleTask(task.id)"
-                      />
-                    </div>
-                    <div class="task-content">
-                      <div class="task-title">{{ task.title }}</div>
-                      <div v-if="task.description" class="task-description">{{ task.description }}</div>
-                      <div class="task-meta">
-                        <span class="task-date">{{ formatDate(task.dueDate) }}</span>
-                        <span :class="['task-priority', task.priority]">{{ task.priority }}</span>
-                      </div>
-                    </div>
-                    <div class="task-actions">
-                      <button @click="editTask(task.id)" class="btn-edit" title="编辑">
-                        ✏️
-                      </button>
-                      <button @click="deleteTask(task.id)" class="btn-delete" title="删除">
-                        <svg viewBox="0 0 24 24" fill="currentColor">
-                          <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-9l-1 1H5v2h14V4z"/>
-                        </svg>
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+          <TodolistHeader @create="handleCreateTask" />
+          <TodolistStats :stats="stats" :completion-rate="completionRate" />
+          <TodolistToolbar 
+            :search-keyword="searchKeyword"
+            :current-filter="currentFilter"
+            @search="searchKeyword = $event"
+            @filter="setFilter"
+          />
+          <TodolistEmpty v-if="filteredTasks.length === 0" />
+          <TodolistGroups 
+            v-else
+            :filtered-tasks="filteredTasks"
+            @toggle="toggleTask"
+            @open="openTask"
+            @edit="editTask"
+            @delete="deleteTask"
+            @accept="acceptTask"
+            @reject="rejectTask"
+          />
         </div>
       </div>
     </div>
@@ -233,6 +39,11 @@
 import { ref, computed, onMounted } from 'vue'
 import Sidebar from '../components/homeView/Sidebar.vue'
 import TopHeader from '../components/homeView/TopHeader.vue'
+import TodolistHeader from '../components/todolistView/TodolistHeader.vue'
+import TodolistStats from '../components/todolistView/TodolistStats.vue'
+import TodolistToolbar from '../components/todolistView/TodolistToolbar.vue'
+import TodolistEmpty from '../components/todolistView/TodolistEmpty.vue'
+import TodolistGroups from '../components/todolistView/TodolistGroups.vue'
 
 interface Task {
   id: string
@@ -266,14 +77,6 @@ const completionRate = computed(() => {
   return Math.round((stats.value.completed / stats.value.total) * 100)
 })
 
-// 状态标签
-const statusLabels = {
-  all: '全部',
-  pending: '待完成',
-  completed: '已完成',
-  overdue: '逾期'
-}
-
 // 过滤后的任务
 const filteredTasks = computed(() => {
   let result = tasks.value
@@ -293,18 +96,9 @@ const filteredTasks = computed(() => {
   return result
 })
 
-// 按类型分类
-const checkinTasks = computed(() => filteredTasks.value.filter(t => t.type === 'checkin'))
-const aiTasks = computed(() => filteredTasks.value.filter(t => t.type === 'ai'))
-const customTasks = computed(() => filteredTasks.value.filter(t => t.type === 'custom'))
-
 // 方法
 const toggleSidebar = () => {
   sidebarRef.value?.toggleSidebarFromHeader()
-}
-
-const handleSearch = () => {
-  // 搜索逻辑由 computed 自动处理
 }
 
 const setFilter = (status: string) => {
@@ -349,19 +143,6 @@ const acceptTask = (taskId: string) => {
 
 const rejectTask = (taskId: string) => {
   tasks.value = tasks.value.filter(t => t.id !== taskId)
-}
-
-const formatDate = (dateStr: string): string => {
-  if (!dateStr) return '-'
-  const date = new Date(dateStr)
-  const today = new Date()
-  const tomorrow = new Date(today)
-  tomorrow.setDate(tomorrow.getDate() + 1)
-  
-  if (date.toDateString() === today.toDateString()) return '今天'
-  if (date.toDateString() === tomorrow.toDateString()) return '明天'
-  
-  return date.toLocaleDateString('zh-CN', { month: 'short', day: 'numeric' })
 }
 
 onMounted(() => {

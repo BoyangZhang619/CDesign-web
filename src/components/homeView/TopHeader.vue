@@ -77,9 +77,10 @@ onMounted(async () => {
 
 <style scoped>
 .top-header {
-    background: linear-gradient(135deg, #F5F2ED 0%, #EBE5DF 100%);
+    background: linear-gradient(135deg, #F5F2EDaf 0%, #EBE5DFaf 100%);
     padding: 20px 30px;
     border-bottom: 1px solid #D4C4B0;
+    box-shadow: #a4a4a4af 0px 2px 4px;
 }
 
 .header-content {

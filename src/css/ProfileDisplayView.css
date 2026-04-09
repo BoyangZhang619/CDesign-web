@@ -18,7 +18,7 @@
 .page {
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
+  min-height: 100dvh;
   background: linear-gradient(135deg, #E8DDD0 0%, #F3ECE4 50%, #EDE7DD 100%);
   font-family: 'Montserrat', sans-serif;
   color: var(--color-text-primary);
@@ -100,7 +100,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #FEFCFA 0%, #F8F6F3 100%);
+  /* background: linear-gradient(135deg, #FEFCFA 0%, #F8F6F3 100%); */
   border: 2px solid var(--color-border);
   border-radius: 15px;
   overflow: hidden;

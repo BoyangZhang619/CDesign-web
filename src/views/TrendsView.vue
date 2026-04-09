@@ -1,49 +1,44 @@
 <template>
-  <div class="trends-layout">
-    <!-- Sidebar -->
-    <Sidebar :active="'trends'" />
+    <div class="trends-layout">
+        <!-- Sidebar -->
+        <Sidebar ref="sidebarRef" :active="'trends'" />
 
-    <!-- Main Content -->
-    <div class="trends-main">
-      <!-- Top Header -->
-      <TopHeader title="趋势分析" :showToggle="true" @toggle="isControlPanelOpen = !isControlPanelOpen" />
+        <!-- Main Content -->
+        <div class="trends-main">
+            <!-- Top Header -->
+            <TopHeader title="趋势分析" :showToggle="true" @toggle-sidebar="toggleSidebar" />
+            <div class="content-area">
 
-      <!-- Control Panel -->
-      <TrendsControlPanel
-        v-show="isControlPanelOpen"
-        :selectedRange="selectedRange"
-        :dateRanges="dateRanges"
-        @select="selectRange"
-      />
+                <!-- Control Panel -->
+                <TrendsControlPanel v-show="isControlPanelOpen" :selectedRange="selectedRange" :dateRanges="dateRanges"
+                    @select="selectRange" />
 
-      <!-- Content Area -->
-      <div class="trends-content">
-        <!-- Loading State -->
-        <div v-if="loading" class="trends-loading">
-          加载数据中...
+                <!-- Content Area -->
+                <div class="trends-content">
+                    <!-- Loading State -->
+                    <div v-if="loading" class="trends-loading">
+                        加载数据中...
+                    </div>
+
+                    <!-- Overview Cards -->
+                    <template v-else>
+                        <TrendsOverviewCards :stats="stats" />
+                        <TrendsCharts :chartData="chartData" />
+                        <TrendsHabits :habits="habits" />
+                        <TrendsComparison :comparison="comparison" />
+                    </template>
+                </div>
+            </div>
         </div>
 
-        <!-- Overview Cards -->
-        <template v-else>
-          <TrendsOverviewCards :stats="stats" />
-          <TrendsCharts :chartData="chartData" />
-          <TrendsHabits :habits="habits" />
-          <TrendsComparison :comparison="comparison" />
-        </template>
-      </div>
+        <!-- Health Setup Modal -->
+        <HealthSetupModal :show="showHealthSetupModal" @close="handleHealthSetupClose"
+            @success="handleHealthSetupSuccess" />
     </div>
-
-    <!-- Health Setup Modal -->
-    <HealthSetupModal
-      :show="showHealthSetupModal"
-      @close="handleHealthSetupClose"
-      @success="handleHealthSetupSuccess"
-    />
-  </div>
 </template>
 
 <script setup lang="ts">
-import { onMounted } from 'vue'
+import { onMounted, ref } from 'vue'
 import Sidebar from '../components/homeView/Sidebar.vue'
 import TopHeader from '../components/homeView/TopHeader.vue'
 import HealthSetupModal from '../components/HealthSetupModal.vue'
@@ -55,37 +50,46 @@ import TrendsComparison from '../components/trendsView/TrendsComparison.vue'
 import { useAuthForm } from '../composables/useAuthForm'
 import { useTrendsView } from '../composables/useTrendsView'
 
+const sidebarRef = ref()
+
 const { checkHealthInfoNeeded } = useAuthForm()
 const {
-  loading,
-  selectedRange,
-  isControlPanelOpen,
-  showHealthSetupModal,
-  chartData,
-  dateRanges,
-  stats,
-  habits,
-  comparison,
-  handleHealthSetupClose,
-  handleHealthSetupSuccess,
-  selectRange,
-  initTrends,
-  setupRangeWatch
+    loading,
+    selectedRange,
+    isControlPanelOpen,
+    showHealthSetupModal,
+    chartData,
+    dateRanges,
+    stats,
+    habits,
+    comparison,
+    handleHealthSetupClose,
+    handleHealthSetupSuccess,
+    selectRange,
+    initTrends,
+    setupRangeWatch
 } = useTrendsView()
 
-onMounted(async () => {
-  try {
-    const needsHealthInfo = await checkHealthInfoNeeded()
-    if (needsHealthInfo) {
-      showHealthSetupModal.value = true
-      return
+// 切换侧栏
+function toggleSidebar() {
+    if (sidebarRef.value) {
+        sidebarRef.value.toggleSidebarFromHeader()
     }
+}
 
-    await initTrends()
-    setupRangeWatch()
-  } catch (err) {
-    console.error('页面初始化错误:', err)
-  }
+onMounted(async () => {
+    try {
+        const needsHealthInfo = await checkHealthInfoNeeded()
+        if (needsHealthInfo) {
+            showHealthSetupModal.value = true
+            return
+        }
+
+        await initTrends()
+        setupRangeWatch()
+    } catch (err) {
+        console.error('页面初始化错误:', err)
+    }
 })
 </script>
 

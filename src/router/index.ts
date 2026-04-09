@@ -12,7 +12,6 @@ import SleepCheckinDisplayView from '../views/SleepCheckinDisplayView.vue'
 import ExerciseCheckinDisplayView from '../views/ExerciseCheckinDisplayView.vue'
 import PortraitView from '../views/PortraitView.vue'
 import TrendsView from '../views/TrendsView.vue'
-import GoalsView from '../views/GoalsView.vue'
 import TodolistView from '../views/TodolistView.vue'
 
 import { useAuthStore } from '../stores/auth'
@@ -130,15 +129,6 @@ const routes = [
     meta: {
       requiresAuth: true,
       title: 'StuHeal - 健康趋势'
-    }
-  },
-  {
-    path: '/goals',
-    name: 'goals',
-    component: GoalsView,
-    meta: {
-      requiresAuth: true,
-      title: 'StuHeal - 目标设定'
     }
   },
   {

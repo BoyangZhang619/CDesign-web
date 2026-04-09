@@ -113,7 +113,10 @@ const navItems = [
 function handleNavClick(path: string) {
     // 仅当侧栏打开时才跳转
     if (isExpanded.value) {
-        router.push(path)
+        isExpanded.value = false // 点击导航项后自动关闭侧栏
+        setTimeout(() => {
+            router.push(path)
+        }, 300) // 等待侧栏关闭动画完成后再跳转
     } else {
         // 如果侧栏关闭，先打开侧栏
         isExpanded.value = true

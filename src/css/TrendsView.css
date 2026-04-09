@@ -1,0 +1,124 @@
+/* TrendsView - Main Layout */
+
+.trends-layout {
+  margin: 0 auto;
+  display: flex;
+  height: calc(100dvh - 10px);
+  background: none;
+  border: 5px solid #5A7A87;
+  border-radius: 20px;
+  overflow: hidden;
+  box-sizing: content-box;
+  position: relative;
+}
+
+.trends-layout::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: url('/bg.png') center/cover no-repeat;
+  background-attachment: fixed;
+  filter: blur(8px);
+  pointer-events: none;
+  z-index: -1;
+}
+
+.trends-main {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  position: relative;
+  z-index: 1;
+}
+
+.trends-charts-section {
+  display: flex;
+  flex-direction: column;
+  margin: 20px 0;
+}
+.trends-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 20px 30px;
+  gap: 20px;
+  position: relative;
+  z-index: 1;
+}
+
+
+.content-area {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 0;
+  position: relative;
+  z-index: 1;
+}
+
+/* Loading State */
+.trends-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 400px;
+  font-size: 16px;
+  color: #9DB4A0;
+  font-weight: 500;
+}
+
+/* Scrollbar styling */
+.trends-content::-webkit-scrollbar {
+  width: 8px;
+}
+
+.trends-content::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.trends-content::-webkit-scrollbar-thumb {
+  background-color: #d0ccc4;
+  border-radius: 4px;
+}
+
+.trends-content::-webkit-scrollbar-thumb:hover {
+  background-color: #b8b0a8;
+}
+
+/* Responsive Design */
+
+@media (max-width: 1024px) {
+  .trends-layout {
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 768px) {
+  .trends-layout {
+    width: 100%;
+    border: none;
+    border-radius: 0;
+    height: 100dvh;
+  }
+
+  .trends-content {
+    padding: 16px 20px;
+    gap: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .trends-content {
+    padding: 12px 16px;
+    gap: 12px;
+  }
+}

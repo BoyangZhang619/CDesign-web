@@ -37,13 +37,13 @@
 
 .health-setup-modal {
   overflow: hidden;
-  background: linear-gradient(135deg, var(--color-light-cream) 0%, var(--color-pale-cream) 100%);
+  background: linear-gradient(135deg, #fff6 0%, #fffa 100%);
   border-radius: 20px;
   box-shadow: var(--shadow-lg), 0 4px 12px rgba(0, 0, 0, 0.06);
   border: 2px solid rgba(255, 255, 255, 0.8);
   max-width: 500px;
   width: 90%;
-  max-height: 85vh;
+  max-height: 85dvh;
   display: flex;
   flex-direction: column;
   animation: slideUp 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -54,7 +54,7 @@
 .modal-header {
   padding: 32px 28px 24px;
   border-bottom: 2px solid var(--color-border);
-  background: linear-gradient(135deg, #FEFCFA 0%, #F8F6F3 100%);
+  background: linear-gradient(135deg, #FEFCFA60 0%, #F8F6F3AA 100%);
 }
 
 .modal-title {
@@ -364,7 +364,7 @@
 @media (max-width: 640px) {
   .health-setup-modal {
     width: 95%;
-    max-height: 90vh;
+    max-height: 90dvh;
   }
 
   .modal-header {
@@ -388,7 +388,7 @@
   }
 
   .form-actions {
-    flex-direction: column-reverse;
+    /* flex-direction: column-reverse; */
     gap: 8px;
   }
 

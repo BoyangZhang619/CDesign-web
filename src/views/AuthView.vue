@@ -144,5 +144,5 @@ const {
 </script>
 
 <style scoped>
-@import '@/css/AuthView_new.css';
+@import '@/css/AuthView.css';
 </style>
