@@ -1,0 +1,77 @@
+.trends-control-panel {
+  background-color: #f8f6f3;
+  border-bottom: 1px solid #e8e1d6;
+  padding: 20px 30px;
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  flex-wrap: wrap;
+  transition: all 0.3s ease;
+}
+
+.trends-range-selector {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.trends-range-btn {
+  padding: 8px 16px;
+  border: 1px solid #e8e1d6;
+  background-color: #fefcfa;
+  color: #5a7a87;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  white-space: nowrap;
+}
+
+.trends-range-btn:hover {
+  background-color: #f8f6f3;
+  border-color: #9db4a0;
+  color: #5a7a87;
+}
+
+.trends-range-btn.active {
+  background-color: #9db4a0;
+  color: #fefcfa;
+  border-color: #9db4a0;
+  box-shadow: 0 2px 8px rgba(157, 180, 160, 0.3);
+}
+
+@media (max-width: 768px) {
+  .trends-control-panel {
+    padding: 16px 20px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .trends-range-selector {
+    width: 100%;
+    gap: 8px;
+  }
+}
+
+@media (max-width: 480px) {
+  .trends-control-panel {
+    padding: 12px 15px;
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .trends-range-selector {
+    width: 100%;
+    gap: 6px;
+    overflow-x: auto;
+    flex-wrap: nowrap;
+  }
+
+  .trends-range-btn {
+    padding: 6px 12px;
+    font-size: 12px;
+    flex-shrink: 0;
+  }
+}

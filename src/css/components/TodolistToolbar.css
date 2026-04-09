@@ -1,0 +1,90 @@
+/* TodolistToolbar - 搜索和筛选 */
+
+.toolbar-section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.search-input {
+  width: 100%;
+  padding: 12px 16px;
+  border: 1px solid #e8e1d6;
+  border-radius: 8px;
+  font-size: 14px;
+  background: white;
+  transition: all 0.3s ease;
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: #9DB4A0;
+  box-shadow: 0 0 0 3px rgba(157, 180, 160, 0.1);
+}
+
+.search-input::placeholder {
+  color: #c4b8ac;
+}
+
+.filter-buttons {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.filter-btn {
+  padding: 8px 16px;
+  background: white;
+  border: 1px solid #e8e1d6;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 500;
+  color: #5A7A87;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.filter-btn:hover {
+  border-color: #9DB4A0;
+  color: #9DB4A0;
+}
+
+.filter-btn.active {
+  background: #9DB4A0;
+  border-color: #9DB4A0;
+  color: white;
+  box-shadow: 0 2px 8px rgba(157, 180, 160, 0.2);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .toolbar-section {
+    gap: 10px;
+  }
+
+  .search-input {
+    padding: 10px 12px;
+    font-size: 13px;
+  }
+
+  .filter-buttons {
+    gap: 6px;
+  }
+
+  .filter-btn {
+    padding: 6px 12px;
+    font-size: 11px;
+  }
+}
+
+@media (max-width: 480px) {
+  .search-input {
+    padding: 8px 10px;
+    font-size: 12px;
+  }
+
+  .filter-btn {
+    padding: 6px 10px;
+    font-size: 10px;
+  }
+}

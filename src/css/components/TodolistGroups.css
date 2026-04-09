@@ -1,0 +1,267 @@
+/* TodolistGroups - 任务列表和分组 */
+
+.tasks-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.task-group {
+  background: white;
+  border-radius: 8px;
+  padding: 16px;
+  box-shadow: 0 2px 8px rgba(90, 122, 135, 0.1);
+}
+
+.group-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: #5A7A87;
+  margin: 0 0 12px 0;
+  padding-bottom: 12px;
+  border-bottom: 2px solid #e8e1d6;
+}
+
+.group-tasks {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* 任务项 */
+.task-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px;
+  border-radius: 6px;
+  border: 1px solid #f0ebe5;
+  transition: all 0.3s ease;
+  background: #fefcfa;
+}
+
+.task-item:hover {
+  background: white;
+  border-color: #e8e1d6;
+  box-shadow: 0 2px 6px rgba(90, 122, 135, 0.08);
+}
+
+.task-item.completed {
+  opacity: 0.6;
+  background: #f8f6f3;
+}
+
+.task-item.overdue {
+  border-color: #f5a6a6;
+  background: rgba(249, 166, 166, 0.05);
+}
+
+.task-item.ai-task {
+  border-left: 3px solid #9DB4A0;
+}
+
+/* 复选框 */
+.task-checkbox {
+  flex-shrink: 0;
+  padding-top: 2px;
+}
+
+.task-checkbox input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+  accent-color: #9DB4A0;
+}
+
+/* 任务内容 */
+.task-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.task-title {
+  font-size: 14px;
+  font-weight: 500;
+  color: #5A7A87;
+  margin-bottom: 6px;
+  word-break: break-word;
+}
+
+.task-item.completed .task-title {
+  text-decoration: line-through;
+  color: #9DB4A0;
+}
+
+.task-description,
+.task-reason {
+  font-size: 12px;
+  color: #9DB4A0;
+  margin-bottom: 8px;
+  line-height: 1.4;
+}
+
+.task-meta {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.task-date {
+  font-size: 11px;
+  color: #c4b8ac;
+  padding: 2px 8px;
+  background: #f8f6f3;
+  border-radius: 3px;
+}
+
+.task-priority {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 3px;
+  text-transform: capitalize;
+}
+
+.task-priority.high {
+  background: rgba(249, 166, 166, 0.2);
+  color: #d46565;
+}
+
+.task-priority.medium {
+  background: rgba(201, 184, 156, 0.2);
+  color: #c9a85c;
+}
+
+.task-priority.low {
+  background: rgba(157, 180, 160, 0.2);
+  color: #7f9581;
+}
+
+/* 任务操作 */
+.task-actions {
+  display: flex;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.btn-action,
+.btn-edit,
+.btn-delete,
+.btn-accept,
+.btn-reject {
+  padding: 6px 10px;
+  background: white;
+  border: 1px solid #e8e1d6;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 32px;
+  height: 32px;
+}
+
+.btn-action:hover,
+.btn-edit:hover {
+  background: #f8f6f3;
+  border-color: #9DB4A0;
+  color: #9DB4A0;
+}
+
+.btn-delete:hover,
+.btn-reject:hover {
+  background: rgba(249, 166, 166, 0.1);
+  border-color: #f5a6a6;
+  color: #d46565;
+}
+
+.btn-accept:hover {
+  background: rgba(157, 180, 160, 0.1);
+  border-color: #9DB4A0;
+  color: #7f9581;
+}
+
+.btn-delete svg,
+.btn-edit,
+.btn-accept,
+.btn-reject {
+  width: 16px;
+  height: 16px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .tasks-container {
+    gap: 16px;
+  }
+
+  .task-group {
+    padding: 12px;
+  }
+
+  .task-item {
+    padding: 10px;
+    gap: 10px;
+  }
+
+  .task-title {
+    font-size: 13px;
+  }
+
+  .task-description,
+  .task-reason {
+    font-size: 11px;
+  }
+
+  .task-actions {
+    gap: 6px;
+  }
+
+  .btn-action,
+  .btn-edit,
+  .btn-delete,
+  .btn-accept,
+  .btn-reject {
+    padding: 4px 8px;
+    min-width: 28px;
+    height: 28px;
+    font-size: 11px;
+  }
+}
+
+@media (max-width: 480px) {
+  .task-item {
+    padding: 8px;
+    gap: 8px;
+  }
+
+  .task-title {
+    font-size: 12px;
+  }
+
+  .task-meta {
+    gap: 8px;
+  }
+
+  .task-date,
+  .task-priority {
+    font-size: 10px;
+    padding: 2px 6px;
+  }
+
+  .task-actions {
+    gap: 4px;
+  }
+
+  .btn-action,
+  .btn-edit,
+  .btn-delete,
+  .btn-accept,
+  .btn-reject {
+    padding: 4px 6px;
+    min-width: 24px;
+    height: 24px;
+  }
+}

@@ -1,15 +1,19 @@
 /* ===== 历史记录页布局 ===== */
 .history-layout {
+  margin: 0 auto;
   display: flex;
-  height: 100vh;
-  background: linear-gradient(135deg, #FEFCFA 0%, #F8F6F3 50%, #F3F0ED 100%);
+  height: calc(100vh - 10px);
+  background: linear-gradient(135deg, #D4C4B0 0%, #E8DDD0 100%);
+  border: 5px solid #5A7A87;
+  border-radius: 20px;
+  overflow: hidden;
+  box-sizing: content-box;
 }
 
 .history-layout .main-content {
   flex: 1;
   display: flex;
   flex-direction: column;
-  margin-left: 75px;
   transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
@@ -107,6 +111,7 @@
     opacity: 0;
     transform: translateY(-10px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -552,6 +557,7 @@
     opacity: 0;
     transform: translateY(-20px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -563,6 +569,7 @@
     opacity: 0;
     transform: translateY(20px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -573,6 +580,7 @@
   from {
     opacity: 0;
   }
+
   to {
     opacity: 1;
   }
@@ -583,6 +591,7 @@
     opacity: 0;
     transform: translateY(10px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -606,7 +615,8 @@
   .filter-panel {
     padding: 16px;
   }
-/* 
+
+  /* 
   .date-range-container {
     flex-direction: column;
   } */
@@ -910,6 +920,7 @@
     transform: translateY(20px);
     opacity: 0;
   }
+
   to {
     transform: translateY(0);
     opacity: 1;
@@ -1168,4 +1179,3 @@
     align-self: flex-end;
   }
 }
-

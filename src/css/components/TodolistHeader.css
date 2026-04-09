@@ -1,0 +1,90 @@
+/* TodolistHeader - 头部区域 */
+
+.todolist-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 10px;
+}
+
+.header-info {
+  flex: 1;
+}
+
+.todolist-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 28px;
+  font-weight: 600;
+  color: #5A7A87;
+  margin: 0 0 4px 0;
+  letter-spacing: 0.5px;
+}
+
+.todolist-subtitle {
+  font-size: 13px;
+  color: #9DB4A0;
+  margin: 0;
+  font-weight: 500;
+}
+
+.header-actions {
+  display: flex;
+  gap: 12px;
+}
+
+.btn-create-task {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  background: linear-gradient(135deg, #9DB4A0 0%, #8FA591 100%);
+  color: white;
+  border: 2px solid #8FA591;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.btn-create-task:hover {
+  background: linear-gradient(135deg, #8FA591 0%, #7F9581 100%);
+  border-color: #7F9581;
+  box-shadow: 0 4px 12px rgba(157, 180, 160, 0.2);
+  transform: translateY(-2px);
+}
+
+.btn-create-task svg {
+  width: 16px;
+  height: 16px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .todolist-title {
+    font-size: 20px;
+  }
+
+  .btn-create-task {
+    padding: 8px 12px;
+    font-size: 11px;
+  }
+
+  .btn-create-task span {
+    display: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .todolist-header {
+    gap: 10px;
+  }
+
+  .todolist-title {
+    font-size: 18px;
+  }
+
+  .todolist-subtitle {
+    font-size: 11px;
+  }
+}

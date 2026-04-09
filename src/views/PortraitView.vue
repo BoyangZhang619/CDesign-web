@@ -1,6 +1,7 @@
 <template>
-  <div class="portrait-page">
-    <AppHeader />
+  <div class="portrait-layout">
+    <!-- 侧栏 -->
+    <Sidebar ref="sidebarRef" />
 
     <!-- 健康档案设置浮窗（必须完成） -->
     <HealthSetupModal
@@ -10,719 +11,71 @@
       @success="handleHealthSetupSuccess"
     />
 
-    <!-- 主内容区 -->
-    <main class="portrait-main" v-if="!showHealthSetupModal">
-      <!-- 页面标题 -->
-      <section class="portrait-header">
-        <div class="header-content">
-          <h1 class="page-title">健康画像</h1>
-          <p class="page-subtitle">基于您的健康数据构建的个性化健康模型</p>
-        </div>
-      </section>
+    <div class="main-content">
+      <!-- 头部 -->
+      <TopHeader @toggle-sidebar="toggleSidebar" />
 
-      <!-- 健康评分卡 -->
-      <section class="portrait-score-card">
-        <!-- 卡片操作栏 -->
-        <div class="card-header">
-          <div class="card-title">健康评分</div>
-          <div class="card-actions">
-            <!-- 加载动画 -->
-            <div v-if="isRefreshing" class="loading-spinner">
-              <div class="spinner"></div>
-              <span>数据分析中...</span>
-            </div>
-            <!-- 刷新按钮 -->
-            <button 
-              v-else
-              @click="handleRefreshClick"
-              class="btn-refresh"
-              :disabled="isRefreshing"
-              title="刷新数据会使用AI重新分析您的打卡数据，可能需要较长时间"
-            >
-              刷新
-            </button>
+      <!-- 内容区 -->
+      <div class="content-area" v-if="!showHealthSetupModal">
+        <!-- 页面标题 -->
+        <section class="portrait-header">
+          <div class="header-content">
+            <h1 class="page-title">健康画像</h1>
+            <p class="page-subtitle">基于您的健康数据构建的个性化健康模型</p>
+          </div>
+        </section>
+
+        <!-- 左右布局 -->
+        <div class="portrait-main">
+          <!-- 左块：评分和维度分析 -->
+          <div class="portrait-left-block">
+            <PortraitLeftContent 
+              :portrait-data="portraitData" 
+              :is-refreshing="isRefreshing"
+              @refresh="handleRefreshClick"
+            />
+          </div>
+
+          <!-- 右块：指标、建议、历程 -->
+          <div class="portrait-right-block">
+            <PortraitRightContent 
+              :portrait-data="portraitData"
+            />
           </div>
         </div>
-
-        <div class="score-container">
-          <div class="score-circle">
-            <svg viewBox="0 0 120 120" class="score-ring">
-              <circle
-                cx="60"
-                cy="60"
-                r="54"
-                class="score-ring-bg"
-              />
-              <circle
-                cx="60"
-                cy="60"
-                r="54"
-                class="score-ring-progress"
-                :style="{ strokeDashoffset: scoreOffset }"
-              />
-            </svg>
-            <div class="score-text">
-              <div class="score-value">{{ healthScore > 0 ? healthScore : '--' }}</div>
-              <div class="score-label">{{ healthScore > 0 ? '总体评分' : '待评分' }}</div>
-            </div>
-          </div>
-
-          <div class="score-details">
-            <div class="score-item">
-              <span class="score-icon">🏃</span>
-              <span class="score-name">运动</span>
-              <div class="score-bar">
-                <div
-                  class="score-fill exercise"
-                  :style="{ width: portraitData.exerciseScore + '%' }"
-                ></div>
-              </div>
-              <span class="score-num">{{ portraitData.exerciseScore }}</span>
-            </div>
-
-            <div class="score-item">
-              <span class="score-icon">🍽️</span>
-              <span class="score-name">饮食</span>
-              <div class="score-bar">
-                <div
-                  class="score-fill meal"
-                  :style="{ width: portraitData.mealScore + '%' }"
-                ></div>
-              </div>
-              <span class="score-num">{{ portraitData.mealScore }}</span>
-            </div>
-
-            <div class="score-item">
-              <span class="score-icon">😴</span>
-              <span class="score-name">睡眠</span>
-              <div class="score-bar">
-                <div
-                  class="score-fill sleep"
-                  :style="{ width: portraitData.sleepScore + '%' }"
-                ></div>
-              </div>
-              <span class="score-num">{{ portraitData.sleepScore }}</span>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- 健康指标雷达图 -->
-      <section class="portrait-radar-section">
-        <h2 class="section-title">健康维度分析</h2>
-        <div class="radar-container">
-          <canvas ref="radarChart" class="radar-chart"></canvas>
-          <div class="radar-legend">
-            <div class="legend-item">
-              <span class="legend-color" style="background: var(--color-accent-primary)"></span>
-              <span>当前水平</span>
-            </div>
-            <div class="legend-item">
-              <span class="legend-color" style="background: var(--color-oatmeal)"></span>
-              <span>理想水平</span>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- 身体指标卡片 -->
-      <section class="portrait-metrics">
-        <h2 class="section-title">身体指标</h2>
-        <div class="metrics-grid">
-          <!-- BMI 指标 -->
-          <div class="metric-card" :class="portraitData.bmiStatus">
-            <div class="metric-icon">📏</div>
-            <div class="metric-info">
-              <div class="metric-label">BMI 指数</div>
-              <div class="metric-value">{{ portraitData.bmi > 0 ? portraitData.bmi : '待更新' }}</div>
-              <div class="metric-status">{{ portraitData.bmi > 0 ? portraitData.bmiStatus : '请完成基本信息设置' }}</div>
-            </div>
-          </div>
-
-          <!-- 心肺功能 -->
-          <div class="metric-card" :class="portraitData.cardioStatus">
-            <div class="metric-icon">❤️</div>
-            <div class="metric-info">
-              <div class="metric-label">心肺功能</div>
-              <div class="metric-value">{{ portraitData.cardioLevel }}</div>
-              <div class="metric-status">{{ portraitData.cardioLevel === '未评估' ? '坚持运动即可提升' : portraitData.cardioStatus }}</div>
-            </div>
-          </div>
-
-          <!-- 代谢指数 -->
-          <div class="metric-card" :class="portraitData.metabolismStatus">
-            <div class="metric-icon">⚡</div>
-            <div class="metric-info">
-              <div class="metric-label">代谢指数</div>
-              <div class="metric-value">{{ portraitData.metabolism > 0 ? portraitData.metabolism : '待评估' }}</div>
-              <div class="metric-status">{{ portraitData.metabolism > 0 ? portraitData.metabolismStatus : '记录运动数据后评估' }}</div>
-            </div>
-          </div>
-
-          <!-- 睡眠质量 -->
-          <div class="metric-card" :class="portraitData.sleepQualityStatus">
-            <div class="metric-icon">🌙</div>
-            <div class="metric-info">
-              <div class="metric-label">睡眠质量</div>
-              <div class="metric-value">{{ portraitData.sleepScore > 0 ? portraitData.sleepQuality : '待评估' }}</div>
-              <div class="metric-status">{{ portraitData.sleepScore > 0 ? portraitData.sleepQualityStatus : '开始记录睡眠数据' }}</div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- 健康建议 -->
-      <section class="portrait-recommendations">
-        <h2 class="section-title">个性化建议</h2>
-        <div class="recommendations-list">
-          <div
-            v-for="(rec, index) in portraitData.recommendations"
-            :key="index"
-            class="recommendation-item"
-          >
-            <div class="rec-icon">{{ rec.icon }}</div>
-            <div class="rec-content">
-              <h3 class="rec-title">{{ rec.title }}</h3>
-              <p class="rec-description">{{ rec.description }}</p>
-            </div>
-            <div class="rec-priority" :class="rec.priority">
-              {{ rec.priority }}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- 健康历程 -->
-      <section class="portrait-timeline">
-        <h2 class="section-title">健康进度</h2>
-        <div class="timeline">
-          <div
-            v-for="(event, index) in portraitData.timeline"
-            :key="index"
-            class="timeline-item"
-          >
-            <div class="timeline-marker" :class="event.status"></div>
-            <div class="timeline-content">
-              <div class="timeline-date">{{ event.date }}</div>
-              <div class="timeline-title">{{ event.title }}</div>
-              <div class="timeline-description">{{ event.description }}</div>
-            </div>
-          </div>
-        </div>
-      </section>
-    </main>
+      </div>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, nextTick } from 'vue'
-import AppHeader from '../components/AppHeader.vue'
+import { ref } from 'vue'
+import Sidebar from '../components/homeView/Sidebar.vue'
+import TopHeader from '../components/homeView/TopHeader.vue'
 import HealthSetupModal from '../components/HealthSetupModal.vue'
-import { useAuthForm } from '../composables/useAuthForm'
-import { fetchWithRefresh } from '../api/http'
+import PortraitLeftContent from '../components/portraitView/PortraitLeftContent.vue'
+import PortraitRightContent from '../components/portraitView/PortraitRightContent.vue'
+import { usePortraitView } from '../composables/usePortraitView'
+import { onMounted } from 'vue'
 
-const { checkHealthInfoNeeded } = useAuthForm()
+const {
+  showHealthSetupModal,
+  isRefreshing,
+  portraitData,
+  handleHealthSetupClose,
+  handleHealthSetupSuccess,
+  handleRefreshClick,
+  initPortrait
+} = usePortraitView()
 
-const showHealthSetupModal = ref(false)
-const loading = ref(false)
-const isRefreshing = ref(false)
-const radarChart = ref<HTMLCanvasElement | null>(null)
+const sidebarRef = ref()
 
-// 健康画像数据 - 初始为空
-const portraitData = ref({
-  // 评分
-  exerciseScore: 0,
-  mealScore: 0,
-  sleepScore: 0,
-
-  // 身体指标
-  bmi: 0,
-  bmiStatus: 'normal',
-  cardioLevel: '待评估',
-  cardioStatus: 'normal',
-  metabolism: 0,
-  metabolismStatus: 'normal',
-  sleepQuality: '待评估',
-  sleepQualityStatus: 'normal',
-
-  // 建议
-  recommendations: [] as Array<{icon: string; title: string; description: string; priority: string}>,
-
-  // 时间轴
-  timeline: [] as Array<{date: string; title: string; description: string; status: string}>
+onMounted(() => {
+  initPortrait()
 })
 
-// 计算健康总分
-const healthScore = computed(() => {
-  return Math.round(
-    (portraitData.value.exerciseScore +
-      portraitData.value.mealScore +
-      portraitData.value.sleepScore) /
-      3
-  )
-})
-
-// 计算圆形进度条的偏移量
-const scoreOffset = computed(() => {
-  const circumference = 2 * Math.PI * 54
-  return circumference - (healthScore.value / 100) * circumference
-})
-
-// 处理健康档案关闭 - 强制不允许关闭
-function handleHealthSetupClose() {
-  console.log('用户尝试关闭健康档案设置 - 但必须完成')
-  // 不进行任何操作，强制用户完成设置
-}
-
-// 处理健康档案成功 - 完成后立即调用后端刷新数据
-async function handleHealthSetupSuccess() {
-  showHealthSetupModal.value = false
-  console.log('用户完成了健康档案设置！准备刷新健康画像数据...')
-  
-  // 立即调用后端接口，让后端调用 aiChat 分析打卡数据
-  try {
-    const response = await fetchWithRefresh(
-      '/api/health/refresh-from-checkin',
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      }
-    )
-    
-    if (!response.ok) {
-      console.warn('后端数据刷新请求失败', response.status)
-    } else {
-      console.log('后端已触发 aiChat 分析，数据已更新到数据库')
-    }
-  } catch (err) {
-    console.error('调用后端刷新接口出错:', err)
-  }
-  
-  // 立即开始轮询获取数据直到有效
-  await pollForPortraitData()
-}
-
-// 轮询获取健康画像数据，直到获取到有效数据
-async function pollForPortraitData() {
-  let attempts = 0
-  const maxAttempts = 30 // 最多轮询30次
-  const baseDelay = 500 // 初始延迟 500ms
-  
-  while (attempts < maxAttempts) {
-    try {
-      const response = await fetchWithRefresh(
-        '/api/health/portrait',
-        {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json'
-          }
-        }
-      )
-      
-      if (response.ok) {
-        const data = await response.json()
-        
-        // 检查是否获得有效数据（至少有一项分数不为0）
-        const hasValidData = data?.data?.exerciseScore > 0 || 
-                           data?.data?.mealScore > 0 || 
-                           data?.data?.sleepScore > 0
-        
-        if (hasValidData) {
-          console.log('获取到有效的健康画像数据，停止轮询')
-          await loadPortraitData()
-          return
-        }
-      }
-    } catch (err) {
-      console.error('轮询出错:', err)
-    }
-    
-    attempts++
-    
-    // 指数退避：500ms, 1s, 1.5s, 2s...
-    const delayMs = baseDelay * (attempts > 5 ? 2 : 1.2 ** attempts)
-    console.log(`轮询第 ${attempts} 次，等待 ${delayMs}ms 后重试...`)
-    await new Promise(resolve => setTimeout(resolve, delayMs))
-  }
-  
-  console.warn('轮询超时，未获取到有效数据')
-  // 最后再加载一次显示当前数据
-  await loadPortraitData()
-}
-
-// 处理刷新按钮点击 - 强制使用 AI 重新分析
-async function handleRefreshClick() {
-  console.log('用户点击刷新按钮，准备强制刷新数据...')
-  
-  isRefreshing.value = true
-  
-  try {
-    const response = await fetchWithRefresh(
-      '/api/health/force-refresh',
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      }
-    )
-    
-    if (!response.ok) {
-      console.error('强制刷新请求失败', response.status)
-      alert('数据刷新失败，请稍后重试')
-      return
-    }
-
-    console.log('强制刷新请求已发送，等待 AI 分析结果...')
-    
-    // 轮询获取更新后的数据
-    await pollForRefreshData()
-  } catch (err) {
-    console.error('调用强制刷新接口出错:', err)
-    alert('刷新出错，请稍后重试')
-  } finally {
-    isRefreshing.value = false
-  }
-}
-
-// 轮询获取刷新后的数据
-async function pollForRefreshData() {
-  let attempts = 0
-  const maxAttempts = 60 // 刷新轮询最多 60 次（约 3 分钟）
-  const baseDelay = 500 // 初始延迟 500ms
-  
-  while (attempts < maxAttempts) {
-    try {
-      const response = await fetchWithRefresh(
-        '/api/health/portrait',
-        {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json'
-          }
-        }
-      )
-      
-      if (response.ok) {
-        const data = await response.json()
-        const portraitInfo = data?.data
-        
-        // 检查是否获得有效数据（至少有一项分数不为0）
-        const hasValidData = portraitInfo?.exerciseScore > 0 || 
-                           portraitInfo?.mealScore > 0 || 
-                           portraitInfo?.sleepScore > 0
-        
-        if (hasValidData) {
-          console.log('获取到最新的健康画像数据')
-          await loadPortraitData()
-          alert('数据刷新成功！')
-          return
-        }
-      }
-    } catch (err) {
-      console.error('轮询出错:', err)
-    }
-    
-    attempts++
-    
-    // 指数退避
-    const delayMs = baseDelay * (attempts > 5 ? 2 : 1.2 ** attempts)
-    console.log(`轮询第 ${attempts} 次，等待 ${delayMs}ms 后重试...`)
-    await new Promise(resolve => setTimeout(resolve, delayMs))
-  }
-  
-  console.warn('轮询超时，AI 分析可能未完成')
-  // 最后再加载一次显示当前数据
-  await loadPortraitData()
-}
-
-// 加载健康画像数据
-async function loadPortraitData() {
-  loading.value = true
-  try {
-    const response = await fetchWithRefresh(
-      '/api/health/portrait',
-      {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      }
-    )
-
-    if (response.ok) {
-      const data = await response.json()
-      // 注意：响应格式是 data.data（嵌套结构）
-      if (data?.success && data.data) {
-        const portraitInfo = data.data
-        
-        // 处理分数数据（如果为0则使用默认值）
-        const processScore = (score: number, defaultValue: number = 0) => {
-          return score > 0 ? score : defaultValue
-        }
-        
-        // 处理建议优先级转换（英文 → 中文）
-        const processPriority = (priority: string): string => {
-          const priorityMap: { [key: string]: string } = {
-            'high': '高',
-            'medium': '中',
-            'low': '低'
-          }
-          return priorityMap[priority] || '中'
-        }
-        
-        // 处理建议列表
-        const processedRecommendations = (portraitInfo.recommendations || []).map((rec: any) => ({
-          icon: rec.icon || '💡',
-          title: rec.title || '健康建议',
-          description: rec.description || '持续改进你的健康生活方式',
-          priority: processPriority(rec.priority)
-        }))
-        
-        // 如果没有建议，使用默认建议
-        const recommendations = processedRecommendations.length > 0 
-          ? processedRecommendations 
-          : [
-              {
-                icon: '🏃',
-                title: '增加有氧运动',
-                description: '建议每周进行3-5次有氧运动，每次30分钟以上，可以有效提升心肺功能和整体健康水平',
-                priority: '高'
-              },
-              {
-                icon: '🥗',
-                title: '均衡膳食结构',
-                description: '增加蔬菜水果摄入，减少高热量食物，保持营养均衡，三餐规律',
-                priority: '高'
-              },
-              {
-                icon: '🌙',
-                title: '规律作息',
-                description: '建议22:30前入睡，保证7-8小时睡眠时间，养成规律的作息习惯',
-                priority: '高'
-              },
-              {
-                icon: '💧',
-                title: '适当补水',
-                description: '每天建议饮用8杯水，保持身体水分平衡，促进新陈代谢',
-                priority: '低'
-              }
-            ]
-        
-        // 生成默认时间轴（如果没有时间轴数据）
-        const timeline = (portraitInfo.timeline && portraitInfo.timeline.length > 0)
-          ? portraitInfo.timeline
-          : [
-              {
-                date: new Date().toLocaleDateString('zh-CN'),
-                title: '健康档案已建立',
-                description: '您的个人健康档案已成功创建，开始记录您的健康数据吧',
-                status: 'completed'
-              },
-              {
-                date: '即将开始',
-                title: '运动习惯养成',
-                description: '坚持运动打卡，逐步提升运动评分',
-                status: 'in-progress'
-              },
-              {
-                date: '即将开始',
-                title: '饮食质量改善',
-                description: '记录饮食信息，养成健康饮食习惯',
-                status: 'pending'
-              },
-              {
-                date: '即将开始',
-                title: '睡眠质量优化',
-                description: '建立规律作息，改善睡眠质量',
-                status: 'pending'
-              }
-            ]
-        
-        // 合并数据到本地state
-        portraitData.value = {
-          exerciseScore: processScore(portraitInfo.exerciseScore, 0),
-          mealScore: processScore(portraitInfo.mealScore, 0),
-          sleepScore: processScore(portraitInfo.sleepScore, 0),
-          bmi: typeof portraitInfo.bmi === 'string' ? parseFloat(portraitInfo.bmi) : portraitInfo.bmi,
-          bmiStatus: portraitInfo.bmiStatus || 'normal',
-          cardioLevel: portraitInfo.cardioLevel || '未评估',
-          cardioStatus: portraitInfo.cardioStatus || 'normal',
-          metabolism: processScore(portraitInfo.metabolism, 0),
-          metabolismStatus: portraitInfo.metabolismStatus || 'normal',
-          sleepQuality: portraitInfo.sleepQuality || '未评估',
-          sleepQualityStatus: portraitInfo.sleepQualityStatus || 'normal',
-          recommendations,
-          timeline
-        }
-        
-        console.log('✅ 健康画像数据已加载:', portraitData.value)
-      }
-    }
-  } catch (error) {
-    console.error('加载健康画像数据失败:', error)
-    // 加载失败时使用默认数据
-  } finally {
-    loading.value = false
-  }
-}
-
-// 初始化
-onMounted(async () => {
-  try {
-    // 强制检查并要求完成健康档案设置
-    const needsHealthInfo = await checkHealthInfoNeeded()
-    if (needsHealthInfo) {
-      // 必须完成健康档案设置后才能继续
-      showHealthSetupModal.value = true
-      return
-    }
-
-    // 健康档案已完成，直接加载现有数据（不自动刷新）
-    console.log('健康档案已完成，加载现有数据...')
-    await loadPortraitData()
-    
-    await nextTick()
-    initRadarChart()
-  } catch (err) {
-    console.error('页面初始化错误:', err)
-  }
-})
-
-// 初始化雷达图
-function initRadarChart() {
-  if (!radarChart.value) return
-
-  // 设置画布尺寸
-  const size = 320
-  radarChart.value.width = size
-  radarChart.value.height = size
-
-  const ctx = radarChart.value.getContext('2d')
-  if (!ctx) return
-
-  const centerX = size / 2
-  const centerY = size / 2
-  const radius = 90
-
-  const labels = ['运动', '饮食', '睡眠', '心肺', '代谢', '压力管理']
-  
-  // 当前数据：从 portraitData 获取，如果为0则使用默认值
-  const currentData = [
-    portraitData.value.exerciseScore || 0,
-    portraitData.value.mealScore || 0,
-    portraitData.value.sleepScore || 0,
-    portraitData.value.cardioStatus === 'excellent' ? 85 : 
-    portraitData.value.cardioStatus === 'good' ? 70 : 
-    portraitData.value.cardioStatus === 'normal' ? 50 : 30,
-    portraitData.value.metabolism || 0,
-    // 压力管理 = (运动分 * 0.4 + 睡眠分 * 0.6)
-    Math.round((portraitData.value.exerciseScore * 0.4 + portraitData.value.sleepScore * 0.6)) || 0
-  ]
-  
-  // 理想数据
-  const idealData = [85, 85, 85, 85, 85, 85]
-
-  const angles = labels.map((_, i) => (i / labels.length) * Math.PI * 2 - Math.PI / 2)
-
-  // 绘制网格
-  const gridColor = '#e0d9d1'
-  ctx.strokeStyle = gridColor
-  ctx.lineWidth = 1
-
-  for (let i = 1; i <= 5; i++) {
-    const gridRadius = (radius / 5) * i
-    ctx.beginPath()
-    angles.forEach((angle, index) => {
-      const x = centerX + gridRadius * Math.cos(angle)
-      const y = centerY + gridRadius * Math.sin(angle)
-      if (index === 0) {
-        ctx.moveTo(x, y)
-      } else {
-        ctx.lineTo(x, y)
-      }
-    })
-    ctx.closePath()
-    ctx.stroke()
-  }
-
-  // 绘制轴线
-  angles.forEach((angle) => {
-    const x = centerX + radius * Math.cos(angle)
-    const y = centerY + radius * Math.sin(angle)
-    ctx.beginPath()
-    ctx.moveTo(centerX, centerY)
-    ctx.lineTo(x, y)
-    ctx.stroke()
-  })
-
-  // 绘制理想数据（浅色）
-  ctx.fillStyle = '#ede6de'
-  ctx.beginPath()
-  idealData.forEach((value, index) => {
-    const angle = angles[index]
-    const r = (value / 100) * radius
-    const x = centerX + r * Math.cos(angle)
-    const y = centerY + r * Math.sin(angle)
-    if (index === 0) {
-      ctx.moveTo(x, y)
-    } else {
-      ctx.lineTo(x, y)
-    }
-  })
-  ctx.closePath()
-  ctx.fill()
-  ctx.strokeStyle = '#b9a796'
-  ctx.lineWidth = 2
-  ctx.stroke()
-
-  // 绘制当前数据（深色）
-  ctx.fillStyle = 'rgba(167, 147, 104, 0.3)'
-  ctx.beginPath()
-  currentData.forEach((value, index) => {
-    const angle = angles[index]
-    const r = (value / 100) * radius
-    const x = centerX + r * Math.cos(angle)
-    const y = centerY + r * Math.sin(angle)
-    if (index === 0) {
-      ctx.moveTo(x, y)
-    } else {
-      ctx.lineTo(x, y)
-    }
-  })
-  ctx.closePath()
-  ctx.fill()
-  ctx.strokeStyle = '#a79368'
-  ctx.lineWidth = 2
-  ctx.stroke()
-
-  // 绘制数据点
-  ctx.fillStyle = '#a79368'
-  currentData.forEach((value, index) => {
-    const angle = angles[index]
-    const r = (value / 100) * radius
-    const x = centerX + r * Math.cos(angle)
-    const y = centerY + r * Math.sin(angle)
-    ctx.beginPath()
-    ctx.arc(x, y, 4, 0, Math.PI * 2)
-    ctx.fill()
-  })
-
-  // 绘制标签
-  ctx.fillStyle = '#2d2d2d'
-  ctx.font = '12px Montserrat, sans-serif'
-  ctx.textAlign = 'center'
-  ctx.textBaseline = 'middle'
-
-  labels.forEach((label, index) => {
-    const angle = angles[index]
-    const x = centerX + (radius + 25) * Math.cos(angle)
-    const y = centerY + (radius + 25) * Math.sin(angle)
-    ctx.fillText(label, x, y)
-  })
+const toggleSidebar = () => {
+  sidebarRef.value?.toggleSidebarFromHeader()
 }
 </script>
 
