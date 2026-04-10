@@ -1,5 +1,5 @@
 <template>
-  <div v-if="chartData.length > 0" class="trends-charts-section">
+  <div class="trends-charts-section">
     <div class="trends-chart-card">
       <div class="trends-chart-header">
         <h3 class="trends-chart-title">运动趋势</h3>
@@ -47,7 +47,7 @@ function drawChart(
   data: number[],
   color: string
 ) {
-  if (data.length === 0) return
+  if (dates.length === 0 || !canvas) return
 
   const ctx = canvas.getContext('2d')
   if (!ctx) return
@@ -58,9 +58,9 @@ function drawChart(
   const padding = 40
   const graphWidth = canvas.width - 2 * padding
   const graphHeight = canvas.height - 2 * padding - 20
-  const maxValue = Math.max(...data) * 1.2
-  const xStep = graphWidth / (dates.length - 1)
-  const scale = graphHeight / maxValue
+  const maxValue = data.length > 0 ? Math.max(...data) * 1.2 : 100
+  const xStep = dates.length > 1 ? graphWidth / (dates.length - 1) : graphWidth
+  const scale = maxValue > 0 ? graphHeight / maxValue : graphHeight / 100
 
   // 绘制网格线
   ctx.strokeStyle = '#e0d9d1'
@@ -128,31 +128,53 @@ function drawChart(
   })
 }
 
-function initCharts() {
-  const dates = props.chartData.map(d => d.date)
-  const exerciseData = props.chartData.map(d => d.exercise)
-  const mealData = props.chartData.map(d => d.meal)
-  const sleepData = props.chartData.map(d => d.sleep)
+function generateDefaultData(count: number = 7) {
+  const dates = []
+  const data = []
+  const today = new Date()
+  
+  for (let i = count - 1; i >= 0; i--) {
+    const date = new Date(today)
+    date.setDate(date.getDate() - i)
+    dates.push(`${date.getMonth() + 1}-${date.getDate()}`)
+    data.push(0)
+  }
+  
+  return { dates, data }
+}
 
-  if (exerciseChart.value && exerciseData.length > 0) {
+function initCharts() {
+  let dates = props.chartData.map(d => d.date)
+  let exerciseData = props.chartData.map(d => d.exercise)
+  let mealData = props.chartData.map(d => d.meal)
+  let sleepData = props.chartData.map(d => d.sleep)
+
+  // 如果没有数据，生成全 0 的默认数据
+  if (dates.length === 0) {
+    const defaultData = generateDefaultData(7)
+    dates = defaultData.dates
+    exerciseData = defaultData.data
+    mealData = defaultData.data
+    sleepData = defaultData.data
+  }
+
+  if (exerciseChart.value) {
     drawChart(exerciseChart.value, dates, exerciseData, '#e8b4b8')
   }
 
-  if (mealChart.value && mealData.length > 0) {
+  if (mealChart.value) {
     drawChart(mealChart.value, dates, mealData, '#daa76f')
   }
 
-  if (sleepChart.value && sleepData.length > 0) {
+  if (sleepChart.value) {
     drawChart(sleepChart.value, dates, sleepData, '#a79368')
   }
 }
 
 watch(() => props.chartData, async () => {
-  if (props.chartData.length > 0) {
-    await nextTick()
-    initCharts()
-  }
-}, { deep: true })
+  await nextTick()
+  initCharts()
+}, { deep: true, immediate: true })
 </script>
 
 <style scoped>

@@ -124,6 +124,7 @@ function handleNavClick(path: string) {
 }
 
 function openModal(type: 'help' | 'logout') {
+    isExpanded.value = false // 打开模态框时自动关闭侧栏
     modalType.value = type
     showModal.value = true
 }

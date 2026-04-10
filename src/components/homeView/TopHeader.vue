@@ -16,10 +16,10 @@
                 <div @click="toggleAIChat" class="search-btn-wrapper" title="AI 健康助手">
                     <img src="/noun-main-topbar-search.svg" class="search-btn" alt="AI 助手">
                 </div>
-                <div class="notification-wrapper">
+                <!-- <div class="notification-wrapper">
                     <img src="/noun-main-topbar-bell.svg" class="notification-btn" alt="">
                     <span class="notification-badge">{{ notificationCount }}</span>
-                </div>
+                </div> -->
                 <div class="user-profile" @click="openProfile">
                     <img v-if="currentUser.avatar" :src="currentUser.avatar" :alt="currentUser.name"
                         class="profile-avatar" />
@@ -55,7 +55,7 @@ const openProfile = () => {
     router.push(`/profile`)
 }
 
-const notificationCount = ref(3)
+// const notificationCount = ref(3)
 
 // 切换 AI 聊天
 function toggleAIChat() {

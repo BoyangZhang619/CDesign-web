@@ -20,12 +20,18 @@
                         加载数据中...
                     </div>
 
-                    <!-- Overview Cards -->
+                    <!-- Left Column -->
                     <template v-else>
-                        <TrendsOverviewCards :stats="stats" />
-                        <TrendsCharts :chartData="chartData" />
-                        <TrendsHabits :habits="habits" />
-                        <TrendsComparison :comparison="comparison" />
+                        <div class="trends-left-column">
+                            <TrendsOverviewCards :stats="stats" />
+                            <TrendsCharts :chartData="chartData" />
+                            <TrendsHabits :habits="habits" />
+                        </div>
+
+                        <!-- Right Column -->
+                        <div class="trends-right-column">
+                            <TrendsComparison :comparison="comparison" />
+                        </div>
                     </template>
                 </div>
             </div>

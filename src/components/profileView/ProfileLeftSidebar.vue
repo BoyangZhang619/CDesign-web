@@ -34,14 +34,6 @@
       </div>
     </div>
 
-    <!-- 模型点数卡片 -->
-    <div class="credits-card">
-      <div class="credits-icon">💎</div>
-      <div class="credits-content">
-        <p class="credits-label">模型点数</p>
-        <p class="credits-value">{{ userInfo?.credits || 0 }}</p>
-      </div>
-    </div>
   </div>
 </template>
 

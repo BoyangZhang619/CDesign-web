@@ -8,6 +8,7 @@
   overflow: hidden;
   box-sizing: content-box;
   position: relative;
+  max-width: 900px;
 }
 
 .ai-chat-layout::before {
@@ -73,9 +74,9 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 24px 32px;
-  border-bottom: 2px solid #D4C4B0;
-  background: linear-gradient(135deg, #EBE5DF 0%, #DDD4C4 50%, #D9CEC0 100%);
+  padding: 6px 32px;
+  border-bottom: 2px solid #eee8;
+  background: linear-gradient(135deg, #eeeeeeaa 0%, #eeeeeecc 50%, #eeeeeecc 100%);
   flex-shrink: 0;
 }
 
@@ -237,7 +238,7 @@
 .message-content {
   padding: 12px 16px;
   background: linear-gradient(135deg, #E8DDD3 0%, #E1D7CD 100%);
-  border: 2px solid #D0C4B8;
+  border: none;
   border-radius: 4px;
   color: #5A7A87;
   font-size: 13px;
@@ -298,8 +299,8 @@
 
 .input-area {
   padding: 20px 32px;
-  background: linear-gradient(135deg, #E8DDD3 0%, #DDD4C4 100%);
-  border-top: 2px solid #C9B89C;
+  background: linear-gradient(135deg, #eeea 0%, #eee8 100%);
+  border-top: 2px solid #eee8;
   flex-shrink: 0;
   display: flex;
   flex-direction: column;
@@ -335,8 +336,8 @@
 .chat-textarea {
   flex: 1;
   padding: 12px;
-  border: 2px solid #C9B89C;
-  background: #FEFCFA;
+  border: 2px solid #5A7A87;
+  background: #fefcfab5;
   border-radius: 4px;
   font-family: 'Montserrat', sans-serif;
   font-size: 13px;
