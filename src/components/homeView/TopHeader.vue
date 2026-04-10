@@ -9,8 +9,8 @@
             </div>
 
             <div class="header-left">
-                <h1 class="greeting">Hi, {{ currentUser.name }}</h1>
-                <p class="subtitle">既来之则安(da)之(ka)!</p>
+                <h1 class="greeting">{{ props.title || `Hi, ${currentUser.name}` }}</h1>
+                <p class="subtitle">{{ props.subtitle || '既来之则安(da)之(ka)!' }}</p>
             </div>
             <div class="header-right">
                 <div @click="toggleAIChat" class="search-btn-wrapper" title="AI 健康助手">
@@ -31,7 +31,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
+import { computed, onMounted } from 'vue'
 import { useAuthStore } from '../../stores/auth'
 import { useRouter } from 'vue-router'
 
@@ -41,6 +41,11 @@ const router = useRouter()
 const emit = defineEmits<{
     'toggle-sidebar': []
     'toggle-ai-chat': []
+}>()
+
+const props = defineProps<{
+    title?: string
+    subtitle?: string
 }>()
 
 // 从认证 store 获取用户信息

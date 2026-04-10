@@ -13,17 +13,17 @@
 
     <div class="main-content">
       <!-- 头部 -->
-      <TopHeader @toggle-sidebar="toggleSidebar" />
+      <TopHeader @toggle-sidebar="toggleSidebar" :title="'健康画像'" :subtitle="'基于您的健康数据构建的个性化健康模型'" />
 
       <!-- 内容区 -->
       <div class="content-area" v-if="!showHealthSetupModal">
         <!-- 页面标题 -->
-        <section class="portrait-header">
+        <!-- <section class="portrait-header">
           <div class="header-content">
             <h1 class="page-title">健康画像</h1>
             <p class="page-subtitle">基于您的健康数据构建的个性化健康模型</p>
           </div>
-        </section>
+        </section> -->
 
         <!-- 左右布局 -->
         <div class="portrait-main">

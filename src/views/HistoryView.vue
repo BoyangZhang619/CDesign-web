@@ -5,13 +5,13 @@
 
     <div class="main-content">
       <!-- 头部 -->
-      <TopHeader @toggle-sidebar="toggleSidebar" />
+      <TopHeader @toggle-sidebar="toggleSidebar" :title="'历史记录'" :subtitle="'查看您的历史打卡记录'" />
 
       <!-- 内容区 -->
       <div class="content-area">
         <div class="history-wrapper">
           <!-- 页面头部 -->
-          <HistoryHeader />
+          <!-- <HistoryHeader /> -->
 
           <!-- 筛选面板 -->
           <HistoryFilter 
@@ -75,7 +75,7 @@
 import { ref, onMounted, watch } from 'vue'
 import Sidebar from '../components/homeView/Sidebar.vue'
 import TopHeader from '../components/homeView/TopHeader.vue'
-import HistoryHeader from '../components/historyView/HistoryHeader.vue'
+// import HistoryHeader from '../components/historyView/HistoryHeader.vue'
 import HistoryFilter from '../components/historyView/HistoryFilter.vue'
 import HistoryInfoBar from '../components/historyView/HistoryInfoBar.vue'
 import HistoryRecordsList from '../components/historyView/HistoryRecordsList.vue'

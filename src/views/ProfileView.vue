@@ -5,21 +5,20 @@
 
     <!-- 主内容区 -->
     <div class="main-content">
-      <TopHeader @toggle-sidebar="toggleSidebar" @toggle-ai-chat="toggleAIChat" />
+      <TopHeader @toggle-sidebar="toggleSidebar" @toggle-ai-chat="toggleAIChat" :title="'个人资料'" :subtitle="'查看和编辑您的个人信息'" />
 
       <div class="content-area">
         <!-- 左侧: 用户基本信息卡片 -->
         <ProfileLeftSidebar :userInfo="userInfo" />
 
         <!-- 右侧: 用户详细信息 -->
-        <ProfileRightContent
-          :userInfo="userInfo"
-          :healthProfile="healthProfile"
-          @edit="navigateToEdit"
-          @logout="handleLogout"
-        />
+        <ProfileRightContent :userInfo="userInfo" :healthProfile="healthProfile" @edit="navigateToEdit"
+          @logout="handleLogout" />
       </div>
     </div>
+    <!-- Health Setup Modal -->
+    <HealthSetupModal :show="showHealthSetupModal" @close="handleHealthSetupClose"
+      @success="handleHealthSetupSuccess" />
   </div>
   <!-- AI 聊天浮窗 -->
   <AIChatFloatingWindow :isOpen="isAIChatOpen" @close="closeAIChat" />
@@ -35,12 +34,14 @@ import ProfileRightContent from '../components/profileView/ProfileRightContent.v
 import { useAuthStore } from '../stores/auth'
 import { useUserProfile } from '../composables/useUserProfile'
 import AIChatFloatingWindow from '../components/AIChatFloatingWindow.vue'
+import { useTrendsView } from '../composables/useTrendsView'
 
 const router = useRouter()
 const authStore = useAuthStore()
 const { userInfo, loadUserInfo } = useUserProfile()
 const sidebarRef = ref<InstanceType<typeof Sidebar>>()
 const healthProfile = ref<any>(null)
+const { showHealthSetupModal, handleHealthSetupClose, handleHealthSetupSuccess } = useTrendsView()
 
 const toggleSidebar = () => {
   sidebarRef.value?.toggleSidebarFromHeader()

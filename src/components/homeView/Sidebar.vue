@@ -146,8 +146,6 @@ function handleLogout() {
         .catch((error) => {
             console.error('Logout failed:', error)
             closeModal()
-        })
-        .finally(() => {
             isLoggingOut.value = false
         })
 }

@@ -5,12 +5,12 @@
 
     <div class="main-content">
       <!-- 头部 -->
-      <TopHeader @toggle-sidebar="toggleSidebar" />
+      <TopHeader @toggle-sidebar="toggleSidebar" :title="'待办事项'" :subtitle="'管理您的任务清单'" />
 
       <!-- 内容区 -->
       <div class="content-area">
         <div class="todolist-wrapper">
-          <TodolistHeader @create="handleCreateTask" />
+          <!-- <TodolistHeader @create="handleCreateTask" /> -->
           <TodolistStats :stats="stats" :completion-rate="completionRate" />
           <TodolistToolbar 
             :search-keyword="searchKeyword"
@@ -39,7 +39,7 @@
 import { ref, computed, onMounted } from 'vue'
 import Sidebar from '../components/homeView/Sidebar.vue'
 import TopHeader from '../components/homeView/TopHeader.vue'
-import TodolistHeader from '../components/todolistView/TodolistHeader.vue'
+// import TodolistHeader from '../components/todolistView/TodolistHeader.vue'
 import TodolistStats from '../components/todolistView/TodolistStats.vue'
 import TodolistToolbar from '../components/todolistView/TodolistToolbar.vue'
 import TodolistEmpty from '../components/todolistView/TodolistEmpty.vue'
@@ -105,10 +105,10 @@ const setFilter = (status: string) => {
   currentFilter.value = status
 }
 
-const handleCreateTask = () => {
-  // TODO: 打开创建任务对话框
-  console.log('创建任务')
-}
+// const handleCreateTask = () => {
+//   // TODO: 打开创建任务对话框
+//   console.log('创建任务')
+// }
 
 const toggleTask = (taskId: string) => {
   const task = tasks.value.find(t => t.id === taskId)

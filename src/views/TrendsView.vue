@@ -38,8 +38,7 @@
         </div>
 
         <!-- Health Setup Modal -->
-        <HealthSetupModal :show="showHealthSetupModal" @close="handleHealthSetupClose"
-            @success="handleHealthSetupSuccess" />
+        <HealthSetupModal :show="showHealthSetupModal" @close="handleHealthSetupClose" @success="handleHealthSetupSuccess" />
     </div>
 </template>
 

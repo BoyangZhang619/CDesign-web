@@ -6,13 +6,13 @@
 
     <div class="main-content">
       <!-- 头部 -->
-      <TopHeader @toggle-sidebar="toggleSidebar" />
+      <TopHeader @toggle-sidebar="toggleSidebar" :title="'每日打卡'" :subtitle="'记录你的健康数据'" />
 
       <!-- 内容区 -->
       <div class="content-area">
         <div class="checkin-wrapper">
           <!-- 页面头部 -->
-          <div class="checkin-header">
+          <!-- <div class="checkin-header">
             <div class="header-info">
               <h1 class="checkin-title">每日打卡</h1>
               <p class="checkin-subtitle">记录你的健康数据</p>
@@ -25,7 +25,7 @@
                 @change="loadCheckinData"
               />
             </div>
-          </div>
+          </div> -->
 
           <!-- 打卡类别选择 -->
           <div class="checkin-tabs">

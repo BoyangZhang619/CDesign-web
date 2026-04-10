@@ -11,6 +11,9 @@
 
     <!-- AI 聊天浮窗 -->
     <AIChatFloatingWindow :isOpen="isAIChatOpen" @close="closeAIChat" />
+
+    <!-- 健康档案设置浮窗 -->
+    <HealthSetupModal :show="showHealthSetupModal" @close="handleHealthSetupClose" @success="handleHealthSetupSuccess" />
   </div>
 </template>
 
@@ -21,9 +24,13 @@ import TopHeader from '../components/homeView/TopHeader.vue'
 import LeftContent from '../components/homeView/LeftContent.vue'
 import RightContent from '../components/homeView/RightContent.vue'
 import AIChatFloatingWindow from '../components/AIChatFloatingWindow.vue'
+import HealthSetupModal from '../components/HealthSetupModal.vue'
+import { useTrendsView } from '../composables/useTrendsView'
 
 const sidebarRef = ref<InstanceType<typeof Sidebar>>()
 const isAIChatOpen = ref(false)
+
+const { showHealthSetupModal, handleHealthSetupClose, handleHealthSetupSuccess } = useTrendsView()
 
 // 用于手机端切换侧栏
 const toggleSidebar = () => {
@@ -42,19 +49,21 @@ const toggleAIChat = () => {
 const closeAIChat = () => {
   isAIChatOpen.value = false
 }
+
 </script>
 
 <style scoped>
 .home-layout {
   margin: 0 auto;
   display: flex;
-  height: calc(100vh - 10px);
+  height: calc(100dvh - 10px);
   background: none;
   border: 5px solid #5A7A87;
   border-radius: 20px;
   overflow: hidden;
   box-sizing: content-box;
   position: relative;
+  width: 100vw;
 }
 
 .home-layout::before {
@@ -112,7 +121,8 @@ const closeAIChat = () => {
   .home-layout {
     border: none;
     border-radius: 0;
-    height: 100vh;
+    height: 100dvh;
+    width: 100vw;
   }
 
   .content-area {

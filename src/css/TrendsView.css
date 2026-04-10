@@ -10,6 +10,7 @@
   overflow: hidden;
   box-sizing: content-box;
   position: relative;
+  width: 100vw;
 }
 
 .trends-layout::before {

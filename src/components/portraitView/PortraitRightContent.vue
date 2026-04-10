@@ -2,14 +2,12 @@
   <div class="portrait-right-content">
     <PortraitMetrics :metrics-data="portraitData.metrics" />
     <PortraitRecommendations :recommendations="portraitData.recommendations" />
-    <PortraitTimeline :timeline-events="portraitData.timelineEvents" />
   </div>
 </template>
 
 <script setup lang="ts">
 import PortraitMetrics from './PortraitMetrics.vue'
 import PortraitRecommendations from './PortraitRecommendations.vue'
-import PortraitTimeline from './PortraitTimeline.vue'
 
 interface Metrics {
   bmi: number

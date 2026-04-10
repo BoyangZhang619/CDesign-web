@@ -14,12 +14,16 @@
     <PortraitRadarChart 
       :radar-data="portraitData.radarData"
     />
+
+    
+    <PortraitTimeline :timeline-events="portraitData.timelineEvents" />
   </div>
 </template>
 
 <script setup lang="ts">
 import PortraitScoreCard from './PortraitScoreCard.vue'
 import PortraitRadarChart from './PortraitRadarChart.vue'
+import PortraitTimeline from './PortraitTimeline.vue'
 
 defineProps({
   portraitData: {
@@ -31,7 +35,6 @@ defineProps({
     default: false
   }
 })
-
 defineEmits(['refresh'])
 </script>
 

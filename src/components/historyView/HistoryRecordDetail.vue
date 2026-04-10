@@ -164,7 +164,7 @@ defineEmits<{
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
   max-width: 500px;
   width: 90vw;
-  max-height: 80vh;
+  max-height: 80dvh;
   overflow-y: auto;
   animation: slideUp 0.3s ease;
 }
@@ -338,7 +338,7 @@ defineEmits<{
 @media (max-width: 480px) {
   .record-detail-modal {
     width: 95vw;
-    max-height: 90vh;
+    max-height: 90dvh;
   }
 
   .modal-content {

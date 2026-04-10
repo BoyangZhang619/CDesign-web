@@ -1,7 +1,7 @@
 <template>
   <section class="patient-activities">
     <div class="section-header">
-      <h3 class="section-title">患者活动</h3>
+      <h3 class="section-title">状态比对</h3>
       <p class="section-date">今天，2022年10月6日</p>
     </div>
 

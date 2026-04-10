@@ -1,19 +1,19 @@
 <template>
   <section class="appointments-calendar">
     <div class="list-header">
-      <h3 class="section-title">预约列表</h3>
+      <h3 class="section-title">TODOLIST</h3>
       <div class="tabs">
-        <button class="tab-btn active">月度</button>
-        <button class="tab-btn">每日</button>
+        <button :class="['tab-btn', { active: !showCalendar }]" @click="showCalendar = false">每日</button>
+        <button :class="['tab-btn', { active: showCalendar }]" @click="showCalendar = true">月度</button>
       </div>
     </div>
 
-    <div class="calendar">
+    <div class="calendar" v-if="showCalendar">
       <div class="calendar-header">
-        <h4>2022年10月</h4>
+        <h4>{{ demoTime.year }}年{{ demoTime.month + 1 }}月</h4>
         <div class="calendar-nav">
-          <button class="nav-btn">←</button>
-          <button class="nav-btn">→</button>
+          <button class="nav-btn" @click="plusMonth(-1)">←</button>
+          <button class="nav-btn" @click="plusMonth(1)">→</button>
         </div>
       </div>
 
@@ -24,12 +24,12 @@
       </div>
 
       <div class="dates">
-        <div class="date-cell empty" v-for="n in 5" :key="'empty-' + n"></div>
+        <div class="date-cell empty" v-for="n in (new Date(demoTime.year, demoTime.month).getDay())" :key="'empty-' + n"></div>
         <div
           class="date-cell"
-          v-for="date in 31"
+          v-for="date in demoMonthDays"
           :key="'date-' + date"
-          :class="{ today: date === 8, selected: date === 14 }"
+          :class="{ today: date === curTime.date && demoTime.month === curTime.month && demoTime.year === curTime.year, selected: date%11 === 2 }"
         >
           {{ date }}
         </div>
@@ -37,29 +37,65 @@
     </div>
 
     <div class="appointments-list">
-      <div class="appointment-list-item">
+      <div v-for="item in (scheduleData.length ? scheduleData.slice(0, 3) : predemoData.slice(0, 3))" :key="item.id" class="appointment-list-item">
         <div class="item-avatar"></div>
         <div class="item-content">
-          <p class="item-title">压力管理</p>
-          <p class="item-time">22:00 - 00:00</p>
+          <p class="item-title">{{ item.title }}</p>
+          <p class="item-time">{{ item.time }}</p>
         </div>
-        <span class="item-arrow">→</span>
-      </div>
-      <div class="appointment-list-item">
-        <div class="item-avatar"></div>
-        <div class="item-content">
-          <p class="item-title">物理治疗</p>
-          <p class="item-time">09:00am - 10:00am</p>
-        </div>
-        <span class="item-arrow">→</span>
       </div>
     </div>
 
-    <button class="see-more-btn">查看完整日程 →</button>
+    <button class="see-more-btn" @click="jumpToDetail">查看完整日程 →</button>
   </section>
 </template>
 
 <script setup lang="ts">
+import { reactive, ref, computed } from 'vue';
+import { useRouter } from 'vue-router';
+
+const router = useRouter();
+
+const scheduleData = ref([]);
+const predemoData = ref([
+  { id: 1, title: '12点前碎觉', time: '22:00 - 00:00' },
+  { id: 2, title: '及时吃早餐', time: '09:00am - 10:00am' }
+]);
+const showCalendar = ref(true)
+const curTime = reactive({
+  year: (new Date()).getFullYear(),
+  month: (new Date()).getMonth(),
+  date: (new Date()).getDate(),
+  day: (new Date()).getDay(),
+  hour: (new Date()).getHours(),
+  minute: (new Date()).getMinutes()
+})
+let _cnt_year = (new Date()).getFullYear();
+let _cnt_month = (new Date()).getMonth();
+const demoTime = reactive({
+  year: _cnt_year,
+  month: _cnt_month
+})
+const demoMonthDays = computed(() => {
+  return new Date(new Date(demoTime.year,demoTime.month).getFullYear(), new Date(demoTime.year,demoTime.month).getMonth() + 1, 0).getDate();
+})
+
+function jumpToDetail() {
+  router.push('/todolist');
+}
+
+function plusMonth(num: number) {
+  demoTime.month += num;
+
+  if (demoTime.month > 11) {
+    demoTime.year += Math.floor(demoTime.month / 12);
+    demoTime.month = demoTime.month % 12;
+  }else if (demoTime.month < 0) {
+    demoTime.year += Math.floor(demoTime.month / 12);
+    demoTime.month = 12 + demoTime.month % 12;
+  }
+}
+
 </script>
 
 <style scoped>

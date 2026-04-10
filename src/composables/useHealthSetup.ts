@@ -1,5 +1,4 @@
 import { reactive, ref, computed } from 'vue'
-import { useRouter } from 'vue-router'
 
 export interface HealthInfo {
   gender: string
@@ -19,7 +18,6 @@ export interface HealthInfo {
 }
 
 export function useHealthSetup() {
-  const router = useRouter()
   const loading = ref(false)
   const errorMsg = ref('')
 
@@ -122,8 +120,6 @@ export function useHealthSetup() {
         const errorData = await response.json().catch(() => ({}))
         throw new Error(errorData.message || '保存失败')
       }
-
-      router.push('/home')
     } catch (error: any) {
       errorMsg.value = error?.message || '保存失败，请重试'
     } finally {
@@ -132,7 +128,8 @@ export function useHealthSetup() {
   }
 
   function handleSkip() {
-    router.push('/home')
+    // ...
+    console.log('')
   }
 
   return {
