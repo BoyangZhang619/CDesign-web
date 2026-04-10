@@ -12,9 +12,6 @@
         <div class="chat-wrapper">
           <!-- 聊天头部 -->
           <div class="chat-header">
-            <div class="header-info">
-              <h1 class="chat-title">聊聊天吧~</h1>
-            </div>
             <div class="header-actions">
               <button @click="handleNewChat" class="btn-new-chat" title="新建对话">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -28,10 +25,6 @@
                   <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/>
                 </svg>
               </button>
-              <!-- <div v-if="authStore.userInfo" class="credits-info">
-                <div class="credits-label">剩余额度</div>
-                <div class="credits-value">{{ authStore.userInfo.credits || 0 }}</div>
-              </div> -->
             </div>
           </div>
 

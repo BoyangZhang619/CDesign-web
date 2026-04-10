@@ -73,11 +73,11 @@
 
 .chat-header {
   display: flex;
-  justify-content: space-between;
+  justify-content: right;
   align-items: center;
   padding: 6px 32px;
-  border-bottom: 2px solid #eee8;
-  background: linear-gradient(135deg, #eeeeeeaa 0%, #eeeeeecc 50%, #eeeeeecc 100%);
+  /* border-bottom: 2px solid #eee8; */
+  /* background: linear-gradient(135deg, #eeeeeeaa 0%, #eeeeeecc 50%, #eeeeeecc 100%); */
   flex-shrink: 0;
 }
 
