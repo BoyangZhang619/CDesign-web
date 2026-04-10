@@ -126,13 +126,13 @@
 import { computed } from 'vue'
 
 interface Task {
-  id: string
+  id: string | number
   title: string
   description?: string
   reason?: string
   status: 'pending' | 'completed' | 'overdue'
   priority: 'low' | 'medium' | 'high'
-  type: 'checkin' | 'ai' | 'custom'
+  type: 'checkin_exercise' | 'checkin_meal' | 'checkin_sleep' | 'ai_suggested' | 'custom'
   dueDate: string
 }
 
@@ -141,8 +141,8 @@ const props = defineProps<{
 }>()
 
 // 按类型分类
-const checkinTasks = computed(() => props.filteredTasks.filter(t => t.type === 'checkin'))
-const aiTasks = computed(() => props.filteredTasks.filter(t => t.type === 'ai'))
+const checkinTasks = computed(() => props.filteredTasks.filter(t => t.type === 'checkin_exercise' || t.type === 'checkin_meal' || t.type === 'checkin_sleep'))
+const aiTasks = computed(() => props.filteredTasks.filter(t => t.type === 'ai_suggested'))
 const customTasks = computed(() => props.filteredTasks.filter(t => t.type === 'custom'))
 
 const formatDate = (dateStr: string): string => {
@@ -159,12 +159,12 @@ const formatDate = (dateStr: string): string => {
 }
 
 defineEmits<{
-  toggle: [taskId: string]
-  open: [taskId: string]
-  edit: [taskId: string]
-  delete: [taskId: string]
-  accept: [taskId: string]
-  reject: [taskId: string]
+  toggle: [taskId: string | number]
+  open: [taskId: string | number]
+  edit: [taskId: string | number]
+  delete: [taskId: string | number]
+  accept: [taskId: string | number]
+  reject: [taskId: string | number]
 }>()
 </script>
 

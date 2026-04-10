@@ -2,7 +2,7 @@
 
 .stats-section {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  grid-template-columns: repeat(1, minmax(140px, 1fr));
   gap: 12px;
 }
 
@@ -103,9 +103,6 @@
 }
 
 @media (max-width: 480px) {
-  .stats-section {
-    grid-template-columns: 1fr;
-  }
 
   .stat-icon {
     font-size: 24px;

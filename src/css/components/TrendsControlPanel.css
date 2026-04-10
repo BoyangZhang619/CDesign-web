@@ -7,11 +7,13 @@
   align-items: center;
   flex-wrap: wrap;
   transition: all 0.3s ease;
+  /* justify-content: center; */
 }
 
 .trends-range-selector {
   display: flex;
   gap: 10px;
+  justify-content: center;
   flex-wrap: wrap;
 }
 

@@ -9,29 +9,55 @@
 
       <!-- 内容区 -->
       <div class="content-area">
-        <div class="todolist-wrapper">
-          <!-- <TodolistHeader @create="handleCreateTask" /> -->
-          <TodolistStats :stats="stats" :completion-rate="completionRate" />
-          <TodolistToolbar 
-            :search-keyword="searchKeyword"
-            :current-filter="currentFilter"
-            @search="searchKeyword = $event"
-            @filter="setFilter"
-          />
-          <TodolistEmpty v-if="filteredTasks.length === 0" />
-          <TodolistGroups 
-            v-else
-            :filtered-tasks="filteredTasks"
-            @toggle="toggleTask"
-            @open="openTask"
-            @edit="editTask"
-            @delete="deleteTask"
-            @accept="acceptTask"
-            @reject="rejectTask"
-          />
+        <div class="todolist-container">
+          <!-- 左栏：任务管理面板 -->
+          <div class="todolist-left-panel">
+            <!-- 添加任务按钮 -->
+            <button class="todolist-add-btn" @click="handleCreateTask" title="创建新任务">
+              <span class="add-btn-icon">+</span>
+              <span class="add-btn-text">新建任务</span>
+            </button>
+
+            <!-- 搜索和筛选 -->
+            <div class="todolist-search-section">
+              <TodolistToolbar 
+                :search-keyword="searchKeyword"
+                :current-filter="currentFilter"
+                @search="handleSearch"
+                @filter="handleSetFilter"
+              />
+            </div>
+
+            <!-- 数据统计展示 -->
+            <div class="todolist-stats-section">
+              <TodolistStats :stats="stats" :completion-rate="completionRate" />
+            </div>
+          </div>
+
+          <!-- 右栏：任务列表 -->
+          <div class="todolist-right-panel">
+            <TodolistEmpty v-if="filteredTasks.length === 0" />
+            <TodolistGroups 
+              v-else
+              :filtered-tasks="filteredTasks"
+              @toggle="toggleTask"
+              @open="openTask"
+              @edit="editTask"
+              @delete="handleDeleteTask"
+              @accept="handleAcceptTask"
+              @reject="handleRejectTask"
+            />
+          </div>
         </div>
       </div>
     </div>
+
+    <!-- 创建任务浮窗 -->
+    <TodolistCreateModal
+      :isOpen="showCreateModal"
+      @close="closeCreateModal"
+      @create="handleCreateTaskSubmit"
+    />
   </div>
 </template>
 
@@ -39,52 +65,47 @@
 import { ref, computed, onMounted } from 'vue'
 import Sidebar from '../components/homeView/Sidebar.vue'
 import TopHeader from '../components/homeView/TopHeader.vue'
-// import TodolistHeader from '../components/todolistView/TodolistHeader.vue'
 import TodolistStats from '../components/todolistView/TodolistStats.vue'
 import TodolistToolbar from '../components/todolistView/TodolistToolbar.vue'
 import TodolistEmpty from '../components/todolistView/TodolistEmpty.vue'
 import TodolistGroups from '../components/todolistView/TodolistGroups.vue'
+import TodolistCreateModal from '../components/todolistView/TodolistCreateModal.vue'
+import { useTodolist } from '../composables/useTodolist'
 
-interface Task {
-  id: string
-  title: string
-  description?: string
-  reason?: string
-  status: 'pending' | 'completed' | 'overdue'
-  priority: 'low' | 'medium' | 'high'
-  type: 'checkin' | 'ai' | 'custom'
-  dueDate: string
-}
-
-const sidebarRef = ref<InstanceType<typeof Sidebar>>()
-
-// 数据
-const tasks = ref<Task[]>([])
+const sidebarRef = ref()
+const showCreateModal = ref(false)
 const searchKeyword = ref('')
 const currentFilter = ref('all')
 
-// 统计数据
-const stats = computed(() => ({
-  total: tasks.value.length,
-  completed: tasks.value.filter(t => t.status === 'completed').length,
-  pending: tasks.value.filter(t => t.status === 'pending').length,
-  overdue: tasks.value.filter(t => t.status === 'overdue').length
-}))
+// 使用 useTodolist composable
+const { 
+  tasks, 
+  stats, 
+  fetchTasks,
+  createTask,
+  completeTask,
+  uncompleteTask,
+  deleteTask,
+  acceptAISuggestion,
+  rejectAISuggestion,
+  searchTasks
+} = useTodolist()
 
 // 完成率
 const completionRate = computed(() => {
   if (stats.value.total === 0) return 0
-  return Math.round((stats.value.completed / stats.value.total) * 100)
+  return Math.round(((stats.value.completed / stats.value.total) * 100) || 0)
 })
 
 // 过滤后的任务
 const filteredTasks = computed(() => {
-  let result = tasks.value
+  let result = Array.from(tasks.value)
   
   // 按搜索关键词过滤
   if (searchKeyword.value) {
     result = result.filter(t => 
-      t.title.toLowerCase().includes(searchKeyword.value.toLowerCase())
+      t.title.toLowerCase().includes(searchKeyword.value.toLowerCase()) ||
+      t.description?.toLowerCase().includes(searchKeyword.value.toLowerCase())
     )
   }
   
@@ -101,81 +122,89 @@ const toggleSidebar = () => {
   sidebarRef.value?.toggleSidebarFromHeader()
 }
 
-const setFilter = (status: string) => {
+const handleSetFilter = (status: string) => {
   currentFilter.value = status
 }
 
-// const handleCreateTask = () => {
-//   // TODO: 打开创建任务对话框
-//   console.log('创建任务')
-// }
+const handleSearch = (keyword: string) => {
+  searchKeyword.value = keyword
+  searchTasks(keyword)
+}
 
-const toggleTask = (taskId: string) => {
-  const task = tasks.value.find(t => t.id === taskId)
-  if (task) {
-    task.status = task.status === 'completed' ? 'pending' : 'completed'
+const handleCreateTask = () => {
+  showCreateModal.value = true
+}
+
+const closeCreateModal = () => {
+  showCreateModal.value = false
+}
+
+const handleCreateTaskSubmit = async (taskData: any) => {
+  try {
+    // createTask 已经直接调用 API 并更新本地状态
+    await createTask(taskData)
+    closeCreateModal()
+  } catch (err) {
+    console.error('创建任务失败:', err)
   }
 }
 
-const openTask = (taskId: string) => {
-  // TODO: 打开任务详情
+const toggleTask = async (taskId: string | number) => {
+  try {
+    const id = typeof taskId === 'string' ? Number(taskId) : taskId
+    const task = tasks.value.find(t => t.id === id)
+    if (!task) return
+    
+    if (task.status === 'completed') {
+      await uncompleteTask(id)
+    } else {
+      await completeTask(id)
+    }
+  } catch (err) {
+    console.error('切换任务状态失败:', err)
+  }
+}
+
+const openTask = (taskId: string | number) => {
   console.log('打开任务:', taskId)
 }
 
-const editTask = (taskId: string) => {
-  // TODO: 打开编辑对话框
+const editTask = (taskId: string | number) => {
   console.log('编辑任务:', taskId)
 }
 
-const deleteTask = (taskId: string) => {
+const handleDeleteTask = async (taskId: string | number) => {
   if (confirm('确定要删除这个任务吗？')) {
-    tasks.value = tasks.value.filter(t => t.id !== taskId)
+    try {
+      const id = typeof taskId === 'string' ? Number(taskId) : taskId
+      await deleteTask(id)
+    } catch (err) {
+      console.error('删除任务失败:', err)
+    }
   }
 }
 
-const acceptTask = (taskId: string) => {
-  const task = tasks.value.find(t => t.id === taskId)
-  if (task) {
-    task.type = 'custom'
-    task.status = 'pending'
+const handleAcceptTask = async (taskId: string | number) => {
+  try {
+    const id = typeof taskId === 'string' ? Number(taskId) : taskId
+    await acceptAISuggestion(id)
+  } catch (err) {
+    console.error('接受建议失败:', err)
   }
 }
 
-const rejectTask = (taskId: string) => {
-  tasks.value = tasks.value.filter(t => t.id !== taskId)
+const handleRejectTask = async (taskId: string | number) => {
+  try {
+    const id = typeof taskId === 'string' ? Number(taskId) : taskId
+    await rejectAISuggestion(id)
+  } catch (err) {
+    console.error('驳回建议失败:', err)
+  }
 }
 
 onMounted(() => {
-  // TODO: 加载任务列表数据
-  // 示例数据
-  tasks.value = [
-    {
-      id: '1',
-      title: '运动打卡',
-      status: 'pending',
-      priority: 'high',
-      type: 'checkin',
-      dueDate: new Date().toISOString()
-    },
-    {
-      id: '2',
-      title: '增加每日步数到 8000',
-      reason: '根据你的健康数据，增加运动量有助于改善睡眠质量',
-      status: 'pending',
-      priority: 'medium',
-      type: 'ai',
-      dueDate: new Date().toISOString()
-    },
-    {
-      id: '3',
-      title: '完成周报',
-      description: '整理本周的工作进度和收获',
-      status: 'pending',
-      priority: 'medium',
-      type: 'custom',
-      dueDate: new Date().toISOString()
-    }
-  ]
+  // 页面加载时获取任务数据
+  fetchTasks()
 })
 </script>
 

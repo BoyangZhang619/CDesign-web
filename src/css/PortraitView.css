@@ -80,13 +80,14 @@
 }
 
 /* 响应式设计 */
-@media (max-width: 1200px) {
+/* @media (max-width: 1200px) {
+} */
+
+@media (max-width: 768px) {
   .portrait-main {
     grid-template-columns: 1fr;
   }
-}
-
-@media (max-width: 768px) {
+  
   .portrait-layout {
     width: 100%;
     border: none;

@@ -1,6 +1,7 @@
 <template>
   <div class="portrait-right-content">
     <PortraitMetrics :metrics-data="portraitData.metrics" />
+    <PortraitTasksDisplay />
     <PortraitRecommendations :recommendations="portraitData.recommendations" />
   </div>
 </template>
@@ -8,6 +9,7 @@
 <script setup lang="ts">
 import PortraitMetrics from './PortraitMetrics.vue'
 import PortraitRecommendations from './PortraitRecommendations.vue'
+import PortraitTasksDisplay from './PortraitTasksDisplay.vue'
 
 interface Metrics {
   bmi: number

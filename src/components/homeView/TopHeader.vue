@@ -92,7 +92,6 @@ onMounted(async () => {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    max-width: 1400px;
     gap: 20px;
 }
 
