@@ -24,6 +24,7 @@
                 <svg viewBox="0 0 24 24" fill="currentColor">
                   <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/>
                 </svg>
+                <span>历史记录</span>
               </button>
             </div>
           </div>
@@ -93,13 +94,13 @@
               <textarea 
                 v-model="inputMessage" 
                 @keydown="handleKeyDown" 
-                :disabled="loading" 
+                :disabled="loading || showHistoryPanel" 
                 class="chat-textarea"
                 placeholder="输入您的问题... (Enter 发送 / Shift+Enter 换行)"
               ></textarea>
               <button 
                 @click="handleSendChat" 
-                :disabled="loading || !inputMessage.trim()" 
+                :disabled="loading || !inputMessage.trim() || showHistoryPanel" 
                 class="btn-submit" 
                 title="发送消息"
               >
@@ -141,16 +142,50 @@
             >
               <div class="history-item-title">{{ chat.title }}</div>
               <div class="history-item-time">{{ formatTime(chat.createdAt) }}</div>
-              <button 
-                @click.stop="deleteChat(chat.id)" 
-                class="btn-delete-chat"
-                title="删除"
-              >
-                <svg viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-9l-1 1H5v2h14V4z"/>
-                </svg>
-              </button>
+              <div class="history-item-actions">
+                <button 
+                  @click.stop="openEditNameDialog(chat.id)" 
+                  class="btn-edit-chat"
+                  title="编辑名称"
+                >
+                  <svg viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25z"/>
+                    <path d="M20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/>
+                  </svg>
+                </button>
+                <button 
+                  @click.stop="deleteChat(chat.id)" 
+                  class="btn-delete-chat"
+                  title="删除"
+                >
+                  <svg viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-9l-1 1H5v2h14V4z"/>
+                  </svg>
+                </button>
+              </div>
             </div>
+          </div>
+        </div>
+      </div>
+    </transition>
+
+    <!-- 编辑聊天名字对话框 -->
+    <transition name="fade">
+      <div v-if="showEditNameDialog" class="dialog-overlay">
+        <div class="dialog-box">
+          <h3 class="dialog-title">编辑对话名称</h3>
+          <input 
+            v-model="editingTitle" 
+            type="text"
+            class="dialog-input"
+            placeholder="输入新的对话名称"
+            @keydown.enter="saveEditedName"
+            @keydown.escape="cancelEditName"
+            autofocus
+          />
+          <div class="dialog-actions">
+            <button @click="cancelEditName" class="btn-cancel">取消</button>
+            <button @click="saveEditedName" class="btn-save">保存</button>
           </div>
         </div>
       </div>
@@ -164,7 +199,7 @@ import Sidebar from '../components/homeView/Sidebar.vue'
 import TopHeader from '../components/homeView/TopHeader.vue'
 import { useAuthStore } from '../stores/auth'
 import { useAIChat } from '../composables/useAIChat'
-import { sessionAPI } from '../api/modules/aiChat'
+import { sessionAPI, messageAPI } from '../api/modules/aiChat'
 
 interface ChatHistory {
   id: string
@@ -191,6 +226,11 @@ const showHistoryPanel = ref(false)
 const chatHistories = ref<ChatHistory[]>([])
 const currentChatId = ref<string | null>(null)
 
+// 编辑名字弹窗
+const showEditNameDialog = ref(false)
+const editingChatId = ref<string | null>(null)
+const editingTitle = ref('')
+
 // 切换侧栏
 const toggleSidebar = () => {
   sidebarRef.value?.toggleSidebarFromHeader()
@@ -210,24 +250,94 @@ const handleNewChat = () => {
 }
 
 // 加载聊天历史
-const loadChatHistory = (chatId: string) => {
+const loadChatHistory = async (chatId: string) => {
   currentChatId.value = chatId
+  showHistoryPanel.value = false
   const chat = chatHistories.value.find(c => c.id === chatId)
-  if (chat) {
-    clearMessages()
-    chatConfig.sessionId = chat.sessionId
-    // 这里可以加载对应 session 的历史消息
+  
+  if (chat?.sessionId) {
+    try {
+      clearMessages()
+      chatConfig.sessionId = chat.sessionId
+      
+      // 加载该会话的历史消息
+      const response = await messageAPI.getMessages(chat.sessionId, { limit: 100 })
+      
+      if (response.data?.success && response.data?.data?.data) {
+        const sessionMessages = response.data.data.data
+        
+        // 将消息加载到 messages 中
+        messages.value = sessionMessages.map((msg: any) => ({
+          role: msg.role,
+          content: msg.content,
+          reasoning: msg.reasoning,
+          reasoningState: msg.reasoning ? 'completed' : 'collapsed',
+          requestTime: msg.response_time_ms,
+          tokensUsed: msg.total_tokens
+        }))
+      }
+    } catch (error) {
+      console.error('加载消息失败:', error)
+    }
   }
 }
 
 // 删除聊天记录
 const deleteChat = (chatId: string) => {
   if (confirm('确定要删除这条对话吗？')) {
+    const chat = chatHistories.value.find(c => c.id === chatId)
+    if (chat?.sessionId) {
+      sessionAPI.deleteSession(chat.sessionId)
+        .catch(error => console.error('删除会话失败:', error))
+    }
     chatHistories.value = chatHistories.value.filter(c => c.id !== chatId)
     if (currentChatId.value === chatId) {
       handleNewChat()
     }
   }
+}
+
+// 编辑聊天名字
+const openEditNameDialog = (chatId: string) => {
+  editingChatId.value = chatId
+  const chat = chatHistories.value.find(c => c.id === chatId)
+  if (chat) {
+    editingTitle.value = chat.title
+    showEditNameDialog.value = true
+  }
+}
+
+// 保存编辑的名字
+const saveEditedName = async () => {
+  if (!editingChatId.value || !editingTitle.value.trim()) return
+  
+  const chat = chatHistories.value.find(c => c.id === editingChatId.value)
+  if (!chat?.sessionId) return
+  
+  try {
+    await sessionAPI.updateSession(chat.sessionId, {
+      session_name: editingTitle.value.trim()
+    })
+    
+    // 更新本地数据
+    const idx = chatHistories.value.findIndex(c => c.id === editingChatId.value)
+    if (idx >= 0) {
+      chatHistories.value[idx].title = editingTitle.value.trim()
+    }
+    
+    showEditNameDialog.value = false
+    editingChatId.value = null
+    editingTitle.value = ''
+  } catch (error) {
+    console.error('更新会话名称失败:', error)
+  }
+}
+
+// 取消编辑
+const cancelEditName = () => {
+  showEditNameDialog.value = false
+  editingChatId.value = null
+  editingTitle.value = ''
 }
 
 // 格式化时间
@@ -250,6 +360,28 @@ const formatTime = (timeStr: string): string => {
   }
 }
 
+// 加载聊天历史记录
+const loadChatHistories = async () => {
+  try {
+    const response = await sessionAPI.getSessions({
+      page: 1,
+      limit: 50
+    })
+
+    if (response.data?.success && response.data?.data?.data) {
+      const sessions = response.data.data.data
+      chatHistories.value = sessions.map((session: any) => ({
+        id: String(session.id || session.uuid),
+        title: session.session_name || '新对话',
+        createdAt: session.created_at,
+        sessionId: session.id
+      }))
+    }
+  } catch (error) {
+    console.error('加载历史记录失败:', error)
+  }
+}
+
 // 处理回车发送
 const handleKeyDown = (event: KeyboardEvent) => {
   if (event.key === 'Enter' && !event.shiftKey) {
@@ -265,14 +397,16 @@ async function handleSendChat() {
     return
   }
   
-  if (!inputMessage.value.trim() || loading.value) return
+  if (!inputMessage.value.trim() || loading.value) {
+    return
+  }
 
   // 创建会话
   if (!chatConfig.sessionId) {
     try {
       const response = await sessionAPI.createSession({
         session_name: 'AI对话',
-        ai_model: 'dashscope',
+        ai_model: 'dashscope' as const,
         temperature: 0.7,
         max_tokens: 2048
       })
@@ -302,11 +436,14 @@ async function handleSendChat() {
       container.scrollTop = container.scrollHeight
     }
   }, 100)
+  
+  // 重新加载历史记录
+  await loadChatHistories()
 }
 
 onMounted(() => {
-  // 初始化聊天历史等
-  // loadChatHistories()
+  // 加载聊天历史
+  loadChatHistories()
 })
 </script>
 

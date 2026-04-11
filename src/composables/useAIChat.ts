@@ -87,16 +87,16 @@ export function useAIChat() {
       let lastUpdateLength = 0
       let reasoningCompleted = false
 
-      // 添加AI消息占位符
+      // 添加AI消息占位符，初始为加载状态
       const aiMessageObj: Message = {
         role: 'assistant',
-        content: '',
+        content: '', // 空内容会触发加载动画显示
         reasoning: '',
         reasoningState: 'streaming'
       }
       messages.value.push(aiMessageObj)
 
-      // 立即触发更新以显示消息开始接收
+      // 立即触发更新以显示消息开始接收（加载动画）
       await nextTick()
 
       // ✅ 使用 Promise.resolve().then() 来延迟更新，不会阻塞 reader.read()
@@ -121,19 +121,17 @@ export function useAIChat() {
 
               // ✅ 支持新的流式数据格式
               if (streamMsg.type === 'connected') {
-                // 连接已建立，开始接收数据
+                // 连接已建立，保持加载动画显示
                 console.log('✅ 流式连接已建立')
               } else if (streamMsg.type === 'chunk') {
                 // 接收完整的文本块（后端已经完整处理）
+                // 这是第一个真实数据块，结束加载动画
                 aiMessage += streamMsg.content || ''
                 aiMessageObj.content = aiMessage
                 aiMessageObj.reasoningState = 'completed'
                 reasoningCompleted = true
-                
-                if (aiMessage.length - lastUpdateLength >= 50) {
-                  scheduleUpdate()
-                  lastUpdateLength = aiMessage.length
-                }
+                scheduleUpdate()
+                lastUpdateLength = aiMessage.length
               } else if (streamMsg.type === 'content') {
                 // 旧格式兼容
                 if (!reasoningCompleted && reasoningMessage) {
