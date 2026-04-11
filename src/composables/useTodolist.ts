@@ -1,5 +1,6 @@
 import { ref, computed, reactive } from 'vue'
 import { fetchWithRefresh } from '../api/http'
+import type { Task } from '../types/todolist'
 
 /**
  * ==================== 类型定义 ====================
@@ -17,32 +18,6 @@ export type TaskPriority = 'high' | 'medium' | 'low'
 // 筛选选项
 export type FilterType = 'all' | 'pending' | 'completed' | 'overdue'
 export type DateRange = 'all' | 'today' | 'week' | 'month'
-
-/**
- * 任务接口 - 映射后端 Task 字段
- * 后端使用 snake_case，前端转换为 camelCase
- */
-export interface Task {
-  id: number
-  title: string
-  description?: string
-  type: TaskType
-  status: TaskStatus
-  priority: TaskPriority
-  dueDate: string  // 后端: due_date
-  dueTime?: string  // 后端: due_time
-  isDaily: boolean  // 后端: is_daily
-  categoryIcon?: string  // 后端: category_icon
-  checkinType?: 'exercise' | 'meal' | 'sleep'  // 后端: checkin_type
-  checkinRecurrence?: string  // 后端: checkin_recurrence
-  checkinPreset?: string  // 后端: checkin_preset
-  aiPrompt?: string  // 后端: ai_prompt
-  aiSuggestionReason?: string  // 后端: ai_suggestion_reason
-  createdAt: string  // 后端: created_at
-  completedAt?: string  // 后端: completed_date
-  userId: number  // 后端: user_id
-  updatedAt: string  // 后端: updated_at
-}
 
 /**
  * 任务统计 - 映射后端 TaskStatistics
@@ -90,35 +65,40 @@ export interface AISuggestion extends Task {
 
 /**
  * 转换后端任务数据为前端格式
- * 将 snake_case 字段转换为 camelCase
+ * Task 接口已经使用 snake_case，无需转换
  */
 function transformBackendTask(backendTask: any): Task {
-  return {
+  const task = {
     id: backendTask.id,
     title: backendTask.title,
     description: backendTask.description,
     type: backendTask.type,
     status: backendTask.status,
     priority: backendTask.priority,
-    dueDate: backendTask.due_date,
-    dueTime: backendTask.due_time,
-    isDaily: backendTask.is_daily,
-    categoryIcon: backendTask.category_icon,
-    checkinType: backendTask.checkin_type,
-    checkinRecurrence: backendTask.checkin_recurrence,
-    checkinPreset: backendTask.checkin_preset,
-    aiPrompt: backendTask.ai_prompt,
-    aiSuggestionReason: backendTask.ai_suggestion_reason,
-    createdAt: backendTask.created_at,
-    completedAt: backendTask.completed_date,
-    userId: backendTask.user_id,
-    updatedAt: backendTask.updated_at
-  }
+    due_date: backendTask.due_date,
+    category: backendTask.category,
+    checkin_type: backendTask.checkin_type,
+    preset_type: backendTask.preset_type,
+    date_type: backendTask.date_type,
+    created_at: backendTask.created_at,
+    updated_at: backendTask.updated_at,
+    completed_at: backendTask.completed_at,
+    user_id: backendTask.user_id
+  } as Task
+  
+  console.log('🔄 转换任务:', {
+    title: task.title,
+    category: task.category,
+    type: task.type,
+    originalData: backendTask
+  })
+  
+  return task
 }
 
 /**
  * 转换前端任务数据为后端格式
- * 将 camelCase 字段转换为 snake_case
+ * Task 接口使用 snake_case，无需转换
  */
 function transformFrontendTask(frontendTask: Partial<Task>): any {
   const result: any = {}
@@ -127,14 +107,11 @@ function transformFrontendTask(frontendTask: Partial<Task>): any {
   if (frontendTask.description !== undefined) result.description = frontendTask.description
   if (frontendTask.type !== undefined) result.type = frontendTask.type
   if (frontendTask.priority !== undefined) result.priority = frontendTask.priority
-  if (frontendTask.dueDate !== undefined) result.due_date = frontendTask.dueDate
-  if (frontendTask.dueTime !== undefined) result.due_time = frontendTask.dueTime
-  if (frontendTask.isDaily !== undefined) result.is_daily = frontendTask.isDaily
-  if (frontendTask.categoryIcon !== undefined) result.category_icon = frontendTask.categoryIcon
-  if (frontendTask.checkinType !== undefined) result.checkin_type = frontendTask.checkinType
-  if (frontendTask.checkinRecurrence !== undefined) result.checkin_recurrence = frontendTask.checkinRecurrence
-  if (frontendTask.checkinPreset !== undefined) result.checkin_preset = frontendTask.checkinPreset
-  if (frontendTask.aiPrompt !== undefined) result.ai_prompt = frontendTask.aiPrompt
+  if (frontendTask.due_date !== undefined) result.due_date = frontendTask.due_date
+  if (frontendTask.category !== undefined) result.category = frontendTask.category
+  if (frontendTask.checkin_type !== undefined) result.checkin_type = frontendTask.checkin_type
+  if (frontendTask.preset_type !== undefined) result.preset_type = frontendTask.preset_type
+  if (frontendTask.date_type !== undefined) result.date_type = frontendTask.date_type
   
   return result
 }
@@ -184,7 +161,7 @@ export function useTodolist() {
       const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1)
 
       result = result.filter(task => {
-        const dueDate = new Date(task.dueDate)
+        const dueDate = new Date(task.due_date)
         switch (filter.dateRange) {
           case 'today':
             return dueDate >= startOfDay && dueDate < new Date(startOfDay.getTime() + 86400000)
@@ -309,40 +286,79 @@ export function useTodolist() {
         { method: 'GET' }
       )
       const data = await response.json()
-      console.log('获取任务列表响应:', data)
+      console.log('📋 获取任务列表响应:', data)
       
       if (data.success && data.data) {
         // 后端返回 { data: tasks, pagination: {...} }
         const taskList = Array.isArray(data.data.data) ? data.data.data : data.data
-        tasks.value = taskList.map((task: any) => transformBackendTask(task))
+        console.log('✅ 任务数量:', taskList.length, '任务列表:', taskList)
+        tasks.value = taskList.map((task: any) => {
+          console.log('📌 原始后端任务:', task)
+          return transformBackendTask(task)
+        })
+        console.log('🎯 转换后的任务:', tasks.value)
         await calculateStats()
       } else {
         throw new Error(data.message || '获取任务列表失败')
       }
     } catch (err: any) {
       error.value = err.message || '获取任务列表失败'
-      console.error('获取任务列表错误:', err)
+      console.error('❌ 获取任务列表错误:', err)
     } finally {
       loading.value = false
     }
   }
 
   /**
-   * 计算统计数据
-   * GET /api/tasks/stats
+   * 计算统计数据（基于本地任务数据）
    */
   async function calculateStats() {
     try {
-      const response = await fetchWithRefresh('/api/tasks/stats', { method: 'GET' })
-      const data = await response.json()
-      console.log('获取任务统计响应:', data)
+      console.log('📊 计算统计数据，当前任务数:', tasks.value.length)
       
-      if (data.success && data.data) {
-        // 直接使用后端返回的统计数据
-        stats.value = data.data
+      // 根据本地任务数据计算统计
+      const total = tasks.value.length
+      const completed = tasks.value.filter(t => t.status === 'completed').length
+      const pending = tasks.value.filter(t => t.status === 'pending').length
+      const overdue = tasks.value.filter(t => t.status === 'overdue').length
+      
+      // 按优先级统计
+      const byPriority = {
+        high: tasks.value.filter(t => t.priority === 'high').length,
+        medium: tasks.value.filter(t => t.priority === 'medium').length,
+        low: tasks.value.filter(t => t.priority === 'low').length
       }
+      
+      // 按类型统计（旧的分类方式，兼容后端）
+      const byType = {
+        checkin_exercise: tasks.value.filter(t => t.type === 'checkin_exercise').length,
+        checkin_meal: tasks.value.filter(t => t.type === 'checkin_meal').length,
+        checkin_sleep: tasks.value.filter(t => t.type === 'checkin_sleep').length,
+        custom: tasks.value.filter(t => t.type === 'custom').length,
+        ai_suggested: tasks.value.filter(t => t.type === 'ai_suggested').length
+      }
+      
+      const completion_rate = total > 0 ? Math.round((completed / total) * 100) : 0
+      
+      stats.value = {
+        total,
+        completed,
+        pending,
+        overdue,
+        completion_rate,
+        byType,
+        byPriority
+      }
+      
+      console.log('📈 统计数据已更新:', {
+        total,
+        completed,
+        pending,
+        overdue,
+        completion_rate: `${completion_rate}%`
+      })
     } catch (err: any) {
-      console.error('计算统计数据错误:', err)
+      console.error('❌ 计算统计数据错误:', err)
     }
   }
 
@@ -466,20 +482,27 @@ export function useTodolist() {
       })
       const data = await response.json()
       
+      console.log('📝 完成任务响应:', data)
+      
       if (data.success && data.data) {
         const updatedTask = transformBackendTask(data.data)
         const index = tasks.value.findIndex(t => t.id === id)
+        
         if (index > -1) {
           tasks.value[index] = updatedTask
         }
+        
+        console.log(`✅ 任务已完成: ${updatedTask.title}`)
         await calculateStats()
         return updatedTask
       } else {
-        throw new Error(data.message || '标记完成失败')
+        const errorMsg = data.message || '标记完成失败'
+        console.error('❌ 完成任务失败:', errorMsg)
+        throw new Error(errorMsg)
       }
     } catch (err: any) {
       error.value = err.message || '标记完成失败'
-      console.error('标记完成错误:', err)
+      console.error('❌ 标记完成错误:', err)
       throw err
     } finally {
       loading.value = false

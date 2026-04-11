@@ -135,7 +135,6 @@
 
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue'
-import { useTodolist } from '../../composables/useTodolist'
 
 interface Props {
   isOpen: boolean
@@ -246,21 +245,6 @@ const handleCreateTask = async () => {
 
     const categoryConfig = categoryMap[selectedCategory.value] || categoryMap['custom']
 
-    const taskData: any = {
-      title: formData.value.title,
-      description: formData.value.description,
-      priority: formData.value.priority,
-      category: selectedCategory.value,
-      category_icon: categoryConfig.icon,
-      type: categoryConfig.type,
-      checkin_type: categoryConfig.checkinType || undefined,
-      preset_type: selectedPreset.value || undefined,
-      checkin_recurrence: formData.value.dateType,
-      checkin_preset: selectedPreset.value || undefined,
-      is_daily: formData.value.dateType === 'everyday',
-      date_type: formData.value.dateType
-    }
-
     // 计算实际的 due_date
     const today = new Date()
     let dueDate = new Date()
@@ -302,14 +286,23 @@ const handleCreateTask = async () => {
         break
     }
 
-    taskData.due_date = dueDate.toISOString().split('T')[0]
+    // 使用 snake_case 构建任务数据（与 Task 接口一致）
+    const taskData: any = {
+      title: formData.value.title,
+      description: formData.value.description,
+      priority: formData.value.priority,
+      type: categoryConfig.type,
+      checkin_type: categoryConfig.checkinType || undefined,
+      category: selectedCategory.value,
+      preset_type: selectedPreset.value || undefined,
+      date_type: formData.value.dateType,
+      due_date: dueDate.toISOString().split('T')[0]
+    }
 
     console.log('📝 创建任务数据:', taskData)
 
-    // 调用 useTodolist 的 createTask 方法
-    const { createTask } = useTodolist()
-    await createTask(taskData)
-
+    // 只发送事件，不直接调用 createTask（避免重复）
+    // 父组件会调用 createTask
     emit('create', taskData)
 
     // 重置表单

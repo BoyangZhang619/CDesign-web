@@ -41,8 +41,6 @@
               v-else
               :filtered-tasks="filteredTasks"
               @toggle="toggleTask"
-              @open="openTask"
-              @edit="editTask"
               @delete="handleDeleteTask"
               @accept="handleAcceptTask"
               @reject="handleRejectTask"
@@ -123,7 +121,9 @@ const toggleSidebar = () => {
 }
 
 const handleSetFilter = (status: string) => {
-  currentFilter.value = status
+  fetchTasks().then(() => {
+    currentFilter.value = status
+  })
 }
 
 const handleSearch = (keyword: string) => {
@@ -143,9 +143,12 @@ const handleCreateTaskSubmit = async (taskData: any) => {
   try {
     // createTask 已经直接调用 API 并更新本地状态
     await createTask(taskData)
-    closeCreateModal()
   } catch (err) {
     console.error('创建任务失败:', err)
+  } finally {
+    // 无论成功与否都关闭模态框
+    closeCreateModal()
+    fetchTasks() // 刷新任务列表
   }
 }
 
@@ -162,16 +165,11 @@ const toggleTask = async (taskId: string | number) => {
     }
   } catch (err) {
     console.error('切换任务状态失败:', err)
+  } finally {
+    fetchTasks() // 刷新任务列表
   }
 }
 
-const openTask = (taskId: string | number) => {
-  console.log('打开任务:', taskId)
-}
-
-const editTask = (taskId: string | number) => {
-  console.log('编辑任务:', taskId)
-}
 
 const handleDeleteTask = async (taskId: string | number) => {
   if (confirm('确定要删除这个任务吗？')) {
@@ -180,6 +178,8 @@ const handleDeleteTask = async (taskId: string | number) => {
       await deleteTask(id)
     } catch (err) {
       console.error('删除任务失败:', err)
+    } finally {
+      fetchTasks() // 刷新任务列表
     }
   }
 }
@@ -190,6 +190,8 @@ const handleAcceptTask = async (taskId: string | number) => {
     await acceptAISuggestion(id)
   } catch (err) {
     console.error('接受建议失败:', err)
+  } finally {
+    fetchTasks() // 刷新任务列表
   }
 }
 
@@ -199,6 +201,8 @@ const handleRejectTask = async (taskId: string | number) => {
     await rejectAISuggestion(id)
   } catch (err) {
     console.error('驳回建议失败:', err)
+  } finally {
+    fetchTasks() // 刷新任务列表
   }
 }
 

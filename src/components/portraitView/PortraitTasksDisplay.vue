@@ -50,13 +50,13 @@
       >
         <!-- 左侧：图标和基本信息 -->
         <div class="task-left">
-          <span class="task-icon">{{ task.categoryIcon }}</span>
+          <span class="task-icon">{{ task.category }}</span>
           <div class="task-info">
             <h4 class="task-title">{{ task.title }}</h4>
             <p v-if="task.description" class="task-description">{{ task.description }}</p>
             <div class="task-meta">
-              <span v-if="task.dueDate" class="meta-item due-date">
-                📅 {{ formatDate(task.dueDate) }}
+              <span v-if="task.due_date" class="meta-item due-date">
+                📅 {{ formatDate(task.due_date) }}
               </span>
               <span class="meta-item task-type">
                 {{ getTaskTypeLabel(task.type) }}

@@ -28,9 +28,6 @@
             </div>
           </div>
           <div class="task-actions">
-            <button @click="$emit('edit', task.id)" class="btn-edit" title="编辑">
-              ✏️
-            </button>
             <button @click="$emit('delete', task.id)" class="btn-delete" title="删除">
               <svg viewBox="0 0 24 24" fill="currentColor">
                 <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-9l-1 1H5v2h14V4z"/>
@@ -69,9 +66,6 @@
             </div>
           </div>
           <div class="task-actions">
-            <button @click="$emit('edit', task.id)" class="btn-edit" title="编辑">
-              ✏️
-            </button>
             <button @click="$emit('delete', task.id)" class="btn-delete" title="删除">
               <svg viewBox="0 0 24 24" fill="currentColor">
                 <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-9l-1 1H5v2h14V4z"/>
@@ -110,9 +104,6 @@
             </div>
           </div>
           <div class="task-actions">
-            <button @click="$emit('edit', task.id)" class="btn-edit" title="编辑">
-              ✏️
-            </button>
             <button @click="$emit('delete', task.id)" class="btn-delete" title="删除">
               <svg viewBox="0 0 24 24" fill="currentColor">
                 <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-9l-1 1H5v2h14V4z"/>
@@ -151,9 +142,6 @@
             </div>
           </div>
           <div class="task-actions">
-            <button @click="$emit('edit', task.id)" class="btn-edit" title="编辑">
-              ✏️
-            </button>
             <button @click="$emit('delete', task.id)" class="btn-delete" title="删除">
               <svg viewBox="0 0 24 24" fill="currentColor">
                 <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-9l-1 1H5v2h14V4z"/>
@@ -165,9 +153,9 @@
     </div>
 
     <!-- 空状态提示 -->
-    <div v-else class="empty-state">
+    <!-- <div v-else class="empty-state">
       <p>📋 还没有任务，去创建一个新的吧！</p>
-    </div>
+    </div> -->
   </div>
 </template>
 
@@ -182,10 +170,26 @@ interface Props {
 const props = defineProps<Props>()
 
 // 按新的四个类别分组
-const dietTasks = computed(() => props.filteredTasks.filter(t => t.category === 'diet'))
-const exerciseTasks = computed(() => props.filteredTasks.filter(t => t.category === 'exercise'))
-const sleepTasks = computed(() => props.filteredTasks.filter(t => t.category === 'sleep'))
-const customTasks = computed(() => props.filteredTasks.filter(t => t.category === 'custom'))
+const dietTasks = computed(() => {
+  const result = props.filteredTasks.filter(t => t.category === 'diet')
+  console.log('🍽️ 饮食任务:', result)
+  return result
+})
+const exerciseTasks = computed(() => {
+  const result = props.filteredTasks.filter(t => t.category === 'exercise')
+  console.log('🏃 运动任务:', result)
+  return result
+})
+const sleepTasks = computed(() => {
+  const result = props.filteredTasks.filter(t => t.category === 'sleep')
+  console.log('😴 睡眠任务:', result)
+  return result
+})
+const customTasks = computed(() => {
+  const result = props.filteredTasks.filter(t => t.category === 'custom')
+  console.log('✏️ 自定义任务:', result)
+  return result
+})
 
 const formatDate = (dateStr: string): string => {
   if (!dateStr) return '-'

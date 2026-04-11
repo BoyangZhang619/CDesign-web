@@ -23,9 +23,16 @@
 }
 
 .stat-icon {
-  font-size: 28px;
+  width: 40px;
+  height: 40px;
   min-width: 40px;
-  text-align: center;
+  display: block;
+}
+
+/* SVG 图片使用 CSS filter 转换为 #7A8F95 颜色 */
+img.stat-icon {
+  object-fit: contain;
+  filter: invert(44%) sepia(10%) saturate(1068%) hue-rotate(162deg) brightness(101%) contrast(96%);
 }
 
 .stat-info {
