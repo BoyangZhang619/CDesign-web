@@ -50,7 +50,9 @@
       >
         <!-- 左侧：图标和基本信息 -->
         <div class="task-left">
-          <span class="task-icon">{{ task.category }}</span>
+          <span class="task-icon">
+            <img :src="iconSVGMap[(task.type as keyof typeof iconSVGMap)]" alt="" />
+          </span>
           <div class="task-info">
             <h4 class="task-title">{{ task.title }}</h4>
             <p v-if="task.description" class="task-description">{{ task.description }}</p>
@@ -103,6 +105,14 @@ const taskStats = computed(() => {
     pending: composableTasks.value.filter((t: any) => t.status === 'pending').length
   }
 })
+
+const iconSVGMap: object = {
+  'checkin_meal': '/noun-portrait-food.svg',
+  'checkin_sleep': '/noun-portrait-sleep.svg',
+  'checkin_exercise': '/noun-portrait-sport.svg',
+  'custom': '/noun-portrait-customization.svg',
+
+}
 
 // 方法
 const getTaskTypeLabel = (type: string): string => {
