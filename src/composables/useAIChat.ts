@@ -95,9 +95,12 @@ export function useAIChat() {
         reasoningState: 'streaming'
       }
       messages.value.push(aiMessageObj)
+      console.log('[stream] 已添加空消息占位符，content=""，应显示加载动画');
+      console.log('[stream] 当前消息数:', messages.value.length, '最后一条:', messages.value[messages.value.length - 1]);
 
       // 立即触发更新以显示消息开始接收（加载动画）
       await nextTick()
+      console.log('[stream] nextTick 完成，加载动画应该已显示');
 
       // ✅ 使用 Promise.resolve().then() 来延迟更新，不会阻塞 reader.read()
       const scheduleUpdate = () => {
@@ -118,14 +121,16 @@ export function useAIChat() {
           if (line.startsWith('data: ')) {
             try {
               const streamMsg = JSON.parse(line.slice(6)) as StreamMessage
+              console.log('[stream] 收到消息:', streamMsg.type, streamMsg)
 
               // ✅ 支持新的流式数据格式
               if (streamMsg.type === 'connected') {
                 // 连接已建立，保持加载动画显示
-                console.log('✅ 流式连接已建立')
+                console.log('✅ 流式连接已建立，显示加载动画')
               } else if (streamMsg.type === 'chunk') {
                 // 接收完整的文本块（后端已经完整处理）
                 // 这是第一个真实数据块，结束加载动画
+                console.log('📨 收到真实数据块，停止加载动画，内容:', streamMsg.content?.substring(0, 50))
                 aiMessage += streamMsg.content || ''
                 aiMessageObj.content = aiMessage
                 aiMessageObj.reasoningState = 'completed'
@@ -134,6 +139,7 @@ export function useAIChat() {
                 lastUpdateLength = aiMessage.length
               } else if (streamMsg.type === 'content') {
                 // 旧格式兼容
+                console.log('📝 收到 content 消息:', streamMsg.content?.substring(0, 50))
                 if (!reasoningCompleted && reasoningMessage) {
                   aiMessageObj.reasoningState = 'completed'
                   reasoningCompleted = true
@@ -148,6 +154,7 @@ export function useAIChat() {
                 }
               } else if (streamMsg.type === 'reasoning') {
                 // 旧格式兼容
+                console.log('🧠 收到 reasoning 消息:', streamMsg.content?.substring(0, 50))
                 reasoningMessage += streamMsg.content || ''
                 aiMessageObj.reasoning = reasoningMessage
                 
@@ -157,6 +164,7 @@ export function useAIChat() {
                 }
               } else if (streamMsg.type === 'done') {
                 // 流完成
+                console.log('✅ 流完成，totalTokens:', streamMsg.totalTokens)
                 totalTokens = (streamMsg.usage?.total_tokens || streamMsg.totalTokens || 0) as number
                 aiMessageObj.reasoningState = 'collapsed'
                 aiMessageObj.requestTime = Math.round(performance.now() - requestStartTime)
@@ -164,7 +172,7 @@ export function useAIChat() {
                 console.log('✅ 流式消息完成，总 Token:', totalTokens)
               }
             } catch (e) {
-              console.error('解析流式消息失败:', e)
+              console.error('解析流式消息失败:', e, '原始行:', line)
             }
           }
         }

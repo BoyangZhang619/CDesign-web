@@ -61,20 +61,13 @@
                   </details>
                 </div>
                 
-                <!-- 回复内容 -->
-                <div class="message-content">{{ msg.content }}</div>
-              </div>
-
-              <!-- 加载动画 -->
-              <div v-if="loading && messages.length > 0 && messages[messages.length - 1].role === 'user'" class="message-bubble msg-assistant">
-                <div class="message-header">
-                  <span class="message-role">AI</span>
-                </div>
-                <div class="message-loading">
+                <!-- 回复内容 或 加载动画 -->
+                <div v-if="msg.content === '' && msg.role === 'assistant'" class="message-loading">
                   <span class="loading-dot"></span>
                   <span class="loading-dot"></span>
                   <span class="loading-dot"></span>
                 </div>
+                <div v-else class="message-content">{{ msg.content }}</div>
               </div>
             </div>
           </div>
