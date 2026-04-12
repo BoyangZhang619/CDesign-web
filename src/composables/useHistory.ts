@@ -1,6 +1,10 @@
 import { ref, computed } from 'vue'
 import { fetchWithRefresh } from '../api/http'
 
+/**
+ * 打卡记录相关接口（原有功能）
+ */
+
 // 饮食记录
 export interface MealRecord {
   id: number
@@ -138,24 +142,28 @@ export function useHistory() {
         search: filters.value.searchText
       })
 
+      console.log('📝 [useHistory] 加载打卡记录，参数:', Object.fromEntries(params))
+
       const response = await fetchWithRefresh(`/api/history/get?${params}`, {
         method: 'GET'
       })
 
       const data = await response.json()
-      console.log('API response for history records:', data)
+      console.log('✅ [useHistory] API 响应:', data)
 
       if (response.ok && data.success) {
         // 将 API 返回的数据正确映射到本地记录
-        const apiRecords = data.data?.records || []
+        const apiRecords = data.data?.records || data.data?.data || []
         records.value = apiRecords as HistoryRecord[]
         totalCount.value = data.data?.total || 0
+        console.log(`📊 [useHistory] 返回 ${records.value.length} 条打卡记录，总计 ${totalCount.value} 条`)
       } else {
         errorMsg.value = data.message || '加载失败'
+        console.error('❌ [useHistory] 加载失败:', errorMsg.value)
       }
     } catch (error) {
       errorMsg.value = '网络错误'
-      console.error('Load records error:', error)
+      console.error('❌ [useHistory] 错误:', error)
     } finally {
       loading.value = false
     }
@@ -163,6 +171,7 @@ export function useHistory() {
 
   // 重置筛选
   function resetFilters() {
+    console.log('🔄 [useHistory] 重置筛选条件')
     filters.value = {
       type: '',
       startDate: '',
@@ -175,18 +184,21 @@ export function useHistory() {
 
   // 应用筛选
   function applyFilters() {
+    console.log('✨ [useHistory] 应用筛选条件:', filters.value)
     currentPage.value = 1
     loadRecords()
   }
 
   // 改变排序
   function changeSort(sort: string) {
+    console.log('📊 [useHistory] 改变排序为:', sort)
     currentSort.value = sort
     loadRecords()
   }
 
   // 改变类型筛选
   function changeType(type: string) {
+    console.log('🏷️ [useHistory] 改变类型为:', type)
     filters.value.type = type
     currentPage.value = 1
     loadRecords()
@@ -195,22 +207,26 @@ export function useHistory() {
   // 删除单条记录
   async function deleteRecord(id: number | string) {
     if (!confirm('确定要删除这条记录吗？')) {
+      console.log('❌ [useHistory] 用户取消删除')
       return
     }
 
     try {
+      console.log('🗑️ [useHistory] 删除记录 ID:', id)
       const response = await fetchWithRefresh(`/api/history/${id}`, {
         method: 'DELETE'
       })
 
       if (response.ok) {
+        console.log('✅ [useHistory] 记录删除成功')
         loadRecords()
       } else {
         errorMsg.value = '删除失败'
+        console.error('❌ [useHistory] 删除失败')
       }
     } catch (error) {
       errorMsg.value = '删除出错'
-      console.error('Delete error:', error)
+      console.error('❌ [useHistory] 删除错误:', error)
     }
   }
 
@@ -220,6 +236,9 @@ export function useHistory() {
   const paginationInfo = computed(() => {
     const start = (currentPage.value - 1) * pageSize.value + 1
     const end = Math.min(currentPage.value * pageSize.value, totalCount.value)
+    if (totalCount.value === 0) {
+      return '无记录'
+    }
     return `显示 ${start}-${end} 条，共 ${totalCount.value} 条`
   })
 
