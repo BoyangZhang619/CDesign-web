@@ -16,6 +16,9 @@ export interface UserProfile {
   updated_at: string
   deleted_at?: string
   credits: number
+  bio?: string
+  website?: string
+  location?: string
 }
 
 export function useUserProfile() {
@@ -88,6 +91,21 @@ export function useUserProfile() {
       return false
     }
 
+    if (editInfo.value.bio && editInfo.value.bio.length > 500) {
+      errorMsg.value = '个人简介长度不能超过500个字符'
+      return false
+    }
+
+    if (editInfo.value.website && editInfo.value.website.length > 255) {
+      errorMsg.value = '网站URL长度不能超过255个字符'
+      return false
+    }
+
+    if (editInfo.value.location && editInfo.value.location.length > 100) {
+      errorMsg.value = '地址长度不能超过100个字符'
+      return false
+    }
+
     return true
   }
 
@@ -108,9 +126,12 @@ export function useUserProfile() {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          nickname: editInfo.value.nickname,
-          phone: editInfo.value.phone,
-          avatar_url: editInfo.value.avatar_url
+          nickname: editInfo.value.nickname || null,
+          phone: editInfo.value.phone || null,
+          avatar_url: editInfo.value.avatar_url || null,
+          bio: editInfo.value.bio || null,
+          website: editInfo.value.website || null,
+          location: editInfo.value.location || null
         })
       })
 
@@ -141,7 +162,10 @@ export function useUserProfile() {
     return (
       editInfo.value.nickname !== userInfo.value.nickname ||
       editInfo.value.phone !== userInfo.value.phone ||
-      editInfo.value.avatar_url !== userInfo.value.avatar_url
+      editInfo.value.avatar_url !== userInfo.value.avatar_url ||
+      editInfo.value.bio !== userInfo.value.bio ||
+      editInfo.value.website !== userInfo.value.website ||
+      editInfo.value.location !== userInfo.value.location
     )
   })
 

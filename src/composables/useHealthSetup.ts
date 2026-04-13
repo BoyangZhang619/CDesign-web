@@ -1,4 +1,5 @@
 import { reactive, ref, computed } from 'vue'
+import { useAuthStore } from '../stores/auth'
 
 export interface HealthInfo {
   gender: string
@@ -105,12 +106,15 @@ export function useHealthSetup() {
     loading.value = true
 
     try {
+      const authStore = useAuthStore()
       const apiUrl = import.meta.env.VITE_API_URL || 'https://cda.api.zbyblq.xin'
+      const token = authStore.token || localStorage.getItem('StuHeal_access_token') || ''
+      
       const response = await fetch(`${apiUrl}/api/health-info/insert-health-info`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('StuHeal_access_token') || ''}`
+          'Authorization': `Bearer ${token}`
         },
         credentials: 'include',
         body: JSON.stringify(healthInfo)
@@ -120,8 +124,11 @@ export function useHealthSetup() {
         const errorData = await response.json().catch(() => ({}))
         throw new Error(errorData.message || '保存失败')
       }
+
+      errorMsg.value = ''
     } catch (error: any) {
       errorMsg.value = error?.message || '保存失败，请重试'
+      console.error('健康档案保存错误:', error)
     } finally {
       loading.value = false
     }

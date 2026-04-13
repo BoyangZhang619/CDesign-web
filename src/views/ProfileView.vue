@@ -13,7 +13,7 @@
 
         <!-- 右侧: 用户详细信息 -->
         <ProfileRightContent :userInfo="userInfo" :healthProfile="healthProfile" @edit="navigateToEdit"
-          @logout="handleLogout" />
+          @logout="handleLogout" @setup-health="handleSetupHealth" />
       </div>
     </div>
     <!-- Health Setup Modal -->
@@ -35,6 +35,7 @@ import { useAuthStore } from '../stores/auth'
 import { useUserProfile } from '../composables/useUserProfile'
 import AIChatFloatingWindow from '../components/AIChatFloatingWindow.vue'
 import { useTrendsView } from '../composables/useTrendsView'
+import HealthSetupModal from '../components/HealthSetupModal.vue'
 
 const router = useRouter()
 const authStore = useAuthStore()
@@ -49,6 +50,10 @@ const toggleSidebar = () => {
 
 const navigateToEdit = () => {
   router.push('/profile/edit')
+}
+
+const handleSetupHealth = () => {
+  showHealthSetupModal.value = true
 }
 
 const handleLogout = () => {
@@ -74,8 +79,72 @@ const closeAIChat = () => {
 
 onMounted(async () => {
   await loadUserInfo()
-  // 这里可以加载健康档案信息
+  // 加载健康档案状态
+  await loadHealthProfileStatus()
+  // 加载完整的健康档案数据
+  await loadFullHealthProfile()
 })
+
+const loadHealthProfileStatus = async () => {
+  try {
+    const response = await fetch(
+      `${import.meta.env.VITE_API_URL || 'https://cda.api.zbyblq.xin'}/api/health-info/check-health-info`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${authStore.token}`
+        },
+        credentials: 'include'
+      }
+    )
+
+    if (response.ok) {
+      const data = await response.json()
+      // 根据 API 返回值设置 healthProfile
+      // needHealthInfo: true 表示未设置，false 表示已设置
+      healthProfile.value = {
+        is_completed: !data.data?.needHealthInfo,
+        setup_date: data.data?.setup_date || null
+      }
+    }
+  } catch (error) {
+    console.error('加载健康档案状态失败:', error)
+    healthProfile.value = {
+      is_completed: false,
+      setup_date: null
+    }
+  }
+}
+
+const loadFullHealthProfile = async () => {
+  try {
+    const response = await fetch(
+      `${import.meta.env.VITE_API_URL || 'https://cda.api.zbyblq.xin'}/api/health-info/get-health-info`,
+      {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${authStore.token}`
+        },
+        credentials: 'include'
+      }
+    )
+
+    if (response.ok) {
+      const data = await response.json()
+      if (data.data?.healthInfo) {
+        // 合并健康档案的详细信息
+        healthProfile.value = {
+          ...healthProfile.value,
+          ...data.data.healthInfo
+        }
+      }
+    }
+  } catch (error) {
+    console.error('加载完整健康档案失败:', error)
+  }
+}
 </script>
 
 <style scoped>

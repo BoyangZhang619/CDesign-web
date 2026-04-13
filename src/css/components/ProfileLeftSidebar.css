@@ -29,11 +29,12 @@
   height: 100px;
   margin: 0 auto 16px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #9db4a0, #8fa591);
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
+  border: 3px solid #9db4a0;
+  background-color: #9db4a040;
 }
 
 .user-avatar {

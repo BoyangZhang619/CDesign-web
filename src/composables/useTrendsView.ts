@@ -60,6 +60,7 @@ export function useTrendsView() {
    * 处理健康档案关闭
    */
   function handleHealthSetupClose() {
+    showHealthSetupModal.value = false;
     console.log('用户选择稍后设置健康档案')
   }
 
