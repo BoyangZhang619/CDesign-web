@@ -241,7 +241,7 @@ export function useTaskCompletionHistory() {
   function changeSort(sort: string) {
     currentSort.value = sort
     currentPage.value = 1
-    loadRecords()
+    // loadRecords()
   }
 
   /**
@@ -250,7 +250,7 @@ export function useTaskCompletionHistory() {
   function changeType(type: string) {
     filters.value.type = type
     currentPage.value = 1
-    loadRecords()
+    // loadRecords()
   }
 
   /**
@@ -259,7 +259,7 @@ export function useTaskCompletionHistory() {
   function changeCategory(category: string) {
     filters.value.category = category
     currentPage.value = 1
-    loadRecords()
+    // loadRecords()
   }
 
   /**
@@ -268,7 +268,7 @@ export function useTaskCompletionHistory() {
   function changePriority(priority: string) {
     filters.value.priority = priority
     currentPage.value = 1
-    loadRecords()
+    // loadRecords()
   }
 
   /**
@@ -277,7 +277,7 @@ export function useTaskCompletionHistory() {
   function changeStatus(status: string) {
     filters.value.completionStatus = status
     currentPage.value = 1
-    loadRecords()
+    // loadRecords()
   }
 
   /**
@@ -287,7 +287,7 @@ export function useTaskCompletionHistory() {
     filters.value.startDate = startDate
     filters.value.endDate = endDate
     currentPage.value = 1
-    loadRecords()
+    // loadRecords()
   }
 
   /**
@@ -296,7 +296,7 @@ export function useTaskCompletionHistory() {
   function searchTasks(text: string) {
     filters.value.searchText = text
     currentPage.value = 1
-    loadRecords()
+    // loadRecords()
   }
 
   /**

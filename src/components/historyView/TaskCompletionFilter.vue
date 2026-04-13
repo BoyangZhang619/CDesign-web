@@ -15,7 +15,7 @@
           <button 
             v-for="option in typeOptions" 
             :key="option.value" 
-            @click="changeType(option.value)"
+            @click="$emit('type', option.value); changeType(option.value)"
             :class="['type-btn', { active: filters.type === option.value }]"
           >
             {{ option.label }}
@@ -30,7 +30,7 @@
           <button 
             v-for="option in categoryOptions" 
             :key="option.value" 
-            @click="changeCategory(option.value)"
+            @click="$emit('category', option.value); changeCategory(option.value)"
             :class="['category-btn', { active: filters.category === option.value }]"
           >
             {{ option.label }}
@@ -45,7 +45,7 @@
           <button 
             v-for="option in priorityOptions" 
             :key="option.value" 
-            @click="changePriority(option.value)"
+            @click="$emit('priority', option.value); changePriority(option.value)"
             :class="['priority-btn', { active: filters.priority === option.value }]"
           >
             {{ option.label }}
@@ -60,7 +60,7 @@
           <button 
             v-for="option in statusOptions" 
             :key="option.value" 
-            @click="changeStatus(option.value)"
+            @click="$emit('status', option.value); changeStatus(option.value)"
             :class="['status-btn', { active: filters.completionStatus === option.value }]"
           >
             {{ option.label }}
@@ -77,6 +77,7 @@
             <input 
               id="startDate" 
               v-model="filters.startDate" 
+              @change="$emit('date-range', { startDate: filters.startDate, endDate: filters.endDate })"
               type="date" 
               class="date-input"
             />
@@ -86,6 +87,7 @@
             <input 
               id="endDate" 
               v-model="filters.endDate" 
+              @change="$emit('date-range', { startDate: filters.startDate, endDate: filters.endDate })"
               type="date" 
               class="date-input"
             />
@@ -98,6 +100,7 @@
         <label class="filter-label">搜索任务</label>
         <input 
           v-model="filters.searchText" 
+          @input="$emit('search', filters.searchText)"
           type="text" 
           class="search-input"
           placeholder="输入任务标题搜索..."
@@ -123,7 +126,7 @@ defineProps({
   }
 })
 
-defineEmits(['toggle', 'apply', 'reset'])
+defineEmits(['toggle', 'apply', 'reset', 'sort', 'type', 'category', 'priority', 'status', 'date-range', 'search'])
 
 const { 
   filters, 
@@ -134,7 +137,7 @@ const {
   changeType, 
   changeCategory,
   changePriority,
-  changeStatus
+  changeStatus,
 } = useTaskCompletionHistory()
 </script>
 

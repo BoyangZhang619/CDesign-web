@@ -100,6 +100,13 @@
               @toggle="isTaskFilterPanelOpen = !isTaskFilterPanelOpen"
               @apply="handleApplyTaskFilters"
               @reset="handleResetTaskFilters"
+              @sort="handleTaskSort"
+              @type="handleTaskType"
+              @category="handleTaskCategory"
+              @priority="handleTaskPriority"
+              @status="handleTaskStatus"
+              @date-range="handleTaskDateRange"
+              @search="handleSearchTasks"
             />
 
             <!-- 任务统计信息 -->
@@ -207,7 +214,15 @@ const {
   loadRecords: loadTaskRecords,
   loadStats: loadTaskStats,
   resetFilters: resetTaskFilters,
-  applyFilters: applyTaskFilters
+  applyFilters: applyTaskFilters,
+  loadCompletionByDate: loadTaskCompletionByDate,
+  changeSort: changeTaskSort,
+  changeType: changeTaskType,
+  changeCategory: changeTaskCategory,
+  changePriority: changeTaskPriority,
+  changeStatus: changeTaskStatus,
+  setDateRange: setTaskDateRange,
+  searchTasks: searchTaskTasks,
 } = useTaskCompletionHistory()
 
 // 标签页切换
@@ -246,13 +261,13 @@ onMounted(() => {
   }
   loadRecords()
   
-  // 初始化任务完成记录筛选
-  if (!taskFilters.value.startDate) {
-    taskFilters.value.startDate = getCurrentDate()
-  }
-  if (!taskFilters.value.endDate) {
-    taskFilters.value.endDate = getCurrentDate()
-  }
+  // 初始化任务完成记录筛选 默认获取全部信息
+  // if (!taskFilters.value.startDate) {
+  //   taskFilters.value.startDate = getCurrentDate()
+  // }
+  // if (!taskFilters.value.endDate) {
+  //   taskFilters.value.endDate = getCurrentDate()
+  // }
 })
 
 // 打卡记录处理方法
@@ -285,6 +300,49 @@ const handleResetTaskFilters = () => {
   console.log('🔄 [HistoryView] 重置任务完成记录筛选条件')
   resetTaskFilters()
   isTaskFilterPanelOpen.value = false
+}
+
+// TaskCompletionFilter emit 处理函数 - 直接触发数据加载
+const handleTaskSort = (sort: string) => {
+  console.log('📊 [HistoryView] 改变任务排序:', sort)
+  changeTaskSort(sort)
+  loadTaskRecords()
+}
+
+const handleTaskType = (type: string) => {
+  console.log('🏷️ [HistoryView] 改变任务类型:', type)
+  changeTaskType(type)
+  loadTaskRecords()
+}
+
+const handleTaskCategory = (category: string) => {
+  console.log('📂 [HistoryView] 改变任务分类:', category)
+  changeTaskCategory(category)
+  loadTaskRecords()
+}
+
+const handleTaskPriority = (priority: string) => {
+  console.log('⚡ [HistoryView] 改变任务优先级:', priority)
+  changeTaskPriority(priority)
+  loadTaskRecords()
+}
+
+const handleTaskStatus = (status: string) => {
+  console.log('✓ [HistoryView] 改变任务完成状态:', status)
+  changeTaskStatus(status)
+  loadTaskRecords()
+}
+
+const handleTaskDateRange = (dateRange: { startDate: string; endDate: string }) => {
+  console.log('📅 [HistoryView] 改变任务日期范围:', dateRange)
+  setTaskDateRange(dateRange.startDate, dateRange.endDate)
+  loadTaskRecords()
+}
+
+const handleSearchTasks = (searchText: string) => {
+  console.log('🔍 [HistoryView] 搜索任务:', searchText)
+  searchTaskTasks(searchText)
+  loadTaskRecords()
 }
 
 const toggleSidebar = () => {

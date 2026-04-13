@@ -16,10 +16,10 @@ export function useTrendsView() {
 
   // 时间范围选项
   const dateRanges = [
-    { label: '本周', value: 'week' },
-    { label: '本月', value: 'month' },
-    { label: '本季度', value: 'quarter' },
-    { label: '本年', value: 'year' }
+    { label: '近7天', value: 'week' },
+    { label: '近30天', value: 'month' },
+    { label: '近90天', value: 'quarter' },
+    { label: '近一年', value: 'year' }
   ]
 
   // 统计数据

@@ -16,6 +16,7 @@ import TodolistView from '../views/TodolistView.vue'
 
 import { useAuthStore } from '../stores/auth'
 
+// 『』
 const routes = [
   {
     path: '/',
@@ -30,7 +31,7 @@ const routes = [
     component: HomeView,
     meta: {
       requiresAuth: true,
-      title: 'StuHeal - 导航中心'
+      title: 'StuHeal-青愈「导航中心」'
     }
   },
   {
@@ -38,7 +39,7 @@ const routes = [
     name: 'auth',
     component: AuthView,
     meta: {
-      title: 'StuHeal - 登录/注册'
+      title: 'StuHeal-青愈「登录/注册」'
     }
   },
   {
@@ -47,7 +48,7 @@ const routes = [
     component: ProfileView,
     meta: {
       requiresAuth: true,
-      title: 'StuHeal - 个人中心'
+      title: 'StuHeal-青愈「个人中心」'
     }
   },
   {
@@ -56,7 +57,7 @@ const routes = [
     component: ProfileEditView,
     meta: {
       requiresAuth: true,
-      title: 'StuHeal - 编辑个人信息'
+      title: 'StuHeal-青愈「编辑个人信息」'
     }
   },
   {
@@ -65,7 +66,7 @@ const routes = [
     component: AIChatView,
     meta: {
       requiresAuth: true,
-      title: 'StuHeal - AI健康助手'
+      title: 'StuHeal-青愈「AI健康助手」'
     }
   },
   {
@@ -74,7 +75,7 @@ const routes = [
     component: DailyCheckinDisplayView,
     meta: {
       requiresAuth: true,
-      title: 'StuHeal - 健康打卡'
+      title: 'StuHeal-青愈「健康打卡」'
     }
   },
   {
@@ -83,7 +84,7 @@ const routes = [
     component: HistoryView,
     meta: {
       requiresAuth: true,
-      title: 'StuHeal - 历史记录'
+      title: 'StuHeal-青愈「历史记录」'
     }
   },
   {
@@ -92,7 +93,7 @@ const routes = [
     component: MealCheckinDisplayView,
     meta: {
       requiresAuth: true,
-      title: 'StuHeal - 饮食打卡'
+      title: 'StuHeal-青愈「饮食打卡」'
     }
   },
   {
@@ -101,7 +102,7 @@ const routes = [
     component: SleepCheckinDisplayView,
     meta: {
       requiresAuth: true,
-      title: 'StuHeal - 睡眠打卡'
+      title: 'StuHeal-青愈「睡眠打卡」'
     }
   },
   {
@@ -110,7 +111,7 @@ const routes = [
     component: ExerciseCheckinDisplayView,
     meta: {
       requiresAuth: true,
-      title: 'StuHeal - 运动打卡'
+      title: 'StuHeal-青愈「运动打卡」'
     }
   },
   {
@@ -119,7 +120,7 @@ const routes = [
     component: PortraitView,
     meta: {
       requiresAuth: true,
-      title: 'StuHeal - 健康画像'
+      title: 'StuHeal-青愈「健康画像」'
     }
   },
   {
@@ -128,7 +129,7 @@ const routes = [
     component: TrendsView,
     meta: {
       requiresAuth: true,
-      title: 'StuHeal - 健康趋势'
+      title: 'StuHeal-青愈「健康趋势」'
     }
   },
   {
@@ -137,7 +138,7 @@ const routes = [
     component: TodolistView,
     meta: {
       requiresAuth: true,
-      title: 'StuHeal - TodoList'
+      title: 'StuHeal-青愈「TodoList」'
     }
   }
 ]

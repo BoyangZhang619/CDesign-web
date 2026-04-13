@@ -316,7 +316,6 @@ const scoreOffset = computed(() => {
 
 @media (max-width: 480px) {
   .card-header {
-    flex-direction: column;
     align-items: flex-start;
     gap: 10px;
   }
