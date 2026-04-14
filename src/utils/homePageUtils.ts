@@ -3,6 +3,8 @@
  * 处理东八区时间、数据聚合、趋势分析等
  */
 
+import { getLocalISOString } from "./dateTime"
+
 // 东八区时间工具
 export function getTimeInCST(): Date {
     const now = new Date()
@@ -361,7 +363,7 @@ export function getTrendData(records: any[], days: number = 7): {
     for (let i = days - 1; i >= 0; i--) {
         const date = new Date(today)
         date.setDate(date.getDate() - i)
-        const dateStr = date.toISOString().split('T')[0]
+        const dateStr = getLocalISOString(date).split('T')[0]
         dates.push(dateStr)
 
         // 统计该日期的记录数

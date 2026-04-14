@@ -1,15 +1,6 @@
 import { ref, computed } from 'vue'
 import { fetchWithRefresh } from '../api/http'
-
-// 获取本地时间的 ISO 字符串（不转换为 UTC）
-function getLocalISOString(date: Date): string {
-  const year = date.getFullYear()
-  const month = String(date.getMonth() + 1).padStart(2, '0')
-  const day = String(date.getDate()).padStart(2, '0')
-  const hours = String(date.getHours()).padStart(2, '0')
-  const minutes = String(date.getMinutes()).padStart(2, '0')
-  return `${year}-${month}-${day}T${hours}:${minutes}`
-}
+import { getLocalISOString } from '@/utils/dateTime'
 
 export interface SleepRecord {
   id: string
@@ -134,8 +125,8 @@ export function useSleepCheckin() {
 
     try {
       const payload: SleepCheckinForm = {
-        sleep_start_time: new Date(form.value.sleep_start_time).toISOString().replace('T', ' ').slice(0, 19),
-        wake_up_time: new Date(form.value.wake_up_time).toISOString().replace('T', ' ').slice(0, 19),
+        sleep_start_time: getLocalISOString(new Date(form.value.sleep_start_time)),
+        wake_up_time: getLocalISOString(new Date(form.value.wake_up_time)),
         is_nap: form.value.is_nap || 0,
         wake_up_times: form.value.wake_up_times || 0,
         sleep_feeling: form.value.sleep_feeling || ''
@@ -203,10 +194,10 @@ export function useSleepCheckin() {
       const payload: any = {}
 
       if (updateData.sleep_start_time) {
-        payload.sleep_start_time = new Date(updateData.sleep_start_time).toISOString().replace('T', ' ').slice(0, 19)
+        payload.sleep_start_time = getLocalISOString(new Date(updateData.sleep_start_time))
       }
       if (updateData.wake_up_time) {
-        payload.wake_up_time = new Date(updateData.wake_up_time).toISOString().replace('T', ' ').slice(0, 19)
+        payload.wake_up_time = getLocalISOString(new Date(updateData.wake_up_time))
       }
       if (updateData.is_nap !== undefined) {
         payload.is_nap = updateData.is_nap

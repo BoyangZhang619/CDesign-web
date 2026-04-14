@@ -1,15 +1,6 @@
 import { ref, computed } from 'vue'
 import { fetchWithRefresh } from '../api/http'
-
-// 获取本地时间的 ISO 字符串（不转换为 UTC）
-function getLocalISOString(date: Date): string {
-  const year = date.getFullYear()
-  const month = String(date.getMonth() + 1).padStart(2, '0')
-  const day = String(date.getDate()).padStart(2, '0')
-  const hours = String(date.getHours()).padStart(2, '0')
-  const minutes = String(date.getMinutes()).padStart(2, '0')
-  return `${year}-${month}-${day}T${hours}:${minutes}`
-}
+import { getLocalISOString } from '@/utils/dateTime'
 
 export interface MealRecord {
   id: string
@@ -52,7 +43,7 @@ export function useMealCheckin() {
     food_source: 'canteen',
     food_name: '',
     food_detail: '',
-    meal_time: getLocalISOString(new Date()),
+    meal_time: getLocalISOString(),
     calories: 0,
     protein_g: 0,
     fat_g: 0,
@@ -142,7 +133,7 @@ export function useMealCheckin() {
         food_source: form.value.food_source,
         food_name: form.value.food_name,
         food_detail: form.value.food_detail,
-        meal_time: new Date(form.value.meal_time).toISOString().replace('T', ' ').slice(0, 19),
+        meal_time: getLocalISOString(new Date(form.value.meal_time)).replace('T', ' ').slice(0, 19),
         calories: 0,
         protein_g: 0,
         fat_g: 0,

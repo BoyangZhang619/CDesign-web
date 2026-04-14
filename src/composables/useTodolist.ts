@@ -1,6 +1,7 @@
 import { ref, computed, reactive } from 'vue'
 import { fetchWithRefresh } from '../api/http'
 import type { Task } from '../types/todolist'
+import { getLocalISOString } from '@/utils/dateTime'
 
 /**
  * ==================== 类型定义 ====================
@@ -477,7 +478,7 @@ export function useTodolist() {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          completed_date: new Date().toISOString().split('T')[0]
+          completed_date: getLocalISOString().split('T')[0]
         })
       })
       const data = await response.json()
@@ -579,7 +580,7 @@ export function useTodolist() {
         body: JSON.stringify({
           type: typeMap[checkinType],
           completed,
-          checkin_date: new Date().toISOString().split('T')[0]
+          checkin_date: getLocalISOString().split('T')[0]
         })
       })
       const data = await response.json()

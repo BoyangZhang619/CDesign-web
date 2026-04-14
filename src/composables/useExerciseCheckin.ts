@@ -1,15 +1,8 @@
 import { ref, computed } from 'vue'
 import { fetchWithRefresh } from '../api/http'
+import { getLocalISOString } from '@/utils/dateTime'
 
 // 获取本地时间的 ISO 字符串（不转换为 UTC）
-function getLocalISOString(date: Date): string {
-  const year = date.getFullYear()
-  const month = String(date.getMonth() + 1).padStart(2, '0')
-  const day = String(date.getDate()).padStart(2, '0')
-  const hours = String(date.getHours()).padStart(2, '0')
-  const minutes = String(date.getMinutes()).padStart(2, '0')
-  return `${year}-${month}-${day}T${hours}:${minutes}`
-}
 
 export interface ExerciseRecord {
   exercise_record_id: string | number
@@ -138,8 +131,8 @@ export function useExerciseCheckin() {
       const payload = {
         activity_type: form.value.activity_type,
         intensity: form.value.intensity,
-        start_time: new Date(form.value.start_time).toISOString().replace('T', ' ').slice(0, 19),
-        end_time: new Date(form.value.end_time).toISOString().replace('T', ' ').slice(0, 19),
+        start_time: getLocalISOString(new Date(form.value.start_time)),
+        end_time: getLocalISOString(new Date(form.value.end_time)),
         note: form.value.note || ''
       }
 
@@ -210,10 +203,10 @@ export function useExerciseCheckin() {
         payload.intensity = updateData.intensity
       }
       if (updateData.start_time) {
-        payload.start_time = new Date(updateData.start_time).toISOString().replace('T', ' ').slice(0, 19)
+        payload.start_time = getLocalISOString(new Date(updateData.start_time)).replace('T', ' ').slice(0, 19)
       }
       if (updateData.end_time) {
-        payload.end_time = new Date(updateData.end_time).toISOString().replace('T', ' ').slice(0, 19)
+        payload.end_time = getLocalISOString(new Date(updateData.end_time)).replace('T', ' ').slice(0, 19)
       }
       if (updateData.note !== undefined) {
         payload.note = updateData.note

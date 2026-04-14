@@ -135,6 +135,7 @@
 
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue'
+import { getLocalISOString } from '@/utils/dateTime'
 
 interface Props {
   isOpen: boolean
@@ -296,7 +297,7 @@ const handleCreateTask = async () => {
       category: selectedCategory.value,
       preset_type: selectedPreset.value || undefined,
       date_type: formData.value.dateType,
-      due_date: dueDate.toISOString().split('T')[0]
+      due_date: getLocalISOString(dueDate).split('T')[0]
     }
 
     console.log('📝 创建任务数据:', taskData)

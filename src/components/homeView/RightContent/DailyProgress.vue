@@ -6,16 +6,54 @@
     <div class="progress-circle">
       <svg viewBox="0 0 120 120" class="circle-svg">
         <circle cx="60" cy="60" r="50" class="circle-background"></circle>
-        <circle cx="60" cy="60" r="50" class="circle-progress" style="stroke-dashoffset: 62.8"></circle>
+        <circle cx="60" cy="60" r="50" class="circle-progress" :style="{ strokeDashoffset: svgStrokeDashOffset }"></circle>
       </svg>
       <div class="circle-content">
-        <span class="progress-percentage">80%</span>
+        <span class="progress-percentage">{{ todayCompletionPercentage }}%</span>
       </div>
     </div>
   </section>
 </template>
 
 <script setup lang="ts">
+import { computed, onMounted } from 'vue';
+import { useTodolist } from '../../../composables/useTodolist';
+import { getLocalISOString } from '@/utils/dateTime';
+
+const { tasks, fetchTasks } = useTodolist();
+
+// 获取今天的任务完成度
+const todayCompletionPercentage = computed(() => {
+  if (!Array.isArray(tasks.value) || tasks.value.length === 0) return 0;
+  
+  const today = getLocalISOString().split('T')[0];
+  
+  // 过滤今天的任务，正确处理日期格式
+  const todayTasks = tasks.value.filter(task => {
+    const taskDateStr = typeof task.due_date === 'string' 
+      ? task.due_date.split('T')[0] 
+      : getLocalISOString(task.due_date).split('T')[0];
+    return taskDateStr === today;
+  });
+  
+  if (todayTasks.length === 0) return 0;
+  
+  const completedCount = todayTasks.filter(task => task.status === 'completed').length;
+  return Math.round((completedCount / todayTasks.length) * 100);
+});
+
+// SVG stroke-dasharray 总长度为 314 (2 * π * 50)
+// 根据完成度计算 stroke-dashoffset
+const svgStrokeDashOffset = computed(() => {
+  const circumference = 314; // 2 * π * 50
+  const offset = circumference - (todayCompletionPercentage.value / 100) * circumference;
+  return offset;
+});
+
+onMounted(() => {
+  fetchTasks();
+});
+
 </script>
 
 <style scoped>

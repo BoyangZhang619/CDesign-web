@@ -1,6 +1,7 @@
 import { ref } from 'vue'
 import { useAuthForm } from '../composables/useAuthForm'
 import { fetchWithRefresh } from '../api/http'
+import { getLocalISOString } from '@/utils/dateTime'
 
 interface Metrics {
   bmi: number
@@ -257,7 +258,7 @@ export function usePortraitView() {
           
           const timelineEvents = (portraitInfo.timeline || []).map((event: any, idx: number) => ({
             id: `event-${idx}`,
-            date: event.date || new Date().toISOString(),
+            date: event.date || getLocalISOString(),
             title: event.title || '健康事件',
             description: event.description || '',
             status: (event.status === 'completed' ? 'completed' : 'pending') as 'completed' | 'pending'
@@ -309,7 +310,7 @@ export function usePortraitView() {
             timelineEvents: timelineEvents.length > 0 ? timelineEvents : [
               {
                 id: 'default-1',
-                date: new Date().toISOString(),
+                date: getLocalISOString(),
                 title: '健康档案已建立',
                 description: '您的个人健康档案已成功创建',
                 status: 'completed'

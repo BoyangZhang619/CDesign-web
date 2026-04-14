@@ -266,6 +266,7 @@
 import { ref, computed, onMounted } from 'vue'
 import Sidebar from '../components/homeView/Sidebar.vue'
 import TopHeader from '../components/homeView/TopHeader.vue'
+import { getLocalISOString } from '@/utils/dateTime'
 
 interface CheckinData {
   exercise?: { status: string; data: any }
@@ -276,7 +277,7 @@ interface CheckinData {
 
 const sidebarRef = ref<InstanceType<typeof Sidebar>>()
 const currentTab = ref('exercise')
-const selectedDate = ref(new Date().toISOString().split('T')[0])
+const selectedDate = ref(getLocalISOString().split('T')[0])
 const checkinData = ref<CheckinData>({})
 
 // 表单数据
@@ -329,7 +330,7 @@ const statusLabels = {
 
 // 今日打卡总结
 const todayCheckinsSummary = computed(() => {
-  const today = new Date().toISOString().split('T')[0]
+  const today = getLocalISOString().split('T')[0]
   if (selectedDate.value !== today) return null
   
   return {

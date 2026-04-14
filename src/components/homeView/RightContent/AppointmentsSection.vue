@@ -1,13 +1,15 @@
 <template>
   <section class="appointments-calendar">
-    <div class="list-header">
+    <!-- 头部 -->
+    <div class="calendar-header-top">
       <h3 class="section-title">TODOLIST</h3>
-      <div class="tabs">
-        <button :class="['tab-btn', { active: !showCalendar }]" @click="showCalendar = false">每日</button>
-        <button :class="['tab-btn', { active: showCalendar }]" @click="showCalendar = true">月度</button>
+      <div>
+        <button :class="['tab-btn', { active: !showCalendar }]" @click="handleTabChange(false)">每日</button>
+        <button :class="['tab-btn', { active: showCalendar }]" @click="handleTabChange(true)">月度</button>
       </div>
     </div>
 
+    <!-- 日历视图 -->
     <div class="calendar" v-if="showCalendar">
       <div class="calendar-header">
         <h4>{{ demoTime.year }}年{{ demoTime.month + 1 }}月</h4>
@@ -29,39 +31,77 @@
           class="date-cell"
           v-for="date in demoMonthDays"
           :key="'date-' + date"
-          :class="{ today: date === curTime.date && demoTime.month === curTime.month && demoTime.year === curTime.year, selected: date%11 === 2 }"
+          :class="{ today: date === curTime.date && demoTime.month === curTime.month && demoTime.year === curTime.year, selected: selectedDate === `${demoTime.year}-${String(demoTime.month + 1).padStart(2, '0')}-${String(date).padStart(2, '0')}` }"
+          @click="handleDateSelect(date)"
         >
           {{ date }}
         </div>
       </div>
     </div>
 
-    <div class="appointments-list">
-      <div v-for="item in (scheduleData.length ? scheduleData.slice(0, 3) : predemoData.slice(0, 3))" :key="item.id" class="appointment-list-item">
-        <div class="item-avatar"></div>
-        <div class="item-content">
-          <p class="item-title">{{ item.title }}</p>
-          <p class="item-time">{{ item.time }}</p>
+    <!-- 任务列表 -->
+    <div class="tasks-container">
+      <div v-if="scheduleData.length === 0" class="tasks-empty">
+        <p>暂无任务</p>
+        <small>开始创建你的第一个任务吧</small>
+      </div>
+      
+      <div v-else class="tasks-list">
+        <div 
+          v-for="task in scheduleData.slice(0, 3)" 
+          :key="task.id"
+          class="task-item"
+          :class="[
+            `priority-${task.priority}`,
+            { completed: task.status === 'completed' }
+          ]"
+        >
+          <!-- 左侧：优先级指示 + 任务信息 -->
+          <div class="task-left">
+            <div class="priority-indicator"></div>
+            <div class="task-info">
+              <h4 class="task-title">{{ task.title }}</h4>
+              <p class="task-time">
+                📅 {{ task.time }}
+              </p>
+            </div>
+          </div>
+
+          <!-- 右侧：优先级标签 + 状态 -->
+          <div class="task-right">
+            <span class="priority-badge">{{ getPriorityLabel(task.priority) }}</span>
+            <span class="status-icon">
+              <svg v-if="task.status === 'completed'" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                <circle cx="8" cy="8" r="7.5" stroke="#4caf50" stroke-width="1.5" fill="#e8f5e9"/>
+                <path d="M5.5 8L7 9.5L10.5 6" stroke="#4caf50" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              <svg v-else width="16" height="16" viewBox="0 0 16 16" fill="none">
+                <circle cx="8" cy="8" r="7.5" stroke="#bbb" stroke-width="1.5"/>
+              </svg>
+            </span>
+          </div>
         </div>
       </div>
     </div>
 
+    <!-- 底部链接 -->
     <button class="see-more-btn" @click="jumpToDetail">查看完整日程 →</button>
   </section>
 </template>
 
 <script setup lang="ts">
-import { reactive, ref, computed } from 'vue';
+import { reactive, ref, computed, onMounted, watch, toRaw } from 'vue';
 import { useRouter } from 'vue-router';
+import { useTodolist } from '../../../composables/useTodolist';
+import { getLocalISOString } from '@/utils/dateTime';
 
 const router = useRouter();
+const { tasks, fetchTasks } = useTodolist();
 
-const scheduleData = ref([]);
-const predemoData = ref([
-  { id: 1, title: '12点前碎觉', time: '22:00 - 00:00' },
-  { id: 2, title: '及时吃早餐', time: '09:00am - 10:00am' }
-]);
-const showCalendar = ref(true)
+const scheduleData = ref<any[]>([]);
+const selectedDate = ref<string>('');
+const showCalendar = ref(false);
+
 const curTime = reactive({
   year: (new Date()).getFullYear(),
   month: (new Date()).getMonth(),
@@ -69,16 +109,108 @@ const curTime = reactive({
   day: (new Date()).getDay(),
   hour: (new Date()).getHours(),
   minute: (new Date()).getMinutes()
-})
+});
+
 let _cnt_year = (new Date()).getFullYear();
 let _cnt_month = (new Date()).getMonth();
 const demoTime = reactive({
   year: _cnt_year,
   month: _cnt_month
-})
+});
+
 const demoMonthDays = computed(() => {
-  return new Date(new Date(demoTime.year,demoTime.month).getFullYear(), new Date(demoTime.year,demoTime.month).getMonth() + 1, 0).getDate();
-})
+  return new Date(new Date(demoTime.year, demoTime.month).getFullYear(), new Date(demoTime.year, demoTime.month).getMonth() + 1, 0).getDate();
+});
+
+// 格式化任务时间显示
+const formatTaskTime = (task: any): string => {
+  if (!task.due_time) {
+    const date = new Date(task.due_date);
+    return date.toLocaleDateString('zh-CN', {
+      month: 'numeric',
+      day: 'numeric'
+    });
+  }
+  return task.due_time.substring(0, 5); // HH:mm format
+};
+
+// 获取今天的任务（未完成）
+const todayTasks = computed(() => {
+  if (!Array.isArray(tasks.value)) return [];
+  return toRaw(tasks.value);
+});
+
+// 获取指定日期的任务
+const getTasksByDate = (dateStr: string): any[] => {
+  if (!Array.isArray(tasks.value)) return [];
+  return tasks.value.filter(task => {
+    // 正确处理日期格式
+    const taskDateStr = typeof task.due_date === 'string' 
+      ? task.due_date.split('T')[0] 
+      : getLocalISOString(task.due_date).split('T')[0];
+    return taskDateStr === dateStr && task.status === 'pending';
+  });
+};
+
+// 处理 tab 切换
+const handleTabChange = (isMonthly: boolean) => {
+  showCalendar.value = isMonthly;
+  if (!isMonthly) {
+    // 每日：加载今天的任务
+    updateDailyTasks();
+  }
+};
+
+// 处理日期选择（月度视图）
+const handleDateSelect = (day: number) => {
+  const dateStr = `${demoTime.year}-${String(demoTime.month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+  selectedDate.value = dateStr;
+  updateMonthlyTasks(dateStr);
+};
+
+// 更新每日任务显示
+const updateDailyTasks = () => {
+  console.log('🔄 updateDailyTasks: 开始');
+  console.log('� todayTasks.value.length:', todayTasks.value.length);
+  
+  const newScheduleData = todayTasks.value
+    .slice(0, 3)
+    .map(task => ({
+      id: task.id,
+      title: task.title,
+      time: formatTaskTime(task)
+    }));
+  
+  scheduleData.value = newScheduleData;
+  console.log('🔄 updateDailyTasks: 完成, scheduleData.length:', scheduleData.value.length);
+  console.log('🔄 scheduleData:', scheduleData.value);
+};
+
+// 更新月度任务显示
+const updateMonthlyTasks = (dateStr: string) => {
+  const tasksForDate = getTasksByDate(dateStr);
+  scheduleData.value = tasksForDate
+    .slice(0, 3)
+    .map(task => ({
+      id: task.id,
+      title: task.title,
+      time: formatTaskTime(task)
+    }));
+};
+
+// 监听任务列表变化
+watch(tasks, () => {
+  console.log('👀 watch tasks 被触发，showCalendar:', showCalendar.value, 'selectedDate:', selectedDate.value);
+  if (showCalendar.value && selectedDate.value) {
+    console.log('📅 月度模式，更新月度任务');
+    updateMonthlyTasks(selectedDate.value);
+  } else if (!showCalendar.value) {
+    console.log('📅 每日模式，更新每日任务');
+    updateDailyTasks();
+  } else {
+    console.log('⚠️ watch 触发但不符合条件');
+  }
+}, { deep: true });
 
 function jumpToDetail() {
   router.push('/todolist');
@@ -90,11 +222,38 @@ function plusMonth(num: number) {
   if (demoTime.month > 11) {
     demoTime.year += Math.floor(demoTime.month / 12);
     demoTime.month = demoTime.month % 12;
-  }else if (demoTime.month < 0) {
+  } else if (demoTime.month < 0) {
     demoTime.year += Math.floor(demoTime.month / 12);
     demoTime.month = 12 + demoTime.month % 12;
   }
 }
+
+// 初始化：加载今天的任务
+onMounted(async () => {
+  console.log('📱 AppointmentsSection onMounted 开始');
+  console.log('📱 初始 tasks.value:', tasks.value);
+  console.log('📱 初始 showCalendar:', showCalendar.value);
+  
+  // 确保 fetchTasks 完成
+  await fetchTasks();
+  console.log('📋 fetchTasks 完成，tasks.value:', tasks.value);
+  console.log('📋 tasks.value.length:', tasks.value.length);
+  
+  // 手动更新每日任务
+  updateDailyTasks();
+  console.log('📊 updateDailyTasks 完成，scheduleData:', scheduleData.value);
+  console.log('📊 scheduleData.length:', scheduleData.value.length);
+});
+
+// 获取优先级标签
+const getPriorityLabel = (priority: string): string => {
+  const labels: Record<string, string> = {
+    'high': '高',
+    'medium': '中',
+    'low': '低'
+  };
+  return labels[priority] || priority;
+};
 
 </script>
 
@@ -106,18 +265,20 @@ function plusMonth(num: number) {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
+.calendar-header-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #e0d5c8;
+}
+
 .section-title {
   font-size: 16px;
   font-weight: 600;
   color: #2c3e50;
   margin: 0;
-}
-
-.list-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 15px;
 }
 
 .tabs {
@@ -233,71 +394,173 @@ function plusMonth(num: number) {
   cursor: default;
 }
 
-/* Appointments List */
-.appointments-list {
-  border-top: 1px solid #D4C4B0;
-  padding-top: 15px;
-  margin-bottom: 15px;
+/* Tasks Container */
+.tasks-container {
+  margin: 15px 0;
 }
 
-.appointment-list-item {
+.tasks-empty {
+  text-align: center;
+  padding: 30px 20px;
+  color: #999;
+}
+
+.tasks-empty small {
+  display: block;
+  margin-top: 8px;
+  color: #bbb;
+  font-size: 12px;
+}
+
+.tasks-list {
   display: flex;
-  align-items: center;
+  flex-direction: column;
   gap: 10px;
-  padding: 10px;
-  border-radius: 8px;
-  margin-bottom: 8px;
+  max-height: 350px;
+  overflow-y: auto;
+}
+
+/* Task Item */
+.task-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px;
+  border-left: 4px solid #ddd;
+  border-radius: 6px;
+  background: white;
   transition: all 0.3s ease;
   cursor: pointer;
 }
 
-.appointment-list-item:hover {
+.task-item:hover {
   background: #f9f9f9;
+  transform: translateX(2px);
 }
 
-.item-avatar {
-  width: 40px;
-  height: 40px;
-  border-radius: 8px;
-  background: linear-gradient(135deg, #C9B89C 0%, #A9787B 100%);
+.task-item.priority-high {
+  border-left-color: #d32f2f;
+}
+
+.task-item.priority-medium {
+  border-left-color: #ff9800;
+}
+
+.task-item.priority-low {
+  border-left-color: #4caf50;
+}
+
+.task-item.completed {
+  opacity: 0.6;
+}
+
+.task-item.completed .task-title {
+  text-decoration: line-through;
+  color: #999;
+}
+
+.task-left {
+  display: flex;
+  gap: 12px;
+  flex: 1;
+  min-width: 0;
+}
+
+.priority-indicator {
+  width: 3px;
+  height: 30px;
+  border-radius: 2px;
   flex-shrink: 0;
 }
 
-.item-content {
+.task-item.priority-high .priority-indicator {
+  background: #d32f2f;
+}
+
+.task-item.priority-medium .priority-indicator {
+  background: #ff9800;
+}
+
+.task-item.priority-low .priority-indicator {
+  background: #4caf50;
+}
+
+.task-info {
   flex: 1;
 }
 
-.item-title {
+.task-title {
   font-size: 13px;
   font-weight: 600;
-  color: #2c3e50;
   margin: 0;
+  color: #2c3e50;
+  word-break: break-word;
 }
 
-.item-time {
+.task-time {
   font-size: 11px;
   color: #95a5a6;
-  margin: 2px 0 0 0;
+  margin: 4px 0 0 0;
 }
 
-.item-arrow {
-  color: #95a5a6;
+.task-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+  margin-left: 12px;
 }
 
+.priority-badge {
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.task-item.priority-high .priority-badge {
+  background: #ffebee;
+  color: #d32f2f;
+}
+
+.task-item.priority-medium .priority-badge {
+  background: #fff3e0;
+  color: #ff9800;
+}
+
+.task-item.priority-low .priority-badge {
+  background: #e8f5e9;
+  color: #4caf50;
+}
+
+.status-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+}
+
+/* Bottom Button */
 .see-more-btn {
   width: 100%;
   background: none;
-  border: none;
+  border: 1px solid #e0d5c8;
   color: #2c3e50;
   font-size: 12px;
   font-weight: 600;
   cursor: pointer;
-  padding: 8px;
+  padding: 10px 8px;
   text-align: center;
+  border-radius: 6px;
   transition: all 0.3s ease;
+  margin-top: 10px;
 }
 
 .see-more-btn:hover {
+  background: #f9f9f9;
+  border-color: #9DB4A0;
   color: #9DB4A0;
 }
 </style>
