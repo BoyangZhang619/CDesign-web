@@ -311,6 +311,31 @@ export function useTodolist() {
   }
 
   /**
+   * 获取指定日期的任务（用于月度视图，直接调用后端API，不触发 watch）
+   */
+  async function fetchTasksForSpecificDate(dateStr: string): Promise<Task[]> {
+    try {
+      console.log(`📅 获取 ${dateStr} 的任务`)
+      const response = await fetchWithRefresh(
+        `/api/tasks/date/${dateStr}`,
+        { method: 'GET' }
+      )
+      const data = await response.json()
+      console.log(`📅 ${dateStr} 任务响应:`, data)
+      
+      if (data.success && Array.isArray(data.data)) {
+        return data.data.map((task: any) => transformBackendTask(task))
+      } else {
+        console.warn(`⚠️ 获取 ${dateStr} 任务失败:`, data)
+        return []
+      }
+    } catch (err: any) {
+      console.error(`❌ 获取 ${dateStr} 任务错误:`, err)
+      return []
+    }
+  }
+
+  /**
    * 计算统计数据（基于本地任务数据）
    */
   async function calculateStats() {
@@ -783,6 +808,7 @@ export function useTodolist() {
 
     // 数据获取
     fetchTasks,
+    fetchTasksForSpecificDate,
     calculateStats,
 
     // 任务操作

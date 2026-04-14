@@ -26,14 +26,11 @@
       </div>
 
       <div class="dates">
-        <div class="date-cell empty" v-for="n in (new Date(demoTime.year, demoTime.month).getDay())" :key="'empty-' + n"></div>
-        <div
-          class="date-cell"
-          v-for="date in demoMonthDays"
-          :key="'date-' + date"
+        <div class="date-cell empty" v-for="n in (new Date(demoTime.year, demoTime.month).getDay())"
+          :key="'empty-' + n"></div>
+        <div class="date-cell" v-for="date in demoMonthDays" :key="'date-' + date"
           :class="{ today: date === curTime.date && demoTime.month === curTime.month && demoTime.year === curTime.year, selected: selectedDate === `${demoTime.year}-${String(demoTime.month + 1).padStart(2, '0')}-${String(date).padStart(2, '0')}` }"
-          @click="handleDateSelect(date)"
-        >
+          @click="handleDateSelect(date)">
           {{ date }}
         </div>
       </div>
@@ -45,17 +42,12 @@
         <p>暂无任务</p>
         <small>开始创建你的第一个任务吧</small>
       </div>
-      
+
       <div v-else class="tasks-list">
-        <div 
-          v-for="task in scheduleData.slice(0, 3)" 
-          :key="task.id"
-          class="task-item"
-          :class="[
-            `priority-${task.priority}`,
-            { completed: task.status === 'completed' }
-          ]"
-        >
+        <div v-for="task in scheduleData.slice(0, 4)" :key="task.id" class="task-item" :class="[
+          `priority-${task.priority}`,
+          { completed: task.status === 'completed' }
+        ]">
           <!-- 左侧：优先级指示 + 任务信息 -->
           <div class="task-left">
             <div class="priority-indicator"></div>
@@ -72,11 +64,12 @@
             <span class="priority-badge">{{ getPriorityLabel(task.priority) }}</span>
             <span class="status-icon">
               <svg v-if="task.status === 'completed'" width="16" height="16" viewBox="0 0 16 16" fill="none">
-                <circle cx="8" cy="8" r="7.5" stroke="#4caf50" stroke-width="1.5" fill="#e8f5e9"/>
-                <path d="M5.5 8L7 9.5L10.5 6" stroke="#4caf50" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                <circle cx="8" cy="8" r="7.5" stroke="#4caf50" stroke-width="1.5" fill="#e8f5e9" />
+                <path d="M5.5 8L7 9.5L10.5 6" stroke="#4caf50" stroke-width="1.5" stroke-linecap="round"
+                  stroke-linejoin="round" />
               </svg>
               <svg v-else width="16" height="16" viewBox="0 0 16 16" fill="none">
-                <circle cx="8" cy="8" r="7.5" stroke="#bbb" stroke-width="1.5"/>
+                <circle cx="8" cy="8" r="7.5" stroke="#bbb" stroke-width="1.5" />
               </svg>
             </span>
           </div>
@@ -93,7 +86,7 @@
 import { reactive, ref, computed, onMounted, watch, toRaw } from 'vue';
 import { useRouter } from 'vue-router';
 import { useTodolist } from '../../../composables/useTodolist';
-import { getLocalISOString } from '@/utils/dateTime';
+import { fetchWithRefresh } from '../../../api/http';
 
 const router = useRouter();
 const { tasks, fetchTasks } = useTodolist();
@@ -141,15 +134,26 @@ const todayTasks = computed(() => {
 });
 
 // 获取指定日期的任务
-const getTasksByDate = (dateStr: string): any[] => {
-  if (!Array.isArray(tasks.value)) return [];
-  return tasks.value.filter(task => {
-    // 正确处理日期格式
-    const taskDateStr = typeof task.due_date === 'string' 
-      ? task.due_date.split('T')[0] 
-      : getLocalISOString(task.due_date).split('T')[0];
-    return taskDateStr === dateStr && task.status === 'pending';
-  });
+const getTasksByDate = async (dateStr: string): Promise<any[]> => {
+  try {
+    console.log(`📅 获取 ${dateStr} 的任务`);
+    // 直接调用 API，不经过 useTodolist 的 fetchTasks
+    // 这样可以避免 watch 触发造成的死循环
+    const response = await fetchWithRefresh(`/api/tasks/date/${dateStr}`, {
+      method: 'GET'
+    });
+    
+    const data = await response.json();
+    console.log(`📅 获取 ${dateStr} 任务响应:`, data);
+    
+    if (data.success && Array.isArray(data.data)) {
+      return data.data;
+    }
+    return [];
+  } catch (err: any) {
+    console.error(`❌ 获取 ${dateStr} 任务错误:`, err);
+    return [];
+  }
 };
 
 // 处理 tab 切换
@@ -171,31 +175,40 @@ const handleDateSelect = (day: number) => {
 // 更新每日任务显示
 const updateDailyTasks = () => {
   console.log('🔄 updateDailyTasks: 开始');
-  console.log('� todayTasks.value.length:', todayTasks.value.length);
-  
+  console.log('📊 todayTasks.value.length:', todayTasks.value.length);
+
   const newScheduleData = todayTasks.value
     .slice(0, 3)
     .map(task => ({
       id: task.id,
       title: task.title,
-      time: formatTaskTime(task)
+      time: formatTaskTime(task),
+      priority: task.priority || 'medium',
+      status: task.status || 'pending'
     }));
-  
+
   scheduleData.value = newScheduleData;
   console.log('🔄 updateDailyTasks: 完成, scheduleData.length:', scheduleData.value.length);
   console.log('🔄 scheduleData:', scheduleData.value);
 };
 
 // 更新月度任务显示
-const updateMonthlyTasks = (dateStr: string) => {
-  const tasksForDate = getTasksByDate(dateStr);
+const updateMonthlyTasks = async (dateStr: string) => {
+  console.log(`🔄 updateMonthlyTasks: 开始加载 ${dateStr} 的任务`);
+  const tasksForDate = await getTasksByDate(dateStr);
+  console.log(`🔄 updateMonthlyTasks: 获取 ${dateStr} 的任务, 数量:`, tasksForDate.length);
+  
   scheduleData.value = tasksForDate
     .slice(0, 3)
     .map(task => ({
       id: task.id,
       title: task.title,
-      time: formatTaskTime(task)
+      time: formatTaskTime(task),
+      priority: task.priority || 'medium',
+      status: task.status || 'pending'
     }));
+  
+  console.log(`🔄 updateMonthlyTasks: 完成, scheduleData.length:`, scheduleData.value.length);
 };
 
 // 监听任务列表变化
@@ -233,12 +246,12 @@ onMounted(async () => {
   console.log('📱 AppointmentsSection onMounted 开始');
   console.log('📱 初始 tasks.value:', tasks.value);
   console.log('📱 初始 showCalendar:', showCalendar.value);
-  
+
   // 确保 fetchTasks 完成
   await fetchTasks();
   console.log('📋 fetchTasks 完成，tasks.value:', tasks.value);
   console.log('📋 tasks.value.length:', tasks.value.length);
-  
+
   // 手动更新每日任务
   updateDailyTasks();
   console.log('📊 updateDailyTasks 完成，scheduleData:', scheduleData.value);
