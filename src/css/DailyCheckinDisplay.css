@@ -1,0 +1,686 @@
+/* DailyCheckinDisplay - Main Layout */
+
+.daily-checkin-layout {
+  margin: 0 auto;
+  display: flex;
+  height: calc(100dvh - 10px);
+  background: none;
+  border: 5px solid #5A7A87;
+  border-radius: 20px;
+  overflow: hidden;
+  box-sizing: content-box;
+  position: relative;
+  width: 100vw;
+}
+
+.daily-checkin-layout::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: url('/bg.png') center/cover no-repeat;
+  background-attachment: fixed;
+  filter: blur(8px);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  position: relative;
+  z-index: 1;
+}
+
+.content-area {
+  flex: 1;
+  display: flex;
+  flex-direction: row;
+  overflow: hidden;
+  padding: 0;
+  position: relative;
+  z-index: 1;
+}
+
+.daily-checkin-container {
+  flex: 1;
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+  padding: 20px 30px;
+  overflow: hidden;
+}
+
+/* 左栏：日期和统计 */
+.daily-checkin-left-panel {
+  flex: 5;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  flex-shrink: 0;
+  padding-right: 10px;
+}
+
+/* 日期选择器 */
+.date-selector-section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 16px;
+  background: rgba(255, 255, 255, 0.7);
+  border-radius: 12px;
+  border: 1px solid #e0e0e0;
+}
+
+.date-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #333;
+}
+
+.date-input {
+  padding: 10px 12px;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.date-input:focus {
+  outline: none;
+  border-color: #5A7A87;
+  box-shadow: 0 0 0 3px rgba(90, 122, 135, 0.1);
+}
+
+.today-btn {
+  padding: 8px 12px;
+  background: linear-gradient(135deg, #5A7A87 0%, #7A8F95 100%);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.today-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 2px 8px rgba(90, 122, 135, 0.3);
+}
+
+.today-btn:active {
+  transform: translateY(0);
+}
+
+/* 总结卡片 */
+.summary-card {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px;
+  background: rgba(255, 255, 255, 0.7);
+  border-radius: 12px;
+  border: 1px solid #e0e0e0;
+  flex-shrink: 0;
+}
+
+.summary-header {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: #333;
+}
+
+.summary-title {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: #333;
+}
+
+.summary-stats {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.stat-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+  background: white;
+  border-radius: 8px;
+  border: 1px solid #f0f0f0;
+}
+
+.stat-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  background: #f0f0f0;
+  border-radius: 6px;
+  font-size: 16px;
+  flex-shrink: 0;
+}
+
+.stat-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.stat-label {
+  font-size: 12px;
+  color: #666;
+}
+
+.stat-value {
+  font-size: 16px;
+  font-weight: 600;
+  color: #2c3e50;
+}
+
+/* 快速导航 */
+.quick-nav-section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 16px;
+  background: rgba(255, 255, 255, 0.7);
+  border-radius: 12px;
+  border: 1px solid #e0e0e0;
+  flex-shrink: 0;
+}
+
+.nav-title {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 600;
+  color: #333;
+}
+
+.nav-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 12px;
+  background: white;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #666;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.nav-btn:hover {
+  background: #f9f9f9;
+  border-color: #d0d0d0;
+  color: #5A7A87;
+}
+
+.nav-icon {
+  font-size: 14px;
+}
+
+.nav-text {
+  font-weight: 500;
+}
+
+/* 右栏：卡片网格 */
+.daily-checkin-right-panel {
+  flex: 7;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  overflow-x: hidden;
+  min-width: 0;
+}
+
+.checkin-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+  padding-right: 8px;
+}
+
+/* 卡片样式 */
+.checkin-card {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px;
+  background: white;
+  border: 2px solid #e0e0e0;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+}
+
+.checkin-card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border-color: #5A7A87;
+}
+
+.checkin-card.completed {
+  background: linear-gradient(135deg, rgba(90, 122, 135, 0.05) 0%, rgba(122, 143, 149, 0.05) 100%);
+  border-color: #5A7A87;
+}
+
+/* 卡片头部 */
+.card-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.card-icon {
+  font-size: 24px;
+  flex-shrink: 0;
+}
+
+.card-title {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: #2c3e50;
+  flex: 1;
+}
+
+.card-status {
+  display: inline-flex;
+  padding: 4px 8px;
+  background: #f5f5f5;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #666;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.card-status.completed {
+  background: #e8f5e9;
+  color: #2e7d32;
+}
+
+.card-status.pending {
+  background: #fff3e0;
+  color: #e65100;
+}
+
+.card-status.not_checkin {
+  background: #f5f5f5;
+  color: #666;
+}
+
+/* 卡片内容 */
+.card-content {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  flex: 1;
+}
+
+.content-main {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.metric-display {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.metric-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px;
+  background: #f9f9f9;
+  border-radius: 6px;
+}
+
+.metric-label {
+  font-size: 12px;
+  color: #666;
+  font-weight: 500;
+  min-width: 40px;
+}
+
+.metric-value {
+  font-size: 14px;
+  font-weight: 600;
+  color: #2c3e50;
+  flex: 1;
+}
+
+.metric-unit {
+  font-size: 11px;
+  color: #999;
+}
+
+.empty-message {
+  padding: 20px;
+  text-align: center;
+  color: #999;
+  font-size: 13px;
+  background: #f9f9f9;
+  border-radius: 6px;
+}
+
+/* 卡片底部 */
+.card-footer {
+  display: flex;
+  justify-content: flex-end;
+  padding-top: 12px;
+  border-top: 1px solid #f0f0f0;
+}
+
+.card-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  background: linear-gradient(135deg, #5A7A87 0%, #7A8F95 100%);
+  color: white;
+  text-decoration: none;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.card-link:hover {
+  transform: translateX(2px);
+  box-shadow: 0 2px 8px rgba(90, 122, 135, 0.3);
+}
+
+.arrow {
+  font-size: 12px;
+}
+
+/* 特殊卡片样式 */
+.trends-card {
+  grid-column: 1;
+}
+
+.history-card {
+  grid-column: 2;
+}
+
+.ai-card {
+  grid-column: 1 / -1;
+}
+
+/* 趋势预览 */
+.trends-preview {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.trends-text {
+  margin: 0;
+  font-size: 13px;
+  color: #666;
+}
+
+.trends-indicators {
+  display: flex;
+  gap: 12px;
+}
+
+.indicator {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  flex: 1;
+  padding: 8px;
+  background: #f9f9f9;
+  border-radius: 6px;
+}
+
+.indicator-label {
+  font-size: 11px;
+  color: #999;
+  font-weight: 500;
+}
+
+.indicator-value {
+  font-size: 18px;
+  font-weight: 600;
+  color: #5A7A87;
+}
+
+/* 历史预览 */
+.history-preview {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.history-text {
+  margin: 0;
+  font-size: 13px;
+  color: #666;
+}
+
+.history-stats {
+  display: flex;
+  justify-content: center;
+}
+
+.history-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 12px;
+  background: #f9f9f9;
+  border-radius: 6px;
+}
+
+.stat-number {
+  font-size: 20px;
+  font-weight: 600;
+  color: #5A7A87;
+}
+
+.stat-desc {
+  font-size: 12px;
+  color: #999;
+}
+
+/* AI预览 */
+.ai-preview {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: center;
+}
+
+.ai-text {
+  margin: 0;
+  font-size: 13px;
+  color: #666;
+}
+
+.ai-badge {
+  display: inline-flex;
+  padding: 6px 12px;
+  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  color: white;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+/* Scrollbar styling */
+.daily-checkin-left-panel::-webkit-scrollbar,
+.daily-checkin-right-panel::-webkit-scrollbar {
+  width: 8px;
+}
+
+.daily-checkin-left-panel::-webkit-scrollbar-track,
+.daily-checkin-right-panel::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.daily-checkin-left-panel::-webkit-scrollbar-thumb,
+.daily-checkin-right-panel::-webkit-scrollbar-thumb {
+  background: #d0d0d0;
+  border-radius: 4px;
+}
+
+.daily-checkin-left-panel::-webkit-scrollbar-thumb:hover,
+.daily-checkin-right-panel::-webkit-scrollbar-thumb:hover {
+  background: #b0b0b0;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .daily-checkin-container {
+    gap: 16px;
+    padding: 16px 20px;
+  }
+
+  .daily-checkin-left-panel {
+    flex: 1;
+    width: 100%;
+    padding-right: 0;
+  }
+
+  .daily-checkin-right-panel {
+    flex: 1;
+  }
+
+  .checkin-cards-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+
+  .ai-card {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 768px) {
+  .daily-checkin-layout {
+    margin: 0;
+    border: none;
+    width: 100%;
+    border-radius: 0;
+    height: 100dvh;
+  }
+
+  .daily-checkin-container {
+    display: block;
+    padding: 12px 16px;
+    gap: 12px;
+  }
+
+  .daily-checkin-left-panel {
+    width: 100%;
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: row;
+    gap: 12px;
+    overflow-x: auto;
+    overflow-y: visible;
+  }
+
+  .date-selector-section,
+  .summary-card,
+  .quick-nav-section {
+    flex-shrink: 0;
+    min-width: 280px;
+  }
+
+  .daily-checkin-right-panel {
+    flex: 1;
+  }
+
+  .checkin-cards-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .trends-card {
+    grid-column: auto;
+  }
+
+  .history-card {
+    grid-column: auto;
+  }
+
+  .ai-card {
+    grid-column: auto;
+  }
+
+  .card-header {
+    flex-wrap: wrap;
+  }
+
+  .card-title {
+    flex: 0 1 auto;
+  }
+}
+
+@media (max-width: 480px) {
+  .daily-checkin-layout {
+    border: none;
+    border-radius: 0;
+  }
+
+  .daily-checkin-container {
+    padding: 12px;
+    flex-direction: column;
+  }
+
+  .daily-checkin-left-panel {
+    order: 2;
+    margin-bottom: 0;
+    margin-top: 16px;
+  }
+
+  .daily-checkin-right-panel {
+    order: 1;
+  }
+
+  .checkin-card {
+    padding: 12px;
+  }
+
+  .card-header {
+    font-size: 14px;
+  }
+
+  .card-icon {
+    font-size: 20px;
+  }
+
+  .metric-item {
+    padding: 6px;
+    font-size: 12px;
+  }
+}

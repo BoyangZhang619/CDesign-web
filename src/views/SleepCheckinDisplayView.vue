@@ -1,136 +1,123 @@
 <template>
-  <div class="sleep-display-page">
-    <AppHeader />
-    
-    <main class="sleep-display-main">
-      <!-- 顶部装饰线 -->
-      <div class="page-divider"></div>
-      
-      <!-- 页面标题区 -->
-      <section class="sleep-title-section">
-        <div class="title-container">
-          <h1 class="sleep-title">睡眠打卡</h1>
-          <p class="sleep-subtitle">记录每天的睡眠情况，AI智能分析睡眠质量</p>
-          <div class="date-display">{{ formatDate(new Date()) }}</div>
-        </div>
-      </section>
+  <div class="sleep-layout">
+    <!-- 侧栏 -->
+    <Sidebar ref="sidebarRef" />
 
-      <!-- 新增打卡按钮区 -->
-      <section class="sleep-add-section">
-        <button class="add-record-btn" @click="openFormModal">
-          <span class="add-icon">+</span>
-          <span class="add-text">新增睡眠记录</span>
-        </button>
-      </section>
+    <div class="main-content">
+      <!-- 头部 -->
+      <TopHeader @toggle-sidebar="toggleSidebar" :title="'睡眠打卡'" :subtitle="'记录每天的睡眠情况'" />
 
-      <!-- 今天的记录列表 -->
-      <section v-if="records.length > 0" class="sleep-records-section">
-        <div class="section-title-bar">
-          <h2 class="section-title">🌙 今日记录</h2>
-          <span class="record-count">{{ records.length }}</span>
-        </div>
+      <!-- 内容区 -->
+      <div class="content-area">
+        <div class="sleep-container">
+          <!-- 左栏：操作面板 -->
+          <div class="sleep-left-panel">
+            <!-- 新增按钮 -->
+            <button class="sleep-add-btn" @click="openFormModal">
+              <span class="add-btn-icon">+</span>
+              <span class="add-btn-text">新增睡眠</span>
+            </button>
 
-        <div class="records-container">
-          <div v-for="record in displayedRecords" :key="record.id" class="record-card">
-            <div class="record-header">
-              <div class="record-meta">
-                <span class="sleep-type-badge">{{ getNapTypeText(record.is_nap) }}</span>
-                <span class="sleep-duration">{{ formatSleepDuration(record.sleep_duration_hours) }}</span>
-                <span class="record-time">{{ formatTime(record.sleep_start_time) }} - {{ formatTime(record.wake_up_time) }}</span>
-              </div>
-            </div>
-
-            <div class="record-content">
-              <p v-if="record.sleep_feeling" class="sleep-feeling">{{ record.sleep_feeling }}</p>
-              
-              <div class="sleep-details">
-                <div class="detail-item">
-                  <span class="detail-label">苏醒次数</span>
-                  <span class="detail-value">{{ record.wake_up_times }}</span>
-                  <span class="detail-unit">次</span>
+            <!-- 今日统计 -->
+            <div v-if="records.length > 0" class="sleep-stats-section">
+              <h3 class="stats-title">今日汇总</h3>
+              <div class="stats-grid">
+                <div class="stat-item">
+                  <span class="stat-label">总记录</span>
+                  <span class="stat-value">{{ todayStatistics.totalRecords }}</span>
+                  <span class="stat-unit">条</span>
                 </div>
-              </div>
-            </div>
-
-            <div class="quality-info">
-              <div v-if="isCalculating(record)" class="calculating">
-                <span class="spinner"></span>
-                分析中...
-              </div>
-              <div v-else class="quality-grid">
-                <div class="quality-item">
-                  <span class="quality-label">睡眠质量</span>
-                  <span class="quality-value">{{ record.sleep_quality_score }}</span>
-                  <span class="quality-unit">分</span>
+                <div class="stat-item">
+                  <span class="stat-label">夜间睡眠</span>
+                  <span class="stat-value">{{ todayStatistics.nightSleepCount }}</span>
+                  <span class="stat-unit">次</span>
+                </div>
+                <div class="stat-item">
+                  <span class="stat-label">午睡次数</span>
+                  <span class="stat-value">{{ todayStatistics.napCount }}</span>
+                  <span class="stat-unit">次</span>
+                </div>
+                <div class="stat-item">
+                  <span class="stat-label">夜间时长</span>
+                  <span class="stat-value">{{ formatSleepDuration(todayStatistics.totalNightHours) }}</span>
+                  <span class="stat-unit">h</span>
+                </div>
+                <div class="stat-item">
+                  <span class="stat-label">午睡时长</span>
+                  <span class="stat-value">{{ formatSleepDuration(todayStatistics.totalNapHours) }}</span>
+                  <span class="stat-unit">h</span>
+                </div>
+                <div class="stat-item">
+                  <span class="stat-label">平均质量</span>
+                  <span class="stat-value">{{ todayStatistics.avgQualityScore }}</span>
+                  <span class="stat-unit">分</span>
                 </div>
               </div>
             </div>
           </div>
-        </div>
 
-        <!-- 全部显示按钮 -->
-        <div v-if="records.length > 2 && !showAllRecords" class="show-all-container">
-          <button class="show-all-btn" @click="showAllRecords = true">
-            查看全部 {{ records.length }} 条记录
-          </button>
-        </div>
-        <div v-else-if="showAllRecords && records.length > 2" class="show-all-container">
-          <button class="show-all-btn" @click="showAllRecords = false">
-            收起
-          </button>
-        </div>
-      </section>
+          <!-- 右栏：记录列表 -->
+          <div class="sleep-right-panel">
+            <!-- 空状态 -->
+            <div v-if="records.length === 0" class="empty-state">
+              <div class="empty-icon">🌙</div>
+              <h3 class="empty-title">暂无睡眠记录</h3>
+              <p class="empty-text">点击新增按钮记录你的睡眠吧</p>
+            </div>
 
-      <!-- 今日统计 -->
-      <section v-if="records.length > 0" class="sleep-summary-section">
-        <div class="section-title-bar">
-          <h2 class="section-title">今日汇总</h2>
+            <!-- 记录列表 -->
+            <template v-else>
+              <div class="records-header">
+                <h2 class="records-title">今日记录</h2>
+                <span class="record-count">{{ records.length }}</span>
+              </div>
+
+              <div class="records-container">
+                <div v-for="record in displayedRecords" :key="record.id" class="record-card">
+                  <div class="card-header">
+                    <div class="card-meta">
+                      <span class="sleep-badge">{{ getNapTypeText(record.is_nap) }}</span>
+                      <span class="duration-badge">{{ formatSleepDuration(record.sleep_duration_hours) }}</span>
+                      <span class="time-badge">{{ formatTime(record.sleep_start_time) }} - {{ formatTime(record.wake_up_time) }}</span>
+                    </div>
+                  </div>
+
+                  <div class="card-content">
+                    <p v-if="record.sleep_feeling" class="sleep-feeling">{{ record.sleep_feeling }}</p>
+                    
+                    <div class="content-row">
+                      <div class="content-item">
+                        <span class="label">苏醒次数</span>
+                        <span class="value">{{ record.wake_up_times }}</span>
+                        <span class="unit">次</span>
+                      </div>
+                      <div class="content-item">
+                        <span class="label">质量分</span>
+                        <span v-if="isCalculating(record)" class="value calculating">计算中...</span>
+                        <span v-else class="value">{{ record.sleep_quality_score }}</span>
+                        <span v-if="!isCalculating(record)" class="unit">分</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 查看全部按钮 -->
+              <div v-if="records.length > 3 && !showAllRecords" class="view-all-container">
+                <button class="view-all-btn" @click="showAllRecords = true">
+                  查看全部 {{ records.length }} 条
+                </button>
+              </div>
+              <div v-else-if="showAllRecords && records.length > 3" class="view-all-container">
+                <button class="view-all-btn" @click="showAllRecords = false">
+                  收起
+                </button>
+              </div>
+            </template>
+          </div>
         </div>
-
-        <div class="summary-grid">
-          <div class="summary-item">
-            <div class="summary-label">总记录数</div>
-            <div class="summary-value">{{ todayStatistics.totalRecords }}</div>
-            <div class="summary-unit">条</div>
-          </div>
-          <div class="summary-item">
-            <div class="summary-label">夜间睡眠</div>
-            <div class="summary-value">{{ todayStatistics.nightSleepCount }}</div>
-            <div class="summary-unit">次</div>
-          </div>
-          <div class="summary-item">
-            <div class="summary-label">午睡次数</div>
-            <div class="summary-value">{{ todayStatistics.napCount }}</div>
-            <div class="summary-unit">次</div>
-          </div>
-          <div class="summary-item">
-            <div class="summary-label">夜间总时长</div>
-            <div class="summary-value">{{ formatSleepDuration(todayStatistics.totalNightHours) }}</div>
-            <div class="summary-unit">h</div>
-          </div>
-          <div class="summary-item">
-            <div class="summary-label">午睡总时长</div>
-            <div class="summary-value">{{ formatSleepDuration(todayStatistics.totalNapHours) }}</div>
-            <div class="summary-unit">h</div>
-          </div>
-          <div class="summary-item">
-            <div class="summary-label">平均质量分</div>
-            <div class="summary-value">{{ todayStatistics.avgQualityScore }}</div>
-            <div class="summary-unit">分</div>
-          </div>
-        </div>
-      </section>
-
-      <!-- 空状态 -->
-      <section v-else class="empty-state">
-        <div class="empty-icon">😴</div>
-        <h3 class="empty-title">暂无睡眠记录</h3>
-        <p class="empty-text">立即添加第一条睡眠记录吧</p>
-      </section>
-
-      <!-- 底部空白 -->
-      <div class="sleep-footer"></div>
-    </main>
+      </div>
+    </div>
 
     <!-- 添加记录浮窗 -->
     <transition name="modal-fade">
@@ -142,7 +129,7 @@
           </div>
 
           <form @submit.prevent="handleSubmit" class="sleep-form">
-            <!-- 睡眠类型选择 -->
+            <!-- 睡眠类型 -->
             <div class="form-group">
               <label class="form-label">睡眠类型 *</label>
               <div class="button-group">
@@ -159,46 +146,64 @@
               </div>
             </div>
 
+            <!-- 入睡和起床时间 -->
             <div class="form-row">
               <div class="form-group">
                 <label for="sleepStart" class="form-label">入睡时间 *</label>
-                <input id="sleepStart" v-model="form.sleep_start_time" type="datetime-local" class="form-input" required />
+                <input 
+                  id="sleepStart" 
+                  v-model="form.sleep_start_time" 
+                  type="datetime-local" 
+                  class="form-input" 
+                  required 
+                />
               </div>
 
               <div class="form-group">
                 <label for="wakeUp" class="form-label">起床时间 *</label>
-                <input id="wakeUp" v-model="form.wake_up_time" type="datetime-local" class="form-input" required />
+                <input 
+                  id="wakeUp" 
+                  v-model="form.wake_up_time" 
+                  type="datetime-local" 
+                  class="form-input" 
+                  required 
+                />
               </div>
             </div>
 
-            <div class="form-row">
-              <div class="form-group">
-                <label for="wakeUpTimes" class="form-label">苏醒次数</label>
-                <input id="wakeUpTimes" v-model.number="form.wake_up_times" type="number" class="form-input" min="0" placeholder="0" />
-              </div>
-
-              <div class="form-group full-width"></div>
+            <!-- 苏醒次数 -->
+            <div class="form-group">
+              <label for="wakeUpTimes" class="form-label">苏醒次数</label>
+              <input 
+                id="wakeUpTimes" 
+                v-model.number="form.wake_up_times" 
+                type="number" 
+                class="form-input" 
+                min="0" 
+                placeholder="0" 
+              />
             </div>
 
-            <div class="form-row">
-              <div class="form-group full-width">
-                <label for="sleepFeel" class="form-label">睡眠感受</label>
-                <textarea id="sleepFeel" v-model="form.sleep_feeling" class="form-textarea"
-                  placeholder="描述你的睡眠感受，例如：睡眠质量不错，但有点累" rows="4"></textarea>
-              </div>
+            <!-- 睡眠感受 -->
+            <div class="form-group full-width">
+              <label for="sleepFeel" class="form-label">睡眠感受</label>
+              <textarea 
+                id="sleepFeel" 
+                v-model="form.sleep_feeling" 
+                class="form-textarea"
+                placeholder="描述你的睡眠感受"
+                rows="4"
+              ></textarea>
             </div>
 
-            <div v-if="errorMsg" class="error-box">
-              {{ errorMsg }}
-            </div>
+            <!-- 消息提示 -->
+            <div v-if="errorMsg" class="alert alert-error">{{ errorMsg }}</div>
+            <div v-if="successMsg" class="alert alert-success">{{ successMsg }}</div>
 
-            <div v-if="successMsg" class="success-box">
-              {{ successMsg }}
-            </div>
-
+            <!-- 按钮 -->
             <div class="form-actions">
-              <button type="button" class="btn-secondary" @click="closeFormModal">取消</button>
-              <button type="submit" class="btn-primary" :disabled="loading">
+              <button type="button" class="btn-cancel" @click="closeFormModal">取消</button>
+              <button type="submit" class="btn-submit" :disabled="loading">
                 {{ loading ? '保存中...' : '保存记录' }}
               </button>
             </div>
@@ -210,10 +215,12 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, onUnmounted, ref, computed } from 'vue'
-import AppHeader from '../components/AppHeader.vue'
+import { ref, computed, onMounted, onUnmounted } from 'vue'
+import Sidebar from '../components/homeView/Sidebar.vue'
+import TopHeader from '../components/homeView/TopHeader.vue'
 import { useSleepCheckin } from '../composables/useSleepCheckin'
 
+const sidebarRef = ref()
 const isFormOpen = ref(false)
 const showAllRecords = ref(false)
 
@@ -235,24 +242,15 @@ const {
   initializeForm
 } = useSleepCheckin()
 
-// 计算显示的记录
+// 计算显示的记录数
 const displayedRecords = computed(() => {
   if (showAllRecords.value) {
     return records.value
   }
-  return records.value.slice(0, 2)
+  return records.value.slice(0, 3)
 })
 
-// 格式化日期
-function formatDate(date: Date): string {
-  const year = date.getFullYear()
-  const month = String(date.getMonth() + 1).padStart(2, '0')
-  const day = String(date.getDate()).padStart(2, '0')
-  const weekDays = ['周日', '周一', '周二', '周三', '周四', '周五', '周六']
-  const weekDay = weekDays[date.getDay()]
-  return `${year}-${month}-${day} ${weekDay}`
-}
-
+// 格式化时间
 const formatTime = (timeStr: string) => {
   const date = new Date(timeStr)
   return date.toLocaleTimeString('zh-CN', {
@@ -261,17 +259,25 @@ const formatTime = (timeStr: string) => {
   })
 }
 
+// 侧栏切换
+const toggleSidebar = () => {
+  sidebarRef.value?.toggleSidebarFromHeader()
+}
+
+// 打开表单
 const openFormModal = () => {
   initializeForm()
   isFormOpen.value = true
 }
 
+// 关闭表单
 const closeFormModal = () => {
   isFormOpen.value = false
   errorMsg.value = ''
   successMsg.value = ''
 }
 
+// 提交表单
 const handleSubmit = async () => {
   await addSleepRecord()
   if (!errorMsg.value) {
@@ -291,5 +297,5 @@ onUnmounted(() => {
 </script>
 
 <style scoped>
-@import '@/css/checkin/SleepCheckinDisplay.css';
+@import '@/css/SleepCheckinDisplay.css';
 </style>

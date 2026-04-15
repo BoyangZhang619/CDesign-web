@@ -1,156 +1,151 @@
 <template>
-  <div class="meal-display-page">
-    <AppHeader />
-    
-    <main class="meal-display-main">
-      <!-- 顶部装饰线 -->
-      <div class="page-divider"></div>
-      
-      <!-- 页面标题区 -->
-      <section class="meal-title-section">
-        <div class="title-container">
-          <h1 class="meal-title">饮食打卡</h1>
-          <p class="meal-subtitle">记录每餐的饮食情况，AI自动计算营养数据</p>
-          <div class="date-display">{{ formatDate(new Date()) }}</div>
-        </div>
-      </section>
+  <div class="meal-layout">
+    <!-- 侧栏 -->
+    <Sidebar ref="sidebarRef" />
 
-      <!-- 新增打卡按钮区 -->
-      <section class="meal-add-section">
-        <button class="add-record-btn" @click="openFormModal">
-          <span class="add-icon">+</span>
-          <span class="add-text">新增打卡</span>
-        </button>
-      </section>
+    <div class="main-content">
+      <!-- 头部 -->
+      <TopHeader @toggle-sidebar="toggleSidebar" :title="'饮食打卡'" :subtitle="'记录每餐的饮食情况'" />
 
-      <!-- 今天的记录列表 -->
-      <section v-if="records.length > 0" class="meal-records-section">
-        <div class="section-title-bar">
-          <h2 class="section-title">今日记录</h2>
-          <span class="record-count">{{ records.length }}</span>
-        </div>
+      <!-- 内容区 -->
+      <div class="content-area">
+        <div class="meal-container">
+          <!-- 左栏：操作面板 -->
+          <div class="meal-left-panel">
+            <!-- 新增按钮 -->
+            <button class="meal-add-btn" @click="openFormModal">
+              <span class="add-btn-icon">+</span>
+              <span class="add-btn-text">新增打卡</span>
+            </button>
 
-        <div class="records-container">
-          <div v-for="record in displayedRecords" :key="record.id" class="record-card">
-            <div class="record-header">
-              <div class="record-meta">
-                <span class="meal-type-badge">{{ getMealTypeText(record.meal_type) }}</span>
-                <span class="food-source-badge">{{ getFoodSourceText(record.food_source) }}</span>
-                <span class="record-time">{{ formatTime(record.meal_time) }}</span>
-              </div>
-            </div>
-
-            <div class="record-content">
-              <h4 class="food-name">{{ record.food_name }}</h4>
-              <p class="food-detail">{{ record.food_detail }}</p>
-            </div>
-
-            <div class="nutrition-info">
-              <div v-if="isCalculating(record)" class="calculating">
-                <span class="spinner"></span>
-                计算中...
-              </div>
-              <div v-else class="nutrition-grid">
-                <div class="nutrition-item">
-                  <span class="nutrition-label">热量</span>
-                  <span class="nutrition-value">{{ record.calories }}</span>
-                  <span class="nutrition-unit">kcal</span>
+            <!-- 汇总统计 -->
+            <div v-if="records.length > 0" class="meal-stats-section">
+              <h3 class="stats-title">今日汇总</h3>
+              <div class="stats-grid">
+                <div class="stat-item">
+                  <span class="stat-label">总热量</span>
+                  <span class="stat-value">{{ totalNutrition.calories }}</span>
+                  <span class="stat-unit">kcal</span>
                 </div>
-                <div class="nutrition-item">
-                  <span class="nutrition-label">蛋白质</span>
-                  <span class="nutrition-value">{{ record.protein_g }}</span>
-                  <span class="nutrition-unit">g</span>
+                <div class="stat-item">
+                  <span class="stat-label">蛋白质</span>
+                  <span class="stat-value">{{ totalNutrition.protein }}</span>
+                  <span class="stat-unit">g</span>
                 </div>
-                <div class="nutrition-item">
-                  <span class="nutrition-label">脂肪</span>
-                  <span class="nutrition-value">{{ record.fat_g }}</span>
-                  <span class="nutrition-unit">g</span>
+                <div class="stat-item">
+                  <span class="stat-label">脂肪</span>
+                  <span class="stat-value">{{ totalNutrition.fat }}</span>
+                  <span class="stat-unit">g</span>
                 </div>
-                <div class="nutrition-item">
-                  <span class="nutrition-label">碳水</span>
-                  <span class="nutrition-value">{{ record.carbohydrate_g }}</span>
-                  <span class="nutrition-unit">g</span>
+                <div class="stat-item">
+                  <span class="stat-label">碳水</span>
+                  <span class="stat-value">{{ totalNutrition.carbohydrate }}</span>
+                  <span class="stat-unit">g</span>
+                </div>
+                <div class="stat-item">
+                  <span class="stat-label">纤维</span>
+                  <span class="stat-value">{{ totalNutrition.fiber }}</span>
+                  <span class="stat-unit">g</span>
+                </div>
+                <div class="stat-item">
+                  <span class="stat-label">记录数</span>
+                  <span class="stat-value">{{ totalNutrition.count }}</span>
+                  <span class="stat-unit">条</span>
                 </div>
               </div>
             </div>
           </div>
+
+          <!-- 右栏：记录列表 -->
+          <div class="meal-right-panel">
+            <!-- 空状态 -->
+            <div v-if="records.length === 0" class="empty-state">
+              <div class="empty-icon">🍽️</div>
+              <h3 class="empty-title">暂无打卡记录</h3>
+              <p class="empty-text">立即点击新增打卡记录吧</p>
+            </div>
+
+            <!-- 记录列表 -->
+            <template v-else>
+              <div class="records-header">
+                <h2 class="records-title">今日记录</h2>
+                <span class="record-count">{{ records.length }}</span>
+              </div>
+
+              <div class="records-container">
+                <div v-for="record in displayedRecords" :key="record.id" class="record-card">
+                  <div class="card-header">
+                    <div class="card-meta">
+                      <span class="meal-badge">{{ getMealTypeText(record.meal_type) }}</span>
+                      <span class="source-badge">{{ getFoodSourceText(record.food_source) }}</span>
+                      <span class="time-badge">{{ formatTime(record.meal_time) }}</span>
+                    </div>
+                  </div>
+
+                  <div class="card-content">
+                    <h4 class="food-name">{{ record.food_name }}</h4>
+                    <p class="food-detail">{{ record.food_detail }}</p>
+                  </div>
+
+                  <div class="card-nutrition">
+                    <div v-if="isCalculating(record)" class="calculating">
+                      <span class="spinner"></span>
+                      计算中...
+                    </div>
+                    <div v-else class="nutrition-info">
+                      <div class="nutrition-item">
+                        <span class="nut-label">热量</span>
+                        <span class="nut-value">{{ record.calories }}</span>
+                        <span class="nut-unit">kcal</span>
+                      </div>
+                      <div class="nutrition-item">
+                        <span class="nut-label">蛋白质</span>
+                        <span class="nut-value">{{ record.protein_g }}</span>
+                        <span class="nut-unit">g</span>
+                      </div>
+                      <div class="nutrition-item">
+                        <span class="nut-label">脂肪</span>
+                        <span class="nut-value">{{ record.fat_g }}</span>
+                        <span class="nut-unit">g</span>
+                      </div>
+                      <div class="nutrition-item">
+                        <span class="nut-label">碳水</span>
+                        <span class="nut-value">{{ record.carbohydrate_g }}</span>
+                        <span class="nut-unit">g</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 查看全部按钮 -->
+              <div v-if="records.length > 3 && !showAllRecords" class="view-all-container">
+                <button class="view-all-btn" @click="showAllRecords = true">
+                  查看全部 {{ records.length }} 条
+                </button>
+              </div>
+              <div v-else-if="showAllRecords && records.length > 3" class="view-all-container">
+                <button class="view-all-btn" @click="showAllRecords = false">
+                  收起
+                </button>
+              </div>
+            </template>
+          </div>
         </div>
+      </div>
+    </div>
 
-        <!-- 全部显示按钮 -->
-        <div v-if="records.length > 2 && !showAllRecords" class="show-all-container">
-          <button class="show-all-btn" @click="showAllRecords = true">
-            查看全部 {{ records.length }} 条记录
-          </button>
-        </div>
-        <div v-else-if="showAllRecords && records.length > 2" class="show-all-container">
-          <button class="show-all-btn" @click="showAllRecords = false">
-            收起
-          </button>
-        </div>
-      </section>
-
-      <!-- 日汇总统计 -->
-      <section v-if="records.length > 0" class="meal-summary-section">
-        <div class="section-title-bar">
-          <h2 class="section-title">今日汇总</h2>
-        </div>
-
-        <div class="summary-grid">
-          <div class="summary-item">
-            <div class="summary-label">总热量摄入</div>
-            <div class="summary-value">{{ totalNutrition.calories }}</div>
-            <div class="summary-unit">kcal</div>
-          </div>
-          <div class="summary-item">
-            <div class="summary-label">总蛋白质</div>
-            <div class="summary-value">{{ totalNutrition.protein }}</div>
-            <div class="summary-unit">g</div>
-          </div>
-          <div class="summary-item">
-            <div class="summary-label">总脂肪</div>
-            <div class="summary-value">{{ totalNutrition.fat }}</div>
-            <div class="summary-unit">g</div>
-          </div>
-          <div class="summary-item">
-            <div class="summary-label">总碳水</div>
-            <div class="summary-value">{{ totalNutrition.carbohydrate }}</div>
-            <div class="summary-unit">g</div>
-          </div>
-          <div class="summary-item">
-            <div class="summary-label">总纤维</div>
-            <div class="summary-value">{{ totalNutrition.fiber }}</div>
-            <div class="summary-unit">g</div>
-          </div>
-          <div class="summary-item">
-            <div class="summary-label">记录条数</div>
-            <div class="summary-value">{{ totalNutrition.count }}</div>
-            <div class="summary-unit">条</div>
-          </div>
-        </div>
-      </section>
-
-      <!-- 空状态 -->
-      <section v-else class="empty-state">
-        <div class="empty-icon">🍽️</div>
-        <h3 class="empty-title">暂无打卡记录</h3>
-        <p class="empty-text">立即添加第一条打卡记录吧</p>
-      </section>
-
-      <!-- 底部空白 -->
-      <div class="meal-footer"></div>
-    </main>
-
-    <!-- 添加记录浮窗 -->
+    <!-- 添加打卡浮窗 -->
     <transition name="modal-fade">
       <div v-if="isFormOpen" class="modal-overlay" @click.self="closeFormModal">
         <div class="modal-content" @click.stop>
           <div class="modal-header">
-            <h2 class="modal-title">新增打卡记录</h2>
+            <h2 class="modal-title">新增饮食打卡</h2>
             <button class="modal-close" @click="closeFormModal">✕</button>
           </div>
 
           <form @submit.prevent="handleSubmit" class="meal-form">
-            <!-- 进食时段选择 -->
+            <!-- 进食时段 -->
             <div class="form-group">
               <label class="form-label">进食时段 *</label>
               <div class="button-group">
@@ -167,7 +162,7 @@
               </div>
             </div>
 
-            <!-- 食物来源选择 -->
+            <!-- 食物来源 -->
             <div class="form-group">
               <label class="form-label">食物来源 *</label>
               <div class="button-group">
@@ -184,38 +179,53 @@
               </div>
             </div>
 
+            <!-- 食物名称和时间 -->
             <div class="form-row">
               <div class="form-group">
                 <label for="foodName" class="form-label">食物名称 *</label>
-                <input id="foodName" v-model="form.food_name" type="text" class="form-input" placeholder="例如：番茄鸡蛋面、红油火锅"
-                  required />
+                <input 
+                  id="foodName" 
+                  v-model="form.food_name" 
+                  type="text" 
+                  class="form-input" 
+                  placeholder="例如：番茄鸡蛋面"
+                  required 
+                />
               </div>
 
               <div class="form-group">
                 <label for="mealTime" class="form-label">进食时间 *</label>
-                <input id="mealTime" v-model="form.meal_time" type="datetime-local" class="form-input" required />
+                <input 
+                  id="mealTime" 
+                  v-model="form.meal_time" 
+                  type="datetime-local" 
+                  class="form-input" 
+                  required 
+                />
               </div>
             </div>
 
-            <div class="form-row">
-              <div class="form-group full-width">
-                <label for="foodDetail" class="form-label">食物描述 *</label>
-                <textarea id="foodDetail" v-model="form.food_detail" class="form-textarea"
-                  placeholder="详细描述食物，例如：一碗番茄鸡蛋面，配青菜一份和豆腐半盒，油量中等" rows="4" required></textarea>
-              </div>
+            <!-- 食物描述 -->
+            <div class="form-group full-width">
+              <label for="foodDetail" class="form-label">食物描述 *</label>
+              <textarea 
+                id="foodDetail" 
+                v-model="form.food_detail" 
+                class="form-textarea"
+                placeholder="详细描述食物内容和用量"
+                rows="4"
+                required
+              ></textarea>
             </div>
 
-            <div v-if="errorMsg" class="error-box">
-              {{ errorMsg }}
-            </div>
+            <!-- 消息提示 -->
+            <div v-if="errorMsg" class="alert alert-error">{{ errorMsg }}</div>
+            <div v-if="successMsg" class="alert alert-success">{{ successMsg }}</div>
 
-            <div v-if="successMsg" class="success-box">
-              {{ successMsg }}
-            </div>
-
+            <!-- 按钮 -->
             <div class="form-actions">
-              <button type="button" class="btn-secondary" @click="closeFormModal">取消</button>
-              <button type="submit" class="btn-primary" :disabled="loading">
+              <button type="button" class="btn-cancel" @click="closeFormModal">取消</button>
+              <button type="submit" class="btn-submit" :disabled="loading">
                 {{ loading ? '保存中...' : '保存打卡' }}
               </button>
             </div>
@@ -227,10 +237,12 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, onUnmounted, ref, computed } from 'vue'
-import AppHeader from '../components/AppHeader.vue'
+import { ref, computed, onMounted, onUnmounted } from 'vue'
+import Sidebar from '../components/homeView/Sidebar.vue'
+import TopHeader from '../components/homeView/TopHeader.vue'
 import { useMealCheckin } from '../composables/useMealCheckin'
 
+const sidebarRef = ref()
 const isFormOpen = ref(false)
 const showAllRecords = ref(false)
 
@@ -253,24 +265,15 @@ const {
   initializeForm
 } = useMealCheckin()
 
-// 计算显示的记录
+// 计算显示的记录数
 const displayedRecords = computed(() => {
   if (showAllRecords.value) {
     return records.value
   }
-  return records.value.slice(0, 2)
+  return records.value.slice(0, 3)
 })
 
-// 格式化日期
-function formatDate(date: Date): string {
-  const year = date.getFullYear()
-  const month = String(date.getMonth() + 1).padStart(2, '0')
-  const day = String(date.getDate()).padStart(2, '0')
-  const weekDays = ['周日', '周一', '周二', '周三', '周四', '周五', '周六']
-  const weekDay = weekDays[date.getDay()]
-  return `${year}-${month}-${day} ${weekDay}`
-}
-
+// 格式化时间
 const formatTime = (timeStr: string) => {
   const date = new Date(timeStr)
   return date.toLocaleTimeString('zh-CN', {
@@ -279,21 +282,27 @@ const formatTime = (timeStr: string) => {
   })
 }
 
+// 侧栏切换
+const toggleSidebar = () => {
+  sidebarRef.value?.toggleSidebarFromHeader()
+}
+
+// 打开表单
 const openFormModal = () => {
   initializeForm()
   isFormOpen.value = true
 }
 
+// 关闭表单
 const closeFormModal = () => {
   isFormOpen.value = false
-  // 清除消息
   errorMsg.value = ''
   successMsg.value = ''
 }
 
+// 提交表单
 const handleSubmit = async () => {
   await addMealRecord()
-  // 上传成功后自动关闭浮窗
   if (!errorMsg.value) {
     closeFormModal()
   }
@@ -311,5 +320,5 @@ onUnmounted(() => {
 </script>
 
 <style scoped>
-@import '@/css/checkin/MealCheckinDisplay.css';
+@import '@/css/MealCheckinDisplay.css';
 </style>
