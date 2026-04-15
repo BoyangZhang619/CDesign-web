@@ -190,7 +190,7 @@
                   </div>
                 </div>
                 <div class="card-footer">
-                  <router-link to="/trends" class="card-link">
+                  <router-link to="/analysis/trends" class="card-link">
                     <span>查看趋势</span>
                     <span class="arrow">→</span>
                   </router-link>

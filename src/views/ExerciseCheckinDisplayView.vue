@@ -54,10 +54,28 @@
                 </div>
               </div>
             </div>
+
+            <!-- 运动任务组件 - 待完成 -->
+            <CheckinTaskGroup 
+              :tasks="exerciseTasks" 
+              category="exercise"
+              position="left"
+              @toggle="toggleTask"
+              @delete="deleteTask"
+            />
           </div>
 
-          <!-- 右栏：记录列表 -->
+          <!-- 右栏：已完成任务和运动记录列表 -->
           <div class="exercise-right-panel">
+            <!-- 运动任务组件 - 已完成 -->
+            <CheckinTaskGroup 
+              :tasks="exerciseTasks" 
+              category="exercise"
+              position="right"
+              @toggle="toggleTask"
+              @delete="deleteTask"
+            />
+
             <!-- 空状态 -->
             <div v-if="records.length === 0" class="empty-state">
               <div class="empty-icon">🏃</div>
@@ -132,14 +150,9 @@
             <div class="form-group">
               <label class="form-label">运动类型 *</label>
               <div class="button-group">
-                <button
-                  v-for="option in activityTypeOptions"
-                  :key="option.value"
-                  type="button"
-                  class="toggle-btn"
+                <button v-for="option in activityTypeOptions" :key="option.value" type="button" class="toggle-btn"
                   :class="{ active: form.activity_type === option.value }"
-                  @click="form.activity_type = option.value as any"
-                >
+                  @click="form.activity_type = option.value as any">
                   {{ option.label }}
                 </button>
               </div>
@@ -149,14 +162,8 @@
             <div class="form-group">
               <label class="form-label">强度 *</label>
               <div class="button-group">
-                <button
-                  v-for="option in intensityOptions"
-                  :key="option.value"
-                  type="button"
-                  class="toggle-btn"
-                  :class="{ active: form.intensity === option.value }"
-                  @click="form.intensity = option.value as any"
-                >
+                <button v-for="option in intensityOptions" :key="option.value" type="button" class="toggle-btn"
+                  :class="{ active: form.intensity === option.value }" @click="form.intensity = option.value as any">
                   {{ option.label }}
                 </button>
               </div>
@@ -166,38 +173,20 @@
             <div class="form-row">
               <div class="form-group">
                 <label for="startTime" class="form-label">开始时间 *</label>
-                <input 
-                  id="startTime" 
-                  v-model="form.start_time" 
-                  type="datetime-local" 
-                  class="form-input" 
-                  required 
-                />
+                <input id="startTime" v-model="form.start_time" type="datetime-local" class="form-input" required />
               </div>
 
               <div class="form-group">
                 <label for="endTime" class="form-label">结束时间 *</label>
-                <input 
-                  id="endTime" 
-                  v-model="form.end_time" 
-                  type="datetime-local" 
-                  class="form-input" 
-                  required 
-                />
+                <input id="endTime" v-model="form.end_time" type="datetime-local" class="form-input" required />
               </div>
             </div>
 
             <!-- 备注 -->
             <div class="form-group full-width">
               <label for="note" class="form-label">备注 (可选)</label>
-              <textarea 
-                id="note" 
-                v-model="form.note" 
-                class="form-textarea"
-                placeholder="记录运动中的特殊情况"
-                rows="3"
-                maxlength="200"
-              ></textarea>
+              <textarea id="note" v-model="form.note" class="form-textarea" placeholder="记录运动中的特殊情况" rows="3"
+                maxlength="200"></textarea>
             </div>
 
             <!-- 消息提示 -->
@@ -215,6 +204,7 @@
         </div>
       </div>
     </transition>
+
   </div>
 </template>
 
@@ -222,9 +212,11 @@
 import { ref, computed, onMounted, onUnmounted } from 'vue'
 import Sidebar from '../components/homeView/Sidebar.vue'
 import TopHeader from '../components/homeView/TopHeader.vue'
+import CheckinTaskGroup from '../components/checkinView/CheckinTaskGroup.vue'
 import { useExerciseCheckin } from '../composables/useExerciseCheckin'
+import { useTodolist } from '../composables/useTodolist'
 
-const sidebarRef = ref()
+const sidebarRef = ref<InstanceType<typeof Sidebar> | null>(null)
 const isFormOpen = ref(false)
 const showAllRecords = ref(false)
 
@@ -247,6 +239,17 @@ const {
   isCalculating,
   initializeForm
 } = useExerciseCheckin()
+
+const {
+  tasks,
+  fetchTasks,
+  toggleTask,
+  deleteTask
+} = useTodolist()
+
+const exerciseTasks = computed(() => {
+  return tasks.value.filter((t: any) => t.category === 'exercise')
+})
 
 // 计算显示的记录数
 const displayedRecords = computed(() => {
@@ -294,6 +297,7 @@ const handleSubmit = async () => {
 onMounted(() => {
   loadRecords()
   startPolling()
+  fetchTasks()
 })
 
 onUnmounted(() => {

@@ -54,10 +54,28 @@
                 </div>
               </div>
             </div>
+
+            <!-- 饮食任务组件 - 待完成 -->
+            <CheckinTaskGroup 
+              :tasks="mealTasks" 
+              category="meal"
+              position="left"
+              @toggle="toggleTask"
+              @delete="deleteTask"
+            />
           </div>
 
-          <!-- 右栏：记录列表 -->
+          <!-- 右栏：饮食任务和记录列表 -->
           <div class="meal-right-panel">
+            <!-- 饮食任务组件 - 已完成 -->
+            <CheckinTaskGroup 
+              :tasks="mealTasks" 
+              category="meal"
+              position="right"
+              @toggle="toggleTask"
+              @delete="deleteTask"
+            />
+
             <!-- 空状态 -->
             <div v-if="records.length === 0" class="empty-state">
               <div class="empty-icon">🍽️</div>
@@ -240,9 +258,11 @@
 import { ref, computed, onMounted, onUnmounted } from 'vue'
 import Sidebar from '../components/homeView/Sidebar.vue'
 import TopHeader from '../components/homeView/TopHeader.vue'
+import CheckinTaskGroup from '../components/checkinView/CheckinTaskGroup.vue'
 import { useMealCheckin } from '../composables/useMealCheckin'
+import { useTodolist } from '../composables/useTodolist'
 
-const sidebarRef = ref()
+const sidebarRef = ref<InstanceType<typeof Sidebar> | null>(null)
 const isFormOpen = ref(false)
 const showAllRecords = ref(false)
 
@@ -264,6 +284,17 @@ const {
   isCalculating,
   initializeForm
 } = useMealCheckin()
+
+const {
+  tasks,
+  fetchTasks,
+  toggleTask,
+  deleteTask
+} = useTodolist()
+
+const mealTasks = computed(() => {
+  return tasks.value.filter((t: any) => t.category === 'meal')
+})
 
 // 计算显示的记录数
 const displayedRecords = computed(() => {
@@ -311,6 +342,7 @@ const handleSubmit = async () => {
 onMounted(() => {
   loadRecords()
   startPolling()
+  fetchTasks()
 })
 
 onUnmounted(() => {

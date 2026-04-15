@@ -54,10 +54,28 @@
                 </div>
               </div>
             </div>
+
+            <!-- 睡眠任务组件 - 待完成 -->
+            <CheckinTaskGroup 
+              :tasks="sleepTasks" 
+              category="sleep"
+              position="left"
+              @toggle="toggleTask"
+              @delete="deleteTask"
+            />
           </div>
 
-          <!-- 右栏：记录列表 -->
+          <!-- 右栏：睡眠任务和记录列表 -->
           <div class="sleep-right-panel">
+            <!-- 睡眠任务组件 - 已完成 -->
+            <CheckinTaskGroup 
+              :tasks="sleepTasks" 
+              category="sleep"
+              position="right"
+              @toggle="toggleTask"
+              @delete="deleteTask"
+            />
+
             <!-- 空状态 -->
             <div v-if="records.length === 0" class="empty-state">
               <div class="empty-icon">🌙</div>
@@ -218,9 +236,17 @@
 import { ref, computed, onMounted, onUnmounted } from 'vue'
 import Sidebar from '../components/homeView/Sidebar.vue'
 import TopHeader from '../components/homeView/TopHeader.vue'
+import CheckinTaskGroup from '../components/checkinView/CheckinTaskGroup.vue'
 import { useSleepCheckin } from '../composables/useSleepCheckin'
+import { useTodolist } from '../composables/useTodolist'
 
 const sidebarRef = ref()
+
+const { tasks, fetchTasks, toggleTask, deleteTask } = useTodolist()
+
+const sleepTasks = computed(() => {
+  return tasks.value.filter((t: any) => t.category === 'sleep')
+})
 const isFormOpen = ref(false)
 const showAllRecords = ref(false)
 
@@ -288,6 +314,7 @@ const handleSubmit = async () => {
 onMounted(() => {
   loadRecords()
   startPolling()
+  fetchTasks()
 })
 
 onUnmounted(() => {
