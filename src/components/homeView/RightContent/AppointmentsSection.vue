@@ -3,7 +3,7 @@
     <!-- 头部 -->
     <div class="calendar-header-top">
       <h3 class="section-title">TODOLIST</h3>
-      <div>
+      <div class="tabs">
         <button :class="['tab-btn', { active: !showCalendar }]" @click="handleTabChange(false)">每日</button>
         <button :class="['tab-btn', { active: showCalendar }]" @click="handleTabChange(true)">月度</button>
       </div>
@@ -62,7 +62,7 @@
           <!-- 右侧：优先级标签 + 状态 -->
           <div class="task-right">
             <span class="priority-badge">{{ getPriorityLabel(task.priority) }}</span>
-            <span class="status-icon">
+            <span class="status-icon" @click="jumpToDetail">
               <svg v-if="task.status === 'completed'" width="16" height="16" viewBox="0 0 16 16" fill="none">
                 <circle cx="8" cy="8" r="7.5" stroke="#4caf50" stroke-width="1.5" fill="#e8f5e9" />
                 <path d="M5.5 8L7 9.5L10.5 6" stroke="#4caf50" stroke-width="1.5" stroke-linecap="round"
@@ -136,7 +136,7 @@ const todayTasks = computed(() => {
 // 获取指定日期的任务
 const getTasksByDate = async (dateStr: string): Promise<any[]> => {
   try {
-    console.log(`📅 获取 ${dateStr} 的任务`);
+    // console.log(`📅 获取 ${dateStr} 的任务`);
     // 直接调用 API，不经过 useTodolist 的 fetchTasks
     // 这样可以避免 watch 触发造成的死循环
     const response = await fetchWithRefresh(`/api/tasks/date/${dateStr}`, {
@@ -144,10 +144,10 @@ const getTasksByDate = async (dateStr: string): Promise<any[]> => {
     });
     
     const data = await response.json();
-    console.log(`📅 获取 ${dateStr} 任务响应:`, data);
+    // console.log(`📅 获取 ${dateStr} 任务响应:`, data);
     
-    if (data.success && Array.isArray(data.data)) {
-      return data.data;
+    if (data.success && Array.isArray(data.data.data)) {
+      return data.data.data;
     }
     return [];
   } catch (err: any) {

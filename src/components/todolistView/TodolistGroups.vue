@@ -15,6 +15,7 @@
           <div class="task-checkbox">
             <input 
               type="checkbox" 
+              v-if="showCheckbox"
               :checked="task.status === 'completed'"
               @change="$emit('toggle', task.id)"
             />
@@ -24,6 +25,7 @@
             <div v-if="task.description" class="task-description">{{ task.description }}</div>
             <div class="task-meta">
               <span class="task-date">{{ formatDate(task.due_date) }}</span>
+              <span class="task-date" v-if="!showCheckbox"> {{ getDateType(task.date_type) }} </span>
               <span :class="['task-priority', task.priority]">{{ getPriorityLabel(task.priority) }}</span>
             </div>
           </div>
@@ -53,6 +55,7 @@
           <div class="task-checkbox">
             <input 
               type="checkbox" 
+              v-if="showCheckbox"
               :checked="task.status === 'completed'"
               @change="$emit('toggle', task.id)"
             />
@@ -62,6 +65,7 @@
             <div v-if="task.description" class="task-description">{{ task.description }}</div>
             <div class="task-meta">
               <span class="task-date">{{ formatDate(task.due_date) }}</span>
+              <span class="task-date" v-if="!showCheckbox"> {{ getDateType(task.date_type) }} </span>
               <span :class="['task-priority', task.priority]">{{ getPriorityLabel(task.priority) }}</span>
             </div>
           </div>
@@ -91,6 +95,7 @@
           <div class="task-checkbox">
             <input 
               type="checkbox" 
+              v-if="showCheckbox"
               :checked="task.status === 'completed'"
               @change="$emit('toggle', task.id)"
             />
@@ -100,6 +105,7 @@
             <div v-if="task.description" class="task-description">{{ task.description }}</div>
             <div class="task-meta">
               <span class="task-date">{{ formatDate(task.due_date) }}</span>
+              <span class="task-date" v-if="!showCheckbox"> {{ getDateType(task.date_type) }} </span>
               <span :class="['task-priority', task.priority]">{{ getPriorityLabel(task.priority) }}</span>
             </div>
           </div>
@@ -129,6 +135,7 @@
           <div class="task-checkbox">
             <input 
               type="checkbox" 
+              v-if="showCheckbox"
               :checked="task.status === 'completed'"
               @change="$emit('toggle', task.id)"
             />
@@ -138,6 +145,7 @@
             <div v-if="task.description" class="task-description">{{ task.description }}</div>
             <div class="task-meta">
               <span class="task-date">{{ formatDate(task.due_date) }}</span>
+              <span class="task-date" v-if="!showCheckbox"> {{ getDateType(task.date_type) }} </span>
               <span :class="['task-priority', task.priority]">{{ getPriorityLabel(task.priority) }}</span>
             </div>
           </div>
@@ -165,6 +173,7 @@ import type { Task } from '../../types/todolist'
 
 interface Props {
   filteredTasks: Task[]
+  showCheckbox: boolean
 }
 
 const props = defineProps<Props>()
@@ -187,7 +196,7 @@ const sleepTasks = computed(() => {
 })
 const customTasks = computed(() => {
   const result = props.filteredTasks.filter(t => t.category === 'custom')
-  console.log('✏️ 自定义任务:', result)
+  console.log('✏️ 自定义任务:', result,props.filteredTasks)
   return result
 })
 
@@ -202,6 +211,16 @@ const formatDate = (dateStr: string): string => {
   if (date.toDateString() === tomorrow.toDateString()) return '明天'
   
   return date.toLocaleDateString('zh-CN', { month: 'short', day: 'numeric' })
+}
+
+const getDateType = (dateStr: string | undefined): string => {
+  console.log('解析日期类型:', dateStr)
+  if (!dateStr) return '无信息';
+  if (dateStr === 'everyday') return '每天';
+  if (dateStr === 'workday') return '工作日';
+  if (dateStr === 'weekend') return '周末';
+  if (dateStr === 'tomorrow') return '次日';
+  return '无信息';
 }
 
 const getPriorityLabel = (priority: 'low' | 'medium' | 'high'): string => {

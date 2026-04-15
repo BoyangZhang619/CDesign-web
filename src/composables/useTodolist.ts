@@ -315,16 +315,16 @@ export function useTodolist() {
    */
   async function fetchTasksForSpecificDate(dateStr: string): Promise<Task[]> {
     try {
-      console.log(`📅 获取 ${dateStr} 的任务`)
+      // console.log(`📅 获取 ${dateStr} 的任务`)
       const response = await fetchWithRefresh(
         `/api/tasks/date/${dateStr}`,
         { method: 'GET' }
       )
       const data = await response.json()
-      console.log(`📅 ${dateStr} 任务响应:`, data)
+      // console.log(`📅 ${dateStr} 任务响应:`, data)
       
-      if (data.success && Array.isArray(data.data)) {
-        return data.data.map((task: any) => transformBackendTask(task))
+      if (data.success && Array.isArray(data.data.data)) {
+        return data.data.data.map((task: any) => transformBackendTask(task))
       } else {
         console.warn(`⚠️ 获取 ${dateStr} 任务失败:`, data)
         return []
@@ -332,6 +332,41 @@ export function useTodolist() {
     } catch (err: any) {
       console.error(`❌ 获取 ${dateStr} 任务错误:`, err)
       return []
+    }
+  }
+
+  /**
+   * 获取用户的所有任务（不做任何后端筛选）
+   */
+  async function fetchAllTasks(): Promise<Task[]> {
+    loading.value = true
+    error.value = ''
+    try {
+      console.log('📋 获取所有任务')
+      const response = await fetchWithRefresh(
+        `/api/tasks/all`,
+        { method: 'GET' }
+      )
+      const data = await response.json()
+      console.log('📋 所有任务响应:', data)
+      
+      if (data.success && Array.isArray(data.data.data)) {
+        const taskList = data.data.data
+        console.log('✅ 所有任务数量:', taskList.length)
+        const transformedTasks = taskList.map((task: any) => transformBackendTask(task))
+        console.log('🎯 转换后的任务:', transformedTasks)
+        tasks.value = transformedTasks
+        await calculateStats()
+        return transformedTasks
+      } else {
+        throw new Error(data.message || '获取所有任务失败')
+      }
+    } catch (err: any) {
+      error.value = err.message || '获取所有任务失败'
+      console.error('❌ 获取所有任务错误:', err)
+      return []
+    } finally {
+      loading.value = false
     }
   }
 
@@ -809,6 +844,7 @@ export function useTodolist() {
     // 数据获取
     fetchTasks,
     fetchTasksForSpecificDate,
+    fetchAllTasks,
     calculateStats,
 
     // 任务操作

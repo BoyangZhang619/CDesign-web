@@ -20,12 +20,8 @@
 
             <!-- 搜索和筛选 -->
             <div class="todolist-search-section">
-              <TodolistToolbar 
-                :search-keyword="searchKeyword"
-                :current-filter="currentFilter"
-                @search="handleSearch"
-                @filter="handleSetFilter"
-              />
+              <TodolistToolbar :search-keyword="searchKeyword" :current-filter="currentFilter" @search="handleSearch"
+                @filter="handleSetFilter" />
             </div>
 
             <!-- 数据统计展示 -->
@@ -36,31 +32,39 @@
 
           <!-- 右栏：任务列表 -->
           <div class="todolist-right-panel">
-            <TodolistEmpty v-if="filteredTasks.length === 0" />
-            <TodolistGroups 
-              v-else
-              :filtered-tasks="filteredTasks"
-              @toggle="toggleTask"
-              @delete="handleDeleteTask"
-              @accept="handleAcceptTask"
-              @reject="handleRejectTask"
-            />
+            <div class="todolist-choice">
+              <div class="choice-toggle">
+                <button :class="['choice-btn', { active: viewMode === 'pending' }]" @click="viewMode = 'pending'">
+                  今日任务
+                </button>
+                <button :class="['choice-btn', { active: viewMode === 'all' }]" @click="viewMode = 'all'">
+                  所有任务
+                </button>
+              </div>
+            </div>
+            <TodolistEmpty v-if="viewMode === 'pending' && filteredTasks.length === 0" />
+            <TodolistGroups v-if="viewMode === 'pending' && filteredTasks.length > 0" :filtered-tasks="filteredTasks"
+              :show-checkbox="true" @toggle="toggleTask" @delete="handleDeleteTask" @accept="handleAcceptTask"
+              @reject="handleRejectTask" />
+
+            <!-- 所有任务模式：不过滤，直接显示所有任务 -->
+            <div v-if="viewMode === 'all'" class="all-tasks-view">
+              <TodolistEmpty v-if="tasks.length === 0" />
+              <TodolistGroups v-else :filtered-tasks="tasks" :show-checkbox="false" @toggle="toggleTask"
+                @delete="handleDeleteTask" @accept="handleAcceptTask" @reject="handleRejectTask" />
+            </div>
           </div>
         </div>
       </div>
     </div>
 
     <!-- 创建任务浮窗 -->
-    <TodolistCreateModal
-      :isOpen="showCreateModal"
-      @close="closeCreateModal"
-      @create="handleCreateTaskSubmit"
-    />
+    <TodolistCreateModal :isOpen="showCreateModal" @close="closeCreateModal" @create="handleCreateTaskSubmit" />
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, watch } from 'vue'
 import Sidebar from '../components/homeView/Sidebar.vue'
 import TopHeader from '../components/homeView/TopHeader.vue'
 import TodolistStats from '../components/todolistView/TodolistStats.vue'
@@ -74,12 +78,15 @@ const sidebarRef = ref()
 const showCreateModal = ref(false)
 const searchKeyword = ref('')
 const currentFilter = ref('all')
+const viewMode = ref<'pending' | 'all'>('pending')
 
 // 使用 useTodolist composable
-const { 
-  tasks, 
-  stats, 
+const {
+  tasks,
+  stats,
   fetchTasks,
+  fetchAllTasks,
+  calculateStats,
   createTask,
   completeTask,
   uncompleteTask,
@@ -98,20 +105,33 @@ const completionRate = computed(() => {
 // 过滤后的任务
 const filteredTasks = computed(() => {
   let result = Array.from(tasks.value)
-  
+  // console.log('🔍 原始任务列表:', result)
+
   // 按搜索关键词过滤
   if (searchKeyword.value) {
-    result = result.filter(t => 
+    result = result.filter(t =>
       t.title.toLowerCase().includes(searchKeyword.value.toLowerCase()) ||
       t.description?.toLowerCase().includes(searchKeyword.value.toLowerCase())
     )
   }
-  
-  // 按状态过滤
+
+  // console.log('🔍 搜索过滤后任务列表:', result)
+
+  // 根据视图模式过滤
+  if (viewMode.value === 'pending') {
+    result = result.filter(t => t.status === 'pending' || t.status === 'overdue' || t.status === 'completed')
+  }
+  // 所有模式：显示所有状态的任务
+
+  // console.log('🔍 视图模式过滤后任务列表:', result)
+
+  // 按当前筛选过滤（如果不是"全部"）
   if (currentFilter.value !== 'all') {
     result = result.filter(t => t.status === currentFilter.value)
   }
-  
+
+  // console.log('🔍 最终过滤后任务列表:', result)
+
   return result
 })
 
@@ -121,12 +141,14 @@ const toggleSidebar = () => {
 }
 
 const handleSetFilter = (status: string) => {
+  viewMode.value = 'pending' // 切换筛选时默认切换到待办模式
   fetchTasks().then(() => {
     currentFilter.value = status
   })
 }
 
 const handleSearch = (keyword: string) => {
+  viewMode.value = 'pending' // 搜索时默认切换到待办模式
   searchKeyword.value = keyword
   searchTasks(keyword)
 }
@@ -148,7 +170,9 @@ const handleCreateTaskSubmit = async (taskData: any) => {
   } finally {
     // 无论成功与否都关闭模态框
     closeCreateModal()
-    fetchTasks() // 刷新任务列表
+    // 创建任务后，默认切换到待办模式并刷新
+    viewMode.value = 'pending'
+    await fetchTasks()
   }
 }
 
@@ -157,7 +181,7 @@ const toggleTask = async (taskId: string | number) => {
     const id = typeof taskId === 'string' ? Number(taskId) : taskId
     const task = tasks.value.find(t => t.id === id)
     if (!task) return
-    
+
     if (task.status === 'completed') {
       await uncompleteTask(id)
     } else {
@@ -166,7 +190,12 @@ const toggleTask = async (taskId: string | number) => {
   } catch (err) {
     console.error('切换任务状态失败:', err)
   } finally {
-    fetchTasks() // 刷新任务列表
+    // 根据当前视图模式刷新不同的数据
+    if (viewMode.value === 'all') {
+      await fetchAllTasks()
+    } else {
+      await fetchTasks()
+    }
   }
 }
 
@@ -179,7 +208,12 @@ const handleDeleteTask = async (taskId: string | number) => {
     } catch (err) {
       console.error('删除任务失败:', err)
     } finally {
-      fetchTasks() // 刷新任务列表
+      // 根据当前视图模式刷新不同的数据
+      if (viewMode.value === 'all') {
+        await fetchAllTasks()
+      } else {
+        await fetchTasks()
+      }
     }
   }
 }
@@ -191,7 +225,12 @@ const handleAcceptTask = async (taskId: string | number) => {
   } catch (err) {
     console.error('接受建议失败:', err)
   } finally {
-    fetchTasks() // 刷新任务列表
+    // 根据当前视图模式刷新不同的数据
+    if (viewMode.value === 'all') {
+      await fetchAllTasks()
+    } else {
+      await fetchTasks()
+    }
   }
 }
 
@@ -202,9 +241,27 @@ const handleRejectTask = async (taskId: string | number) => {
   } catch (err) {
     console.error('驳回建议失败:', err)
   } finally {
-    fetchTasks() // 刷新任务列表
+    // 根据当前视图模式刷新不同的数据
+    if (viewMode.value === 'all') {
+      await fetchAllTasks()
+    } else {
+      await fetchTasks()
+    }
   }
 }
+
+// 监听 viewMode 变化
+watch(viewMode, async (newMode) => {
+  if (newMode === 'all') {
+    // 切换到"所有任务"模式，获取所有任务
+    await fetchAllTasks()
+  } else {
+    // 切换到"待办任务"模式，恢复待办任务
+    await fetchTasks()
+  }
+  // 刷新统计数据
+  await calculateStats()
+})
 
 onMounted(() => {
   // 页面加载时获取任务数据

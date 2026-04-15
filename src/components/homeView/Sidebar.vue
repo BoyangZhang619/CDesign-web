@@ -1,7 +1,7 @@
 <template>
     <aside class="sidebar" :class="{ expanded: isExpanded }">
         <!-- Logo -->
-        <div class="sidebar-logo" @click="toggleSidebarFromHeader">
+        <div class="sidebar-logo" @click="router.push('/home')">
             <img src="/logo-stuheal.svg" alt="StuHeal Logo" class="logo-icon">
             <span class="logo-text" v-if="isExpanded == true">StuHeal</span>
         </div>
