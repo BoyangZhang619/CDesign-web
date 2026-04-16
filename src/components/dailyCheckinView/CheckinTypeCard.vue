@@ -68,10 +68,20 @@ const displayMetrics = computed(() => {
   const result: Record<string, any> = {}
   props.metrics.forEach((metric) => {
     const value = props.data?.[metric.key]
-    result[metric.key] = {
-      label: metric.label,
-      value: metric.formatter ? metric.formatter(value) : value ?? '-',
-      unit: metric.unit
+    try {
+      result[metric.key] = {
+        label: metric.label,
+        value: metric.formatter ? metric.formatter(value) : value ?? '-',
+        unit: metric.unit
+      }
+    } catch (error) {
+      // 如果 formatter 失败，使用原始值
+      result[metric.key] = {
+        label: metric.label,
+        value: String(value ?? '-'),
+        unit: metric.unit
+      }
+      console.error(`Formatter error for ${metric.key}:`, error)
     }
   })
   return result
@@ -94,11 +104,6 @@ const displayMetrics = computed(() => {
   border-color: #5A7A87;
   box-shadow: 0 4px 12px rgba(90, 122, 135, 0.2);
   transform: translateY(-2px);
-}
-
-.checkin-card.completed {
-  border-color: #66bb6a;
-  background: linear-gradient(135deg, rgba(102, 187, 106, 0.05) 0%, rgba(102, 187, 106, 0.02) 100%);
 }
 
 .checkin-card.pending {

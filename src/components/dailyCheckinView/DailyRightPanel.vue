@@ -94,7 +94,7 @@
       <!-- AI分析卡片 -->
       <div class="special-card ai-card">
         <div class="card-header">
-          <span class="card-icon">✨</span>
+          <img src="/noun-sidebar-ai.svg" alt="AI分析" class="grid-svg" style="transform: scale(1.5);"/>
           <h2 class="card-title">AI分析</h2>
         </div>
         <div class="card-content">
@@ -111,11 +111,33 @@
         </div>
       </div>
     </div>
+
+    <!-- AI 总结面板 -->
+    <AISummaryPanel
+      :ai-summary="aiSummary"
+      :loading="aiLoading"
+      :error="aiError"
+      @retry="emit('retry-ai-summary')"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
 import CheckinTypeCard from './CheckinTypeCard.vue'
+import AISummaryPanel from './AISummaryPanel.vue'
+
+interface AISummaryData {
+  exercise_ai_summary: string | null
+  meal_ai_summary: string | null
+  sleep_ai_summary: string | null
+  total_ai_summary: string | null
+  updated_flags?: {
+    exercise: boolean
+    meal: boolean
+    sleep: boolean
+    total: boolean
+  }
+}
 
 interface Props {
   exerciseStatus: 'completed' | 'pending' | 'none'
@@ -125,14 +147,23 @@ interface Props {
   sleepStatus: 'completed' | 'pending' | 'none'
   sleepData?: Record<string, any>
   totalRecords: number
+  aiSummary?: AISummaryData | null
+  aiLoading?: boolean
+  aiError?: string | null
 }
 
 withDefaults(defineProps<Props>(), {
   exerciseStatus: 'none',
   mealStatus: 'none',
   sleepStatus: 'none',
-  totalRecords: 0
+  totalRecords: 0,
+  aiLoading: false,
+  aiError: null
 })
+
+const emit = defineEmits<{
+  'retry-ai-summary': []
+}>()
 </script>
 
 <style scoped>
@@ -169,7 +200,7 @@ withDefaults(defineProps<Props>(), {
   transform: translateY(-2px);
 }
 
-.special-card.trends-card {
+/* .special-card.trends-card {
   border-color: #9c27b0;
   background: linear-gradient(135deg, rgba(156, 39, 176, 0.05) 0%, rgba(156, 39, 176, 0.02) 100%);
 }
@@ -177,7 +208,7 @@ withDefaults(defineProps<Props>(), {
 .special-card.trends-card:hover {
   border-color: #9c27b0;
 }
-
+  
 .special-card.history-card {
   border-color: #2196f3;
   background: linear-gradient(135deg, rgba(33, 150, 243, 0.05) 0%, rgba(33, 150, 243, 0.02) 100%);
@@ -194,7 +225,7 @@ withDefaults(defineProps<Props>(), {
 
 .special-card.ai-card:hover {
   border-color: #ff9800;
-}
+} */
 
 .card-header {
   display: flex;

@@ -29,6 +29,10 @@
             :sleep-status="sleepStatus"
             :sleep-data="sleepData"
             :total-records="allTotalRecords"
+            :ai-summary="aiSummary"
+            :ai-loading="aiLoading"
+            :ai-error="aiError"
+            @retry-ai-summary="retryAISummary"
           />
         </div>
       </div>
@@ -45,6 +49,7 @@ import DailyRightPanel from '@/components/dailyCheckinView/DailyRightPanel.vue'
 import { useExerciseCheckin } from '@/composables/useExerciseCheckin'
 import { useMealCheckin } from '@/composables/useMealCheckin'
 import { useSleepCheckin } from '@/composables/useSleepCheckin'
+import { useAISummary } from '@/composables/useAISummary'
 import { getLocalISOString } from '@/utils/dateTime'
 
 const sidebarRef = ref<InstanceType<typeof Sidebar>>()
@@ -75,6 +80,16 @@ const {
   stopPolling: stopSleepPolling 
 } = useSleepCheckin()
 
+// AI 总结 composable
+const { 
+  summary: aiSummary,
+  loading: aiLoading,
+  error: aiError,
+  getAISummary,
+  startPolling: startAISummaryPolling,
+  stopPolling: stopAISummaryPolling
+} = useAISummary()
+
 // 计算完成状态
 const exerciseStatus = computed(() => {
   if (exerciseRecords.value.length > 0) return 'completed'
@@ -103,7 +118,7 @@ const mealData = computed(() => ({
 }))
 
 const sleepData = computed(() => ({
-  duration: sleepStats.value?.totalNightHours ? (sleepStats.value.totalNightHours / 60).toFixed(1) : 0,
+  duration: sleepStats.value?.totalNightHours ? sleepStats.value.totalNightHours / 60 : 0,
   quality: sleepStats.value?.avgQualityScore || 0
 }))
 
@@ -139,6 +154,11 @@ const selectToday = () => {
   loadAllData()
 }
 
+const retryAISummary = async () => {
+  console.log('重新加载 AI 总结...')
+  await getAISummary()
+}
+
 const loadAllData = async () => {
   try {
     await Promise.all([
@@ -158,10 +178,14 @@ const refreshAllData = async () => {
 
 onMounted(async () => {
   await loadAllData()
+  // 获取 AI 总结
+  await getAISummary()
   // 开始轮询以获得实时数据
   startExercisePolling()
   startMealPolling()
   startSleepPolling()
+  // 启动 AI 总结轮询
+  startAISummaryPolling(5000) // 5 秒轮询一次
 })
 
 // 清理轮询
@@ -169,6 +193,7 @@ onBeforeUnmount(() => {
   stopExercisePolling()
   stopMealPolling()
   stopSleepPolling()
+  stopAISummaryPolling()
 })
 </script>
 

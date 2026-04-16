@@ -1,16 +1,5 @@
 <template>
   <div class="daily-left-panel">
-    <!-- 日期选择器 -->
-    <div class="date-selector-section">
-      <label class="date-label">选择日期</label>
-      <input 
-        :value="selectedDate" 
-        type="date" 
-        class="date-input"
-        @change="(e) => emit('date-change', (e.target as HTMLInputElement).value)"
-      />
-      <button @click="emit('today')" class="today-btn">今天</button>
-    </div>
 
     <!-- 今日总结卡片 -->
     <div class="summary-card">
@@ -37,7 +26,6 @@
 
     <!-- 快速导航按钮 -->
     <div class="quick-nav-section">
-      <p class="nav-title">快速导航</p>
       <button class="nav-btn" @click="emit('refresh')" title="刷新所有数据">
         <span class="nav-icon">🔄</span>
         <span class="nav-text">刷新数据</span>
@@ -78,7 +66,6 @@ const completionRate = computed(() => {
   gap: 16px;
   overflow-y: auto;
   overflow-x: hidden;
-  padding-right: 10px;
 }
 
 .date-selector-section {
@@ -138,7 +125,7 @@ const completionRate = computed(() => {
   flex-direction: column;
   gap: 12px;
   padding: 16px;
-  background: linear-gradient(135deg, rgba(90, 122, 135, 0.05) 0%, rgba(90, 122, 135, 0.02) 100%);
+  background: #fff8;
   border: 1px solid rgba(90, 122, 135, 0.15);
   border-radius: 12px;
 }
@@ -246,5 +233,12 @@ const completionRate = computed(() => {
 
 .nav-text {
   font-weight: 600;
+}
+
+@media (max-width: 768px) {
+  .daily-left-panel {
+    padding-bottom: 15px;
+  }
+  
 }
 </style>
