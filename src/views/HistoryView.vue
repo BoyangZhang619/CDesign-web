@@ -351,15 +351,91 @@ const toggleSidebar = () => {
 </script>
 
 <style scoped>
-@import '@/css/HistoryView.css';
+:root {
+  --color-deep-blue: #5A7A87;
+  --color-warm-beige: #D4C4B0;
+  --color-soft-cream: #FEFCFA;
+  --color-cream-light: #F8F6F3;
+  --color-soft-green: #9DB4A0;
+  --color-dusty-rose: #A9787B;
+  --color-light-gold: #C9B89C;
+}
+
+.history-layout {
+  margin: 0 auto;
+  display: flex;
+  height: calc(100dvh - 10px);
+  background: none;
+  border: 5px solid var(--color-deep-blue);
+  border-radius: 20px;
+  overflow: hidden;
+  box-sizing: content-box;
+  position: relative;
+  width: 100vw;
+}
+
+.history-layout::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: url('/bg.png') center/cover no-repeat;
+  background-attachment: fixed;
+  filter: blur(8px);
+  pointer-events: none;
+  z-index: -1;
+}
+
+.main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  transition: margin-left 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.content-area {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 20px 30px;
+  gap: 20px;
+  overflow-y: auto;
+}
+
+/* 滚动条样式 */
+.content-area::-webkit-scrollbar {
+  width: 8px;
+}
+
+.content-area::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.content-area::-webkit-scrollbar-thumb {
+  background: #d0d0d0;
+  border-radius: 4px;
+}
+
+.content-area::-webkit-scrollbar-thumb:hover {
+  background: #b0b0b0;
+}
+
+.history-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
 
 /* 标签页容器 */
 .tabs-container {
-  margin-bottom: 24px;
-  background: linear-gradient(135deg, #FEFCFA 0%, #F8F6F3 100%);
+  background: white;
   border-radius: 12px;
-  border: 1px solid #E8E1D6;
+  border: 1px solid var(--color-warm-beige);
   padding: 4px;
+  box-shadow: 0 2px 8px rgba(90, 122, 135, 0.05);
 }
 
 .tabs {
@@ -385,14 +461,14 @@ const toggleSidebar = () => {
 }
 
 .tab-button:hover {
-  background: rgba(200, 180, 160, 0.08);
-  color: #C8B4A0;
+  background: rgba(157, 180, 160, 0.08);
+  color: var(--color-soft-green);
 }
 
 .tab-button.active {
-  background: linear-gradient(135deg, #F5E6D3 0%, #EDD9CC 100%);
-  color: #8B6F47;
-  box-shadow: 0 2px 8px rgba(200, 180, 160, 0.15);
+  background: linear-gradient(135deg, var(--color-soft-green) 0%, #8FA591 100%);
+  color: #ffffff;
+  box-shadow: 0 2px 8px rgba(157, 180, 160, 0.2);
 }
 
 .tab-icon {
@@ -401,6 +477,9 @@ const toggleSidebar = () => {
 
 .tab-pane {
   animation: fadeIn 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }
 
 @keyframes fadeIn {
@@ -411,6 +490,108 @@ const toggleSidebar = () => {
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+/* 错误信息框 */
+.error-box {
+  background: #FFE8E8;
+  border: 1px solid #D98A8A;
+  border-radius: 8px;
+  padding: 12px 16px;
+  color: #8B5555;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+/* 加载状态 */
+.loading-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  gap: 16px;
+  background: linear-gradient(135deg, var(--color-soft-cream) 0%, var(--color-cream-light) 100%);
+  border-radius: 12px;
+  border: 1px solid var(--color-warm-beige);
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid var(--color-warm-beige);
+  border-top-color: var(--color-soft-green);
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.loading-state p {
+  color: var(--color-soft-green);
+  font-size: 14px;
+  margin: 0;
+  font-weight: 500;
+}
+
+/* 空状态 */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  background: linear-gradient(135deg, var(--color-soft-cream) 0%, var(--color-cream-light) 100%);
+  border-radius: 12px;
+  border: 1px solid var(--color-warm-beige);
+  text-align: center;
+}
+
+.empty-icon {
+  font-size: 48px;
+  color: var(--color-warm-beige);
+  margin-bottom: 12px;
+}
+
+.empty-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--color-deep-blue);
+  margin: 0 0 8px 0;
+}
+
+.empty-text {
+  font-size: 13px;
+  color: var(--color-soft-green);
+  margin: 0;
+}
+
+/* 响应式设计 - 手机端 */
+@media (max-width: 768px) {
+  .history-layout {
+    border: none;
+    border-radius: 0;
+    height: 100dvh;
+    width: 100vw;
+  }
+
+  .content-area {
+    padding: 15px 20px;
+    gap: 15px;
+  }
+
+  .tab-button {
+    font-size: 13px;
+    padding: 10px 12px;
+  }
+
+  .tab-icon {
+    font-size: 14px;
   }
 }
 </style>
