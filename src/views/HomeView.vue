@@ -30,7 +30,7 @@ import { useTrendsView } from '../composables/useTrendsView'
 const sidebarRef = ref<InstanceType<typeof Sidebar>>()
 const isAIChatOpen = ref(false)
 
-const { showHealthSetupModal, handleHealthSetupClose, handleHealthSetupSuccess } = useTrendsView()
+const { showHealthSetupModal, handleHealthSetupClose, handleHealthSetupSuccess, triggerHealthSetup } = useTrendsView()
 
 // 用于手机端切换侧栏
 const toggleSidebar = () => {

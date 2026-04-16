@@ -16,14 +16,24 @@
     </div>
 
     <!-- 总结内容 -->
-    <div v-else class="summary-content">
+    <button v-else class="summary-content" @click="openFullModal" :disabled="!actualSummary">
       <p class="summary-text">{{ actualSummary || '暂无数据' }}</p>
-    </div>
+    </button>
+
+    <!-- AI总结全文浮窗 -->
+    <AISummaryFullModal
+      :visible="showFullModal"
+      :icon="'😴'"
+      :title="'睡眠AI总结'"
+      :content="actualSummary || ''"
+      @close="showFullModal = false"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
+import AISummaryFullModal from '../modals/AISummaryFullModal.vue'
 
 interface Props {
   sleepSummary?: {
@@ -41,12 +51,20 @@ const props = withDefaults(defineProps<Props>(), {
   error: null
 })
 
+const showFullModal = ref(false)
+
 // 获取真实数据对象
 const actualSummary = computed(() => {
   return (props.sleepSummary as any)?.data?.sleep_ai_summary || 
          (props.sleepSummary as any)?.sleep_ai_summary ||
          null
 })
+
+const openFullModal = () => {
+  if (actualSummary.value) {
+    showFullModal.value = true
+  }
+}
 </script>
 
 <style scoped>
@@ -108,6 +126,20 @@ const actualSummary = computed(() => {
 
 .summary-content {
   padding: 0;
+  background: none;
+  border: none;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.summary-content:hover:not(:disabled) {
+  transform: translateY(-1px);
+}
+
+.summary-content:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
 }
 
 .summary-text {

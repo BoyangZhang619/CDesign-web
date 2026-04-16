@@ -38,7 +38,7 @@
       />
 
       <!-- 健康趋势卡片 -->
-      <div class="special-card trends-card">
+      <!-- <div class="special-card trends-card">
         <div class="card-header">
           <img src="/noun-sidebar-trend.svg" alt="趋势分析" class="grid-svg"/>
           <h2 class="card-title">趋势分析</h2>
@@ -64,10 +64,10 @@
             <span class="arrow">→</span>
           </router-link>
         </div>
-      </div>
+      </div> -->
 
       <!-- 历史记录卡片 -->
-      <div class="special-card history-card">
+      <!-- <div class="special-card history-card">
         <div class="card-header">
           <img src="/noun-sidebar-history.svg" alt="历史记录" class="grid-svg"/>
           <h2 class="card-title">历史记录</h2>
@@ -89,10 +89,10 @@
             <span class="arrow">→</span>
           </router-link>
         </div>
-      </div>
+      </div> -->
 
       <!-- AI分析卡片 -->
-      <div class="special-card ai-card">
+      <!-- <div class="special-card ai-card">
         <div class="card-header">
           <img src="/noun-sidebar-ai.svg" alt="AI分析" class="grid-svg" style="transform: scale(1.5);"/>
           <h2 class="card-title">AI分析</h2>
@@ -109,7 +109,7 @@
             <span class="arrow">→</span>
           </router-link>
         </div>
-      </div>
+      </div> -->
     </div>
   </div>
 </template>

@@ -24,7 +24,7 @@
             </div>
 
             <!-- 今日统计 -->
-            <div v-if="records.length > 0 && isSleepStatsVisible" class="sleep-stats-section">
+            <div class="sleep-stats-section">
               <div class="stats-header">
                 <h3 class="stats-title">今日汇总</h3>
                 <button class="stats-toggle-btn" @click="isSleepStatsVisible = !isSleepStatsVisible" :title="isSleepStatsVisible ? '收起' : '展开'">
@@ -33,7 +33,7 @@
                   </svg>
                 </button>
               </div>
-              <div class="stats-grid">
+              <div class="stats-grid" v-if="isSleepStatsVisible">
                 <div class="stat-item">
                   <span class="stat-label">总记录</span>
                   <span class="stat-value">{{ todayStatistics.totalRecords }}</span>
@@ -51,12 +51,12 @@
                 </div>
                 <div class="stat-item">
                   <span class="stat-label">夜间时长</span>
-                  <span class="stat-value">{{ formatSleepDuration(todayStatistics.totalNightHours) }}</span>
+                  <span class="stat-value">{{ formatSleepDuration(todayStatistics.totalNightHours, true) }}</span>
                   <span class="stat-unit">h</span>
                 </div>
                 <div class="stat-item">
                   <span class="stat-label">午睡时长</span>
-                  <span class="stat-value">{{ formatSleepDuration(todayStatistics.totalNapHours) }}</span>
+                  <span class="stat-value">{{ formatSleepDuration(todayStatistics.totalNapHours, true) }}</span>
                   <span class="stat-unit">h</span>
                 </div>
                 <div class="stat-item">
@@ -66,6 +66,13 @@
                 </div>
               </div>
             </div>
+            
+            <!-- AI 总结面板 -->
+            <SleepAISummaryPanel
+              :sleep-summary="SleepAISummary"
+              :loading="SleepAILoading"
+              :error="SleepAIError"
+            />
 
             <!-- 睡眠任务组件 - 待完成 -->
             <CheckinTaskGroup 
@@ -103,7 +110,7 @@
               </div>
 
               <div class="records-container">
-                <div v-for="record in displayedRecords" :key="record.id" class="record-card">
+                <button v-for="record in displayedRecords" :key="record.id" class="record-card" @click="openRecordDetail(record)">
                   <div class="card-header">
                     <div class="card-meta">
                       <span class="sleep-badge">{{ getNapTypeText(record.is_nap) }}</span>
@@ -129,7 +136,7 @@
                       </div>
                     </div>
                   </div>
-                </div>
+                </button>
               </div>
 
               <!-- 查看全部按钮 -->
@@ -265,6 +272,14 @@
         </div>
       </div>
     </transition>
+
+    <!-- 记录详情模态框 -->
+    <RecordDetailModal
+      :visible="showRecordDetail"
+      record-type="sleep"
+      :record="selectedRecord"
+      @close="showRecordDetail = false"
+    />
   </div>
 </template>
 
@@ -274,14 +289,19 @@ import { useRouter } from 'vue-router'
 import Sidebar from '../components/homeView/Sidebar.vue'
 import TopHeader from '../components/homeView/TopHeader.vue'
 import CheckinTaskGroup from '../components/checkinView/CheckinTaskGroup.vue'
+import RecordDetailModal from '../components/modals/RecordDetailModal.vue'
 import { useSleepCheckin } from '../composables/useSleepCheckin'
 import { useTodolist } from '../composables/useTodolist'
+import SleepAISummaryPanel from '../components/sleepCheckinView/SleepAISummaryPanel.vue'
+import { useAISummary } from '../composables/useAISummary'
 
 const router = useRouter()
 const sidebarRef = ref()
 
 const showOtherCheckinMenu = ref(false)
 const isSleepStatsVisible = ref(typeof window !== 'undefined' ? window.innerWidth > 768 : true)
+const showRecordDetail = ref(false)
+const selectedRecord = ref<any>(null)
 
 const { tasks, fetchTasks, toggleTask, deleteTask } = useTodolist()
 
@@ -380,6 +400,34 @@ const navigateToCheckin = (type: 'exercise' | 'meal') => {
   }
 }
 
+// 打开记录详情模态框
+const openRecordDetail = (record: any) => {
+  selectedRecord.value = record
+  showRecordDetail.value = true
+}
+
+
+// AI 总结
+const {
+  summary: aiSummary,
+  loading: aiLoading,
+  error: aiError,
+  getAISummary
+} = useAISummary()
+
+const SleepAISummary = computed(() => {
+  return aiSummary.value
+})
+
+const SleepAILoading = computed(() => {
+  return aiLoading.value
+})
+
+const SleepAIError = computed(() => {
+  return aiError.value
+})
+
+
 // 监听窗口大小变化
 const handleSleepWindowResize = () => {
   isSleepStatsVisible.value = window.innerWidth > 768
@@ -389,6 +437,7 @@ onMounted(() => {
   loadRecords()
   startPolling()
   fetchTasks()
+  getAISummary()
   // 监听窗口大小变化
   window.addEventListener('resize', handleSleepWindowResize)
 })

@@ -73,6 +73,10 @@ export function useTrendsView() {
     loadTrendsData()
   }
 
+  function triggerHealthSetup() {
+    showHealthSetupModal.value = !showHealthSetupModal.value
+  }
+
   /**
    * 选择时间范围
    */
@@ -312,6 +316,7 @@ export function useTrendsView() {
     // Methods
     handleHealthSetupClose,
     handleHealthSetupSuccess,
+    triggerHealthSetup,
     selectRange,
     loadTrendsData,
     initCharts,

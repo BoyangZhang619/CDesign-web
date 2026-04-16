@@ -18,51 +18,61 @@
       <!-- 总结内容 -->
       <div v-else class="summaries">
         <!-- 运动总结 -->
-        <div class="summary-item exercise-summary">
+        <button class="summary-item exercise-summary" @click="openFullModal('exercise', actualSummary?.exercise_ai_summary)" :disabled="!actualSummary?.exercise_ai_summary">
           <div class="summary-header">
             <span class="summary-icon">🏃</span>
             <span class="summary-label">运动总结</span>
             <span v-if="updatedTypes.includes('exercise')" class="updated-badge">更新</span>
           </div>
           <p class="summary-text">{{ actualSummary?.exercise_ai_summary || '暂无运动数据' }}</p>
-        </div>
+        </button>
 
         <!-- 饮食总结 -->
-        <div class="summary-item meal-summary">
+        <button class="summary-item meal-summary" @click="openFullModal('meal', actualSummary?.meal_ai_summary)" :disabled="!actualSummary?.meal_ai_summary">
           <div class="summary-header">
             <span class="summary-icon">🍽️</span>
             <span class="summary-label">饮食总结</span>
             <span v-if="updatedTypes.includes('meal')" class="updated-badge">更新</span>
           </div>
           <p class="summary-text">{{ actualSummary?.meal_ai_summary || '暂无饮食数据' }}</p>
-        </div>
+        </button>
 
         <!-- 睡眠总结 -->
-        <div class="summary-item sleep-summary">
+        <button class="summary-item sleep-summary" @click="openFullModal('sleep', actualSummary?.sleep_ai_summary)" :disabled="!actualSummary?.sleep_ai_summary">
           <div class="summary-header">
             <span class="summary-icon">😴</span>
             <span class="summary-label">睡眠总结</span>
             <span v-if="updatedTypes.includes('sleep')" class="updated-badge">更新</span>
           </div>
           <p class="summary-text">{{ actualSummary?.sleep_ai_summary || '暂无睡眠数据' }}</p>
-        </div>
+        </button>
 
         <!-- 综合总结 -->
-        <div class="summary-item total-summary">
+        <button class="summary-item total-summary" @click="openFullModal('total', actualSummary?.total_ai_summary)" :disabled="!actualSummary?.total_ai_summary">
           <div class="summary-header">
             <span class="summary-icon">✨</span>
             <span class="summary-label">综合总结</span>
             <span v-if="updatedTypes.includes('total')" class="updated-badge">更新</span>
           </div>
           <p class="summary-text">{{ actualSummary?.total_ai_summary || '等待数据汇总...' }}</p>
-        </div>
+        </button>
       </div>
     </div>
+
+    <!-- AI总结全文浮窗 -->
+    <AISummaryFullModal
+      :visible="showFullModal"
+      :icon="fullModalIcon"
+      :title="fullModalTitle"
+      :content="fullModalContent"
+      @close="showFullModal = false"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
+import AISummaryFullModal from '../modals/AISummaryFullModal.vue'
 
 interface Props {
   aiSummary?: {
@@ -90,6 +100,11 @@ const emit = defineEmits<{
   retry: []
 }>()
 
+const showFullModal = ref(false)
+const fullModalIcon = ref('📊')
+const fullModalTitle = ref('AI 总结')
+const fullModalContent = ref('')
+
 // 计算更新的类型列表
 const updatedTypes = computed(() => {
   // 如果 aiSummary 是完整响应结构，提取 .data
@@ -108,6 +123,29 @@ const updatedTypes = computed(() => {
 const actualSummary = computed(() => {
   return (props.aiSummary as any)?.data || props.aiSummary
 })
+
+const openFullModal = (type: string, content: string | null) => {
+  if (!content) return
+  
+  const iconMap: Record<string, string> = {
+    exercise: '🏃',
+    meal: '🍽️',
+    sleep: '😴',
+    total: '✨'
+  }
+
+  const titleMap: Record<string, string> = {
+    exercise: '运动AI总结',
+    meal: '饮食AI总结',
+    sleep: '睡眠AI总结',
+    total: '综合AI总结'
+  }
+
+  fullModalIcon.value = iconMap[type] || '📊'
+  fullModalTitle.value = titleMap[type] || 'AI总结'
+  fullModalContent.value = content
+  showFullModal.value = true
+}
 
 const retry = () => {
   // emit('retry')
@@ -194,6 +232,10 @@ const retry = () => {
   padding: 12px;
   border-left: 3px solid;
   transition: all 0.3s ease;
+  border: 1px solid #f0f0f0;
+  border-left: 3px solid;
+  text-align: left;
+  cursor: pointer;
 }
 
 .exercise-summary {
@@ -212,9 +254,15 @@ const retry = () => {
   border-left-color: #5a7a87;
 }
 
-.summary-item:hover {
+.summary-item:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.summary-item:hover:not(:disabled) {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
   transform: translateY(-1px);
+  background: #fafafa;
 }
 
 .summary-header {

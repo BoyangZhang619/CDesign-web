@@ -24,7 +24,7 @@
             </div>
 
             <!-- 汇总统计 -->
-            <div v-if="records.length > 0 && isMealStatsVisible" class="meal-stats-section">
+            <div class="meal-stats-section">
               <div class="stats-header">
                 <h3 class="stats-title">今日汇总</h3>
                 <button class="stats-toggle-btn" @click="isMealStatsVisible = !isMealStatsVisible" :title="isMealStatsVisible ? '收起' : '展开'">
@@ -33,7 +33,7 @@
                   </svg>
                 </button>
               </div>
-              <div class="stats-grid">
+              <div class="stats-grid" v-if="isMealStatsVisible">
                 <div class="stat-item">
                   <span class="stat-label">总热量</span>
                   <span class="stat-value">{{ totalNutrition.calories }}</span>
@@ -66,6 +66,13 @@
                 </div>
               </div>
             </div>
+            
+            <!-- AI 总结面板 -->
+            <MealAISummaryPanel
+              :meal-summary="MealAISummary"
+              :loading="MealAILoading"
+              :error="MealAIError"
+            />
 
             <!-- 饮食任务组件 - 待完成 -->
             <CheckinTaskGroup 
@@ -103,7 +110,12 @@
               </div>
 
               <div class="records-container">
-                <div v-for="record in displayedRecords" :key="record.id" class="record-card">
+                <button 
+                  v-for="record in displayedRecords" 
+                  :key="record.id" 
+                  class="record-card"
+                  @click="openRecordDetail(record)"
+                >
                   <div class="card-header">
                     <div class="card-meta">
                       <span class="meal-badge">{{ getMealTypeText(record.meal_type) }}</span>
@@ -145,7 +157,7 @@
                       </div>
                     </div>
                   </div>
-                </div>
+                </button>
               </div>
 
               <!-- 查看全部按钮 -->
@@ -287,6 +299,14 @@
         </div>
       </div>
     </transition>
+
+    <!-- 记录详情模态框 -->
+    <RecordDetailModal
+      :visible="showRecordDetail"
+      record-type="meal"
+      :record="selectedRecord"
+      @close="showRecordDetail = false"
+    />
   </div>
 </template>
 
@@ -296,8 +316,11 @@ import { useRouter } from 'vue-router'
 import Sidebar from '../components/homeView/Sidebar.vue'
 import TopHeader from '../components/homeView/TopHeader.vue'
 import CheckinTaskGroup from '../components/checkinView/CheckinTaskGroup.vue'
+import RecordDetailModal from '../components/modals/RecordDetailModal.vue'
 import { useMealCheckin } from '../composables/useMealCheckin'
 import { useTodolist } from '../composables/useTodolist'
+import MealAISummaryPanel from '../components/mealCheckinView/MealAISummaryPanel.vue'
+import { useAISummary } from '../composables/useAISummary'
 
 const router = useRouter()
 
@@ -305,6 +328,8 @@ const sidebarRef = ref<InstanceType<typeof Sidebar> | null>(null)
 const isFormOpen = ref(false)
 const showAllRecords = ref(false)
 const showOtherCheckinMenu = ref(false)
+const showRecordDetail = ref(false)
+const selectedRecord = ref<any>(null)
 
 // 响应式设置统计部分默认状态（px > 768 默认展开，否则默认关闭）
 const isMealStatsVisible = ref(typeof window !== 'undefined' ? window.innerWidth > 768 : true)
@@ -382,6 +407,26 @@ const handleSubmit = async () => {
   }
 }
 
+// AI 总结
+const {
+  summary: aiSummary,
+  loading: aiLoading,
+  error: aiError,
+  getAISummary
+} = useAISummary()
+
+const MealAISummary = computed(() => {
+  return aiSummary.value
+})
+
+const MealAILoading = computed(() => {
+  return aiLoading.value
+})
+
+const MealAIError = computed(() => {
+  return aiError.value
+})
+
 // 处理任务切换（同步更新已完成任务列表）
 const handleToggleTask = async (taskId: number) => {
   await toggleTask(taskId)
@@ -410,6 +455,12 @@ const navigateToCheckin = (type: 'exercise' | 'sleep') => {
   }
 }
 
+// 打开记录详情模态框
+const openRecordDetail = (record: any) => {
+  selectedRecord.value = record
+  showRecordDetail.value = true
+}
+
 // 监听窗口大小变化
 const handleMealWindowResize = () => {
   isMealStatsVisible.value = window.innerWidth > 768
@@ -419,6 +470,7 @@ onMounted(() => {
   loadRecords()
   startPolling()
   fetchTasks()
+  getAISummary()
   // 监听窗口大小变化
   window.addEventListener('resize', handleMealWindowResize)
 })

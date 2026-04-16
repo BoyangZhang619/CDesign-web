@@ -308,9 +308,12 @@ export function useSleepCheckin() {
   }
 
   // 计算睡眠时长文本
-  const formatSleepDuration = (hours: number): string => {
+  const formatSleepDuration = (hours: number, isNumber: boolean = false): string => {
     const h = Math.floor(hours)
     const m = Math.round((hours - h) * 60)
+    if (isNumber) {
+      return ((h * 60 + m) / 60).toFixed(2)
+    }
     if (m === 0) return `${h}小时`
     return `${h}小时${m}分钟`
   }

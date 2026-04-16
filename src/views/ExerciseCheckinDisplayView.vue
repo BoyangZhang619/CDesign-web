@@ -110,7 +110,12 @@
               </div>
 
               <div class="records-container">
-                <div v-for="record in displayedRecords" :key="record.exercise_record_id" class="record-card">
+                <button 
+                  v-for="record in displayedRecords" 
+                  :key="record.exercise_record_id" 
+                  class="record-card"
+                  @click="openRecordDetail(record)"
+                >
                   <div class="card-header">
                     <div class="card-meta">
                       <span class="activity-badge">{{ getActivityTypeText(record.activity_type) }}</span>
@@ -135,7 +140,7 @@
                     </div>
                     <p v-if="record.note" class="note">{{ record.note }}</p>
                   </div>
-                </div>
+                </button>
               </div>
 
               <!-- 查看全部按钮 -->
@@ -248,6 +253,14 @@
       </div>
     </transition>
 
+    <!-- 记录详情浮窗 -->
+    <RecordDetailModal
+      :visible="showRecordDetail"
+      record-type="exercise"
+      :record="selectedRecord"
+      @close="showRecordDetail = false"
+    />
+
   </div>
 </template>
 
@@ -258,6 +271,7 @@ import Sidebar from '../components/homeView/Sidebar.vue'
 import TopHeader from '../components/homeView/TopHeader.vue'
 import CheckinTaskGroup from '../components/checkinView/CheckinTaskGroup.vue'
 import ExerciseAISummaryPanel from '../components/exerciseCheckinView/ExerciseAISummaryPanel.vue'
+import RecordDetailModal from '../components/modals/RecordDetailModal.vue'
 import { useExerciseCheckin } from '../composables/useExerciseCheckin'
 import { useTodolist } from '../composables/useTodolist'
 import { useAISummary } from '../composables/useAISummary'
@@ -268,6 +282,10 @@ const sidebarRef = ref<InstanceType<typeof Sidebar> | null>(null)
 const isFormOpen = ref(false)
 const showAllRecords = ref(false)
 const showOtherCheckinMenu = ref(false)
+
+// 记录详情浮窗
+const showRecordDetail = ref(false)
+const selectedRecord = ref<any>(null)
 
 // 响应式设置统计部分默认状态（px > 768 默认展开，否则默认关闭）
 const isStatsVisible = ref(typeof window !== 'undefined' ? window.innerWidth > 768 : true)
@@ -356,6 +374,12 @@ const closeFormModal = () => {
   isFormOpen.value = false
   errorMsg.value = ''
   successMsg.value = ''
+}
+
+// 打开记录详情浮窗
+const openRecordDetail = (record: any) => {
+  selectedRecord.value = record
+  showRecordDetail.value = true
 }
 
 // 提交表单
