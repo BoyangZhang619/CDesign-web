@@ -16,7 +16,7 @@ export function useAISummary() {
     error.value = ''
 
     try {
-      const response = await fetchWithRefresh('/api/exercise-checkin/ai-summary/all', {
+      const response = await fetchWithRefresh('/api/exercise-checkin/checkin/exercise/ai-summary/all', {
         method: 'GET'
       })
 
@@ -53,6 +53,13 @@ export function useAISummary() {
     pollIntervalId.value = window.setInterval(() => {
       getAISummary()
     }, interval)
+  }
+
+  /**
+   * 获取一次 AI 总结（不轮询）
+   */
+  async function fetchOnce(): Promise<AISummaryData | null> {
+    return await getAISummary()
   }
 
   /**
@@ -118,6 +125,7 @@ export function useAISummary() {
     loading,
     error,
     getAISummary,
+    fetchOnce,
     startPolling,
     stopPolling,
     getSummaryByType,

@@ -24,7 +24,7 @@
             <span class="summary-label">运动总结</span>
             <span v-if="updatedTypes.includes('exercise')" class="updated-badge">更新</span>
           </div>
-          <p class="summary-text">{{ aiSummary?.exercise_ai_summary || '暂无运动数据' }}</p>
+          <p class="summary-text">{{ actualSummary?.exercise_ai_summary || '暂无运动数据' }}</p>
         </div>
 
         <!-- 饮食总结 -->
@@ -34,7 +34,7 @@
             <span class="summary-label">饮食总结</span>
             <span v-if="updatedTypes.includes('meal')" class="updated-badge">更新</span>
           </div>
-          <p class="summary-text">{{ aiSummary?.meal_ai_summary || '暂无饮食数据' }}</p>
+          <p class="summary-text">{{ actualSummary?.meal_ai_summary || '暂无饮食数据' }}</p>
         </div>
 
         <!-- 睡眠总结 -->
@@ -44,7 +44,7 @@
             <span class="summary-label">睡眠总结</span>
             <span v-if="updatedTypes.includes('sleep')" class="updated-badge">更新</span>
           </div>
-          <p class="summary-text">{{ aiSummary?.sleep_ai_summary || '暂无睡眠数据' }}</p>
+          <p class="summary-text">{{ actualSummary?.sleep_ai_summary || '暂无睡眠数据' }}</p>
         </div>
 
         <!-- 综合总结 -->
@@ -54,7 +54,7 @@
             <span class="summary-label">综合总结</span>
             <span v-if="updatedTypes.includes('total')" class="updated-badge">更新</span>
           </div>
-          <p class="summary-text">{{ aiSummary?.total_ai_summary || '等待数据汇总...' }}</p>
+          <p class="summary-text">{{ actualSummary?.total_ai_summary || '等待数据汇总...' }}</p>
         </div>
       </div>
     </div>
@@ -92,9 +92,11 @@ const emit = defineEmits<{
 
 // 计算更新的类型列表
 const updatedTypes = computed(() => {
-  if (!props.aiSummary?.updated_flags) return []
+  // 如果 aiSummary 是完整响应结构，提取 .data
+  const actualData = (props.aiSummary as any)?.data || props.aiSummary
+  if (!actualData?.updated_flags) return []
   const types: string[] = []
-  const flags = props.aiSummary.updated_flags
+  const flags = actualData.updated_flags
   if (flags.exercise) types.push('exercise')
   if (flags.meal) types.push('meal')
   if (flags.sleep) types.push('sleep')
@@ -102,35 +104,38 @@ const updatedTypes = computed(() => {
   return types
 })
 
+// 获取真实数据对象
+const actualSummary = computed(() => {
+  return (props.aiSummary as any)?.data || props.aiSummary
+})
+
 const retry = () => {
-  emit('retry')
+  // emit('retry')
 }
 </script>
 
 <style scoped>
 .ai-summary-panel {
-  width: 100%;
-  background: linear-gradient(135deg, #f5f7ff 0%, #f9f5ff 100%);
-  border-radius: 16px;
-  padding: 24px;
-  margin-top: 16px;
-  box-shadow: 0 4px 12px rgba(147, 112, 219, 0.08);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px;
+  background: #fff8;
+  border: 1px solid rgba(90, 122, 135, 0.15);
+  border-radius: 12px;
 }
 
 .summary-section {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 12px;
 }
 
 .summary-title {
-  font-size: 18px;
-  font-weight: 600;
-  color: #2d2d2d;
+  font-size: 16px;
+  font-weight: 700;
+  color: #2c3e50;
   margin: 0;
-  display: flex;
-  align-items: center;
-  gap: 8px;
 }
 
 .loading-state,
@@ -139,16 +144,17 @@ const retry = () => {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 32px 16px;
+  padding: 20px 12px;
   gap: 12px;
-  color: #666;
+  color: #999;
+  font-size: 13px;
 }
 
 .spinner {
-  width: 32px;
-  height: 32px;
-  border: 3px solid rgba(147, 112, 219, 0.1);
-  border-top-color: #9370db;
+  width: 24px;
+  height: 24px;
+  border: 2px solid rgba(90, 122, 135, 0.1);
+  border-top-color: #5a7a87;
   border-radius: 50%;
   animation: spin 0.8s linear infinite;
 }
@@ -160,31 +166,33 @@ const retry = () => {
 }
 
 .retry-btn {
-  padding: 8px 16px;
-  background: #9370db;
+  padding: 6px 12px;
+  background: #5a7a87;
   color: white;
   border: none;
   border-radius: 6px;
   cursor: pointer;
   font-weight: 500;
-  transition: background 0.3s;
+  font-size: 12px;
+  transition: all 0.3s;
 }
 
 .retry-btn:hover {
-  background: #7b5cc9;
+  background: #4a6a77;
+  transform: translateY(-1px);
 }
 
 .summaries {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
 .summary-item {
   background: white;
-  border-radius: 12px;
-  padding: 16px;
-  border-left: 4px solid;
+  border-radius: 8px;
+  padding: 12px;
+  border-left: 3px solid;
   transition: all 0.3s ease;
 }
 
@@ -201,62 +209,69 @@ const retry = () => {
 }
 
 .total-summary {
-  border-left-color: #9370db;
-  grid-column: 1 / -1;
+  border-left-color: #5a7a87;
 }
 
 .summary-item:hover {
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-  transform: translateY(-2px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  transform: translateY(-1px);
 }
 
 .summary-header {
   display: flex;
   align-items: center;
-  gap: 8px;
-  margin-bottom: 12px;
+  gap: 6px;
+  margin-bottom: 8px;
 }
 
 .summary-icon {
-  font-size: 20px;
+  font-size: 16px;
+  flex-shrink: 0;
 }
 
 .summary-label {
   font-weight: 600;
-  color: #2d2d2d;
-  font-size: 14px;
+  color: #2c3e50;
+  font-size: 13px;
+  flex: 1;
 }
 
 .updated-badge {
   display: inline-block;
   background: #4ecdc4;
   color: white;
-  padding: 2px 8px;
-  border-radius: 4px;
-  font-size: 11px;
+  padding: 1px 6px;
+  border-radius: 3px;
+  font-size: 10px;
   font-weight: 500;
-  margin-left: auto;
+  flex-shrink: 0;
 }
 
 .summary-text {
-  font-size: 13px;
-  line-height: 1.5;
-  color: #555;
+  font-size: 12px;
+  line-height: 1.4;
+  color: #666;
   margin: 0;
   word-break: break-word;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  line-clamp: 3;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 @media (max-width: 768px) {
   .ai-summary-panel {
-    padding: 16px;
+    padding: 12px;
   }
 
-  .summaries {
-    grid-template-columns: 1fr;
+  .summary-title {
+    font-size: 14px;
   }
 
-  .total-summary {
-    grid-column: 1;
+  .summary-text {
+    font-size: 11px;
   }
 }
 </style>

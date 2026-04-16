@@ -31,26 +31,54 @@
         <span class="nav-text">刷新数据</span>
       </button>
     </div>
+
+    <!-- AI 总结卡片 -->
+    <AISummaryPanel
+      :ai-summary="aiSummary"
+      :loading="aiLoading"
+      :error="aiError"
+      @retry="emit('retry-ai-summary')"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
 import { computed } from 'vue'
+import AISummaryPanel from './AISummaryPanel.vue'
+
+interface AISummaryData {
+  exercise_ai_summary: string | null
+  meal_ai_summary: string | null
+  sleep_ai_summary: string | null
+  total_ai_summary: string | null
+  updated_flags?: {
+    exercise: boolean
+    meal: boolean
+    sleep: boolean
+    total: boolean
+  }
+}
 
 interface Props {
   selectedDate: string
   completedCount: number
   totalCount: number
+  aiSummary?: AISummaryData | null
+  aiLoading?: boolean
+  aiError?: string | null
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  totalCount: 3
+  totalCount: 3,
+  aiLoading: false,
+  aiError: null
 })
 
 const emit = defineEmits<{
   'date-change': [date: string]
   'today': []
   'refresh': []
+  'retry-ai-summary': []
 }>()
 
 const completionRate = computed(() => {

@@ -67,6 +67,13 @@
               </div>
             </div>
 
+            <!-- AI 总结面板 -->
+            <ExerciseAISummaryPanel
+              :exercise-summary="exerciseAISummary"
+              :loading="exerciseAILoading"
+              :error="exerciseAIError"
+            />
+
             <!-- 运动任务组件 - 待完成 -->
             <CheckinTaskGroup 
               :tasks="exerciseTasks" 
@@ -250,8 +257,10 @@ import { useRouter } from 'vue-router'
 import Sidebar from '../components/homeView/Sidebar.vue'
 import TopHeader from '../components/homeView/TopHeader.vue'
 import CheckinTaskGroup from '../components/checkinView/CheckinTaskGroup.vue'
+import ExerciseAISummaryPanel from '../components/exerciseCheckinView/ExerciseAISummaryPanel.vue'
 import { useExerciseCheckin } from '../composables/useExerciseCheckin'
 import { useTodolist } from '../composables/useTodolist'
+import { useAISummary } from '../composables/useAISummary'
 
 const router = useRouter()
 
@@ -289,6 +298,26 @@ const {
   toggleTask,
   deleteTask
 } = useTodolist()
+
+// AI 总结
+const {
+  summary: aiSummary,
+  loading: aiLoading,
+  error: aiError,
+  getAISummary
+} = useAISummary()
+
+const exerciseAISummary = computed(() => {
+  return aiSummary.value
+})
+
+const exerciseAILoading = computed(() => {
+  return aiLoading.value
+})
+
+const exerciseAIError = computed(() => {
+  return aiError.value
+})
 
 const exerciseTasks = computed(() => {
   return tasks.value.filter((t: any) => t.category === 'exercise')
@@ -374,6 +403,7 @@ onMounted(() => {
   loadRecords()
   startPolling()
   fetchTasks()
+  getAISummary()
   handleWindowResize()
 })
 

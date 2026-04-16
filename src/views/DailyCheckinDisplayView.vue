@@ -15,9 +15,13 @@
             :selected-date="selectedDate"
             :completed-count="completedCount"
             :total-count="totalCount"
+            :ai-summary="aiSummary"
+            :ai-loading="aiLoading"
+            :ai-error="aiError"
             @date-change="handleDateChange"
             @today="selectToday"
             @refresh="refreshAllData"
+            @retry-ai-summary="retryAISummary"
           />
 
           <!-- 右栏：打卡卡片网格 -->
@@ -29,10 +33,6 @@
             :sleep-status="sleepStatus"
             :sleep-data="sleepData"
             :total-records="allTotalRecords"
-            :ai-summary="aiSummary"
-            :ai-loading="aiLoading"
-            :ai-error="aiError"
-            @retry-ai-summary="retryAISummary"
           />
         </div>
       </div>
@@ -85,9 +85,7 @@ const {
   summary: aiSummary,
   loading: aiLoading,
   error: aiError,
-  getAISummary,
-  startPolling: startAISummaryPolling,
-  stopPolling: stopAISummaryPolling
+  getAISummary
 } = useAISummary()
 
 // 计算完成状态
@@ -174,18 +172,18 @@ const loadAllData = async () => {
 const refreshAllData = async () => {
   console.log('刷新所有数据...')
   await loadAllData()
+  // 同时刷新 AI 总结
+  await getAISummary()
 }
 
 onMounted(async () => {
   await loadAllData()
-  // 获取 AI 总结
+  // 获取 AI 总结（只获取一次）
   await getAISummary()
   // 开始轮询以获得实时数据
   startExercisePolling()
   startMealPolling()
   startSleepPolling()
-  // 启动 AI 总结轮询
-  startAISummaryPolling(5000) // 5 秒轮询一次
 })
 
 // 清理轮询
@@ -193,7 +191,6 @@ onBeforeUnmount(() => {
   stopExercisePolling()
   stopMealPolling()
   stopSleepPolling()
-  stopAISummaryPolling()
 })
 </script>
 

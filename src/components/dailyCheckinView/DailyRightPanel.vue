@@ -111,33 +111,11 @@
         </div>
       </div>
     </div>
-
-    <!-- AI 总结面板 -->
-    <AISummaryPanel
-      :ai-summary="aiSummary"
-      :loading="aiLoading"
-      :error="aiError"
-      @retry="emit('retry-ai-summary')"
-    />
   </div>
 </template>
 
 <script setup lang="ts">
 import CheckinTypeCard from './CheckinTypeCard.vue'
-import AISummaryPanel from './AISummaryPanel.vue'
-
-interface AISummaryData {
-  exercise_ai_summary: string | null
-  meal_ai_summary: string | null
-  sleep_ai_summary: string | null
-  total_ai_summary: string | null
-  updated_flags?: {
-    exercise: boolean
-    meal: boolean
-    sleep: boolean
-    total: boolean
-  }
-}
 
 interface Props {
   exerciseStatus: 'completed' | 'pending' | 'none'
@@ -147,23 +125,14 @@ interface Props {
   sleepStatus: 'completed' | 'pending' | 'none'
   sleepData?: Record<string, any>
   totalRecords: number
-  aiSummary?: AISummaryData | null
-  aiLoading?: boolean
-  aiError?: string | null
 }
 
 withDefaults(defineProps<Props>(), {
   exerciseStatus: 'none',
   mealStatus: 'none',
   sleepStatus: 'none',
-  totalRecords: 0,
-  aiLoading: false,
-  aiError: null
+  totalRecords: 0
 })
-
-const emit = defineEmits<{
-  'retry-ai-summary': []
-}>()
 </script>
 
 <style scoped>
