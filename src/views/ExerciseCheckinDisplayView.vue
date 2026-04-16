@@ -12,16 +12,28 @@
         <div class="exercise-container">
           <!-- 左栏：操作面板 -->
           <div class="exercise-left-panel">
-            <!-- 新增按钮 -->
-            <button class="exercise-add-btn" @click="openFormModal">
-              <span class="add-btn-icon">+</span>
-              <span class="add-btn-text">新增运动</span>
-            </button>
+            <!-- 按钮组 -->
+            <div class="button-container">
+              <button class="exercise-add-btn" @click="openFormModal">
+                <span class="add-btn-icon">+</span>
+                <span class="add-btn-text">新增运动</span>
+              </button>
+              <button class="exercise-other-btn" @click="showOtherCheckinMenu = true" title="其他打卡">
+                <span class="other-btn-icon">📋</span>
+              </button>
+            </div>
 
             <!-- 今日统计 -->
-            <div v-if="records.length > 0" class="exercise-stats-section">
-              <h3 class="stats-title">今日汇总</h3>
-              <div class="stats-grid">
+            <div class="exercise-stats-section">
+              <div class="stats-header">
+                <h3 class="stats-title">今日汇总</h3>
+                <button class="stats-toggle-btn" @click="isStatsVisible = !isStatsVisible" :title="isStatsVisible ? '收起' : '展开'">
+                  <svg class="toggle-icon" viewBox="0 0 24 24" fill="currentColor">
+                    <path :d="isStatsVisible ? 'M7 10l5 5 5-5z' : 'M7 14l5-5 5 5z'" />
+                  </svg>
+                </button>
+              </div>
+              <div class="stats-grid" v-show="isStatsVisible">
                 <div class="stat-item">
                   <span class="stat-label">运动次数</span>
                   <span class="stat-value">{{ todayStatistics.totalRecords }}</span>
@@ -60,8 +72,8 @@
               :tasks="exerciseTasks" 
               category="exercise"
               position="left"
-              @toggle="toggleTask"
-              @delete="deleteTask"
+              @toggle="handleToggleTask"
+              @delete="handleDeleteTask"
             />
           </div>
 
@@ -72,8 +84,8 @@
               :tasks="exerciseTasks" 
               category="exercise"
               position="right"
-              @toggle="toggleTask"
-              @delete="deleteTask"
+              @toggle="handleToggleTask"
+              @delete="handleDeleteTask"
             />
 
             <!-- 空状态 -->
@@ -205,20 +217,51 @@
       </div>
     </transition>
 
+    <!-- 其他打卡菜单浮窗 -->
+    <transition name="modal-fade">
+      <div v-if="showOtherCheckinMenu" class="modal-overlay" @click.self="showOtherCheckinMenu = false">
+        <div class="checkin-menu-content" @click.stop>
+          <div class="menu-header">
+            <h3 class="menu-title">其他打卡</h3>
+            <button class="menu-close" @click="showOtherCheckinMenu = false">✕</button>
+          </div>
+          <div class="menu-items">
+            <button class="menu-item meal-item" @click="navigateToCheckin('meal')">
+              <span class="menu-icon">🍽️</span>
+              <span class="menu-text">饮食打卡</span>
+              <span class="menu-desc">记录你的每一餐</span>
+            </button>
+            <button class="menu-item sleep-item" @click="navigateToCheckin('sleep')">
+              <span class="menu-icon">😴</span>
+              <span class="menu-text">睡眠打卡</span>
+              <span class="menu-desc">记录你的睡眠质量</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </transition>
+
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted } from 'vue'
+import { useRouter } from 'vue-router'
 import Sidebar from '../components/homeView/Sidebar.vue'
 import TopHeader from '../components/homeView/TopHeader.vue'
 import CheckinTaskGroup from '../components/checkinView/CheckinTaskGroup.vue'
 import { useExerciseCheckin } from '../composables/useExerciseCheckin'
 import { useTodolist } from '../composables/useTodolist'
 
+const router = useRouter()
+
 const sidebarRef = ref<InstanceType<typeof Sidebar> | null>(null)
 const isFormOpen = ref(false)
 const showAllRecords = ref(false)
+const showOtherCheckinMenu = ref(false)
+
+// 响应式设置统计部分默认状态（px > 768 默认展开，否则默认关闭）
+const isStatsVisible = ref(typeof window !== 'undefined' ? window.innerWidth > 768 : true)
 
 const {
   form,
@@ -294,10 +337,44 @@ const handleSubmit = async () => {
   }
 }
 
+// 处理任务切换（同步更新已完成任务列表）
+const handleToggleTask = async (taskId: number) => {
+  await toggleTask(taskId)
+  // 强制刷新任务数据，确保两个CheckinTaskGroup同步更新
+  setTimeout(() => {
+    fetchTasks()
+  }, 100)
+}
+
+// 处理任务删除（同步更新已完成任务列表）
+const handleDeleteTask = async (taskId: number) => {
+  await deleteTask(taskId)
+  // 强制刷新任务数据，确保两个CheckinTaskGroup同步更新
+  setTimeout(() => {
+    fetchTasks()
+  }, 100)
+}
+
+// 导航到其他打卡类型
+const navigateToCheckin = (type: 'meal' | 'sleep') => {
+  showOtherCheckinMenu.value = false
+  if (type === 'meal') {
+    router.push('/meal/checkin')
+  } else if (type === 'sleep') {
+    router.push('/sleep/checkin')
+  }
+}
+
+// 监听窗口大小变化
+const handleWindowResize = () => {
+  isStatsVisible.value = window.innerWidth > 768
+}
+
 onMounted(() => {
   loadRecords()
   startPolling()
   fetchTasks()
+  handleWindowResize()
 })
 
 onUnmounted(() => {

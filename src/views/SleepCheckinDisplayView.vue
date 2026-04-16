@@ -12,15 +12,27 @@
         <div class="sleep-container">
           <!-- 左栏：操作面板 -->
           <div class="sleep-left-panel">
-            <!-- 新增按钮 -->
-            <button class="sleep-add-btn" @click="openFormModal">
-              <span class="add-btn-icon">+</span>
-              <span class="add-btn-text">新增睡眠</span>
-            </button>
+            <!-- 按钮组 -->
+            <div class="button-container">
+              <button class="sleep-add-btn" @click="openFormModal">
+                <span class="add-btn-icon">+</span>
+                <span class="add-btn-text">新增睡眠</span>
+              </button>
+              <button class="sleep-other-btn" @click="showOtherCheckinMenu = true" title="其他打卡">
+                <span class="other-btn-icon">📋</span>
+              </button>
+            </div>
 
             <!-- 今日统计 -->
-            <div v-if="records.length > 0" class="sleep-stats-section">
-              <h3 class="stats-title">今日汇总</h3>
+            <div v-if="records.length > 0 && isSleepStatsVisible" class="sleep-stats-section">
+              <div class="stats-header">
+                <h3 class="stats-title">今日汇总</h3>
+                <button class="stats-toggle-btn" @click="isSleepStatsVisible = !isSleepStatsVisible" :title="isSleepStatsVisible ? '收起' : '展开'">
+                  <svg class="toggle-icon" viewBox="0 0 24 24" fill="currentColor">
+                    <path :d="isSleepStatsVisible ? 'M7 10l5 5 5-5z' : 'M7 14l5-5 5 5z'" />
+                  </svg>
+                </button>
+              </div>
               <div class="stats-grid">
                 <div class="stat-item">
                   <span class="stat-label">总记录</span>
@@ -60,8 +72,8 @@
               :tasks="sleepTasks" 
               category="sleep"
               position="left"
-              @toggle="toggleTask"
-              @delete="deleteTask"
+              @toggle="handleToggleTask"
+              @delete="handleDeleteTask"
             />
           </div>
 
@@ -72,8 +84,8 @@
               :tasks="sleepTasks" 
               category="sleep"
               position="right"
-              @toggle="toggleTask"
-              @delete="deleteTask"
+              @toggle="handleToggleTask"
+              @delete="handleDeleteTask"
             />
 
             <!-- 空状态 -->
@@ -229,18 +241,47 @@
         </div>
       </div>
     </transition>
+
+    <!-- 其他打卡菜单浮窗 -->
+    <transition name="modal-fade">
+      <div v-if="showOtherCheckinMenu" class="modal-overlay" @click.self="showOtherCheckinMenu = false">
+        <div class="checkin-menu-content" @click.stop>
+          <div class="menu-header">
+            <h3 class="menu-title">其他打卡</h3>
+            <button class="menu-close" @click="showOtherCheckinMenu = false">✕</button>
+          </div>
+          <div class="menu-items">
+            <button class="menu-item exercise-item" @click="navigateToCheckin('exercise')">
+              <span class="menu-icon">🏃</span>
+              <span class="menu-text">运动打卡</span>
+              <span class="menu-desc">记录你的运动</span>
+            </button>
+            <button class="menu-item meal-item" @click="navigateToCheckin('meal')">
+              <span class="menu-icon">🍽️</span>
+              <span class="menu-text">饮食打卡</span>
+              <span class="menu-desc">记录你的每一餐</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </transition>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted } from 'vue'
+import { useRouter } from 'vue-router'
 import Sidebar from '../components/homeView/Sidebar.vue'
 import TopHeader from '../components/homeView/TopHeader.vue'
 import CheckinTaskGroup from '../components/checkinView/CheckinTaskGroup.vue'
 import { useSleepCheckin } from '../composables/useSleepCheckin'
 import { useTodolist } from '../composables/useTodolist'
 
+const router = useRouter()
 const sidebarRef = ref()
+
+const showOtherCheckinMenu = ref(false)
+const isSleepStatsVisible = ref(typeof window !== 'undefined' ? window.innerWidth > 768 : true)
 
 const { tasks, fetchTasks, toggleTask, deleteTask } = useTodolist()
 
@@ -311,15 +352,52 @@ const handleSubmit = async () => {
   }
 }
 
+// 处理任务切换（同步更新已完成任务列表）
+const handleToggleTask = async (taskId: number) => {
+  await toggleTask(taskId)
+  // 强制刷新任务数据，确保两个CheckinTaskGroup同步更新
+  setTimeout(() => {
+    fetchTasks()
+  }, 100)
+}
+
+// 处理任务删除（同步更新已完成任务列表）
+const handleDeleteTask = async (taskId: number) => {
+  await deleteTask(taskId)
+  // 强制刷新任务数据，确保两个CheckinTaskGroup同步更新
+  setTimeout(() => {
+    fetchTasks()
+  }, 100)
+}
+
+// 导航到其他打卡类型
+const navigateToCheckin = (type: 'exercise' | 'meal') => {
+  showOtherCheckinMenu.value = false
+  if (type === 'exercise') {
+    router.push('/exercise/checkin')
+  } else if (type === 'meal') {
+    router.push('/meal/checkin')
+  }
+}
+
+// 监听窗口大小变化
+const handleSleepWindowResize = () => {
+  isSleepStatsVisible.value = window.innerWidth > 768
+}
+
 onMounted(() => {
   loadRecords()
   startPolling()
   fetchTasks()
+  // 监听窗口大小变化
+  window.addEventListener('resize', handleSleepWindowResize)
 })
 
 onUnmounted(() => {
   stopPolling()
   isFormOpen.value = false
+  // 移除窗口监听
+  window.removeEventListener('resize', handleSleepWindowResize)
 })
 </script>
 

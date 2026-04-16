@@ -213,18 +213,18 @@
 }
 
 /* 不同状态的组特殊样式 */
-.pending-group {
+/* .pending-group {
   border-color: #fce4ec;
   background: rgba(255, 193, 206, 0.05);
-}
+} */
 
 .pending-group .group-title {
   color: #c2185b;
 }
 
 .completed-group {
-  border-color: #c8e6c9;
-  background: rgba(76, 175, 80, 0.05);
+  /* border-color: #c8e6c9;
+  background: rgba(76, 175, 80, 0.05); */
   order: 2;
 }
 

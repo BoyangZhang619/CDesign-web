@@ -171,7 +171,7 @@
               <!-- 健康趋势卡片 -->
               <div class="checkin-card trends-card">
                 <div class="card-header">
-                  <span class="card-icon">�</span>
+                  <img src="/noun-sidebar-trend.svg" alt="趋势分析" class="grid-svg"/>
                   <h2 class="card-title">趋势分析</h2>
                 </div>
                 <div class="card-content">
@@ -200,7 +200,7 @@
               <!-- 历史记录卡片 -->
               <div class="checkin-card history-card">
                 <div class="card-header">
-                  <span class="card-icon">📋</span>
+                  <img src="/noun-sidebar-history.svg" alt="历史记录" class="grid-svg"/>
                   <h2 class="card-title">历史记录</h2>
                 </div>
                 <div class="card-content">

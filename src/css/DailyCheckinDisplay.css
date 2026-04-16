@@ -276,10 +276,10 @@
   border-color: #5A7A87;
 }
 
-.checkin-card.completed {
+/* .checkin-card.completed {
   background: linear-gradient(135deg, rgba(90, 122, 135, 0.05) 0%, rgba(122, 143, 149, 0.05) 100%);
   border-color: #5A7A87;
-}
+} */
 
 /* 卡片头部 */
 .card-header {
@@ -555,6 +555,11 @@
 .daily-checkin-left-panel::-webkit-scrollbar-thumb:hover,
 .daily-checkin-right-panel::-webkit-scrollbar-thumb:hover {
   background: #b0b0b0;
+}
+
+.grid-svg {
+  width: 24px;
+  height: 24px;
 }
 
 /* Responsive Design */
