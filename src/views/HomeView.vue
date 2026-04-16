@@ -4,7 +4,7 @@
     <div class="main-content">
       <TopHeader @toggle-sidebar="toggleSidebar" @toggle-ai-chat="toggleAIChat" />
       <div class="content-area">
-        <LeftContent />
+        <LeftContent :health-data="healthData" />
         <RightContent />
       </div>
     </div>
@@ -13,12 +13,16 @@
     <AIChatFloatingWindow :isOpen="isAIChatOpen" @close="closeAIChat" />
 
     <!-- 健康档案设置浮窗 -->
-    <HealthSetupModal :show="showHealthSetupModal" @close="handleHealthSetupClose" @success="handleHealthSetupSuccess" />
+    <HealthSetupModal 
+      :show="showHealthSetupModal" 
+      @close="handleHealthSetupClose" 
+      @success="handleHealthSetupSuccess"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import Sidebar from '../components/homeView/Sidebar.vue'
 import TopHeader from '../components/homeView/TopHeader.vue'
 import LeftContent from '../components/homeView/LeftContent.vue'
@@ -26,18 +30,18 @@ import RightContent from '../components/homeView/RightContent.vue'
 import AIChatFloatingWindow from '../components/AIChatFloatingWindow.vue'
 import HealthSetupModal from '../components/HealthSetupModal.vue'
 import { useTrendsView } from '../composables/useTrendsView'
+import { useHealthInfoCheck } from '../composables/useHealthInfoCheck'
 
 const sidebarRef = ref<InstanceType<typeof Sidebar>>()
 const isAIChatOpen = ref(false)
 
-const { showHealthSetupModal, handleHealthSetupClose, handleHealthSetupSuccess, triggerHealthSetup } = useTrendsView()
+const { showHealthSetupModal, handleHealthSetupClose, handleHealthSetupSuccess } = useTrendsView()
+const { healthData, checkAndFetchHealthInfo } = useHealthInfoCheck()
 
-// 用于手机端切换侧栏
 const toggleSidebar = () => {
   sidebarRef.value?.toggleSidebarFromHeader()
 }
 
-// 切换 AI 聊天浮窗
 const toggleAIChat = () => {
   isAIChatOpen.value = !isAIChatOpen.value
   if (!isAIChatOpen.value) {
@@ -45,11 +49,13 @@ const toggleAIChat = () => {
   }
 }
 
-// 关闭 AI 聊天浮窗
 const closeAIChat = () => {
   isAIChatOpen.value = false
 }
 
+onMounted(async () => {
+  await checkAndFetchHealthInfo()
+})
 </script>
 
 <style scoped>

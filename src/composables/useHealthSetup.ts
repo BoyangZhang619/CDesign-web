@@ -1,5 +1,6 @@
 import { reactive, ref, computed } from 'vue'
 import { useAuthStore } from '../stores/auth'
+import { useHealthData } from './useHealthData'
 
 export interface HealthInfo {
   gender: string
@@ -107,6 +108,7 @@ export function useHealthSetup() {
 
     try {
       const authStore = useAuthStore()
+      const { updateHealthData } = useHealthData()
       const apiUrl = import.meta.env.VITE_API_URL || 'https://cda.api.zbyblq.xin'
       const token = authStore.token || localStorage.getItem('StuHeal_access_token') || ''
       
@@ -124,6 +126,20 @@ export function useHealthSetup() {
         const errorData = await response.json().catch(() => ({}))
         throw new Error(errorData.message || '保存失败')
       }
+
+      // 保存到本地存储
+      updateHealthData({
+        gender: healthInfo.gender,
+        birthday: healthInfo.birthday,
+        height: healthInfo.height,
+        currentWeight: healthInfo.currentWeight,
+        targetWeight: healthInfo.targetWeight,
+        dietPreferences: healthInfo.dietPreferences,
+        healthGoals: healthInfo.healthGoals,
+        allergies: healthInfo.allergies,
+        sleepHabit: healthInfo.sleepHabit,
+        activityLevel: healthInfo.activityLevel
+      })
 
       errorMsg.value = ''
     } catch (error: any) {
