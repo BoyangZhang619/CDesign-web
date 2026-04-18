@@ -144,7 +144,7 @@ export function useHistory() {
 
       console.log('📝 [useHistory] 加载打卡记录，参数:', Object.fromEntries(params))
 
-      const response = await fetchWithRefresh(`/api/history/get?${params}`, {
+      const response = await fetchWithRefresh(`/history/get?${params}`, {
         method: 'GET'
       })
 
@@ -213,7 +213,7 @@ export function useHistory() {
 
     try {
       console.log('🗑️ [useHistory] 删除记录 ID:', id)
-      const response = await fetchWithRefresh(`/api/history/${id}`, {
+      const response = await fetchWithRefresh(`/history/${id}`, {
         method: 'DELETE'
       })
 

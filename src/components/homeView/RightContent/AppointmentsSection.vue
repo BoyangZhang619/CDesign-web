@@ -139,7 +139,7 @@ const getTasksByDate = async (dateStr: string): Promise<any[]> => {
     // console.log(`📅 获取 ${dateStr} 的任务`);
     // 直接调用 API，不经过 useTodolist 的 fetchTasks
     // 这样可以避免 watch 触发造成的死循环
-    const response = await fetchWithRefresh(`/api/tasks/date/${dateStr}`, {
+    const response = await fetchWithRefresh(`/tasks/date/${dateStr}`, {
       method: 'GET'
     });
     

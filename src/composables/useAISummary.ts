@@ -16,7 +16,7 @@ export function useAISummary() {
     error.value = ''
 
     try {
-      const response = await fetchWithRefresh('/api/exercise-checkin/checkin/exercise/ai-summary/all', {
+      const response = await fetchWithRefresh('/exercise-checkin/checkin/exercise/ai-summary/all', {
         method: 'GET'
       })
 

@@ -6,7 +6,7 @@ import http from '../http'
  * 返回: { success, message, data: { message } }
  */
 export function registerApi(data: { email: string; password: string }) {
-  return http.post('/api/auth/register', data)
+  return http.post('/auth/register', data)
 }
 
 /**
@@ -16,7 +16,7 @@ export function registerApi(data: { email: string; password: string }) {
  * 同时在Cookie中设置refreshToken
  */
 export function loginApi(data: { email: string; password: string }) {
-  return http.post('/api/auth/login', data)
+  return http.post('/auth/login', data)
 }
 
 /**
@@ -26,7 +26,7 @@ export function loginApi(data: { email: string; password: string }) {
  * 同时在Cookie中设置新的refreshToken
  */
 export function refreshTokenApi() {
-  return http.post('/api/auth/refresh')
+  return http.post('/auth/refresh')
 }
 
 /**
@@ -35,7 +35,7 @@ export function refreshTokenApi() {
  * 返回: { success, message, data: { user: { id, email, credits, created_at } } }
  */
 export function getUserInfoApi() {
-  return http.get('/api/auth/me')
+  return http.get('/auth/me')
 }
 
 /**
@@ -45,7 +45,7 @@ export function getUserInfoApi() {
  * 删除当前设备的refreshToken
  */
 export function logoutApi() {
-  return http.post('/api/auth/logout')
+  return http.post('/auth/logout')
 }
 
 /**
@@ -55,5 +55,5 @@ export function logoutApi() {
  * 撤销所有设备的refreshToken
  */
 export function logoutAllApi() {
-  return http.post('/api/auth/logout-all')
+  return http.post('/auth/logout-all')
 }

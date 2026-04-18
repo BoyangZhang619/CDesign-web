@@ -4,6 +4,7 @@
 
 import { ref, computed } from 'vue';
 import { useAuthStore } from '@/stores/auth';
+import http from '@/api/http';
 
 export interface TaskItem {
   id: number;
@@ -54,9 +55,9 @@ export async function fetchTasksByDate(date: string): Promise<TaskItem[]> {
   }
 
   try {
-    const apiUrl = import.meta.env.VITE_API_URL || 'https://cda.api.zbyblq.xin';
+    const apiUrl = http.defaults.baseURL;
     const response = await fetch(
-      `${apiUrl}/api/tasks?date=${date}&limit=100`,
+      `${apiUrl}/tasks?date=${date}&limit=100`,
       {
         method: 'GET',
         headers: {
@@ -100,10 +101,10 @@ export async function fetchTaskStats(date?: string): Promise<any> {
   }
 
   try {
-    const apiUrl = import.meta.env.VITE_API_URL || 'https://cda.api.zbyblq.xin';
+    const apiUrl = http.defaults.baseURL;
     const urlPath = date
-      ? `/api/tasks/stats?date=${date}`
-      : `/api/tasks/stats`;
+      ? `/tasks/stats?date=${date}`
+      : `/tasks/stats`;
 
     const response = await fetch(
       `${apiUrl}${urlPath}`,

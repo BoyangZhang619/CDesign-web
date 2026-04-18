@@ -36,6 +36,7 @@ import { useUserProfile } from '../composables/useUserProfile'
 import AIChatFloatingWindow from '../components/AIChatFloatingWindow.vue'
 import { useTrendsView } from '../composables/useTrendsView'
 import HealthSetupModal from '../components/HealthSetupModal.vue'
+import http from '@/api/http'
 
 const router = useRouter()
 const authStore = useAuthStore()
@@ -88,7 +89,7 @@ onMounted(async () => {
 const loadHealthProfileStatus = async () => {
   try {
     const response = await fetch(
-      `${import.meta.env.VITE_API_URL || 'https://cda.api.zbyblq.xin'}/api/health-info/check-health-info`,
+      `${http.defaults.baseURL}/health-info/check-health-info`,
       {
         method: 'POST',
         headers: {
@@ -120,7 +121,7 @@ const loadHealthProfileStatus = async () => {
 const loadFullHealthProfile = async () => {
   try {
     const response = await fetch(
-      `${import.meta.env.VITE_API_URL || 'https://cda.api.zbyblq.xin'}/api/health-info/get-health-info`,
+      `${http.defaults.baseURL}/health-info/get-health-info`,
       {
         method: 'GET',
         headers: {

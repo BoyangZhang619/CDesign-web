@@ -35,7 +35,7 @@ export function useUserProfile() {
     errorMsg.value = ''
 
     try {
-      const response = await fetchWithRefresh(`/api/auth/me`, {
+      const response = await fetchWithRefresh(`/auth/me`, {
         method: 'GET'
       })
 
@@ -120,7 +120,7 @@ export function useUserProfile() {
     successMsg.value = ''
 
     try {
-      const response = await fetchWithRefresh(`/api/auth/update-user-info`, {
+      const response = await fetchWithRefresh(`/auth/update-user-info`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

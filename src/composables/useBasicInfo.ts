@@ -111,7 +111,7 @@ export function useBasicInfo() {
     successMsg.value = ''
 
     try {
-      const response = await fetchWithRefresh('/api/healthInfo/update-health-info', {
+      const response = await fetchWithRefresh('/healthInfo/update-health-info', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -157,7 +157,7 @@ export function useBasicInfo() {
     errorMsg.value = ''
 
     try {
-      const response = await fetchWithRefresh('/api/healthInfo/get-health-info', {
+      const response = await fetchWithRefresh('/healthInfo/get-health-info', {
         method: 'GET'
       })
 

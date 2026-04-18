@@ -271,7 +271,7 @@ export function useTodolist() {
 
   /**
    * 获取任务列表
-   * GET /api/tasks
+   * GET /tasks
    */
   async function fetchTasks(date?: string) {
     loading.value = true
@@ -283,7 +283,7 @@ export function useTodolist() {
       params.append('limit', '100')  // 获取足够多的数据
       
       const response = await fetchWithRefresh(
-        `/api/tasks?${params.toString()}`,
+        `/tasks?${params.toString()}`,
         { method: 'GET' }
       )
       const data = await response.json()
@@ -317,7 +317,7 @@ export function useTodolist() {
     try {
       // console.log(`📅 获取 ${dateStr} 的任务`)
       const response = await fetchWithRefresh(
-        `/api/tasks/date/${dateStr}`,
+        `/tasks/date/${dateStr}`,
         { method: 'GET' }
       )
       const data = await response.json()
@@ -344,7 +344,7 @@ export function useTodolist() {
     try {
       console.log('📋 获取所有任务')
       const response = await fetchWithRefresh(
-        `/api/tasks/all`,
+        `/tasks/all`,
         { method: 'GET' }
       )
       const data = await response.json()
@@ -427,7 +427,7 @@ export function useTodolist() {
 
   /**
    * 创建任务
-   * POST /api/tasks
+   * POST /tasks
    */
   async function createTask(taskData: Partial<Task>) {
     loading.value = true
@@ -436,7 +436,7 @@ export function useTodolist() {
       // 转换前端数据为后端格式
       const backendData = transformFrontendTask(taskData)
       
-      const response = await fetchWithRefresh('/api/tasks', {
+      const response = await fetchWithRefresh('/tasks', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(backendData)
@@ -462,7 +462,7 @@ export function useTodolist() {
 
   /**
    * 更新任务
-   * PUT /api/tasks/:id
+   * PUT /tasks/:id
    */
   async function updateTask(id: number, taskData: Partial<Task>) {
     loading.value = true
@@ -471,7 +471,7 @@ export function useTodolist() {
       // 转换前端数据为后端格式
       const backendData = transformFrontendTask(taskData)
       
-      const response = await fetchWithRefresh(`/api/tasks/${id}`, {
+      const response = await fetchWithRefresh(`/tasks/${id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(backendData)
@@ -500,13 +500,13 @@ export function useTodolist() {
 
   /**
    * 删除任务
-   * DELETE /api/tasks/:id
+   * DELETE /tasks/:id
    */
   async function deleteTask(id: number) {
     loading.value = true
     error.value = ''
     try {
-      const response = await fetchWithRefresh(`/api/tasks/${id}`, {
+      const response = await fetchWithRefresh(`/tasks/${id}`, {
         method: 'DELETE'
       })
       const data = await response.json()
@@ -528,13 +528,13 @@ export function useTodolist() {
 
   /**
    * 标记任务为完成
-   * PATCH /api/tasks/:id/complete
+   * PATCH /tasks/:id/complete
    */
   async function completeTask(id: number) {
     loading.value = true
     error.value = ''
     try {
-      const response = await fetchWithRefresh(`/api/tasks/${id}/complete`, {
+      const response = await fetchWithRefresh(`/tasks/${id}/complete`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -572,13 +572,13 @@ export function useTodolist() {
 
   /**
    * 标记任务为未完成
-   * PATCH /api/tasks/:id/uncomplete
+   * PATCH /tasks/:id/uncomplete
    */
   async function uncompleteTask(id: number) {
     loading.value = true
     error.value = ''
     try {
-      const response = await fetchWithRefresh(`/api/tasks/${id}/uncomplete`, {
+      const response = await fetchWithRefresh(`/tasks/${id}/uncomplete`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' }
       })
@@ -620,7 +620,7 @@ export function useTodolist() {
 
   /**
    * 同步打卡任务状态
-   * POST /api/tasks/sync-checkin
+   * POST /tasks/sync-checkin
    * 当在 DailyCheckin 中完成打卡后，同步状态到 TodoList
    */
   async function syncCheckinTask(
@@ -634,7 +634,7 @@ export function useTodolist() {
         'sleep': 'sleep'
       }
       
-      const response = await fetchWithRefresh('/api/tasks/sync-checkin', {
+      const response = await fetchWithRefresh('/tasks/sync-checkin', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -697,13 +697,13 @@ export function useTodolist() {
 
   /**
    * 生成 AI 建议
-   * POST /api/tasks/ai-suggestions
+   * POST /tasks/ai-suggestions
    */
   async function generateAISuggestions(): Promise<Task[]> {
     loading.value = true
     error.value = ''
     try {
-      const response = await fetchWithRefresh('/api/tasks/ai-suggestions', {
+      const response = await fetchWithRefresh('/tasks/ai-suggestions', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({})
@@ -732,7 +732,7 @@ export function useTodolist() {
    */
   async function acceptAISuggestion(id: number) {
     try {
-      const response = await fetchWithRefresh(`/api/tasks/${id}/accept-suggestion`, {
+      const response = await fetchWithRefresh(`/tasks/${id}/accept-suggestion`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' }
       })
@@ -760,13 +760,13 @@ export function useTodolist() {
 
   /**
    * 驳回 AI 建议
-   * POST /api/tasks/:id/reject-suggestion
+   * POST /tasks/:id/reject-suggestion
    */
   async function rejectAISuggestion(id: number) {
     loading.value = true
     error.value = ''
     try {
-      const response = await fetchWithRefresh(`/api/tasks/${id}/reject-suggestion`, {
+      const response = await fetchWithRefresh(`/tasks/${id}/reject-suggestion`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' }
       })

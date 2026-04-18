@@ -80,7 +80,7 @@ export function usePortraitView() {
     
     try {
       const response = await fetchWithRefresh(
-        '/api/health/refresh-from-checkin',
+        '/health/refresh-from-checkin',
         {
           method: 'POST',
           headers: {
@@ -109,7 +109,7 @@ export function usePortraitView() {
     while (attempts < maxAttempts) {
       try {
         const response = await fetchWithRefresh(
-          '/api/health/portrait',
+          '/health/portrait',
           {
             method: 'GET',
             headers: {
@@ -152,7 +152,7 @@ export function usePortraitView() {
     
     try {
       const response = await fetchWithRefresh(
-        '/api/health/force-refresh',
+        '/health/force-refresh',
         {
           method: 'POST',
           headers: {
@@ -186,7 +186,7 @@ export function usePortraitView() {
     while (attempts < maxAttempts) {
       try {
         const response = await fetchWithRefresh(
-          '/api/health/portrait',
+          '/health/portrait',
           {
             method: 'GET',
             headers: {
@@ -227,7 +227,7 @@ export function usePortraitView() {
   async function loadPortraitData() {
     try {
       const response = await fetchWithRefresh(
-        '/api/health/portrait',
+        '/health/portrait',
         {
           method: 'GET',
           headers: {

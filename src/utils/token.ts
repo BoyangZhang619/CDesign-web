@@ -8,9 +8,8 @@
  * 认证流程：
  * 1. 用户登录 → 获得accessToken
  * 2. 每个API请求自动在Authorization请求头中添加Bearer Token
- * 3. 如果accessToken过期，自动使用refreshToken调用/api/auth/refresh
- * 4. 获得新的accessToken和refreshToken
- * 5. 继续请求
+ * 3. 如果accessToken过期，自动使用refreshToken调用/auth/refresh
+ * 4. 获得新的accessToken和refreshToken * 5. 继续请求
  */
 
 const TOKEN_KEY = 'StuHeal_access_token'

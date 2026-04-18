@@ -3,11 +3,11 @@ import { getToken, setToken, removeToken } from '../utils/token.js'
 import { useAuthStore } from '../stores/auth'
 
 const http = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || 'https://cda.api.zbyblq.xin',
+  baseURL: import.meta.env.DEVELOPMENT ? '/api' : `${import.meta.env.VITE_API_URL}/api`, // 根据环境变量设置API基础URL
   timeout: 30000, // 根据API文档，请求超时为30秒
   withCredentials: true // 自动发送Cookie中的refreshToken
 })
-
+console.log("API base URL:", http.defaults.baseURL)
 // 标记是否正在刷新Token，避免多个请求同时刷新
 let isRefreshing = false
 // 等待刷新Token完成的请求队列
@@ -79,9 +79,9 @@ http.interceptors.response.use(
       try {
         // 调用刷新Token接口
         // 注意：刷新接口不需要传入参数，使用Cookie中的refreshToken
-        console.log("api url:", `${import.meta.env.VITE_API_URL}`)
+        console.log("api url:", `${http.defaults.baseURL}`)
         const response = await axios.post(
-          `${import.meta.env.VITE_API_URL || 'https://cda.api.zbyblq.xin'}/api/auth/refresh`,
+          `${http.defaults.baseURL}/auth/refresh`,
           {},
           {
             withCredentials: true,
@@ -150,7 +150,7 @@ export async function fetchWithRefresh(url: string, options: RequestInit = {}) {
     'Authorization': `Bearer ${authStore.token}`
   }
 
-  let response = await fetch(`${import.meta.env.VITE_API_URL || 'https://cda.api.zbyblq.xin'}${url}`, {
+  let response = await fetch(`${http.defaults.baseURL}${url}`, {
     ...options,
     headers,
     credentials: 'include'
@@ -161,7 +161,7 @@ export async function fetchWithRefresh(url: string, options: RequestInit = {}) {
     try {
       // 调用刷新 token 接口
       const refreshResponse = await axios.post(
-        `${import.meta.env.VITE_API_URL || 'https://cda.api.zbyblq.xin'}/api/auth/refresh`,
+        `${http.defaults.baseURL}/auth/refresh`,
         {},
         {
           withCredentials: true,
@@ -180,7 +180,7 @@ export async function fetchWithRefresh(url: string, options: RequestInit = {}) {
           'Authorization': `Bearer ${newToken}`
         }
 
-        response = await fetch(`${import.meta.env.VITE_API_URL || 'https://cda.api.zbyblq.xin'}${url}`, {
+        response = await fetch(`${http.defaults.baseURL}${url}`, {
           ...options,
           headers: newHeaders,
           credentials: 'include'

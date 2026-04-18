@@ -371,7 +371,7 @@ const handleSubmit = async () => {
 
   try {
     // 使用 fetchWithRefresh 发送请求，带有认证和自动 token 刷新
-    const response = await fetchWithRefresh('/api/auth/update-user-info', {
+    const response = await fetchWithRefresh('/auth/update-user-info', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'

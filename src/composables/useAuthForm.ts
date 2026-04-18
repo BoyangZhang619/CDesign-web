@@ -1,6 +1,7 @@
 import { reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '../stores/auth'
+import http from '@/api/http'
 
 export function useAuthForm() {
   const router = useRouter()
@@ -68,8 +69,8 @@ export function useAuthForm() {
 
   async function checkHealthInfoNeeded(): Promise<boolean> {
     try {
-      const apiUrl = import.meta.env.VITE_API_URL || 'https://cda.api.zbyblq.xin'
-      const response = await fetch(`${apiUrl}/api/health-info/check-health-info`, {
+      const apiUrl = http.defaults.baseURL;
+      const response = await fetch(`${apiUrl}/health-info/check-health-info`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

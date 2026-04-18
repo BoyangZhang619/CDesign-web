@@ -2,7 +2,7 @@
  * AI Chat API 模块
  * 根据 AI_CHAT_API_DOCUMENTATION.md 实现
  * 
- * 基础 URL: /api/ai-chat
+ * 基础 URL: /ai-chat
  * 所有请求都需要 Bearer Token 认证
  */
 
@@ -15,7 +15,7 @@ import { getToken } from '../../utils/token'
 export const sessionAPI = {
   /**
    * 创建新会话
-   * POST /api/ai-chat/sessions
+   * POST /ai-chat/sessions
    */
   async createSession(data: {
     session_name: string
@@ -27,12 +27,12 @@ export const sessionAPI = {
     tags?: string
     description?: string
   }) {
-    return http.post('/api/ai-chat/sessions', data)
+    return http.post('/ai-chat/sessions', data)
   },
 
   /**
    * 获取用户的所有会话
-   * GET /api/ai-chat/sessions
+   * GET /ai-chat/sessions
    */
   async getSessions(params?: {
     page?: number
@@ -43,20 +43,20 @@ export const sessionAPI = {
     start_date?: string
     end_date?: string
   }) {
-    return http.get('/api/ai-chat/sessions', { params })
+    return http.get('/ai-chat/sessions', { params })
   },
 
   /**
    * 获取会话详情
-   * GET /api/ai-chat/sessions/{id}
+   * GET /ai-chat/sessions/{id}
    */
   async getSessionDetail(id: number) {
-    return http.get(`/api/ai-chat/sessions/${id}`)
+    return http.get(`/ai-chat/sessions/${id}`)
   },
 
   /**
    * 更新会话
-   * PUT /api/ai-chat/sessions/{id}
+   * PUT /ai-chat/sessions/{id}
    */
   async updateSession(
     id: number,
@@ -68,31 +68,31 @@ export const sessionAPI = {
       tags?: string
     }
   ) {
-    return http.put(`/api/ai-chat/sessions/${id}`, data)
+    return http.put(`/ai-chat/sessions/${id}`, data)
   },
 
   /**
    * 删除会话
-   * DELETE /api/ai-chat/sessions/{id}
+   * DELETE /ai-chat/sessions/{id}
    */
   async deleteSession(id: number) {
-    return http.delete(`/api/ai-chat/sessions/${id}`)
+    return http.delete(`/ai-chat/sessions/${id}`)
   },
 
   /**
    * 标记会话为星标
-   * POST /api/ai-chat/sessions/{id}/star
+   * POST /ai-chat/sessions/{id}/star
    */
   async toggleSessionStar(id: number) {
-    return http.post(`/api/ai-chat/sessions/${id}/star`)
+    return http.post(`/ai-chat/sessions/${id}/star`)
   },
 
   /**
    * 清空会话内的所有消息
-   * DELETE /api/ai-chat/sessions/{id}/clear
+   * DELETE /ai-chat/sessions/{id}/clear
    */
   async clearSession(id: number) {
-    return http.delete(`/api/ai-chat/sessions/${id}/clear`)
+    return http.delete(`/ai-chat/sessions/${id}/clear`)
   }
 }
 
@@ -102,24 +102,24 @@ export const sessionAPI = {
 export const messageAPI = {
   /**
    * 发送消息
-   * POST /api/ai-chat/sessions/{id}/messages
+   * POST /ai-chat/sessions/{id}/messages
    */
   async sendMessage(sessionId: number, content: string) {
-    return http.post(`/api/ai-chat/sessions/${sessionId}/messages`, {
+    return http.post(`/ai-chat/sessions/${sessionId}/messages`, {
       content
     })
   },
 
   /**
    * 发送流式消息
-   * POST /api/ai-chat/sessions/{id}/messages/stream
+   * POST /ai-chat/sessions/{id}/messages/stream
    * 返回 ReadableStream
    */
   sendStreamMessage: async function (sessionId: number, content: string) {
     const token = getToken() || ''
     
     const response = await fetch(
-      `${import.meta.env.VITE_API_URL || 'https://cda.api.zbyblq.xin'}/api/ai-chat/sessions/${sessionId}/messages/stream`,
+      `${http.defaults.baseURL}/ai-chat/sessions/${sessionId}/messages/stream`,
       {
         method: 'POST',
         headers: {
@@ -140,28 +140,28 @@ export const messageAPI = {
 
   /**
    * 获取聊天历史
-   * GET /api/ai-chat/sessions/{id}/messages
+   * GET /ai-chat/sessions/{id}/messages
    */
   async getMessages(sessionId: number, params?: { limit?: number }) {
-    return http.get(`/api/ai-chat/sessions/${sessionId}/messages`, { params })
+    return http.get(`/ai-chat/sessions/${sessionId}/messages`, { params })
   },
 
   /**
    * 编辑消息
-   * PATCH /api/ai-chat/messages/{id}
+   * PATCH /ai-chat/messages/{id}
    */
   async editMessage(messageId: number, content: string) {
-    return http.patch(`/api/ai-chat/messages/${messageId}`, {
+    return http.patch(`/ai-chat/messages/${messageId}`, {
       content
     })
   },
 
   /**
    * 删除消息
-   * DELETE /api/ai-chat/messages/{id}
+   * DELETE /ai-chat/messages/{id}
    */
   async deleteMessage(messageId: number) {
-    return http.delete(`/api/ai-chat/messages/${messageId}`)
+    return http.delete(`/ai-chat/messages/${messageId}`)
   }
 }
 
@@ -171,21 +171,21 @@ export const messageAPI = {
 export const searchAPI = {
   /**
    * 搜索消息
-   * GET /api/ai-chat/search
+   * GET /ai-chat/search
    */
   async searchMessages(params: {
     keyword: string
     session_id?: number
   }) {
-    return http.get('/api/ai-chat/search', { params })
+    return http.get('/ai-chat/search', { params })
   },
 
   /**
    * 获取用户 Token 统计
-   * GET /api/ai-chat/stats
+   * GET /ai-chat/stats
    */
   async getStats() {
-    return http.get('/api/ai-chat/stats')
+    return http.get('/ai-chat/stats')
   }
 }
 

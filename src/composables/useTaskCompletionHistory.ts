@@ -135,7 +135,7 @@ export function useTaskCompletionHistory() {
       console.log('📝 [useTaskCompletionHistory] 加载记录，参数:', Object.fromEntries(params))
 
       const response = await fetchWithRefresh(
-        `/api/task-completion-history?${params}`,
+        `/task-completion-history?${params}`,
         { method: 'GET' }
       )
 
@@ -166,7 +166,7 @@ export function useTaskCompletionHistory() {
       console.log('📊 [useTaskCompletionHistory] 加载统计信息')
 
       const response = await fetchWithRefresh(
-        '/api/task-completion-history/stats',
+        '/task-completion-history/stats',
         { method: 'GET' }
       )
 
@@ -194,7 +194,7 @@ export function useTaskCompletionHistory() {
       console.log('📅 [useTaskCompletionHistory] 加载日期汇总')
 
       const response = await fetchWithRefresh(
-        `/api/task-completion-history/by-date?${params}`,
+        `/task-completion-history/by-date?${params}`,
         { method: 'GET' }
       )
 

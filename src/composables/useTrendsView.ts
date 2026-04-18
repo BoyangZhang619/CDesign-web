@@ -91,7 +91,7 @@ export function useTrendsView() {
     loading.value = true
     try {
       const response = await fetchWithRefresh(
-        `/api/analysis/trends?range=${selectedRange.value}`,
+        `/analysis/trends?range=${selectedRange.value}`,
         {
           method: 'GET',
           headers: {

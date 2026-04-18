@@ -14,7 +14,7 @@ export function useHealthInfoCheck() {
     isLoading.value = true
 
     try {
-      const response = await fetchWithRefresh('/api/health-info/get-health-info', {
+      const response = await fetchWithRefresh('/health-info/get-health-info', {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json'

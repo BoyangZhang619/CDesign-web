@@ -82,11 +82,11 @@ export function useDailyCheckin() {
     errorMsg.value = ''
 
     try {
-      const exerciseData = await loadCheckin('/api/exercise-checkin/checkin/exercise/summary');
-      const mealData = await loadCheckin('/api/meal-checkin/checkin/meal/summary');
-      const sleepData = await loadCheckin('/api/sleep-checkin/checkin/sleep/summary');
+      const exerciseData = await loadCheckin('/exercise-checkin/checkin/exercise/summary');
+      const mealData = await loadCheckin('/meal-checkin/checkin/meal/summary');
+      const sleepData = await loadCheckin('/sleep-checkin/checkin/sleep/summary');
 
-      const aiSummary = await loadCheckin('/api/exercise-checkin/checkin/exercise/ai-summary');
+      const aiSummary = await loadCheckin('/exercise-checkin/checkin/exercise/ai-summary');
       console.log('AI Summary response:', aiSummary);
       form.value.exercise_duration_time = (exerciseData as DailyCheckin).exercise_duration_time || 0
       form.value.exercise_calories_burned = (exerciseData as DailyCheckin).exercise_calories_burned || 0

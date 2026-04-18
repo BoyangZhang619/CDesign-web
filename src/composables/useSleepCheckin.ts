@@ -132,7 +132,7 @@ export function useSleepCheckin() {
         sleep_feeling: form.value.sleep_feeling || ''
       }
 
-      const response = await fetchWithRefresh('/api/sleep-checkin/checkin/sleep', {
+      const response = await fetchWithRefresh('/sleep-checkin/checkin/sleep', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -161,7 +161,7 @@ export function useSleepCheckin() {
   // 加载今天的所有睡眠记录
   async function loadRecords() {
     try {
-      const response = await fetchWithRefresh('/api/sleep-checkin/checkin/sleep', {
+      const response = await fetchWithRefresh('/sleep-checkin/checkin/sleep', {
         method: 'GET'
       })
 
@@ -209,7 +209,7 @@ export function useSleepCheckin() {
         payload.sleep_feeling = updateData.sleep_feeling
       }
 
-      const response = await fetchWithRefresh(`/api/sleep-checkin/checkin/sleep/${recordId}`, {
+      const response = await fetchWithRefresh(`/sleep-checkin/checkin/sleep/${recordId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json'
@@ -245,7 +245,7 @@ export function useSleepCheckin() {
     errorMsg.value = ''
 
     try {
-      const response = await fetchWithRefresh(`/api/sleep-checkin/checkin/sleep/${recordId}`, {
+      const response = await fetchWithRefresh(`/sleep-checkin/checkin/sleep/${recordId}`, {
         method: 'DELETE'
       })
 
@@ -291,7 +291,7 @@ export function useSleepCheckin() {
   // 加载统计数据
   async function loadStatistics(days: 7 | 30 = 7) {
     try {
-      const response = await fetchWithRefresh(`/api/sleep-checkin/checkin/sleep/statistics?days=${days}`, {
+      const response = await fetchWithRefresh(`/sleep-checkin/checkin/sleep/statistics?days=${days}`, {
         method: 'GET'
       })
 

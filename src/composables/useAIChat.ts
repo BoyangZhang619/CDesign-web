@@ -32,7 +32,7 @@ export function useAIChat() {
 
   /**
    * 发送非流式消息
-   * 使用 API: POST /api/ai-chat/sessions/{sessionId}/messages
+   * 使用 API: POST /ai-chat/sessions/{sessionId}/messages
    */
   async function sendCommonMessage(): Promise<number> {
     if (!chatConfig.sessionId) {
@@ -65,7 +65,7 @@ export function useAIChat() {
 
   /**
    * 发送流式消息
-   * 使用 API: POST /api/ai-chat/sessions/{sessionId}/messages/stream
+   * 使用 API: POST /ai-chat/sessions/{sessionId}/messages/stream
    * 如果流式失败，会自动降级到非流式
    */
   async function sendStreamMessage(): Promise<number> {

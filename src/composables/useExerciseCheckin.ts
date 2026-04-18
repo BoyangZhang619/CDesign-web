@@ -136,7 +136,7 @@ export function useExerciseCheckin() {
         note: form.value.note || ''
       }
 
-      const response = await fetchWithRefresh('/api/exercise-checkin/checkin/exercise', {
+      const response = await fetchWithRefresh('/exercise-checkin/checkin/exercise', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -165,7 +165,7 @@ export function useExerciseCheckin() {
   // 加载今天的所有运动记录
   async function loadRecords() {
     try {
-      const response = await fetchWithRefresh('/api/exercise-checkin/checkin/exercise', {
+      const response = await fetchWithRefresh('/exercise-checkin/checkin/exercise', {
         method: 'GET'
       })
 
@@ -212,7 +212,7 @@ export function useExerciseCheckin() {
         payload.note = updateData.note
       }
 
-      const response = await fetchWithRefresh(`/api/exercise-checkin/checkin/exercise/${recordId}`, {
+      const response = await fetchWithRefresh(`/exercise-checkin/checkin/exercise/${recordId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json'
@@ -248,7 +248,7 @@ export function useExerciseCheckin() {
     errorMsg.value = ''
 
     try {
-      const response = await fetchWithRefresh(`/api/exercise-checkin/checkin/exercise/${recordId}`, {
+      const response = await fetchWithRefresh(`/exercise-checkin/checkin/exercise/${recordId}`, {
         method: 'DELETE'
       })
 
