@@ -36,7 +36,7 @@ import { useUserProfile } from '../composables/useUserProfile'
 import AIChatFloatingWindow from '../components/AIChatFloatingWindow.vue'
 import { useTrendsView } from '../composables/useTrendsView'
 import HealthSetupModal from '../components/HealthSetupModal.vue'
-import http from '@/api/http'
+import { fetchWithRefresh } from '@/api/http'
 
 const router = useRouter()
 const authStore = useAuthStore()
@@ -88,15 +88,11 @@ onMounted(async () => {
 
 const loadHealthProfileStatus = async () => {
   try {
-    const response = await fetch(
-      `${http.defaults.baseURL}/health-info/check-health-info`,
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${authStore.token}`
-        },
-        credentials: 'include'
+    const response = await fetchWithRefresh(`/health-info/check-health-info`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        }
       }
     )
 
@@ -120,15 +116,12 @@ const loadHealthProfileStatus = async () => {
 
 const loadFullHealthProfile = async () => {
   try {
-    const response = await fetch(
-      `${http.defaults.baseURL}/health-info/get-health-info`,
+    const response = await fetchWithRefresh(`/health-info/get-health-info`,
       {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${authStore.token}`
-        },
-        credentials: 'include'
+        }
       }
     )
 

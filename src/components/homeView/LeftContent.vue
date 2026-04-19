@@ -2,7 +2,7 @@
   <div class="left-content">
     <CheckConditionCard :visible="!hasData" />
     <HealthStats :health-data="healthData" />
-    <PatientActivities />
+    <!-- <PatientActivities /> -->
   </div>
 </template>
 
@@ -10,7 +10,7 @@
 import { computed } from 'vue'
 import CheckConditionCard from './LeftContent/CheckConditionCard.vue'
 import HealthStats from './LeftContent/HealthStats.vue'
-import PatientActivities from './LeftContent/PatientActivities.vue'
+// import PatientActivities from './LeftContent/PatientActivities.vue'
 import { type HealthData } from '../../composables/useHealthData'
 
 const props = defineProps<{

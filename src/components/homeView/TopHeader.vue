@@ -82,9 +82,9 @@ onMounted(async () => {
 
 <style scoped>
 .top-header {
-    background: linear-gradient(135deg, #F5F2EDaf 0%, #EBE5DFaf 100%);
+    background: linear-gradient(135deg, #ffffffc4 0%, #ffffffbf 100%);
     padding: 20px 30px;
-    border-bottom: 1px solid #D4C4B0;
+    border-bottom: 1px solid #ffffffc2;
     box-shadow: #a4a4a4af 0px 2px 4px;
 }
 
@@ -168,16 +168,17 @@ onMounted(async () => {
     width: 40px;
     height: 40px;
     border-radius: 50%;
-    /* background: linear-gradient(135deg, #C9B89C 0%, #A9787B 100%); */
     border: 2px solid #9DB4A0;
     cursor: pointer;
     transition: transform 0.3s ease;
     transform: translateY(0) scale(.9);
     object-fit: cover;
+    filter: brightness(0) saturate(100%) invert(0);
+    transform: scale(.85);
 }
 
 .profile-avatar:hover {
-    transform: scale(1.05);
+    transform: scale(.9);
 }
 
 /* ============================================

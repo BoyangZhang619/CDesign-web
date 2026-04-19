@@ -1,7 +1,6 @@
 import { reactive, ref, computed } from 'vue'
-import { useAuthStore } from '../stores/auth'
 import { useHealthData } from './useHealthData'
-import http from '@/api/http'
+import { fetchWithRefresh } from '@/api/http'
 
 export interface HealthInfo {
   gender: string
@@ -108,18 +107,13 @@ export function useHealthSetup() {
     loading.value = true
 
     try {
-      const authStore = useAuthStore()
       const { updateHealthData } = useHealthData()
-      const apiUrl = http.defaults.baseURL
-      const token = authStore.token || localStorage.getItem('StuHeal_access_token') || ''
-      
-      const response = await fetch(`${apiUrl}/health-info/insert-health-info`, {
+
+      const response = await fetchWithRefresh(`/health-info/insert-health-info`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
         },
-        credentials: 'include',
         body: JSON.stringify(healthInfo)
       })
 

@@ -7,7 +7,7 @@
  */
 
 import http from '../http'
-import { getToken } from '../../utils/token'
+import { fetchWithRefresh } from '../http'
 
 /**
  * 会话管理接口
@@ -116,20 +116,13 @@ export const messageAPI = {
    * 返回 ReadableStream
    */
   sendStreamMessage: async function (sessionId: number, content: string) {
-    const token = getToken() || ''
-    
-    const response = await fetch(
-      `${http.defaults.baseURL}/ai-chat/sessions/${sessionId}/messages/stream`,
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        credentials: 'include',  // ✅ 带上cookie
-        body: JSON.stringify({ content })
-      }
-    )
+    const response = await fetchWithRefresh(`/ai-chat/sessions/${sessionId}/messages/stream`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ content })
+    })
 
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`)

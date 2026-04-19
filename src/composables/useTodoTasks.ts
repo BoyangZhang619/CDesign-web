@@ -3,8 +3,7 @@
  */
 
 import { ref, computed } from 'vue';
-import { useAuthStore } from '@/stores/auth';
-import http from '@/api/http';
+import { fetchWithRefresh } from '@/api/http';
 
 export interface TaskItem {
   id: number;
@@ -48,25 +47,13 @@ export interface TaskStatsResponse {
  * @param date 格式: YYYY-MM-DD
  */
 export async function fetchTasksByDate(date: string): Promise<TaskItem[]> {
-  const authStore = useAuthStore();
-  if (!authStore.token) {
-    console.error('未认证');
-    return [];
-  }
-
   try {
-    const apiUrl = http.defaults.baseURL;
-    const response = await fetch(
-      `${apiUrl}/tasks?date=${date}&limit=100`,
-      {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${authStore.token}`,
-        },
-        credentials: 'include'
+    const response = await fetchWithRefresh(`/tasks?date=${date}&limit=100`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
       }
-    );
+    });
 
     if (response.ok) {
       const result: TasksResponse = await response.json();
@@ -94,29 +81,17 @@ export async function fetchTodayTasks(): Promise<TaskItem[]> {
  * 获取指定年月的任务统计
  */
 export async function fetchTaskStats(date?: string): Promise<any> {
-  const authStore = useAuthStore();
-  if (!authStore.token) {
-    console.error('未认证');
-    return null;
-  }
-
   try {
-    const apiUrl = http.defaults.baseURL;
     const urlPath = date
       ? `/tasks/stats?date=${date}`
       : `/tasks/stats`;
 
-    const response = await fetch(
-      `${apiUrl}${urlPath}`,
-      {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${authStore.token}`,
-        },
-        credentials: 'include'
+    const response = await fetchWithRefresh(urlPath, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
       }
-    );
+    });
 
     if (response.ok) {
       const result: TaskStatsResponse = await response.json();
