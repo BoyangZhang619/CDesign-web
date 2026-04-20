@@ -17,6 +17,8 @@ export interface HealthInfo {
   allergies: string
   sleepHabit: string
   activityLevel: string
+  diseases: string
+  remark: string
 }
 
 export function useHealthSetup() {
@@ -57,10 +59,75 @@ export function useHealthSetup() {
     goalOtherText: '',
     allergies: '',
     sleepHabit: '',
-    activityLevel: ''
+    activityLevel: '',
+    diseases: '',
+    remark: ''
   })
 
-  const totalFields = 10
+  /**
+   * 初始化健康信息 - 从服务器加载已有数据
+   */
+  async function initializeHealthInfo() {
+    try {
+      const response = await fetchWithRefresh(`/health-info/get-health-info`, {
+        method: 'GET'
+      })
+
+      if (!response.ok) {
+        console.log('未获取到已有的健康信息')
+        return
+      }
+
+      const data = await response.json()
+      const remoteHealthInfo = data.data?.healthInfo || data.data
+
+      if (remoteHealthInfo) {
+        console.log('[useHealthSetup] 加载已有健康信息:', remoteHealthInfo)
+
+        // 填充表单数据
+        healthInfo.gender = remoteHealthInfo.gender || ''
+        healthInfo.birthday = remoteHealthInfo.birthday || ''
+        healthInfo.height = remoteHealthInfo.height_cm || remoteHealthInfo.heightCm
+        healthInfo.currentWeight = remoteHealthInfo.current_weight_kg || remoteHealthInfo.currentWeight
+        healthInfo.targetWeight = remoteHealthInfo.target_weight_kg || remoteHealthInfo.targetWeight
+
+        // 处理数组字段
+        if (remoteHealthInfo.dietary_preferences) {
+          if (Array.isArray(remoteHealthInfo.dietary_preferences)) {
+            healthInfo.dietPreferences = remoteHealthInfo.dietary_preferences
+          } else if (typeof remoteHealthInfo.dietary_preferences === 'string') {
+            try {
+              healthInfo.dietPreferences = JSON.parse(remoteHealthInfo.dietary_preferences)
+            } catch {
+              healthInfo.dietPreferences = []
+            }
+          }
+        }
+
+        if (remoteHealthInfo.health_goals) {
+          if (Array.isArray(remoteHealthInfo.health_goals)) {
+            healthInfo.healthGoals = remoteHealthInfo.health_goals
+          } else if (typeof remoteHealthInfo.health_goals === 'string') {
+            try {
+              healthInfo.healthGoals = JSON.parse(remoteHealthInfo.health_goals)
+            } catch {
+              healthInfo.healthGoals = []
+            }
+          }
+        }
+
+        healthInfo.allergies = remoteHealthInfo.allergies || ''
+        healthInfo.sleepHabit = remoteHealthInfo.sleep_habit || remoteHealthInfo.sleepHabit || ''
+        healthInfo.activityLevel = remoteHealthInfo.activity_level || remoteHealthInfo.activityLevel || ''
+        healthInfo.diseases = remoteHealthInfo.diseases || ''
+        healthInfo.remark = remoteHealthInfo.remark || ''
+      }
+    } catch (error) {
+      console.error('[useHealthSetup] 加载健康信息失败:', error)
+    }
+  }
+
+  const totalFields = 12
   const completedFields = computed(() => {
     let count = 0
     if (healthInfo.gender) count++
@@ -73,6 +140,8 @@ export function useHealthSetup() {
     if (healthInfo.allergies) count++
     if (healthInfo.sleepHabit) count++
     if (healthInfo.activityLevel) count++
+    if (healthInfo.diseases) count++
+    if (healthInfo.remark) count++
     return count
   })
 
@@ -94,6 +163,8 @@ export function useHealthSetup() {
     if (healthInfo.healthGoals.length === 0 && !healthInfo.goalOtherText) return warningPrint('请选择至少一个健康目标')
     if (!healthInfo.sleepHabit) return warningPrint('请选择作息习惯')
     if (!healthInfo.activityLevel) return warningPrint('请选择日常活动水平')
+    if (!healthInfo.diseases) return warningPrint('请填写疾病史')
+    if (!healthInfo.remark) return warningPrint('请填写其他信息')
     return true
   }
 
@@ -161,6 +232,7 @@ export function useHealthSetup() {
     progressPercentage,
     validateForm,
     handleSubmit,
-    handleSkip
+    handleSkip,
+    initializeHealthInfo
   }
 }

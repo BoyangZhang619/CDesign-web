@@ -1,6 +1,7 @@
 import { ref } from 'vue'
 import { fetchWithRefresh } from '../api/http'
 import { type HealthData } from './useHealthData'
+import { getCurrentDateTime } from '@/utils/dateTime'
 
 export function useHealthInfoCheck() {
   // 唯一的数据源 - 响应式 ref
@@ -33,15 +34,15 @@ export function useHealthInfoCheck() {
       healthData.value = {
         gender: remoteHealthInfo.gender,
         birthday: remoteHealthInfo.birthday,
-        height: remoteHealthInfo.height,
-        currentWeight: remoteHealthInfo.current_weight || remoteHealthInfo.currentWeight,
-        targetWeight: remoteHealthInfo.target_weight || remoteHealthInfo.targetWeight,
+        height: remoteHealthInfo.height_cm,
+        currentWeight: remoteHealthInfo.current_weight_kg || remoteHealthInfo.currentWeight,
+        targetWeight: remoteHealthInfo.target_weight_kg || remoteHealthInfo.targetWeight,
         dietPreferences: remoteHealthInfo.diet_preferences || remoteHealthInfo.dietPreferences || [],
         healthGoals: remoteHealthInfo.health_goals || remoteHealthInfo.healthGoals || [],
         allergies: remoteHealthInfo.allergies,
         sleepHabit: remoteHealthInfo.sleep_habit || remoteHealthInfo.sleepHabit,
         activityLevel: remoteHealthInfo.activity_level || remoteHealthInfo.activityLevel,
-        lastUpdated: remoteHealthInfo.updated_at || new Date().toISOString()
+        lastUpdated: remoteHealthInfo.updated_at || getCurrentDateTime()
       }
 
       console.log('健康数据已更新:', healthData.value)

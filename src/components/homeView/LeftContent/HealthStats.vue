@@ -74,23 +74,24 @@ import { type HealthData } from '../../../composables/useHealthData'
 const props = defineProps<{
   healthData?: HealthData
 }>()
-
+const healthData = computed(() => props.healthData)
+console.log('HealthStats received healthData:', healthData.value)
 // 判断是否有完整档案
 const hasCompleteProfile = computed(() => {
   return !!(
-    props.healthData?.gender ||
-    props.healthData?.birthday ||
-    props.healthData?.height ||
-    props.healthData?.currentWeight ||
-    props.healthData?.targetWeight
+    healthData.value?.gender ||
+    healthData.value?.birthday ||
+    healthData.value?.height ||
+    healthData.value?.currentWeight ||
+    healthData.value?.targetWeight
   )
 })
 
 // 计算年龄
 const age = computed(() => {
-  if (!props.healthData?.birthday) return null
+  if (!healthData.value?.birthday) return null
   const today = new Date()
-  const birthDate = new Date(props.healthData.birthday)
+  const birthDate = new Date(healthData.value.birthday)
   let age = today.getFullYear() - birthDate.getFullYear()
   const monthDiff = today.getMonth() - birthDate.getMonth()
   if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
@@ -101,9 +102,11 @@ const age = computed(() => {
 
 // 计算 BMI
 const bmi = computed(() => {
-  if (!props.healthData?.currentWeight || !props.healthData?.height) return null
-  const heightInMeters = props.healthData.height / 100
-  return (props.healthData.currentWeight / (heightInMeters * heightInMeters)).toFixed(1)
+  console.log('计算 BMI 输入:', healthData.value?.currentWeight, healthData.value?.height)
+  if (!healthData.value?.currentWeight || !healthData.value?.height) return null
+  const heightInMeters = healthData.value.height / 100
+  console.log('计算 BMI:', healthData.value.currentWeight, heightInMeters)
+  return (healthData.value.currentWeight / (heightInMeters * heightInMeters)).toFixed(1)
 })
 
 // 计算 BMI 等级
@@ -118,8 +121,8 @@ const bmiCategory = computed(() => {
 
 // 计算体重差异
 const weightDifference = computed(() => {
-  if (!props.healthData?.currentWeight || !props.healthData?.targetWeight) return null
-  return (props.healthData.currentWeight - props.healthData.targetWeight).toFixed(1)
+  if (!healthData.value?.currentWeight || !healthData.value?.targetWeight) return null
+  return (healthData.value.currentWeight - healthData.value.targetWeight).toFixed(1)
 })
 
 // 计算健康等级
@@ -136,7 +139,7 @@ const healthLevel = computed(() => {
     'light': 10,
     'sedentary': 5
   }
-  score += activityScores[props.healthData?.activityLevel || 'moderate'] || 15
+  score += activityScores[healthData.value?.activityLevel || 'moderate'] || 15
 
   // BMI 评分 (占 25 分)
   if (bmiCategory.value === '正常') {
@@ -150,8 +153,8 @@ const healthLevel = computed(() => {
   }
 
   // 体重目标进度评分 (占 25 分)
-  if (props.healthData?.currentWeight && props.healthData?.targetWeight) {
-    const diff = Math.abs(props.healthData.currentWeight - props.healthData.targetWeight)
+  if (healthData.value?.currentWeight && healthData.value?.targetWeight) {
+    const diff = Math.abs(healthData.value.currentWeight - healthData.value.targetWeight)
     if (diff === 0) score += 25
     else if (diff <= 2) score += 23
     else if (diff <= 5) score += 20
@@ -161,10 +164,10 @@ const healthLevel = computed(() => {
   }
 
   // 健康目标评分 (占 25 分)
-  score += (props.healthData?.healthGoals?.length || 0) > 0 ? 25 : 10
+  score += (healthData.value?.healthGoals?.length || 0) > 0 ? 25 : 10
 
   // 睡眠习惯加分 (占 5 分)
-  if (props.healthData?.sleepHabit) score += 5
+  if (healthData.value?.sleepHabit) score += 5
 
   return Math.min(score, 100)
 })
@@ -182,13 +185,13 @@ const healthStatus = computed(() => {
 // 完成度百分比
 const completionPercentage = computed(() => {
   let count = 0
-  if (props.healthData?.gender) count++
-  if (props.healthData?.birthday) count++
-  if (props.healthData?.height) count++
-  if (props.healthData?.currentWeight) count++
-  if (props.healthData?.targetWeight) count++
-  if (props.healthData?.sleepHabit) count++
-  if (props.healthData?.activityLevel) count++
+  if (healthData.value?.gender) count++
+  if (healthData.value?.birthday) count++
+  if (healthData.value?.height) count++
+  if (healthData.value?.currentWeight) count++
+  if (healthData.value?.targetWeight) count++
+  if (healthData.value?.sleepHabit) count++
+  if (healthData.value?.activityLevel) count++
   return Math.round((count / 7) * 100)
 })
 
@@ -236,7 +239,7 @@ const activityLevelText = computed(() => {
     'very-active': '活跃',
     'extremely-active': '极活跃'
   }
-  return levels[props.healthData?.activityLevel || ''] || '-'
+  return levels[healthData.value?.activityLevel || ''] || '-'
 })
 
 const showDetailInfo = computed(() => hasCompleteProfile.value)
@@ -432,8 +435,7 @@ const showDetailInfo = computed(() => hasCompleteProfile.value)
   }
 
   .stat-divider {
-    width: 100%;
-    height: 1px;
+    display: none;
   }
 
   .info-grid {

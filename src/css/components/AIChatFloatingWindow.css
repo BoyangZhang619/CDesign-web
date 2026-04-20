@@ -32,6 +32,9 @@
   bottom: 0;
   z-index: 9998;
   cursor: grabbing;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: none;
 }
 
 /* ============================================
@@ -40,10 +43,10 @@
 
 .float-minimize-widget {
   position: fixed;
-  width: 70px;
-  height: 70px;
-  background: #5A7A87;
-  border: 2px solid #8FA591;
+  width: 40px;
+  height: 40px;
+  background: #3b3b3b;
+  border: 2px solid #e0e0e0;
   border-radius: 15px;
   display: flex;
   align-items: center;
@@ -52,6 +55,11 @@
   z-index: 9999;
   box-shadow: 0 8px 24px rgba(157, 180, 160, 0.3);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+  touch-action: none;
+  will-change: bottom, right;
 }
 
 .float-minimize-widget:hover {
@@ -128,6 +136,7 @@
   z-index: 9999;
   box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12), 0 8px 20px rgba(0, 0, 0, 0.08);
   overflow: hidden;
+  will-change: bottom, right;
 }
 
 /* ============================================
@@ -139,10 +148,10 @@
   align-items: center;
   justify-content: space-between;
   padding: 20px;
-  background: linear-gradient(135deg, #EBE5DF 0%, #E1DBD4 50%, #D9CEC0 100%);
-  border-bottom: 2px solid #C9B89C;
   cursor: move;
   user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
 }
 
 .float-header-info {
@@ -324,7 +333,7 @@
   background: linear-gradient(135deg, #E8DDD3 0%, #E1D7CD 100%);
   color: #5A7A87;
   border-radius: 4px 12px 12px 12px;
-  border: 2px solid #D0C4B8;
+  /* border: 2px solid #D0C4B8; */
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
@@ -391,8 +400,6 @@
 
 .float-input-area {
   padding: 16px;
-  background: linear-gradient(135deg, #E8DDD3 0%, #DDD4C4 100%);
-  border-top: 2px solid #C9B89C;
   display: flex;
   flex-direction: column;
   gap: 12px;
@@ -608,11 +615,10 @@
    响应式设计 - 平板和手机
    ============================================ */
 
-@media (max-width: 640px) {
+@media (max-width: 768px) {
   .ai-float-window {
-    width: calc(100% - 24px);
+    width: calc(100dvw - 24px) !important;
     max-height: 70dvh;
-    bottom: 12px !important;
     right: 12px !important;
     left: 12px !important;
   }

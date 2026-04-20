@@ -249,8 +249,9 @@ export interface APIResponse<T> {
 }
 
 export interface StreamMessage {
-  type: 'reasoning' | 'content' | 'done' | 'connected' | 'chunk'
+  type: 'reasoning' | 'content' | 'done' | 'connected' | 'chunk' | 'error'
   content?: string
+  message?: string
   usage?: {
     input_tokens?: number
     output_tokens?: number

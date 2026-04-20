@@ -2,26 +2,30 @@
   <teleport to="body">
     <!-- 最小化浮块 -->
     <transition name="float-pulse">
-      <div v-if="isMinimized && isOpen" class="float-minimize-widget"
-        :style="{ bottom: `${widgetBottom}px`, right: `${widgetRight}px` }" @mousedown="startDrag"
-        @click="toggleMinimize">
-        <img src="/noun-float-window-ai.svg" alt="" style="transform: scale(1.2);
-    filter: brightness(0) saturate(100%) invert(1);">
+      <div v-if="isMinimized && isOpen" 
+        class="float-minimize-widget"
+        :style="{ bottom: `${widgetBottom}px`, right: `${widgetRight}px` }" 
+        @mousedown="startDrag"
+        @touchstart.stop="startTouchDrag"
+        @click.stop="toggleMinimize">
+        <img src="/noun-float-window-ai.svg" alt="" style="transform: scale(1.2); filter: brightness(0) saturate(100%) invert(1); pointer-events: none; user-select: none;">
         <div class="widget-badge" v-if="messages.length > 0">{{ messages.length }}</div>
       </div>
     </transition>
 
     <!-- 主浮窗 -->
     <transition name="float-slide-up">
-      <div v-if="!isMinimized && isOpen" class="ai-float-window" :style="{
-        bottom: `${windowBottom}px`,
-        right: `${windowRight}px`,
-        width: `${windowWidth}px`
+      <div v-if="!isMinimized && isOpen" 
+        class="ai-float-window" 
+        :style="{
+          bottom: `${windowBottom}px`,
+          right: `${windowRight}px`,
+          width: `${windowWidth}px`
       }">
         <!-- 浮窗头部（可拖动） -->
-        <div class="float-header" @mousedown="startDrag">
+        <div class="float-header" @mousedown="startDrag" @touchstart="startTouchDrag" style="user-select: none;">
           <div class="float-header-info">
-            <h2 class="float-title">AI 健康助手</h2>
+            <h2 class="float-title">AI健康助手-愈伴</h2>
             <p class="float-subtitle">您的个性化健康顾问</p>
           </div>
           <div class="float-header-actions">
@@ -42,7 +46,7 @@
           <!-- 消息列表 -->
           <div v-else class="float-messages-list">
             <div v-for="(msg, index) in messages" :key="index" :class="['float-message', `float-msg-${msg.role}`]">
-              <div class="float-message-avatar" v-if="msg.role === 'assistant'">🤖</div>
+              <div class="float-message-avatar" v-if="msg.role === 'assistant'">AI</div>
               <div class="float-message-content">{{ msg.content }}</div>
               <div class="float-message-avatar" v-if="msg.role === 'user'">👤</div>
             </div>
@@ -78,19 +82,6 @@
               <span v-else>发送中</span>
             </button>
           </div>
-
-          <!-- 快速问题按钮 -->
-          <!-- <div v-if="messages.length === 0" class="float-quick-prompts">
-            <button
-              v-for="prompt in quickPrompts"
-              :key="prompt.id"
-              @click="sendQuickPrompt(prompt.text)"
-              :disabled="loading"
-              class="float-quick-btn"
-            >
-              {{ prompt.label }}
-            </button>
-          </div> -->
         </div>
       </div>
     </transition>
@@ -131,12 +122,14 @@ const messagesContainer = ref<HTMLElement | null>(null)
 const isMinimized = ref(false)
 const isDragging = ref(false)
 
-// 浮窗位置
+// 浮窗位置 - 使用 bottom 定位
+// 默认放在页面底部右侧
 const windowBottom = ref(20)
 const windowRight = ref(20)
 const windowWidth = ref(420)
 
-// 最小化浮块位置
+// 最小化浮块位置 - 使用 bottom 定位
+// 默认放在页面底部右侧
 const widgetBottom = ref(20)
 const widgetRight = ref(20)
 
@@ -145,14 +138,8 @@ let dragStartX = 0
 let dragStartY = 0
 let dragStartBottom = 0
 let dragStartRight = 0
-
-// 快速提问列表
-// const quickPrompts = [
-//   { id: 1, label: '💪 运动建议', text: '请给我一些日常运动的建议' },
-//   { id: 2, label: '🥗 饮食建议', text: '请给我一些健康饮食的建议' },
-//   { id: 3, label: '😴 睡眠建议', text: '请给我一些改善睡眠的建议' },
-//   { id: 4, label: '❤️ 健康检查', text: '我想做一个健康状态自测' }
-// ]
+let isDraggingActive = false // 真正的拖动标记
+const DRAG_THRESHOLD = 10 // 触发拖动的最小距离（像素）
 
 // 关闭浮窗
 function closeWindow() {
@@ -165,7 +152,9 @@ function closeWindow() {
 
 // 切换最小化
 function toggleMinimize() {
+  console.log('[AIChatFloatingWindow] 切换最小化，当前状态:', isMinimized.value)
   isMinimized.value = !isMinimized.value
+  console.log('[AIChatFloatingWindow] 切换后状态:', isMinimized.value)
   if (!isMinimized.value) {
     nextTick(() => {
       scrollToBottom()
@@ -181,9 +170,11 @@ function handleKeyDown(event: KeyboardEvent) {
   }
 }
 
-// 开始拖动
+// 开始拖动 - 鼠标事件
 function startDrag(event: MouseEvent) {
-  if ((event.target as HTMLElement).closest('.float-close, .float-minimize-btn')) {
+  // 阻止 SVG 图像的默认拖动行为
+  if ((event.target as HTMLElement).closest('.float-close, .float-minimize-btn') ||
+      (event.target as HTMLElement).tagName === 'IMG') {
     return
   }
 
@@ -195,40 +186,138 @@ function startDrag(event: MouseEvent) {
 
   document.addEventListener('mousemove', handleDrag)
   document.addEventListener('mouseup', stopDrag)
+  
+  // 防止默认拖动行为
+  event.preventDefault()
 }
 
-// 处理拖动
+// 开始拖动 - 触摸事件（手机）
+function startTouchDrag(event: TouchEvent) {
+  // 如果点击的是按钮或图片，不进行拖动
+  const target = event.target as HTMLElement
+  if (target.closest('.float-close, .float-minimize-btn') || target.tagName === 'IMG') {
+    console.log('[AIChatFloatingWindow] 触摸在按钮或图片上，不进行拖动')
+    return
+  }
+
+  console.log('[AIChatFloatingWindow] 触摸开始，位置:', event.touches[0].clientX, event.touches[0].clientY)
+  // 不立即设置isDragging，等移动距离超过阈值后再设置
+  isDraggingActive = false
+  const touch = event.touches[0]
+  dragStartX = touch.clientX
+  dragStartY = touch.clientY
+  dragStartBottom = isMinimized.value ? widgetBottom.value : windowBottom.value
+  dragStartRight = isMinimized.value ? widgetRight.value : windowRight.value
+
+  document.addEventListener('touchmove', handleTouchDrag)
+  document.addEventListener('touchend', stopDrag)
+  
+  event.preventDefault()
+}
+
+// 处理拖动 - 鼠标事件
 function handleDrag(event: MouseEvent) {
+  if (!isDragging.value) return
+  
   const deltaX = event.clientX - dragStartX
   const deltaY = event.clientY - dragStartY
 
   const newBottom = dragStartBottom - deltaY
   const newRight = dragStartRight - deltaX
 
+  // 获取元素尺寸
+  const elementHeight = isMinimized.value ? 40 : 400
+  const elementWidth = isMinimized.value ? 40 : 420
+
   // 限制在视口内
-  const maxBottom = window.innerHeight - (isMinimized.value ? 80 : 600)
-  const maxRight = window.innerWidth - (isMinimized.value ? 80 : 450)
+  const maxBottom = Math.max(0, window.innerHeight - elementHeight)
+  const maxRight = Math.max(0, window.innerWidth - elementWidth)
+
+  const finalBottom = Math.max(0, Math.min(newBottom, maxBottom))
+  const finalRight = Math.max(0, Math.min(newRight, maxRight))
+
+  // 实时更新位置 - 直接修改响应式变量，Vue 会自动更新 DOM
+  if (isMinimized.value) {
+    widgetBottom.value = finalBottom
+    widgetRight.value = finalRight
+  } else {
+    windowBottom.value = finalBottom
+    windowRight.value = finalRight
+  }
+}
+
+// 处理拖动 - 触摸事件
+function handleTouchDrag(event: TouchEvent) {
+  const touch = event.touches[0]
+  const deltaX = touch.clientX - dragStartX
+  const deltaY = touch.clientY - dragStartY
+  
+  // 只有移动距离超过阈值才认为是真正的拖动
+  if (!isDraggingActive && Math.abs(deltaX) + Math.abs(deltaY) < DRAG_THRESHOLD) {
+    console.log('[AIChatFloatingWindow] 触摸移动距离未超过阈值，不进行拖动')
+    return
+  }
+  
+  // 标记为真正的拖动
+  if (!isDraggingActive) {
+    console.log('[AIChatFloatingWindow] 触摸移动超过阈值，开始拖动')
+    isDraggingActive = true
+    isDragging.value = true
+  }
+
+  const newBottom = dragStartBottom - deltaY
+  const newRight = dragStartRight - deltaX
+
+  // 获取元素尺寸
+  const elementHeight = isMinimized.value ? 40 : 400
+  const elementWidth = isMinimized.value ? 40 : 420
+
+  // 限制在视口内
+  const maxBottom = Math.max(0, window.innerHeight - elementHeight)
+  const maxRight = Math.max(0, window.innerWidth - elementWidth)
+
+  const finalBottom = Math.max(0, Math.min(newBottom, maxBottom))
+  const finalRight = Math.max(0, Math.min(newRight, maxRight))
 
   if (isMinimized.value) {
-    widgetBottom.value = Math.max(0, Math.min(newBottom, maxBottom))
-    widgetRight.value = Math.max(0, Math.min(newRight, maxRight))
+    widgetBottom.value = finalBottom
+    widgetRight.value = finalRight
   } else {
-    windowBottom.value = Math.max(0, Math.min(newBottom, maxBottom))
-    windowRight.value = Math.max(0, Math.min(newRight, maxRight))
+    windowBottom.value = finalBottom
+    windowRight.value = finalRight
   }
 }
 
 // 停止拖动
 function stopDrag() {
+  console.log('[AIChatFloatingWindow] 停止拖动，isDraggingActive:', isDraggingActive)
+  
+  // 如果没有真正发生拖动，触发点击事件
+  if (!isDraggingActive) {
+    console.log('[AIChatFloatingWindow] 触摸距离太短，视为点击，切换最小化')
+    if (isMinimized.value) {
+      toggleMinimize()
+    }
+  }
+  
   isDragging.value = false
+  isDraggingActive = false
   document.removeEventListener('mousemove', handleDrag)
   document.removeEventListener('mouseup', stopDrag)
+  document.removeEventListener('touchmove', handleTouchDrag)
+  document.removeEventListener('touchend', stopDrag)
 }
 
 // 发送消息
 async function handleSendMessage() {
   if (!authStore.userInfo) {
     errorMsg.value = '请先登录'
+    return
+  }
+
+  // ✅ 防止重复提交
+  if (loading.value) {
+    console.warn('[AIChatFloatingWindow] 上一个请求仍在处理中，忽略本次提交')
     return
   }
 
@@ -246,15 +335,20 @@ async function handleSendMessage() {
 
       if (response.data?.success && response.data?.data?.data?.id) {
         chatConfig.sessionId = response.data.data.data.id
+        console.log('[AIChatFloatingWindow] 会话创建成功，ID:', chatConfig.sessionId)
       } else {
         errorMsg.value = '创建会话失败'
+        console.error('[AIChatFloatingWindow] 创建会话失败:', response.data)
         return
       }
     } catch (error) {
       errorMsg.value = '创建会话失败'
+      console.error('[AIChatFloatingWindow] 创建会话异常:', error)
       return
     }
   }
+
+  console.log('[AIChatFloatingWindow] 开始发送消息，sessionId:', chatConfig.sessionId)
 
   // 使用真实的用户额度
   const result = await composableHandleSendMessage(authStore.userInfo.credits || 0)
@@ -262,6 +356,9 @@ async function handleSendMessage() {
   // 更新用户额度
   if (result.success && authStore.userInfo) {
     authStore.userInfo.credits -= result.tokensUsed
+    console.log('[AIChatFloatingWindow] 消息发送成功，消耗token:', result.tokensUsed)
+  } else {
+    console.warn('[AIChatFloatingWindow] 消息发送失败或无token消耗')
   }
 
   await nextTick()
@@ -285,6 +382,16 @@ function scrollToBottom() {
 }
 
 onMounted(() => {
+  // 检测设备类型
+  const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth <= 768
+  
+  if (isMobile) {
+    // 手机端：将浮窗放在底部
+    windowBottom.value = 20
+    windowRight.value = 12
+    windowWidth.value = Math.min(420, window.innerWidth - 24) // 根据屏幕宽度调整
+  }
+  
   nextTick(() => {
     scrollToBottom()
   })
@@ -293,6 +400,8 @@ onMounted(() => {
 onUnmounted(() => {
   document.removeEventListener('mousemove', handleDrag)
   document.removeEventListener('mouseup', stopDrag)
+  document.removeEventListener('touchmove', handleTouchDrag)
+  document.removeEventListener('touchend', stopDrag)
 })
 </script>
 

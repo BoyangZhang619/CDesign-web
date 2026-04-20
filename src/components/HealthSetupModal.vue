@@ -194,6 +194,32 @@
             </div>
           </section>
 
+          <!-- 步骤 11: 疾病史 -->
+          <section v-if="currentStep === 11" class="form-step">
+            <div class="step-header">
+              <h3 class="step-title">04 健康状况</h3>
+              <p class="step-subtitle">了解您的健康状况</p>
+            </div>
+            <div class="form-field">
+              <label for="diseases" class="form-label">疾病史</label>
+              <textarea id="diseases" v-model="healthInfo.diseases" class="form-textarea"
+                placeholder="如无疾病史可留空。例如：高血压、糖尿病" rows="3"></textarea>
+            </div>
+          </section>
+
+          <!-- 步骤 12: 其他信息 -->
+          <section v-if="currentStep === 12" class="form-step">
+            <div class="step-header">
+              <h3 class="step-title">04 健康状况</h3>
+              <p class="step-subtitle">了解您的健康状况</p>
+            </div>
+            <div class="form-field">
+              <label for="otherInfo" class="form-label">其他信息</label>
+              <textarea id="otherInfo" v-model="healthInfo.remark" class="form-textarea"
+                placeholder="如有其他健康信息可填写" rows="3"></textarea>
+            </div>
+          </section>
+
           <!-- 错误提示 -->
           <div v-if="errorMsg" class="error-box">{{ errorMsg }}</div>
 
@@ -243,11 +269,12 @@ const {
   dietOptions,
   goalOptions,
   handleSubmit,
-  handleSkip
+  handleSkip,
+  initializeHealthInfo
 } = useHealthSetup()
 
 const currentStep = ref(1)
-const totalSteps = 10
+const totalSteps = 12
 const errorMsg = ref('')
 
 const progressPercentage = computed(() => {
@@ -266,6 +293,19 @@ const showModal = computed(() => {
 watch(composableErrorMsg, (newVal) => {
   errorMsg.value = newVal
 })
+
+// 当模态框打开时，加载已有的健康信息
+watch(
+  () => props.show,
+  async (newVal) => {
+    if (newVal) {
+      // 模态框打开时，加载已有数据
+      await initializeHealthInfo()
+      // 重置到第一步
+      currentStep.value = 1
+    }
+  }
+)
 
 function isCurrentStepValid(): boolean {
   switch (currentStep.value) {
@@ -289,6 +329,10 @@ function isCurrentStepValid(): boolean {
       return !!healthInfo.sleepHabit
     case 10:
       return !!healthInfo.activityLevel
+    case 11:
+      return !!healthInfo.diseases
+    case 12:
+      return !!healthInfo.remark
     default:
       return false
   }
