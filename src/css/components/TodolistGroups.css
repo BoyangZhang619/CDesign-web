@@ -191,6 +191,12 @@
   height: 16px;
 }
 
+@media (min-width: 1200px) {
+  .task-group {
+    box-shadow: none;
+  }
+}
+
 /* Responsive */
 @media (max-width: 768px) {
   .tasks-container {

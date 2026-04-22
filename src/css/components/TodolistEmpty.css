@@ -8,14 +8,12 @@
   padding: 60px 40px;
   text-align: center;
   border-radius: 12px;
-  background: linear-gradient(135deg, rgba(244, 236, 226, 0.6) 0%, rgba(235, 229, 223, 0.4) 100%);
-  border: 2px dashed rgba(90, 122, 135, 0.2);
   min-height: 400px;
   position: relative;
   overflow: hidden;
 }
 
-.empty-state::before {
+/* .empty-state::before {
   content: '';
   position: absolute;
   top: -50%;
@@ -25,9 +23,9 @@
   background: radial-gradient(circle, rgba(157, 180, 160, 0.1) 0%, transparent 70%);
   border-radius: 50%;
   pointer-events: none;
-}
+} */
 
-.empty-state::after {
+/* .empty-state::after {
   content: '';
   position: absolute;
   bottom: -30%;
@@ -37,7 +35,7 @@
   background: radial-gradient(circle, rgba(90, 122, 135, 0.08) 0%, transparent 70%);
   border-radius: 50%;
   pointer-events: none;
-}
+} */
 
 .empty-icon {
   font-size: 72px;

@@ -69,9 +69,9 @@
             </div>
           </div>
           <div class="ai-section">
-            <h4 class="section-title">🤖 AI 建议</h4>
+            <h4 class="section-title"> AI 建议</h4>
             <p class="section-content">{{ record.suggestion }}</p>
-            <h4 class="section-title">📊 AI 评价</h4>
+            <h4 class="section-title"> AI 评价</h4>
             <p class="section-content">{{ record.evaluation }}</p>
           </div>
         </div>
@@ -102,9 +102,9 @@
           </div>
           <p v-if="record.sleep_feeling" class="modal-note">{{ record.sleep_feeling }}</p>
           <div class="ai-section">
-            <h4 class="section-title">🤖 AI 建议</h4>
+            <h4 class="section-title"> AI 建议</h4>
             <p class="section-content">{{ record.suggestion }}</p>
-            <h4 class="section-title">📊 AI 评价</h4>
+            <h4 class="section-title"> AI 评价</h4>
             <p class="section-content">{{ record.evaluation }}</p>
           </div>
         </div>

@@ -115,7 +115,7 @@ const showCreateModal = ref(false)
 const searchKeyword = ref('')
 const currentFilter = ref('all')
 const viewMode = ref<'pending' | 'all'>('pending')
-const showLeftPanel = ref(true) // 控制左栏在小屏幕上的显示/隐藏
+const showLeftPanel = ref(window.innerWidth > 768) // 控制左栏在小屏幕上的显示/隐藏
 
 // 使用 useTodolist composable
 const {

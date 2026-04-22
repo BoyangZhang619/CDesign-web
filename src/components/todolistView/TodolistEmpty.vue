@@ -1,8 +1,8 @@
 <template>
   <div class="empty-state">
     <div class="empty-icon">📭</div>
-    <h3 class="empty-title">暂无任务</h3>
-    <p class="empty-text">创建你的第一个任务来开始吧</p>
+    <h3 class="empty-title">暂无该类型任务</h3>
+    <p class="empty-text">新建一个或者好好休息一下吧~</p>
   </div>
 </template>
 

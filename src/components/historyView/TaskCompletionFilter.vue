@@ -172,13 +172,15 @@ const {
 }
 
 .filter-panel-toggle {
-  font-size: 12px;
-  color: #999;
+  display: inline-block;
+  transform: rotate(-90deg);
   transition: transform 0.3s ease;
+  color: #4A4A4A;
+  font-size: 12px;
 }
 
 .filter-panel-toggle.open {
-  transform: rotate(180deg);
+  transform: rotate(0deg);
 }
 
 .filter-panel-content {
@@ -221,7 +223,7 @@ const {
   cursor: pointer;
   font-size: 12px;
   font-weight: 500;
-  color: #666;
+  color: #4A4A4A;
   transition: all 0.2s ease;
 }
 
@@ -237,9 +239,8 @@ const {
 .category-btn.active,
 .priority-btn.active,
 .status-btn.active {
-  background: #E8D9C8;
-  border-color: #C8B4A0;
-  color: #6B5B47;
+  background: #4A4A4A;
+  color: #fff;
   font-weight: 600;
 }
 
@@ -258,7 +259,7 @@ const {
 .date-label {
   font-size: 12px;
   font-weight: 500;
-  color: #666;
+  color: #4A4A4A;
 }
 
 .date-input,
@@ -304,18 +305,18 @@ const {
 }
 
 .btn-primary {
-  background: linear-gradient(135deg, #D4A574 0%, #C89860 100%);
+  background: #4A4A4A;
   color: #FFF;
 }
 
 .btn-primary:hover {
-  background: linear-gradient(135deg, #C89860 0%, #B88A50 100%);
+  background: #4A4A4A;
   transform: translateY(-2px);
 }
 
 .btn-secondary {
   background: #F5F1ED;
-  color: #666;
+  color: #4A4A4A;
   border: 1px solid #D8CFC4;
 }
 
