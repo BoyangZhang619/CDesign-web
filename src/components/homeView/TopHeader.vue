@@ -33,14 +33,15 @@
 <script setup lang="ts">
 import { computed, onMounted } from 'vue'
 import { useAuthStore } from '../../stores/auth'
+import { useAIChatStore } from '../../stores/aiChat'
 import { useRouter } from 'vue-router'
 
 const authStore = useAuthStore()
+const aiChatStore = useAIChatStore()
 const router = useRouter()
 
 const emit = defineEmits<{
     'toggle-sidebar': []
-    'toggle-ai-chat': []
 }>()
 
 const props = defineProps<{
@@ -60,12 +61,10 @@ const openProfile = () => {
     router.push(`/profile`)
 }
 
-// const notificationCount = ref(3)
-
-// 切换 AI 聊天
+// 切换 AI 聊天 - 使用全局 Store
 function toggleAIChat() {
     console.log('Toggling AI Chat')
-    emit('toggle-ai-chat')
+    aiChatStore.toggleChat()
 }
 
 // 页面挂载时获取用户信息

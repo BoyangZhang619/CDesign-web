@@ -2,15 +2,14 @@
   <div class="home-layout">
     <Sidebar ref="sidebarRef" />
     <div class="main-content">
-      <TopHeader @toggle-sidebar="toggleSidebar" @toggle-ai-chat="toggleAIChat" />
+      <TopHeader @toggle-sidebar="toggleSidebar" :title="'待办事项'" :subtitle="'管理您的任务清单'" />
       <div class="content-area">
         <LeftContent :health-data="healthData" />
         <RightContent />
       </div>
     </div>
 
-    <!-- AI 聊天浮窗 -->
-    <AIChatFloatingWindow :isOpen="isAIChatOpen" @close="closeAIChat" />
+    <!-- AI 聊天浮窗已移到 App.vue 全局级别 -->
 
     <!-- 健康档案设置浮窗 -->
     <HealthSetupModal 
@@ -27,30 +26,17 @@ import Sidebar from '../components/homeView/Sidebar.vue'
 import TopHeader from '../components/homeView/TopHeader.vue'
 import LeftContent from '../components/homeView/LeftContent.vue'
 import RightContent from '../components/homeView/RightContent.vue'
-import AIChatFloatingWindow from '../components/AIChatFloatingWindow.vue'
 import HealthSetupModal from '../components/HealthSetupModal.vue'
 import { useTrendsView } from '../composables/useTrendsView'
 import { useHealthInfoCheck } from '../composables/useHealthInfoCheck'
 
 const sidebarRef = ref<InstanceType<typeof Sidebar>>()
-const isAIChatOpen = ref(false)
 
 const { showHealthSetupModal, handleHealthSetupClose, handleHealthSetupSuccess } = useTrendsView()
 const { healthData, checkAndFetchHealthInfo } = useHealthInfoCheck()
 
 const toggleSidebar = () => {
   sidebarRef.value?.toggleSidebarFromHeader()
-}
-
-const toggleAIChat = () => {
-  isAIChatOpen.value = !isAIChatOpen.value
-  if (!isAIChatOpen.value) {
-    closeAIChat()
-  }
-}
-
-const closeAIChat = () => {
-  isAIChatOpen.value = false
 }
 
 onMounted(async () => {

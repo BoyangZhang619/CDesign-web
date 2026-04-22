@@ -198,7 +198,6 @@
 .message-bubble {
   display: flex;
   flex-direction: column;
-  max-width: 70%;
   animation: slideIn 0.3s ease-out;
 }
 
@@ -246,6 +245,7 @@
   font-size: 13px;
   line-height: 1.6;
   word-wrap: break-word;
+  max-width: 70dvw;
 }
 
 .msg-user .message-content {
@@ -259,7 +259,6 @@
 .message-loading {
   padding: 12px 16px;
   background: white;
-  border: 2px solid #D0C4B8;
   border-radius: 4px;
   display: flex;
   align-items: center;
@@ -305,8 +304,6 @@
 
 .input-area {
   padding: 20px 32px;
-  background: linear-gradient(135deg, #eeea 0%, #eee8 100%);
-  border-top: 2px solid #eee8;
   flex-shrink: 0;
   display: flex;
   flex-direction: column;
@@ -347,7 +344,7 @@
   border-radius: 40px;
   font-family: 'Montserrat', sans-serif;
   font-size: 13px;
-  color: #a7b4b9;
+  color: #ffffff;
   resize: none;
   height: 44px;
   max-height: 120px;
@@ -356,7 +353,8 @@
 }
 
 .chat-textarea:focus {
-  background: transparent;
+  background-color: #ffffff;
+  color: #5A7A87;
   box-shadow: 0 0 0 3px rgba(143, 165, 145, 0.15);
 }
 
@@ -521,23 +519,10 @@
     padding: 16px 20px;
   }
 
-  .message-bubble {
-    max-width: 85%;
-  }
-
   .input-area {
     padding: 12px 20px;
   }
 
-  .chat-textarea {
-    font-size: 12px;
-    height: 40px;
-  }
-
-  .btn-submit {
-    width: 40px;
-    height: 40px;
-  }
 }
 
 @media (max-width: 480px) {
@@ -553,10 +538,6 @@
     padding: 12px 16px;
   }
 
-  .message-bubble {
-    max-width: 100%;
-  }
-
   .input-area {
     padding: 10px 16px;
   }
@@ -565,20 +546,6 @@
     gap: 8px;
   }
 
-  .chat-textarea {
-    font-size: 12px;
-    height: 36px;
-  }
-
-  .btn-submit {
-    width: 36px;
-    height: 36px;
-  }
-
-  .btn-submit svg {
-    width: 16px;
-    height: 16px;
-  }
 }
 
 /* ============================================
@@ -846,6 +813,10 @@
   .btn-new-chat,
   .btn-history {
     padding: 8px;
+  }
+
+  .message-content {
+    max-width: calc(100dvw - 32px);
   }
 }
 
