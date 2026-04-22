@@ -13,7 +13,7 @@ import PortraitTasksDisplay from './PortraitTasksDisplay.vue'
 
 interface Metrics {
   bmi: number
-  cardio: number
+  activityLevel: string | number
   metabolism: number
   sleepQuality: number
 }

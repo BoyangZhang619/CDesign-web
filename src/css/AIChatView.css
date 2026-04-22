@@ -339,9 +339,9 @@
 .chat-textarea {
   flex: 1;
   padding: 12px;
-  border: 2px solid #5A7A87;
+  border: 2px solid #3b3b3b;
   background: transparent;
-  border-radius: 40px;
+  border-radius: 10px;
   font-family: 'Montserrat', sans-serif;
   font-size: 13px;
   color: #ffffff;
@@ -354,7 +354,7 @@
 
 .chat-textarea:focus {
   background-color: #ffffff;
-  color: #5A7A87;
+  color: #3b3b3b;
   box-shadow: 0 0 0 3px rgba(143, 165, 145, 0.15);
 }
 
@@ -373,9 +373,9 @@
   width: 44px;
   height: 44px;
   padding: 0;
-  background: linear-gradient(135deg, #9DB4A0 0%, #8FA591 100%);
-  border: 2px solid #8FA591;
-  border-radius: 40px;
+  background: #3b3b3b;
+  border: 2px solid #000;
+  border-radius: 10px;
   color: white;
   cursor: pointer;
   transition: all 0.3s ease;
@@ -389,8 +389,7 @@
 }
 
 .btn-submit:hover:not(:disabled) {
-  background: linear-gradient(135deg, #8FA591 0%, #7F9581 100%);
-  border-color: #7F9581;
+  background: #2c2c2c;
   box-shadow: 0 8px 20px rgba(157, 180, 160, 0.3);
   transform: translateY(-2px);
 }

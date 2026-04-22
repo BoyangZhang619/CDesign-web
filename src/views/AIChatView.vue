@@ -5,7 +5,7 @@
     
     <div class="main-content">
       <!-- 头部 -->
-      <TopHeader @toggle-sidebar="toggleSidebar" :title="'AI助手'" :subtitle="'个性化健康咨询 · 随时为您服务'" />
+      <TopHeader @toggle-sidebar="toggleSidebar" :title="'AI助手-愈伴'" :subtitle="'个性化健康咨询 · 有什么就来问问吧'" />
 
       <!-- 聊天内容区 -->
       <div class="content-area">

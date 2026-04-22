@@ -14,12 +14,12 @@
         </div>
       </div>
 
-      <div class="metric-card cardio">
-        <div class="metric-icon">❤️</div>
-        <div class="metric-value">{{ metricsData.cardio }}</div>
-        <div class="metric-unit">BPM</div>
-        <div class="metric-status" :class="getCardioStatus(metricsData.cardio)">
-          {{ getCardioLabel(metricsData.cardio) }}
+      <div class="metric-card activity">
+        <div class="metric-icon">🏃</div>
+        <div class="metric-value">{{ formatActivityLevel(metricsData.activityLevel) }}</div>
+        <div class="metric-unit">活动水平</div>
+        <div class="metric-status" :class="getActivityStatus(metricsData.activityLevel)">
+          {{ getActivityLabel(metricsData.activityLevel) }}
         </div>
       </div>
 
@@ -45,7 +45,7 @@
 <script setup lang="ts">
 interface Metrics {
   bmi: number
-  cardio: number
+  activityLevel: string | number
   metabolism: number
   sleepQuality: number
 }
@@ -55,7 +55,7 @@ defineProps({
     type: Object as () => Metrics,
     default: () => ({
       bmi: 24,
-      cardio: 72,
+      activityLevel: 2,
       metabolism: 1800,
       sleepQuality: 80
     })
@@ -75,15 +75,50 @@ const getBMILabel = (bmi: number): string => {
   return '正常'
 }
 
-// 心率状态判断
-const getCardioStatus = (bpm: number): string => {
-  if (bpm < 60 || bpm > 100) return 'warning'
-  return 'excellent'
+// 活动水平状态判断
+const getActivityStatus = (level: string | number): string => {
+  if (typeof level === 'number') {
+    if (level < 2) return 'warning'
+    if (level >= 4) return 'excellent'
+    return 'neutral'
+  }
+  
+  // 字符串值映射
+  const statusMap: Record<string, string> = {
+    'sedentary': 'warning',
+    'light': 'warning',
+    'moderate': 'neutral',
+    'very-active': 'excellent',
+    'extremely-active': 'excellent'
+  }
+  return statusMap[level] || 'neutral'
 }
 
-const getCardioLabel = (bpm: number): string => {
-  if (bpm < 60 || bpm > 100) return '异常'
-  return '正常'
+const getActivityLabel = (level: string | number): string => {
+  if (typeof level === 'number') {
+    if (level < 1) return '久坐'
+    if (level < 2) return '低活动'
+    if (level < 3) return '适度活动'
+    if (level < 4) return '较高活动'
+    return '非常活跃'
+  }
+  
+  // 字符串值映射
+  const labelMap: Record<string, string> = {
+    'sedentary': '久坐',
+    'light': '轻度活跃',
+    'moderate': '中度活跃',
+    'very-active': '非常活跃',
+    'extremely-active': '极其活跃'
+  }
+  return labelMap[level] || '未知'
+}
+
+const formatActivityLevel = (level: string | number): string => {
+  if (typeof level === 'string') {
+    return getActivityLabel(level)
+  }
+  return String(level)
 }
 
 // 睡眠状态判断
@@ -192,8 +227,8 @@ const getSleepLabel = (quality: number): string => {
   border-left: 4px solid #9DB4A0;
 }
 
-.metric-card.cardio {
-  border-left: 4px solid #A9787B;
+.metric-card.activity {
+  border-left: 4px solid #FF9A76;
 }
 
 .metric-card.metabolism {

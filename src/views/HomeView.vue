@@ -2,7 +2,7 @@
   <div class="home-layout">
     <Sidebar ref="sidebarRef" />
     <div class="main-content">
-      <TopHeader @toggle-sidebar="toggleSidebar" :title="'待办事项'" :subtitle="'管理您的任务清单'" />
+      <TopHeader @toggle-sidebar="toggleSidebar" :title="'首页'" :subtitle="'你好喔~'" />
       <div class="content-area">
         <LeftContent :health-data="healthData" />
         <RightContent />

@@ -20,8 +20,6 @@
     <HealthSetupModal :show="showHealthSetupModal" @close="handleHealthSetupClose"
       @success="handleHealthSetupSuccess" />
   </div>
-  <!-- AI 聊天浮窗 -->
-  <AIChatFloatingWindow :isOpen="isAIChatOpen" @close="closeAIChat" />
 </template>
 
 <script setup lang="ts">
@@ -33,7 +31,6 @@ import ProfileLeftSidebar from '../components/profileView/ProfileLeftSidebar.vue
 import ProfileRightContent from '../components/profileView/ProfileRightContent.vue'
 import { useAuthStore } from '../stores/auth'
 import { useUserProfile } from '../composables/useUserProfile'
-import AIChatFloatingWindow from '../components/AIChatFloatingWindow.vue'
 import { useTrendsView } from '../composables/useTrendsView'
 import HealthSetupModal from '../components/HealthSetupModal.vue'
 import { fetchWithRefresh } from '@/api/http'

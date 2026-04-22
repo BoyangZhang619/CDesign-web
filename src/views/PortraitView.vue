@@ -3,7 +3,7 @@
     <!-- 侧栏 -->
     <Sidebar ref="sidebarRef" />
 
-    <!-- 健康档案设置浮窗（必须完成） -->
+    <!-- 健康档案设置浮窗 -->
     <HealthSetupModal
       :show="showHealthSetupModal"
       :force-complete="true"
@@ -17,14 +17,6 @@
 
       <!-- 内容区 -->
       <div class="content-area" v-if="!showHealthSetupModal">
-        <!-- 页面标题 -->
-        <!-- <section class="portrait-header">
-          <div class="header-content">
-            <h1 class="page-title">健康画像</h1>
-            <p class="page-subtitle">基于您的健康数据构建的个性化健康模型</p>
-          </div>
-        </section> -->
-
         <!-- 左右布局 -->
         <div class="portrait-main">
           <!-- 左块：评分和维度分析 -->

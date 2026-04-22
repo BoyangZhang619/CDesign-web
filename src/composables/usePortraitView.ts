@@ -1,11 +1,12 @@
 import { ref } from 'vue'
 import { useAuthForm } from '../composables/useAuthForm'
+import { useHealthInfoCheck } from '../composables/useHealthInfoCheck'
 import { fetchWithRefresh } from '../api/http'
 import { getLocalISOString } from '@/utils/dateTime'
 
 interface Metrics {
   bmi: number
-  cardio: number
+  activityLevel: string | number
   metabolism: number
   sleepQuality: number
 }
@@ -43,6 +44,7 @@ interface PortraitData {
 
 export function usePortraitView() {
   const { checkHealthInfoNeeded } = useAuthForm()
+  const { healthData, checkAndFetchHealthInfo } = useHealthInfoCheck()
 
   const showHealthSetupModal = ref(false)
   const isRefreshing = ref(false)
@@ -61,7 +63,7 @@ export function usePortraitView() {
     
     metrics: {
       bmi: 0,
-      cardio: 0,
+      activityLevel: 0,
       metabolism: 0,
       sleepQuality: 0
     },
@@ -226,6 +228,16 @@ export function usePortraitView() {
 
   async function loadPortraitData() {
     try {
+      // 首先获取健康信息以计算 BMI 和获取活动水平
+      await checkAndFetchHealthInfo()
+      
+      // 计算 BMI: 体重(kg) / (身高(m))^2
+      let calculatedBmi = 0
+      if (healthData.value.height && healthData.value.currentWeight) {
+        const heightInMeters = (healthData.value.height as number) / 100
+        calculatedBmi = Number(((healthData.value.currentWeight as number) / (heightInMeters * heightInMeters)).toFixed(1))
+      }
+      
       const response = await fetchWithRefresh(
         '/health/portrait',
         {
@@ -277,8 +289,8 @@ export function usePortraitView() {
             },
             
             metrics: {
-              bmi: typeof portraitInfo.bmi === 'string' ? parseFloat(portraitInfo.bmi) : (portraitInfo.bmi || 0),
-              cardio: portraitInfo.cardioLevel || 0,
+              bmi: calculatedBmi || portraitInfo.bmi || 0,
+              activityLevel: healthData.value.activityLevel || portraitInfo.activityLevel || portraitInfo.activity_level || 0,
               metabolism: portraitInfo.metabolism || 0,
               sleepQuality: sleepScore
             },
