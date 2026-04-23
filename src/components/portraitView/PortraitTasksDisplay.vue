@@ -309,7 +309,7 @@ onMounted(() => {
 }
 
 .task-item.priority-high {
-  border-left-color: #d32f2f;
+  border-left-color: #5A7A87;
 }
 
 .task-item.priority-medium {

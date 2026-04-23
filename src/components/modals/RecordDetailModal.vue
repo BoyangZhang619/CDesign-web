@@ -40,6 +40,14 @@
               <span class="detail-label">备注</span>
               <p class="detail-value">{{ exerciseRecord.note }}</p>
             </div>
+            <div v-if="exerciseRecord.evaluation" class="detail-item full-width ai-section">
+              <span class="detail-label">AI 评价</span>
+              <p class="detail-value">{{ exerciseRecord.evaluation }}</p>
+            </div>
+            <div v-if="exerciseRecord.suggestion" class="detail-item full-width ai-section">
+              <span class="detail-label">AI 建议</span>
+              <p class="detail-value">{{ exerciseRecord.suggestion }}</p>
+            </div>
           </div>
 
           <!-- 饮食记录详情 -->
@@ -77,11 +85,11 @@
               <p class="detail-value">{{ mealRecord.note }}</p>
             </div>
             <div v-if="mealRecord.evaluation" class="detail-item full-width ai-section">
-              <span class="detail-label">🤖 AI 评价</span>
+              <span class="detail-label">AI 评价</span>
               <p class="detail-value">{{ mealRecord.evaluation }}</p>
             </div>
             <div v-if="mealRecord.suggestion" class="detail-item full-width ai-section">
-              <span class="detail-label">💡 AI 建议</span>
+              <span class="detail-label">AI 建议</span>
               <p class="detail-value">{{ mealRecord.suggestion }}</p>
             </div>
           </div>
@@ -115,11 +123,11 @@
               <p class="detail-value">{{ sleepRecord.note }}</p>
             </div>
             <div v-if="sleepRecord.evaluation" class="detail-item full-width ai-section">
-              <span class="detail-label">🤖 AI 评价</span>
+              <span class="detail-label">AI 评价</span>
               <p class="detail-value">{{ sleepRecord.evaluation }}</p>
             </div>
             <div v-if="sleepRecord.suggestion" class="detail-item full-width ai-section">
-              <span class="detail-label">💡 AI 建议</span>
+              <span class="detail-label">AI 建议</span>
               <p class="detail-value">{{ sleepRecord.suggestion }}</p>
             </div>
           </div>
@@ -145,6 +153,8 @@ interface ExerciseRecord {
   intensity: 'low' | 'medium' | 'high'
   calories_burned: number
   note?: string
+  evaluation?: string | null
+  suggestion?: string | null
 }
 
 interface MealRecord {
@@ -400,8 +410,7 @@ watch(() => props.visible, (newVal) => {
 }
 
 .ai-section {
-  border-left: 3px solid #ff9800 !important;
-  background: #fff8f0 !important;
+  background: linear-gradient(135deg, #FEFCFA 0%, #F8F6F3 100%) !important;
 }
 
 .ai-section .detail-label {

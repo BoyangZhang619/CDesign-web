@@ -1,7 +1,7 @@
 <template>
   <div class="sleep-ai-summary-panel">
     <div class="summary-header">
-      <h3 class="summary-title">🤖 睡眠AI总结</h3>
+      <h3 class="summary-title">睡眠AI总结</h3>
     </div>
 
     <!-- 加载状态 -->
@@ -72,8 +72,8 @@ const openFullModal = () => {
   display: flex;
   flex-direction: column;
   gap: 12px;
-  padding: 12px;
-  background: white;
+  padding: 18px;
+  background: linear-gradient(135deg, #FEFCFA 0%, #F8F6F3 100%);
   border: 1px solid #e8e8e8;
   border-radius: 8px;
   margin: 12px 0;
@@ -89,7 +89,7 @@ const openFullModal = () => {
   margin: 0;
   font-size: 14px;
   font-weight: 600;
-  color: #2c3e50;
+  color: #5A7A87;
 }
 
 .loading-state,
@@ -158,7 +158,6 @@ const openFullModal = () => {
 
 @media (max-width: 768px) {
   .sleep-ai-summary-panel {
-    padding: 10px;
     margin: 10px 0;
   }
 
