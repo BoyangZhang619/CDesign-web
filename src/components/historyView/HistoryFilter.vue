@@ -2,7 +2,7 @@
   <div class="filter-panel">
     <!-- 筛选面板头部 - 切换按钮 -->
     <div class="filter-panel-header" @click="$emit('toggle')">
-      <span class="filter-panel-title">筛选条件</span>
+      <span class="filter-panel-title">打卡筛选</span>
       <span class="filter-panel-toggle" :class="{ open: isOpen }">▼</span>
     </div>
 
@@ -78,6 +78,7 @@ const { filters, typeOptions, changeType } = useHistory()
   border: 1px solid #E8E1D6;
   border-radius: 12px;
   overflow: hidden;
+  margin-bottom: 20px;
 }
 
 .filter-panel-header {

@@ -18,41 +18,37 @@
       <!-- 总结内容 -->
       <div v-else class="summaries">
         <!-- 运动总结 -->
-        <button class="summary-item exercise-summary" @click="openFullModal('exercise', actualSummary?.exercise_ai_summary)" :disabled="!actualSummary?.exercise_ai_summary">
+        <button v-if="actualSummary?.exercise_ai_summary" class="summary-item exercise-summary" @click="openFullModal('exercise', actualSummary?.exercise_ai_summary)" :disabled="!actualSummary?.exercise_ai_summary">
           <div class="summary-header">
-            <span class="summary-icon">🏃</span>
+            <!-- <span class="summary-icon">🏃</span> -->
             <span class="summary-label">运动总结</span>
-            <span v-if="updatedTypes.includes('exercise')" class="updated-badge">更新</span>
           </div>
           <p class="summary-text">{{ actualSummary?.exercise_ai_summary || '暂无运动数据' }}</p>
         </button>
 
         <!-- 饮食总结 -->
-        <button class="summary-item meal-summary" @click="openFullModal('meal', actualSummary?.meal_ai_summary)" :disabled="!actualSummary?.meal_ai_summary">
+        <button v-if="actualSummary?.meal_ai_summary" class="summary-item meal-summary" @click="openFullModal('meal', actualSummary?.meal_ai_summary)" :disabled="!actualSummary?.meal_ai_summary">
           <div class="summary-header">
-            <span class="summary-icon">🍽️</span>
+            <!-- <span class="summary-icon">🍽️</span> -->
             <span class="summary-label">饮食总结</span>
-            <span v-if="updatedTypes.includes('meal')" class="updated-badge">更新</span>
           </div>
           <p class="summary-text">{{ actualSummary?.meal_ai_summary || '暂无饮食数据' }}</p>
         </button>
 
         <!-- 睡眠总结 -->
-        <button class="summary-item sleep-summary" @click="openFullModal('sleep', actualSummary?.sleep_ai_summary)" :disabled="!actualSummary?.sleep_ai_summary">
+        <button v-if="actualSummary?.sleep_ai_summary" class="summary-item sleep-summary" @click="openFullModal('sleep', actualSummary?.sleep_ai_summary)" :disabled="!actualSummary?.sleep_ai_summary">
           <div class="summary-header">
-            <span class="summary-icon">😴</span>
+            <!-- <span class="summary-icon">😴</span> -->
             <span class="summary-label">睡眠总结</span>
-            <span v-if="updatedTypes.includes('sleep')" class="updated-badge">更新</span>
           </div>
           <p class="summary-text">{{ actualSummary?.sleep_ai_summary || '暂无睡眠数据' }}</p>
         </button>
 
         <!-- 综合总结 -->
-        <button class="summary-item total-summary" @click="openFullModal('total', actualSummary?.total_ai_summary)" :disabled="!actualSummary?.total_ai_summary">
+        <button v-if="actualSummary?.total_ai_summary" class="summary-item total-summary" @click="openFullModal('total', actualSummary?.total_ai_summary)" :disabled="!actualSummary?.total_ai_summary">
           <div class="summary-header">
-            <span class="summary-icon">✨</span>
+            <!-- <span class="summary-icon">✨</span> -->
             <span class="summary-label">综合总结</span>
-            <span v-if="updatedTypes.includes('total')" class="updated-badge">更新</span>
           </div>
           <p class="summary-text">{{ actualSummary?.total_ai_summary || '等待数据汇总...' }}</p>
         </button>
@@ -105,19 +101,6 @@ const fullModalIcon = ref('📊')
 const fullModalTitle = ref('AI 总结')
 const fullModalContent = ref('')
 
-// 计算更新的类型列表
-const updatedTypes = computed(() => {
-  // 如果 aiSummary 是完整响应结构，提取 .data
-  const actualData = (props.aiSummary as any)?.data || props.aiSummary
-  if (!actualData?.updated_flags) return []
-  const types: string[] = []
-  const flags = actualData.updated_flags
-  if (flags.exercise) types.push('exercise')
-  if (flags.meal) types.push('meal')
-  if (flags.sleep) types.push('sleep')
-  if (flags.total) types.push('total')
-  return types
-})
 
 // 获取真实数据对象
 const actualSummary = computed(() => {
@@ -158,8 +141,8 @@ const retry = () => {
   flex-direction: column;
   gap: 12px;
   padding: 16px;
-  background: #fff8;
-  border: 1px solid rgba(90, 122, 135, 0.15);
+  background: linear-gradient(135deg, #FEFCFA 0%, #F8F6F3 100%);
+  border: 1px solid #E8E1D6;
   border-radius: 12px;
 }
 
@@ -172,7 +155,7 @@ const retry = () => {
 .summary-title {
   font-size: 16px;
   font-weight: 700;
-  color: #2c3e50;
+  color: #5A7A87;
   margin: 0;
 }
 
@@ -191,8 +174,8 @@ const retry = () => {
 .spinner {
   width: 24px;
   height: 24px;
-  border: 2px solid rgba(90, 122, 135, 0.1);
-  border-top-color: #5a7a87;
+  border: 2px solid rgba(157, 180, 160, 0.1);
+  border-top-color: #9DB4A0;
   border-radius: 50%;
   animation: spin 0.8s linear infinite;
 }
@@ -205,7 +188,7 @@ const retry = () => {
 
 .retry-btn {
   padding: 6px 12px;
-  background: #5a7a87;
+  background: #9DB4A0;
   color: white;
   border: none;
   border-radius: 6px;
@@ -216,7 +199,7 @@ const retry = () => {
 }
 
 .retry-btn:hover {
-  background: #4a6a77;
+  background: #8FA591;
   transform: translateY(-1px);
 }
 
@@ -233,25 +216,8 @@ const retry = () => {
   border-left: 3px solid;
   transition: all 0.3s ease;
   border: 1px solid #f0f0f0;
-  border-left: 3px solid;
   text-align: left;
   cursor: pointer;
-}
-
-.exercise-summary {
-  border-left-color: #ff6b6b;
-}
-
-.meal-summary {
-  border-left-color: #4ecdc4;
-}
-
-.sleep-summary {
-  border-left-color: #95a5a6;
-}
-
-.total-summary {
-  border-left-color: #5a7a87;
 }
 
 .summary-item:disabled {
@@ -279,14 +245,14 @@ const retry = () => {
 
 .summary-label {
   font-weight: 600;
-  color: #2c3e50;
+  color: #5A7A87;
   font-size: 13px;
   flex: 1;
 }
 
 .updated-badge {
   display: inline-block;
-  background: #4ecdc4;
+  background: #9DB4A0;
   color: white;
   padding: 1px 6px;
   border-radius: 3px;
@@ -296,15 +262,15 @@ const retry = () => {
 }
 
 .summary-text {
-  font-size: 12px;
+  font-size: 14px;
   line-height: 1.4;
   color: #666;
   margin: 0;
   word-break: break-word;
   display: -webkit-box;
-  -webkit-line-clamp: 3;
+  -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
-  line-clamp: 3;
+  line-clamp: 2;
   overflow: hidden;
   text-overflow: ellipsis;
 }

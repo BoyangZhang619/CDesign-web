@@ -16,9 +16,6 @@
           </div>
         </div>
 
-        <div class="modal-footer">
-          <button class="btn-close" @click="close">关闭</button>
-        </div>
       </div>
     </div>
   </transition>
@@ -150,13 +147,6 @@ watch(() => props.visible, (newVal) => {
   word-break: break-word;
 }
 
-.modal-footer {
-  padding: 16px 20px;
-  border-top: 1px solid #e8e8e8;
-  display: flex;
-  justify-content: flex-end;
-  gap: 12px;
-}
 
 .btn-close {
   padding: 10px 24px;
@@ -198,10 +188,6 @@ watch(() => props.visible, (newVal) => {
 
   .modal-body {
     padding: 16px;
-  }
-
-  .modal-footer {
-    padding: 12px 16px;
   }
 
   .modal-title {

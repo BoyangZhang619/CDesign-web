@@ -5,7 +5,7 @@
 
     <div class="main-content">
       <!-- 头部 -->
-      <TopHeader @toggle-sidebar="toggleSidebar" :title="'每日健康中心'" :subtitle="'您的健康数据一览'" />
+      <TopHeader @toggle-sidebar="toggleSidebar" :title="'健康打卡'" :subtitle="'既然都看到这句话了那么打个卡吧'" />
 
       <!-- 内容区 -->
       <div class="content-area">
@@ -15,6 +15,14 @@
             :selected-date="selectedDate"
             :completed-count="completedCount"
             :total-count="totalCount"
+            :exercise-status="exerciseStatus"
+            :exercise-data="exerciseData"
+            :meal-status="mealStatus"
+            :meal-data="mealData"
+            :meal-records="mealRecords"
+            :sleep-status="sleepStatus"
+            :sleep-data="sleepData"
+            :sleep-records="sleepRecords"
             :ai-summary="aiSummary"
             :ai-loading="aiLoading"
             :ai-error="aiError"
@@ -115,10 +123,48 @@ const mealData = computed(() => ({
   protein: mealStats.value?.protein || 0
 }))
 
-const sleepData = computed(() => ({
-  duration: sleepStats.value?.totalNightHours ? sleepStats.value.totalNightHours / 60 : 0,
-  quality: sleepStats.value?.avgQualityScore || 0
-}))
+// 获取时长最长的睡眠记录
+const longestSleepRecord = computed(() => {
+  if (!sleepRecords.value || sleepRecords.value.length === 0) {
+    return null
+  }
+  
+  return sleepRecords.value.reduce((longest, current) => {
+    const currentDuration = calculateRecordDuration(current)
+    const longestDuration = calculateRecordDuration(longest)
+    return currentDuration > longestDuration ? current : longest
+  })
+})
+
+// 计算单条睡眠记录的时长（小时）
+const calculateRecordDuration = (record: any): number => {
+  if (!record?.sleep_start_time || !record?.wake_up_time) {
+    return 0
+  }
+  
+  const start = new Date(record.sleep_start_time)
+  const end = new Date(record.wake_up_time)
+  const durationMs = end.getTime() - start.getTime()
+  
+  return durationMs / (1000 * 60 * 60)
+}
+
+const sleepData = computed(() => {
+  // 如果有最长的睡眠记录，使用其时长；否则使用统计数据
+  if (longestSleepRecord.value) {
+    return {
+      duration: calculateRecordDuration(longestSleepRecord.value),
+      quality: sleepStats.value?.avgQualityScore || 0,
+      sleep_start_time: longestSleepRecord.value.sleep_start_time,
+      wake_up_time: longestSleepRecord.value.wake_up_time
+    }
+  }
+  
+  return {
+    duration: sleepStats.value?.totalNightHours ? sleepStats.value.totalNightHours / 60 : 0,
+    quality: sleepStats.value?.avgQualityScore || 0
+  }
+})
 
 // 计算完成数量
 const completedCount = computed(() => {

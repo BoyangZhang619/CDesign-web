@@ -14,6 +14,10 @@
           <span>·</span>
           <span>{{ formatTime(record.meal_time) }}</span>
         </div>
+        <div class="detail-time">
+          <span class="time-label">记录时间</span>
+          <span class="time-value">{{ formatDateTime(record.created_at) }}</span>
+        </div>
         <p v-if="record.food_detail" class="detail-note">{{ record.food_detail }}</p>
         <div class="nutrition-grid">
           <div class="nutrition-item">
@@ -59,6 +63,10 @@
           <span>·</span>
           <span>{{ formatTime(record.start_time) }} - {{ formatTime(record.end_time) }}</span>
         </div>
+        <div class="detail-time">
+          <span class="time-label">记录时间</span>
+          <span class="time-value">{{ formatDateTime(record.created_at) }}</span>
+        </div>
         <p v-if="record.note" class="detail-note">{{ record.note }}</p>
         <div class="exercise-stats">
           <div class="stat-item">
@@ -87,6 +95,10 @@
           <span>{{ formatTime(record.sleep_start_time) }} 睡眠</span>
           <span>·</span>
           <span>{{ formatTime(record.wake_up_time) }} 起床</span>
+        </div>
+        <div class="detail-time">
+          <span class="time-label">记录时间</span>
+          <span class="time-value">{{ formatDateTime(record.created_at) }}</span>
         </div>
         <div class="sleep-stats">
           <div class="stat-item">
@@ -127,6 +139,17 @@ defineEmits<{
 const formatTime = (time: string) => {
   if (!time) return '—'
   return new Date(time).toLocaleTimeString('zh-CN', {
+    hour: '2-digit',
+    minute: '2-digit'
+  })
+}
+
+const formatDateTime = (datetime: string) => {
+  if (!datetime) return '—'
+  return new Date(datetime).toLocaleString('zh-CN', {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
     hour: '2-digit',
     minute: '2-digit'
   })
@@ -189,6 +212,25 @@ const formatTime = (time: string) => {
   display: flex;
   gap: 8px;
   flex-wrap: wrap;
+}
+
+.detail-time {
+  font-size: 11px;
+  color: #8B9FA0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 8px;
+  padding: 6px 0;
+}
+
+.time-label {
+  font-weight: 600;
+  color: #5A7A87;
+}
+
+.time-value {
+  color: #8B9FA0;
 }
 
 .detail-note {

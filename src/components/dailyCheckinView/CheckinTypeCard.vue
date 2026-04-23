@@ -92,8 +92,8 @@ const displayMetrics = computed(() => {
 .checkin-card {
   display: flex;
   flex-direction: column;
-  background: white;
-  border: 2px solid #e8e8e8;
+  background: linear-gradient(135deg, #FEFCFA 0%, #F8F6F3 100%);
+  border: 1px solid #E8E1D6;
   border-radius: 12px;
   overflow: hidden;
   transition: all 0.3s ease;
@@ -101,8 +101,8 @@ const displayMetrics = computed(() => {
 }
 
 .checkin-card:hover {
-  border-color: #5A7A87;
-  box-shadow: 0 4px 12px rgba(90, 122, 135, 0.2);
+  border-color: #9DB4A0;
+  box-shadow: 0 4px 12px rgba(157, 180, 160, 0.2);
   transform: translateY(-2px);
 }
 
@@ -116,7 +116,7 @@ const displayMetrics = computed(() => {
   align-items: center;
   gap: 12px;
   padding: 16px;
-  border-bottom: 1px solid #f0f0f0;
+  border-bottom: 1px solid #E1D9D0;
 }
 
 .card-icon {
@@ -128,7 +128,7 @@ const displayMetrics = computed(() => {
   margin: 0;
   font-size: 16px;
   font-weight: 600;
-  color: #2c3e50;
+  color: #5A7A87;
   flex: 1;
 }
 
@@ -143,18 +143,18 @@ const displayMetrics = computed(() => {
 }
 
 .card-status.completed {
-  background: #e8f5e9;
-  color: #2e7d32;
+  background: rgba(157, 180, 160, 0.15);
+  color: #6B8B77;
 }
 
 .card-status.pending {
-  background: #fff3e0;
-  color: #e65100;
+  background: rgba(201, 184, 156, 0.15);
+  color: #8B6B5D;
 }
 
 .card-status.none {
-  background: #f5f5f5;
-  color: #999;
+  background: rgba(232, 225, 214, 0.6);
+  color: #8FA591;
 }
 
 .card-content {
@@ -181,14 +181,15 @@ const displayMetrics = computed(() => {
   align-items: center;
   justify-content: center;
   padding: 12px;
-  background: #f8f9fa;
+  background: rgba(157, 180, 160, 0.08);
   border-radius: 8px;
+  border: 1px solid rgba(157, 180, 160, 0.15);
   text-align: center;
 }
 
 .metric-label {
   font-size: 12px;
-  color: #7a8f95;
+  color: #8FA591;
   margin-bottom: 4px;
   font-weight: 500;
 }
@@ -217,8 +218,8 @@ const displayMetrics = computed(() => {
 
 .card-footer {
   padding: 12px 16px;
-  border-top: 1px solid #f0f0f0;
-  background: #fafafa;
+  border-top: 1px solid #E1D9D0;
+  background: rgba(157, 180, 160, 0.06);
 }
 
 .card-link {
@@ -226,7 +227,7 @@ const displayMetrics = computed(() => {
   align-items: center;
   justify-content: center;
   gap: 8px;
-  color: #5A7A87;
+  color: #9DB4A0;
   text-decoration: none;
   font-weight: 600;
   font-size: 14px;
@@ -234,7 +235,7 @@ const displayMetrics = computed(() => {
 }
 
 .card-link:hover {
-  color: #2c3e50;
+  color: #8FA591;
   gap: 12px;
 }
 

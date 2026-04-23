@@ -67,11 +67,6 @@
           <h3 class="notes-title">任务标题</h3>
           <p class="notes-content">{{ record.task_title }}</p>
         </div>
-
-        <!-- 操作按钮 -->
-        <div class="detail-actions">
-          <button class="btn-primary" @click="$emit('close')">返回</button>
-        </div>
       </div>
     </div>
   </div>
@@ -315,11 +310,6 @@ const formatDateTime = (dateTimeStr: string): string => {
   font-size: 13px;
   color: #666;
   line-height: 1.6;
-}
-
-.detail-actions {
-  display: flex;
-  gap: 10px;
 }
 
 .btn-primary {
