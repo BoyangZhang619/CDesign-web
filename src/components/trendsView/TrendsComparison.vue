@@ -3,28 +3,28 @@
     <h2 class="trends-section-heading">周期对比分析</h2>
     <div class="trends-comparison-grid">
       <div class="trends-comparison-item">
-        <div class="trends-comparison-label">本期运动</div>
+        <div class="trends-comparison-label">本周期运动</div>
         <div class="trends-comparison-values">
           <div class="trends-comparison-value">
             <span class="value">{{ Math.round(comparison.exerciseFrequencyCurrent) }}</span>
-            <span class="unit">天</span>
+            <span class="unit">次</span>
           </div>
           <div class="trends-comparison-vs">VS</div>
           <div class="trends-comparison-value secondary">
             <span class="value">{{ Math.round(comparison.exerciseFrequencyPrev) }}</span>
-            <span class="unit">天</span>
+            <span class="unit">次</span>
           </div>
         </div>
         <div
           class="trends-comparison-trend"
-          :class="{ up: comparison.exerciseTrend > 0, down: comparison.exerciseTrend < 0 }"
+          :class="{ up: comparison.exerciseTrend <= 0, down: comparison.exerciseTrend > 0 }"
         >
           {{ comparison.exerciseTrend > 0 ? '↑' : '↓' }} {{ Math.abs(comparison.exerciseTrend) }}%
         </div>
       </div>
 
       <div class="trends-comparison-item">
-        <div class="trends-comparison-label">本期睡眠</div>
+        <div class="trends-comparison-label">本周期睡眠平均时间</div>
         <div class="trends-comparison-values">
           <div class="trends-comparison-value">
             <span class="value">{{ comparison.sleepCurrent.toFixed(1) }}</span>
@@ -38,28 +38,28 @@
         </div>
         <div
           class="trends-comparison-trend"
-          :class="{ up: comparison.sleepTrend > 0, down: comparison.sleepTrend < 0 }"
+          :class="{ up: comparison.sleepTrend <= 0, down: comparison.sleepTrend > 0 }"
         >
           {{ comparison.sleepTrend > 0 ? '↑' : '↓' }} {{ Math.abs(comparison.sleepTrend) }}%
         </div>
       </div>
 
       <div class="trends-comparison-item">
-        <div class="trends-comparison-label">本期饮食</div>
+        <div class="trends-comparison-label">本周期饮食</div>
         <div class="trends-comparison-values">
           <div class="trends-comparison-value">
             <span class="value">{{ Math.round(comparison.mealBalanceCurrent) }}</span>
-            <span class="unit">分</span>
+            <span class="unit">次</span>
           </div>
           <div class="trends-comparison-vs">VS</div>
           <div class="trends-comparison-value secondary">
             <span class="value">{{ Math.round(comparison.mealBalancePrev) }}</span>
-            <span class="unit">分</span>
+            <span class="unit">次</span>
           </div>
         </div>
         <div
           class="trends-comparison-trend"
-          :class="{ up: comparison.mealTrend > 0, down: comparison.mealTrend < 0 }"
+          :class="{ up: comparison.mealTrend <= 0, down: comparison.mealTrend > 0 }"
         >
           {{ comparison.mealTrend > 0 ? '↑' : '↓' }} {{ Math.abs(comparison.mealTrend) }}%
         </div>
@@ -69,7 +69,8 @@
 </template>
 
 <script setup lang="ts">
-defineProps<{
+import { onMounted } from 'vue'
+const props = defineProps<{
   comparison: {
     exerciseFrequencyCurrent: number
     exerciseFrequencyPrev: number
@@ -82,6 +83,10 @@ defineProps<{
     mealTrend: number
   }
 }>()
+
+onMounted(() => {
+  console.log('TrendsComparison component mounted with comparison data:', {...props.comparison})
+})
 </script>
 
 <style scoped>

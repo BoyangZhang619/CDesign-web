@@ -452,7 +452,7 @@ const getPriorityLabel = (priority: string): string => {
 }
 
 .task-item.priority-high {
-  border-left-color: #5A7A87;
+  border-left-color: #d32f2f;
 }
 
 .task-item.priority-medium {

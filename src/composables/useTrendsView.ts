@@ -3,7 +3,7 @@ import { fetchWithRefresh } from '../api/http'
 
 export function useTrendsView() {
   const loading = ref(false)
-  const selectedRange = ref('month')
+  const selectedRange = ref('week')
   const isControlPanelOpen = ref(true)
   const showHealthSetupModal = ref(false)
 
@@ -103,6 +103,7 @@ export function useTrendsView() {
       if (response.ok) {
         const data = await response.json()
         if (data?.success && data.data) {
+          console.log('趋势数据加载成功:', data.data)
           const trendsData = data.data
           Object.assign(stats.value, {
             avgExercise: trendsData.avgExercise || 0,
@@ -125,15 +126,15 @@ export function useTrendsView() {
           if (trendsData.weekComparison) {
             const wc = trendsData.weekComparison
             Object.assign(comparison.value, {
-              exerciseFrequencyCurrent: wc.exerciseFrequency || 0,
+              exerciseFrequencyCurrent: wc.exerciseFrequencyCurrent || 0,
               exerciseFrequencyPrev: wc.exerciseFrequencyPrev || 0,
               exerciseTrend: wc.exerciseFrequencyTrend || 0,
-              sleepCurrent: wc.avgSleepCurrent || 0,
-              sleepPrev: wc.avgSleepPrev || 0,
+              sleepCurrent: wc.sleepCurrent || 0,
+              sleepPrev: wc.sleepPrev || 0,
               sleepTrend: wc.sleepTrend || 0,
-              mealBalanceCurrent: wc.mealBalance || 0,
-              mealBalancePrev: (wc.mealBalance || 0) * (1 - (wc.mealBalanceTrend || 0) / 100),
-              mealTrend: wc.mealBalanceTrend || 0
+              mealBalanceCurrent: wc.mealBalanceCurrent || 0,
+              mealBalancePrev: wc.mealBalancePrev || 0,
+              mealTrend: wc.mealTrend || 0
             })
           }
 

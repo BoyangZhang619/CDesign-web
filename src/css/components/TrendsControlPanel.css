@@ -1,28 +1,27 @@
 .trends-control-panel {
-  background-color: #f8f6f380;
-  border-bottom: 1px solid #e8e1d680;
-  padding: 20px 30px;
-  display: flex;
+  /* display: flex; */
   gap: 20px;
   align-items: center;
   flex-wrap: wrap;
   transition: all 0.3s ease;
-  /* justify-content: center; */
+  margin: 20px 30px;
 }
 
 .trends-range-selector {
   display: flex;
-  gap: 10px;
-  justify-content: center;
+  gap: 0;
+  justify-content: space-evenly;
   flex-wrap: wrap;
+  border-radius: 10px;
+  overflow: hidden;
 }
 
 .trends-range-btn {
   padding: 8px 16px;
-  border: 1px solid #e8e1d6;
-  background-color: #fefcfa;
+  border: none;
   color: #5a7a87;
-  border-radius: 6px;
+  width: 25%;
+  height: 40px;
   cursor: pointer;
   font-size: 14px;
   font-weight: 500;
@@ -45,28 +44,24 @@
 
 @media (max-width: 768px) {
   .trends-control-panel {
-    padding: 16px 20px;
     flex-direction: column;
     align-items: flex-start;
-    gap: 12px;
+    margin: 16px 20px;
   }
 
   .trends-range-selector {
     width: 100%;
-    gap: 8px;
   }
 }
 
 @media (max-width: 480px) {
   .trends-control-panel {
-    padding: 12px 15px;
     flex-direction: column;
     align-items: stretch;
   }
 
   .trends-range-selector {
     width: 100%;
-    gap: 6px;
     overflow-x: auto;
     flex-wrap: nowrap;
   }

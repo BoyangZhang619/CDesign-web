@@ -134,6 +134,8 @@
 
   .trends-left-column {
     width: 100%;
+    overflow-y: visible;
+    overflow-x: visible;
   }
 
   .trends-right-column {

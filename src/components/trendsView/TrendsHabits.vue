@@ -19,8 +19,8 @@
           </div>
         </div>
         <div class="trends-habit-footer">
-          <span class="trends-habit-target">目标: {{ habit.target }}天</span>
-          <span class="trends-habit-current">已坚持: {{ habit.days }}天</span>
+          <span class="trends-habit-target">目标: {{ habit.target }}{{ habit.title.includes('运动') ? '次' : '天' }}</span>
+          <span class="trends-habit-current">已{{ habit.title.includes('运动') ? '完成' : '坚持' }}: {{ habit.days }}{{ habit.title.includes('运动') ? '次' : '天' }}</span>
         </div>
       </div>
     </div>

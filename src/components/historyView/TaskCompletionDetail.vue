@@ -61,12 +61,6 @@
             <span class="detail-value">{{ formatDateTime(record.created_at) }}</span>
           </div>
         </div>
-
-        <!-- 备注部分（如果任务有描述） -->
-        <div v-if="record.task_title" class="detail-notes">
-          <h3 class="notes-title">任务标题</h3>
-          <p class="notes-content">{{ record.task_title }}</p>
-        </div>
       </div>
     </div>
   </div>
