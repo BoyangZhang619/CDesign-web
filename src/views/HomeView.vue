@@ -4,8 +4,18 @@
     <div class="main-content">
       <TopHeader @toggle-sidebar="toggleSidebar" :title="'首页'" :subtitle="'你好喔~'" />
       <div class="content-area">
-        <LeftContent :health-data="healthData" />
-        <RightContent />
+        <LeftContent 
+        :health-data="healthData" 
+        @reload="checkAndFetchHealthInfo"
+        :portrait-data="portraitData" 
+        :is-refreshing="isRefreshing"
+        @refresh="handleRefreshClick" 
+        />
+        <RightContent
+          :portrait-data="portraitData"
+          :is-refreshing="isRefreshing"
+          @refresh="handleRefreshClick"
+        />
       </div>
     </div>
 
@@ -29,6 +39,14 @@ import RightContent from '../components/homeView/RightContent.vue'
 import HealthSetupModal from '../components/HealthSetupModal.vue'
 import { useTrendsView } from '../composables/useTrendsView'
 import { useHealthInfoCheck } from '../composables/useHealthInfoCheck'
+import { usePortraitView } from '../composables/usePortraitView'
+
+const {
+  isRefreshing,
+  portraitData,
+  handleRefreshClick,
+  initPortrait
+} = usePortraitView()
 
 const sidebarRef = ref<InstanceType<typeof Sidebar>>()
 
@@ -41,6 +59,7 @@ const toggleSidebar = () => {
 
 onMounted(async () => {
   await checkAndFetchHealthInfo()
+  initPortrait()
 })
 </script>
 

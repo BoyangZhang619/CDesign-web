@@ -9,72 +9,75 @@
       </div>
     </div>
 
-    <!-- 日历视图 -->
-    <div class="calendar" v-if="showCalendar">
-      <div class="calendar-header">
-        <h4>{{ demoTime.year }}年{{ demoTime.month + 1 }}月</h4>
-        <div class="calendar-nav">
-          <button class="nav-btn" @click="plusMonth(-1)">←</button>
-          <button class="nav-btn" @click="plusMonth(1)">→</button>
+    <div class="show-block">
+      <!-- 日历视图 -->
+      <div class="calendar" v-if="showCalendar">
+        <div class="calendar-header">
+          <h4>{{ demoTime.year }}年{{ demoTime.month + 1 }}月</h4>
+          <div class="calendar-nav">
+            <button class="nav-btn" @click="plusMonth(-1)">←</button>
+            <button class="nav-btn" @click="plusMonth(1)">→</button>
+          </div>
+        </div>
+
+        <div class="weekdays">
+          <div class="weekday" v-for="day in ['日', '一', '二', '三', '四', '五', '六']" :key="day">
+            {{ day }}
+          </div>
+        </div>
+
+        <div class="dates">
+          <div class="date-cell empty" v-for="n in (new Date(demoTime.year, demoTime.month).getDay())"
+            :key="'empty-' + n"></div>
+          <div class="date-cell" v-for="date in demoMonthDays" :key="'date-' + date"
+            :class="{ today: date === curTime.date && demoTime.month === curTime.month && demoTime.year === curTime.year, selected: selectedDate === `${demoTime.year}-${String(demoTime.month + 1).padStart(2, '0')}-${String(date).padStart(2, '0')}` }"
+            @click="handleDateSelect(date)">
+            {{ date }}
+          </div>
         </div>
       </div>
 
-      <div class="weekdays">
-        <div class="weekday" v-for="day in ['日', '一', '二', '三', '四', '五', '六']" :key="day">
-          {{ day }}
+      <!-- 任务列表 -->
+      <div class="tasks-container">
+        <div v-if="scheduleData.length === 0" class="tasks-empty">
+          <p>暂无任务</p>
+          <small>开始创建你的第一个任务吧</small>
         </div>
-      </div>
 
-      <div class="dates">
-        <div class="date-cell empty" v-for="n in (new Date(demoTime.year, demoTime.month).getDay())"
-          :key="'empty-' + n"></div>
-        <div class="date-cell" v-for="date in demoMonthDays" :key="'date-' + date"
-          :class="{ today: date === curTime.date && demoTime.month === curTime.month && demoTime.year === curTime.year, selected: selectedDate === `${demoTime.year}-${String(demoTime.month + 1).padStart(2, '0')}-${String(date).padStart(2, '0')}` }"
-          @click="handleDateSelect(date)">
-          {{ date }}
-        </div>
-      </div>
-    </div>
+        <div v-else class="tasks-list">
+          <div v-for="task in scheduleData.slice(0, 4)" :key="task.id" class="task-item" :class="[
+            `priority-${task.priority}`,
+            { completed: task.status === 'completed' }
+          ]">
+            <!-- 左侧：优先级指示 + 任务信息 -->
+            <div class="task-left">
+              <div class="priority-indicator"></div>
+              <div class="task-info">
+                <h4 class="task-title">{{ task.title }}</h4>
+                <p class="task-time">
+                  📅 {{ task.time }}
+                </p>
+              </div>
+            </div>
 
-    <!-- 任务列表 -->
-    <div class="tasks-container">
-      <div v-if="scheduleData.length === 0" class="tasks-empty">
-        <p>暂无任务</p>
-        <small>开始创建你的第一个任务吧</small>
-      </div>
-
-      <div v-else class="tasks-list">
-        <div v-for="task in scheduleData.slice(0, 4)" :key="task.id" class="task-item" :class="[
-          `priority-${task.priority}`,
-          { completed: task.status === 'completed' }
-        ]">
-          <!-- 左侧：优先级指示 + 任务信息 -->
-          <div class="task-left">
-            <div class="priority-indicator"></div>
-            <div class="task-info">
-              <h4 class="task-title">{{ task.title }}</h4>
-              <p class="task-time">
-                📅 {{ task.time }}
-              </p>
+            <!-- 右侧：优先级标签 + 状态 -->
+            <div class="task-right">
+              <span class="priority-badge">{{ getPriorityLabel(task.priority) }}</span>
+              <span class="status-icon" @click="jumpToDetail">
+                <svg v-if="task.status === 'completed'" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                  <circle cx="8" cy="8" r="7.5" stroke="#4caf50" stroke-width="1.5" fill="#e8f5e9" />
+                  <path d="M5.5 8L7 9.5L10.5 6" stroke="#4caf50" stroke-width="1.5" stroke-linecap="round"
+                    stroke-linejoin="round" />
+                </svg>
+                <svg v-else width="16" height="16" viewBox="0 0 16 16" fill="none">
+                  <circle cx="8" cy="8" r="7.5" stroke="#bbb" stroke-width="1.5" />
+                </svg>
+              </span>
             </div>
           </div>
-
-          <!-- 右侧：优先级标签 + 状态 -->
-          <div class="task-right">
-            <span class="priority-badge">{{ getPriorityLabel(task.priority) }}</span>
-            <span class="status-icon" @click="jumpToDetail">
-              <svg v-if="task.status === 'completed'" width="16" height="16" viewBox="0 0 16 16" fill="none">
-                <circle cx="8" cy="8" r="7.5" stroke="#4caf50" stroke-width="1.5" fill="#e8f5e9" />
-                <path d="M5.5 8L7 9.5L10.5 6" stroke="#4caf50" stroke-width="1.5" stroke-linecap="round"
-                  stroke-linejoin="round" />
-              </svg>
-              <svg v-else width="16" height="16" viewBox="0 0 16 16" fill="none">
-                <circle cx="8" cy="8" r="7.5" stroke="#bbb" stroke-width="1.5" />
-              </svg>
-            </span>
-          </div>
         </div>
       </div>
+
     </div>
 
     <!-- 底部链接 -->
@@ -93,7 +96,7 @@ const { tasks, fetchTasks } = useTodolist();
 
 const scheduleData = ref<any[]>([]);
 const selectedDate = ref<string>('');
-const showCalendar = ref(false);
+const showCalendar = ref(navigator.userAgent.includes('Mobile') ? false : true); // 移动端默认显示每日，桌面端默认显示月度
 
 const curTime = reactive({
   year: (new Date()).getFullYear(),
@@ -142,10 +145,10 @@ const getTasksByDate = async (dateStr: string): Promise<any[]> => {
     const response = await fetchWithRefresh(`/tasks/date/${dateStr}`, {
       method: 'GET'
     });
-    
+
     const data = await response.json();
     // console.log(`📅 获取 ${dateStr} 任务响应:`, data);
-    
+
     if (data.success && Array.isArray(data.data.data)) {
       return data.data.data;
     }
@@ -197,7 +200,7 @@ const updateMonthlyTasks = async (dateStr: string) => {
   console.log(`🔄 updateMonthlyTasks: 开始加载 ${dateStr} 的任务`);
   const tasksForDate = await getTasksByDate(dateStr);
   console.log(`🔄 updateMonthlyTasks: 获取 ${dateStr} 的任务, 数量:`, tasksForDate.length);
-  
+
   scheduleData.value = tasksForDate
     .slice(0, 3)
     .map(task => ({
@@ -207,7 +210,7 @@ const updateMonthlyTasks = async (dateStr: string) => {
       priority: task.priority || 'medium',
       status: task.status || 'pending'
     }));
-  
+
   console.log(`🔄 updateMonthlyTasks: 完成, scheduleData.length:`, scheduleData.value.length);
 };
 
@@ -575,5 +578,39 @@ const getPriorityLabel = (priority: string): string => {
   background: #f9f9f9;
   border-color: #9DB4A0;
   color: #9DB4A0;
+}
+
+.show-block {
+  display: flex;
+  gap: 40px;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+}
+
+.show-block > div {
+  flex: 1;
+  max-height: 600px !important;
+  overflow-y: auto;
+}
+
+.show-block .calendar {
+  max-width: 320px;
+}
+
+@media (max-width: 768px) {
+  .show-block {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 75px;
+  }
+
+  .show-block > div {
+    max-height: 400px !important;
+    overflow-y: visible;
+  }
+
+  .show-block .calendar {
+    max-width: 100%;
+  }
 }
 </style>

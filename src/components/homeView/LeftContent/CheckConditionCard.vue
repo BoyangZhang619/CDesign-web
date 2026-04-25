@@ -13,7 +13,7 @@
       <div class="card-right"></div>
     </div>
   </section>
-  <HealthSetupModal :show="showHealthSetupModal" @close="handleHealthSetupClose" @success="handleHealthSetupSuccess" />
+  <HealthSetupModal :show="showHealthSetupModal" @close="handleHealthSetupClose" @success="success" />
 </template>
 
 <script setup lang="ts">
@@ -29,6 +29,16 @@ withDefaults(defineProps<Props>(), {
 })
 
 const { showHealthSetupModal, handleHealthSetupClose, handleHealthSetupSuccess, triggerHealthSetup } = useTrendsView()
+
+
+const emit = defineEmits<{
+  reload: []
+}>()
+
+const success = () => {
+  handleHealthSetupSuccess()
+  emit('reload')
+}
 </script>
 
 <style scoped>

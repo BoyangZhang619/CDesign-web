@@ -57,7 +57,9 @@ const handleSetupHealth = () => {
 const handleLogout = () => {
   if (confirm('确定要退出登录吗？')) {
     authStore.logout()
-    router.push('/auth')
+    setTimeout(() => {
+      router.push('/auth')
+    }, 500)
   }
 }
 const isAIChatOpen = ref(false)
