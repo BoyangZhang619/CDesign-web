@@ -2,7 +2,7 @@
   <div class="ai-chat-layout">
     <!-- 侧栏 - 左侧导航 -->
     <Sidebar ref="sidebarRef" />
-    
+
     <div class="main-content">
       <!-- 头部 -->
       <TopHeader @toggle-sidebar="toggleSidebar" :title="'AI助手-愈伴'" :subtitle="'个性化健康咨询 · 有什么就来问问吧'" />
@@ -22,7 +22,8 @@
               </button>
               <button @click="toggleHistoryPanel" class="btn-history" title="聊天历史">
                 <svg viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/>
+                  <path
+                    d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z" />
                 </svg>
                 <span>历史记录</span>
               </button>
@@ -46,10 +47,11 @@
                 <div class="message-header">
                   <span class="message-role">{{ msg.role === 'user' ? '您' : 'AI' }}</span>
                 </div>
-                
+
                 <!-- 思考过程 -->
                 <div v-if="msg.reasoning" class="reasoning-section">
-                  <details :class="['reasoning-details', `state-${msg.reasoningState}`]" :open="msg.reasoningState !== 'collapsed'">
+                  <details :class="['reasoning-details', `state-${msg.reasoningState}`]"
+                    :open="msg.reasoningState !== 'collapsed'">
                     <summary class="reasoning-summary">
                       <span class="reasoning-icon">&nbsp;|&nbsp;</span>
                       <span class="reasoning-label">思考过程</span>
@@ -60,7 +62,7 @@
                     <div class="reasoning-content">{{ msg.reasoning }}</div>
                   </details>
                 </div>
-                
+
                 <!-- 回复内容 或 加载动画 -->
                 <div v-if="msg.content === '' && msg.role === 'assistant'" class="message-loading">
                   <span class="loading-dot"></span>
@@ -84,21 +86,13 @@
 
             <!-- 输入框 -->
             <div class="input-box">
-              <textarea 
-                v-model="inputMessage" 
-                @keydown="handleKeyDown" 
-                :disabled="loading || showHistoryPanel" 
-                class="chat-textarea"
-                placeholder="输入您的问题... (Enter 发送 / Shift+Enter 换行)"
-              ></textarea>
-              <button 
-                @click="handleSendChat" 
-                :disabled="loading || !inputMessage.trim() || showHistoryPanel" 
-                class="btn-submit" 
-                title="发送消息"
-              >
+              <textarea v-model="inputMessage" @keydown="handleKeyDown" :disabled="loading || showHistoryPanel"
+                class="chat-textarea" placeholder="输入您的问题... (Enter 发送 / Shift+Enter 换行)"></textarea>
+              <button @click="handleSendChat" :disabled="loading || !inputMessage.trim() || showHistoryPanel"
+                class="btn-submit" title="发送消息">
                 <svg v-if="!loading" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M16.6915026,12.4744748 L3.50612381,13.2599618 C3.19218622,13.2599618 3.03521743,13.4170592 3.03521743,13.5741566 L1.15159189,20.0151496 C0.8376543,20.8006365 0.99,21.89 1.77946707,22.52 C2.41,22.99 3.50612381,23.1 4.13399899,22.8429026 L21.714504,14.0454487 C22.6563168,13.5741566 23.1272231,12.6315722 22.9702544,11.6889879 L4.13399899,1.16350093 C3.34915502,0.9 2.40734225,1.00636533 1.77946707,1.4776575 C0.994623095,2.10604706 0.837654326,3.0486314 1.15159189,3.99701575 L3.03521743,10.4379852 C3.03521743,10.5950826 3.19218622,10.75 3.50612381,10.75 L16.6915026,11.5354869 C16.6915026,11.5354869 17.1624089,11.5354869 17.1624089,12.0068791 C17.1624089,12.4744748 16.6915026,12.4744748 16.6915026,12.4744748 Z" />
+                  <path
+                    d="M16.6915026,12.4744748 L3.50612381,13.2599618 C3.19218622,13.2599618 3.03521743,13.4170592 3.03521743,13.5741566 L1.15159189,20.0151496 C0.8376543,20.8006365 0.99,21.89 1.77946707,22.52 C2.41,22.99 3.50612381,23.1 4.13399899,22.8429026 L21.714504,14.0454487 C22.6563168,13.5741566 23.1272231,12.6315722 22.9702544,11.6889879 L4.13399899,1.16350093 C3.34915502,0.9 2.40734225,1.00636533 1.77946707,1.4776575 C0.994623095,2.10604706 0.837654326,3.0486314 1.15159189,3.99701575 L3.03521743,10.4379852 C3.03521743,10.5950826 3.19218622,10.75 3.50612381,10.75 L16.6915026,11.5354869 C16.6915026,11.5354869 17.1624089,11.5354869 17.1624089,12.0068791 C17.1624089,12.4744748 16.6915026,12.4744748 16.6915026,12.4744748 Z" />
                 </svg>
                 <span v-else>⏳</span>
               </button>
@@ -115,7 +109,8 @@
           <h3 class="history-title">聊天历史</h3>
           <button @click="toggleHistoryPanel" class="btn-close-history" title="关闭">
             <svg viewBox="0 0 24 24" fill="currentColor">
-              <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/>
+              <path
+                d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z" />
             </svg>
           </button>
         </div>
@@ -127,32 +122,21 @@
           </div>
 
           <div v-else>
-            <div 
-              v-for="chat in chatHistories" 
-              :key="chat.id"
-              :class="['history-item', { active: currentChatId === chat.id }]"
-              @click="loadChatHistory(chat.id)"
-            >
+            <div v-for="chat in chatHistories" :key="chat.id"
+              :class="['history-item', { active: currentChatId === chat.id }]" @click="loadChatHistory(chat.id)">
               <div class="history-item-title">{{ chat.title }}</div>
               <div class="history-item-time">{{ formatTime(chat.createdAt) }}</div>
               <div class="history-item-actions">
-                <button 
-                  @click.stop="openEditNameDialog(chat.id)" 
-                  class="btn-edit-chat"
-                  title="编辑名称"
-                >
+                <button @click.stop="openEditNameDialog(chat.id)" class="btn-edit-chat" title="编辑名称">
                   <svg viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25z"/>
-                    <path d="M20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/>
+                    <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25z" />
+                    <path
+                      d="M20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z" />
                   </svg>
                 </button>
-                <button 
-                  @click.stop="deleteChat(chat.id)" 
-                  class="btn-delete-chat"
-                  title="删除"
-                >
+                <button @click.stop="deleteChat(chat.id)" class="btn-delete-chat" title="删除">
                   <svg viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-9l-1 1H5v2h14V4z"/>
+                    <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-9l-1 1H5v2h14V4z" />
                   </svg>
                 </button>
               </div>
@@ -167,15 +151,8 @@
       <div v-if="showEditNameDialog" class="dialog-overlay">
         <div class="dialog-box">
           <h3 class="dialog-title">编辑对话名称</h3>
-          <input 
-            v-model="editingTitle" 
-            type="text"
-            class="dialog-input"
-            placeholder="输入新的对话名称"
-            @keydown.enter="saveEditedName"
-            @keydown.escape="cancelEditName"
-            autofocus
-          />
+          <input v-model="editingTitle" type="text" class="dialog-input" placeholder="输入新的对话名称"
+            @keydown.enter="saveEditedName" @keydown.escape="cancelEditName" autofocus />
           <div class="dialog-actions">
             <button @click="cancelEditName" class="btn-cancel">取消</button>
             <button @click="saveEditedName" class="btn-save">保存</button>
@@ -199,6 +176,7 @@ interface ChatHistory {
   title: string
   createdAt: string
   sessionId?: number
+  session_name?: string
 }
 
 const authStore = useAuthStore()
@@ -247,18 +225,18 @@ const loadChatHistory = async (chatId: string) => {
   currentChatId.value = chatId
   showHistoryPanel.value = false
   const chat = chatHistories.value.find(c => c.id === chatId)
-  
+
   if (chat?.sessionId) {
     try {
       clearMessages()
       chatConfig.sessionId = chat.sessionId
-      
+
       // 加载该会话的历史消息
       const response = await messageAPI.getMessages(chat.sessionId, { limit: 100 })
-      
+
       if (response.data?.success && response.data?.data?.data) {
         const sessionMessages = response.data.data.data
-        
+
         // 将消息加载到 messages 中
         messages.value = sessionMessages.map((msg: any) => ({
           role: msg.role,
@@ -303,21 +281,21 @@ const openEditNameDialog = (chatId: string) => {
 // 保存编辑的名字
 const saveEditedName = async () => {
   if (!editingChatId.value || !editingTitle.value.trim()) return
-  
+
   const chat = chatHistories.value.find(c => c.id === editingChatId.value)
   if (!chat?.sessionId) return
-  
+
   try {
     await sessionAPI.updateSession(chat.sessionId, {
       session_name: editingTitle.value.trim()
     })
-    
+
     // 更新本地数据
     const idx = chatHistories.value.findIndex(c => c.id === editingChatId.value)
     if (idx >= 0) {
       chatHistories.value[idx].title = editingTitle.value.trim()
     }
-    
+
     showEditNameDialog.value = false
     editingChatId.value = null
     editingTitle.value = ''
@@ -363,12 +341,14 @@ const loadChatHistories = async () => {
 
     if (response.data?.success && response.data?.data?.data) {
       const sessions = response.data.data.data
-      chatHistories.value = sessions.map((session: any) => ({
-        id: String(session.id || session.uuid),
-        title: session.session_name || '新对话',
-        createdAt: session.created_at,
-        sessionId: session.id
-      }))
+      chatHistories.value = sessions
+        .filter((chat: ChatHistory) => { console.log(chat); return chat.session_name !== '新聊天' })
+        .map((session: any) => ({
+          id: String(session.id || session.uuid),
+          title: session.session_name || '新对话',
+          createdAt: session.created_at,
+          sessionId: session.id
+        }))
     }
   } catch (error) {
     console.error('加载历史记录失败:', error)
@@ -389,7 +369,7 @@ async function handleSendChat() {
     errorMsg.value = '请先登录'
     return
   }
-  
+
   if (!inputMessage.value.trim() || loading.value) {
     return
   }
@@ -403,7 +383,7 @@ async function handleSendChat() {
         temperature: 0.7,
         max_tokens: 2048
       })
-      
+
       if (response.data?.success && response.data?.data?.data?.id) {
         chatConfig.sessionId = response.data.data.data.id
       } else {
@@ -417,7 +397,7 @@ async function handleSendChat() {
   }
 
   const result = await handleSendMessage(authStore.userInfo.credits || 0)
-  
+
   if (result.success && authStore.userInfo) {
     authStore.userInfo.credits -= result.tokensUsed
   }
@@ -429,7 +409,7 @@ async function handleSendChat() {
       container.scrollTop = container.scrollHeight
     }
   }, 100)
-  
+
   // 重新加载历史记录
   await loadChatHistories()
 }

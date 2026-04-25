@@ -3,16 +3,16 @@
     <h2 class="trends-section-heading">周期对比分析</h2>
     <div class="trends-comparison-grid">
       <div class="trends-comparison-item">
-        <div class="trends-comparison-label">本周期运动</div>
+        <div class="trends-comparison-label">本期运动</div>
         <div class="trends-comparison-values">
           <div class="trends-comparison-value">
             <span class="value">{{ Math.round(comparison.exerciseFrequencyCurrent) }}</span>
-            <span class="unit">次</span>
+            <span class="unit">天</span>
           </div>
           <div class="trends-comparison-vs">VS</div>
           <div class="trends-comparison-value secondary">
             <span class="value">{{ Math.round(comparison.exerciseFrequencyPrev) }}</span>
-            <span class="unit">次</span>
+            <span class="unit">天</span>
           </div>
         </div>
         <div
@@ -24,7 +24,7 @@
       </div>
 
       <div class="trends-comparison-item">
-        <div class="trends-comparison-label">本周期睡眠平均时间</div>
+        <div class="trends-comparison-label">本期睡眠</div>
         <div class="trends-comparison-values">
           <div class="trends-comparison-value">
             <span class="value">{{ comparison.sleepCurrent.toFixed(1) }}</span>
@@ -45,7 +45,7 @@
       </div>
 
       <div class="trends-comparison-item">
-        <div class="trends-comparison-label">本周期饮食</div>
+        <div class="trends-comparison-label">本期饮食</div>
         <div class="trends-comparison-values">
           <div class="trends-comparison-value">
             <span class="value">{{ Math.round(comparison.mealBalanceCurrent) }}</span>

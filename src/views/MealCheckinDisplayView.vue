@@ -76,6 +76,7 @@
 
             <!-- 饮食任务组件 - 待完成 -->
             <CheckinTaskGroup 
+              v-if="mealTasks.filter((t: any) => !(t.status == 'completed')).length"
               :tasks="mealTasks" 
               category="meal"
               position="left"
@@ -88,6 +89,7 @@
           <div class="meal-right-panel">
             <!-- 饮食任务组件 - 已完成 -->
             <CheckinTaskGroup 
+              v-if="mealTasks.filter((t: any) => t.status == 'completed').length"
               :tasks="mealTasks" 
               category="meal"
               position="right"
@@ -361,7 +363,7 @@ const {
 } = useTodolist()
 
 const mealTasks = computed(() => {
-  return tasks.value.filter((t: any) => t.category === 'meal')
+  return tasks.value.filter((t: any) => t.category === 'diet')
 })
 
 // 计算显示的记录数

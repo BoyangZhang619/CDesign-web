@@ -339,7 +339,7 @@
 .chat-textarea {
   flex: 1;
   padding: 12px;
-  border: 2px solid #3b3b3b;
+  border: 2px solid #5A7A87;
   background: transparent;
   border-radius: 10px;
   font-family: 'Montserrat', sans-serif;
@@ -373,8 +373,8 @@
   width: 44px;
   height: 44px;
   padding: 0;
-  background: #3b3b3b;
-  border: 2px solid #000;
+  background: #8FA591;
+  border: 2px solid #5A7A87;
   border-radius: 10px;
   color: white;
   cursor: pointer;
@@ -389,7 +389,7 @@
 }
 
 .btn-submit:hover:not(:disabled) {
-  background: #2c2c2c;
+  background: #8FA591;
   box-shadow: 0 8px 20px rgba(157, 180, 160, 0.3);
   transform: translateY(-2px);
 }

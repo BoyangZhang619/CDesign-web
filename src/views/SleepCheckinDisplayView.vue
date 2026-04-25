@@ -76,6 +76,7 @@
 
             <!-- 睡眠任务组件 - 待完成 -->
             <CheckinTaskGroup 
+              v-if="sleepTasks.filter((t: any) => !(t.status == 'completed')).length"
               :tasks="sleepTasks" 
               category="sleep"
               position="left"
@@ -88,6 +89,7 @@
           <div class="sleep-right-panel">
             <!-- 睡眠任务组件 - 已完成 -->
             <CheckinTaskGroup 
+              v-if="sleepTasks.filter((t: any) => t.status == 'completed').length"
               :tasks="sleepTasks" 
               category="sleep"
               position="right"

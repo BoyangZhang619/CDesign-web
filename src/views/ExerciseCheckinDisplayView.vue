@@ -76,6 +76,7 @@
 
             <!-- 运动任务组件 - 待完成 -->
             <CheckinTaskGroup 
+              v-if="exerciseTasks.filter((t: any) => !(t.status == 'completed')).length"
               :tasks="exerciseTasks" 
               category="exercise"
               position="left"
@@ -88,6 +89,7 @@
           <div class="exercise-right-panel">
             <!-- 运动任务组件 - 已完成 -->
             <CheckinTaskGroup 
+              v-if="exerciseTasks.filter((t: any) => t.status == 'completed').length"
               :tasks="exerciseTasks" 
               category="exercise"
               position="right"

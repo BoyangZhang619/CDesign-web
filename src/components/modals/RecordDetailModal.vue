@@ -58,11 +58,11 @@
             </div>
             <div class="detail-item">
               <span class="detail-label">摄入时间</span>
-              <span class="detail-value">{{ formatDateTime(mealRecord.intake_time) }}</span>
+              <span class="detail-value">{{ formatDateTime(mealRecord.meal_time) }}</span>
             </div>
             <div class="detail-item">
-              <span class="detail-label">摄入量</span>
-              <span class="detail-value">{{ mealRecord.amount }} {{ mealRecord.unit }}</span>
+              <span class="detail-label">来源</span>
+              <span class="detail-value">{{ mealRecord.food_source }}</span>
             </div>
             <div class="detail-item">
               <span class="detail-label">热量</span>
@@ -70,19 +70,27 @@
             </div>
             <div class="detail-item">
               <span class="detail-label">蛋白质</span>
-              <span class="detail-value">{{ mealRecord.protein }} g</span>
+              <span class="detail-value">{{ mealRecord.protein_g }} g</span>
             </div>
             <div class="detail-item">
               <span class="detail-label">脂肪</span>
-              <span class="detail-value">{{ mealRecord.fat }} g</span>
+              <span class="detail-value">{{ mealRecord.fat_g }} g</span>
             </div>
             <div class="detail-item">
               <span class="detail-label">碳水化合物</span>
-              <span class="detail-value">{{ mealRecord.carbs }} g</span>
+              <span class="detail-value">{{ mealRecord.carbohydrate_g }} g</span>
             </div>
-            <div v-if="mealRecord.note" class="detail-item full-width">
+            <div class="detail-item">
+              <span class="detail-label">纤维</span>
+              <span class="detail-value">{{ mealRecord.fiber_g }} g</span>
+            </div>
+            <div class="detail-item">
+              <span class="detail-label">糖分</span>
+              <span class="detail-value">{{ mealRecord.sugar_g }} g</span>
+            </div>
+            <div v-if="mealRecord.food_detail" class="detail-item full-width">
               <span class="detail-label">备注</span>
-              <p class="detail-value">{{ mealRecord.note }}</p>
+              <p class="detail-value">{{ mealRecord.food_detail }}</p>
             </div>
             <div v-if="mealRecord.evaluation" class="detail-item full-width ai-section">
               <span class="detail-label">AI 评价</span>
@@ -98,25 +106,25 @@
           <div v-if="recordType === 'sleep' && sleepRecord" class="detail-section">
             <div class="detail-item">
               <span class="detail-label">入睡时间</span>
-              <span class="detail-value">{{ formatDateTime(sleepRecord.sleep_start) }}</span>
+              <span class="detail-value">{{ formatDateTime(sleepRecord.sleep_start_time) }}</span>
             </div>
             <div class="detail-item">
               <span class="detail-label">醒来时间</span>
-              <span class="detail-value">{{ formatDateTime(sleepRecord.sleep_end) }}</span>
+              <span class="detail-value">{{ formatDateTime(sleepRecord.wake_up_time) }}</span>
             </div>
             <div class="detail-item">
               <span class="detail-label">睡眠时长</span>
-              <span class="detail-value">{{ sleepRecord.sleep_duration }} 小时</span>
+              <span class="detail-value">{{ sleepRecord.sleep_duration_hours }} 小时</span>
             </div>
             <div class="detail-item">
               <span class="detail-label">睡眠质量</span>
-              <span class="detail-value quality-badge" :class="`quality-${getQualityLevel(sleepRecord.sleep_quality)}`">
-                {{ getQualityText(sleepRecord.sleep_quality) }}
+              <span class="detail-value quality-badge" :class="`quality-${getQualityLevel(sleepRecord.sleep_quality_score)}`">
+                {{ getQualityText(sleepRecord.sleep_quality_score) }}
               </span>
             </div>
             <div class="detail-item">
               <span class="detail-label">质量评分</span>
-              <span class="detail-value">{{ sleepRecord.sleep_quality }} / 10</span>
+              <span class="detail-value">{{ sleepRecord.sleep_quality_score }} / 100</span>
             </div>
             <div v-if="sleepRecord.note" class="detail-item full-width">
               <span class="detail-label">备注</span>
@@ -160,24 +168,27 @@ interface ExerciseRecord {
 interface MealRecord {
   meal_record_id?: string
   food_name: string
-  intake_time: string
+  meal_time: string
   amount: number
+  food_source: string
   unit: string
   calories: number
-  protein: number
-  fat: number
-  carbs: number
-  note?: string
+  protein_g: number
+  fat_g: number
+  fiber_g: number
+  sugar_g: number
+  carbohydrate_g: number
+  food_detail?: string
   suggestion?: string | null
   evaluation?: string | null
 }
 
 interface SleepRecord {
   sleep_record_id?: string
-  sleep_start: string
-  sleep_end: string
-  sleep_duration: number
-  sleep_quality: number
+  sleep_start_time: string
+  wake_up_time: string
+  sleep_duration_hours: number
+  sleep_quality_score: number
   note?: string
   suggestion?: string | null
   evaluation?: string | null
@@ -194,7 +205,7 @@ const props = withDefaults(defineProps<Props>(), {
   recordType: 'exercise',
   record: null
 })
-
+console.log('props:', props)
 const emit = defineEmits<{
   close: []
 }>()
