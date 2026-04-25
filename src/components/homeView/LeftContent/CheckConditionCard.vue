@@ -46,7 +46,6 @@ const success = () => {
   border-radius: 16px;
   padding: 0;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-  overflow: hidden;
   animation: slideIn 0.3s ease;
 }
 
@@ -76,6 +75,7 @@ const success = () => {
   flex-direction: column;
   justify-content: center;
   background: linear-gradient(135deg, #fefcfa94 0%, #f8f6f3b4 100%);
+  border-radius: 16px;
 }
 
 .card-content {
