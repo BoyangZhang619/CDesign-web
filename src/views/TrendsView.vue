@@ -20,6 +20,13 @@
                         加载数据中...
                     </div>
 
+                    <!-- Error State -->
+                    <div v-else-if="error" class="trends-error">
+                        <span class="error-icon">⚠</span>
+                        <p>{{ error }}</p>
+                        <button @click="loadTrendsData()">重试</button>
+                    </div>
+
                     <!-- Left Column -->
                     <template v-else>
                         <div class="trends-left-column">
@@ -60,6 +67,7 @@ const sidebarRef = ref()
 const { checkHealthInfoNeeded } = useAuthForm()
 const {
     loading,
+    error,
     selectedRange,
     isControlPanelOpen,
     showHealthSetupModal,
@@ -71,6 +79,7 @@ const {
     handleHealthSetupClose,
     handleHealthSetupSuccess,
     selectRange,
+    loadTrendsData,
     initTrends,
     setupRangeWatch
 } = useTrendsView()

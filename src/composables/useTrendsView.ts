@@ -3,6 +3,7 @@ import { fetchWithRefresh } from '../api/http'
 
 export function useTrendsView() {
   const loading = ref(false)
+  const error = ref('')
   const selectedRange = ref('week')
   const isControlPanelOpen = ref(true)
   const showHealthSetupModal = ref(false)
@@ -89,6 +90,7 @@ export function useTrendsView() {
    */
   async function loadTrendsData() {
     loading.value = true
+    error.value = ''
     try {
       const response = await fetchWithRefresh(
         `/analysis/trends?range=${selectedRange.value}`,
@@ -153,8 +155,9 @@ export function useTrendsView() {
           }
         }
       }
-    } catch (error) {
-      console.error('加载趋势数据失败:', error)
+    } catch (err) {
+      error.value = (err as any).message || '加载趋势数据失败'
+      console.error('加载趋势数据失败:', err)
     } finally {
       loading.value = false
     }
@@ -303,6 +306,7 @@ export function useTrendsView() {
   return {
     // State
     loading,
+    error,
     selectedRange,
     isControlPanelOpen,
     showHealthSetupModal,

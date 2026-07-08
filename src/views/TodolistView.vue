@@ -10,6 +10,18 @@
       <!-- 内容区 -->
       <div class="content-area">
         <div class="todolist-container">
+          <!-- 加载状态 -->
+          <div v-if="loading" class="todolist-loading">
+            <div class="loading-spinner"></div>
+            <p>加载中...</p>
+          </div>
+          <!-- 错误状态 -->
+          <div v-else-if="error" class="todolist-error">
+            <span class="error-icon">⚠</span>
+            <p>{{ error }}</p>
+            <button @click="viewMode === 'all' ? fetchAllTasks() : fetchTasks()">重试</button>
+          </div>
+          <template v-else>
           <!-- 左栏：任务管理面板 -->
           <div class="todolist-left-panel">
             <!-- 按钮容器 -->
@@ -91,6 +103,7 @@
             </div>
           </div>
         </div>
+        </template>
       </div>
     </div>
 
@@ -121,6 +134,8 @@ const showLeftPanel = ref(window.innerWidth > 768) // 控制左栏在小屏幕�
 const {
   tasks,
   stats,
+  loading,
+  error,
   fetchTasks,
   fetchAllTasks,
   calculateStats,
