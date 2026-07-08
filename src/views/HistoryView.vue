@@ -1,445 +1,186 @@
 <template>
-  <div class="history-layout">
-    <!-- 侧栏 -->
-    <Sidebar ref="sidebarRef" />
+  <div class="history container-md">
+    <!-- Tab switch -->
+    <div class="tabs">
+      <button :class="['tab', { active: activeTab === 'checkin' }]" @click="activeTab = 'checkin'">打卡记录</button>
+      <button :class="['tab', { active: activeTab === 'tasks' }]" @click="activeTab = 'tasks'">任务完成</button>
+    </div>
 
-    <div class="main-content">
-      <!-- 头部 -->
-      <TopHeader 
-        @toggle-sidebar="toggleSidebar" 
-        :title="'历史记录'" 
-        :subtitle="activeTab === 'checkin' ? '查看您的历史打卡记录' : '查看您的任务完成记录'"
-      />
-
-      <!-- 内容区 -->
-      <div class="content-area">
-        <div class="history-container">
-          <!-- 左栏：筛选 + 记录列表 -->
-          <div class="history-left-panel">
-            <!-- 顶部按钮（详情按钮仅中小屏幕显示） -->
-            <!-- <div class="left-panel-top">
-              <button 
-                class="history-detail-btn" 
-                @click="showFiltersOnMobile = !showFiltersOnMobile"
-                title="筛选和搜索"
-              >
-                ⚙️
-              </button>
-            </div> -->
-
-            <!-- 筛选面板（打卡记录） -->
-            <div v-if="activeTab === 'checkin'" class="filter-panel">
-              <HistoryFilter 
-                :is-open="isFilterPanelOpen"
-                @toggle="isFilterPanelOpen = !isFilterPanelOpen"
-                @apply="handleApplyFilters"
-                @reset="handleResetFilters"
-              />
-            </div>
-
-            <!-- 筛选面板（任务完成） -->
-            <div v-if="activeTab === 'tasks'" class="filter-panel">
-              <TaskCompletionFilter 
-                :is-open="isTaskFilterPanelOpen"
-                @toggle="isTaskFilterPanelOpen = !isTaskFilterPanelOpen"
-                @apply="handleApplyTaskFilters"
-                @reset="handleResetTaskFilters"
-                @sort="handleTaskSort"
-                @type="handleTaskType"
-                @category="handleTaskCategory"
-                @priority="handleTaskPriority"
-                @status="handleTaskStatus"
-                @date-range="handleTaskDateRange"
-                @search="handleSearchTasks"
-              />
-            </div>
-
-            <!-- 记录列表容器 -->
-            <div class="records-section">
-              <!-- 打卡记录列表 -->
-              <div v-show="activeTab === 'checkin'" class="records-container">
-                <!-- 错误提示 -->
-                <div v-if="errorMsg" class="error-box">
-                  {{ errorMsg }}
-                </div>
-
-                <!-- 加载状态 -->
-                <div v-if="loading" class="loading-state">
-                  <div class="spinner"></div>
-                  <p>加载中...</p>
-                </div>
-
-                <!-- 空状态 -->
-                <div v-else-if="records.length === 0" class="empty-state">
-                  <div class="empty-icon">—</div>
-                  <h3 class="empty-title">暂无记录</h3>
-                  <p class="empty-text">尝试调整筛选条件或创建新的打卡记录</p>
-                </div>
-
-                <!-- 记录列表 -->
-                <HistoryRecordsList 
-                  v-else
-                  :records="records"
-                  @select="selectedRecord = $event"
-                />
-              </div>
-
-              <!-- 任务完成列表 -->
-              <div v-show="activeTab === 'tasks'" class="records-container">
-                <!-- 错误提示 -->
-                <div v-if="taskErrorMsg" class="error-box">
-                  {{ taskErrorMsg }}
-                </div>
-
-                <!-- 加载状态 -->
-                <div v-if="taskLoading" class="loading-state">
-                  <div class="spinner"></div>
-                  <p>加载中...</p>
-                </div>
-
-                <!-- 空状态 -->
-                <div v-else-if="taskRecords.length === 0" class="empty-state">
-                  <div class="empty-icon">✓</div>
-                  <h3 class="empty-title">暂无任务完成记录</h3>
-                  <p class="empty-text">尝试调整筛选条件或完成新的任务</p>
-                </div>
-
-                <!-- 任务记录列表 -->
-                <TaskCompletionRecordsList 
-                  v-else
-                  :records="taskRecords"
-                  @select="selectedTaskRecord = $event"
-                />
-              </div>
-            </div>
-
-            <!-- 分页 -->
-            <div v-show="activeTab === 'checkin'" class="pagination-section">
-              <HistoryPagination 
-                v-if="!loading && records.length > 0"
-                :current-page="currentPage"
-                :total-pages="totalPages"
-                @prev="currentPage--"
-                @next="currentPage++"
-                @goto="currentPage = $event"
-              />
-            </div>
-
-            <div v-show="activeTab === 'tasks'" class="pagination-section">
-              <TaskCompletionPagination 
-                v-if="!taskLoading && taskRecords.length > 0"
-                :current-page="taskCurrentPage"
-                :total-pages="taskTotalPages"
-                @prev="taskCurrentPage--"
-                @next="taskCurrentPage++"
-              />
-            </div>
-          </div>
-
-          <!-- 右栏：详情展示 -->
-          <div class="history-right-panel">
-            <!-- 打卡记录详情 -->
-            <div v-show="activeTab === 'checkin'" class="details-wrapper">
-              <!-- 打卡类型统计 -->
-              <HistoryStats />
-
-              <!-- 详情标题 -->
-              <div class="detail-section-title" v-if="selectedRecord">选中的打卡记录</div>
-
-              <!-- 记录详情或提示 -->
-              <div v-if="selectedRecord" class="detail-content">
-                <HistoryRecordContent 
-                  :record="selectedRecord"
-                  @delete="handleDeleteRecord"
-                />
-              </div>
-              <div v-else class="no-selection-hint">
-                <p>👈 选择左侧记录查看详情</p>
-              </div>
-            </div>
-
-            <!-- 任务完成详情 -->
-            <div v-show="activeTab === 'tasks'" class="details-wrapper">
-              <!-- 任务统计信息 -->
-              <TaskCompletionStats v-if="taskStats" :stats="taskStats" />
-
-              <!-- 详情标题 -->
-              <div class="detail-section-title" v-if="selectedTaskRecord">选中的任务记录</div>
-
-              <!-- 任务详情或提示 -->
-              <div v-if="selectedTaskRecord" class="detail-content">
-                <TaskCompletionContent 
-                  :record="selectedTaskRecord"
-                />
-              </div>
-              <div v-else class="no-selection-hint">
-                <p>👈 选择左侧任务查看详情</p>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- 底部标签页切换（仅平板和手机） -->
-        <div class="tabs-footer">
-          <button 
-            class="tab-btn" 
-            :class="{ active: activeTab === 'checkin' }"
-            @click="activeTab = 'checkin'"
-          >
-            📋 打卡记录
-          </button>
-          <button 
-            class="tab-btn" 
-            :class="{ active: activeTab === 'tasks' }"
-            @click="activeTab = 'tasks'"
-          >
-            ✓ 任务完成
-          </button>
-        </div>
-
-        <!-- 顶部切换按钮（仅桌面显示） -->
-        <div class="desktop-tabs-header">
-          <button 
-            class="desktop-tab-btn" 
-            :class="{ active: activeTab === 'checkin' }"
-            @click="activeTab = 'checkin'"
-          >
-            📋 打卡记录
-          </button>
-          <button 
-            class="desktop-tab-btn" 
-            :class="{ active: activeTab === 'tasks' }"
-            @click="activeTab = 'tasks'"
-          >
-            ✓ 任务完成
-          </button>
-        </div>
-      </div>
-
-      <!-- 详情模态窗口（手机端） -->
-      <!-- 打卡记录详情 -->
-      <div v-if="selectedRecord && isMobileView" class="detail-modal-overlay" @click="selectedRecord = null">
-        <div class="detail-modal" @click.stop>
-          <button class="modal-close-btn" @click="selectedRecord = null">✕</button>
-          <HistoryRecordDetail 
-            :record="selectedRecord"
-            @close="selectedRecord = null"
-            @delete="handleDeleteRecord"
-          />
-        </div>
-      </div>
-
-      <!-- 任务完成详情 -->
-      <div v-if="selectedTaskRecord && isMobileView" class="detail-modal-overlay" @click="selectedTaskRecord = null">
-        <div class="detail-modal" @click.stop>
-          <button class="modal-close-btn" @click="selectedTaskRecord = null">✕</button>
-          <TaskCompletionDetail 
-            :record="selectedTaskRecord"
-            @close="selectedTaskRecord = null"
-          />
-        </div>
+    <!-- Filter bar -->
+    <div class="filter-bar">
+      <div class="filter-row">
+        <select v-model="filters.type" @change="applyFilters()" class="filter-select">
+          <option value="">全部类型</option>
+          <option v-for="t in typeOptions" :key="t.value" :value="t.value">{{ t.label }}</option>
+        </select>
+        <select v-model="currentSort" @change="changeSort(currentSort)" class="filter-select">
+          <option v-for="s in sortOptions" :key="s.value" :value="s.value">{{ s.label }}</option>
+        </select>
       </div>
     </div>
+
+    <!-- Loading -->
+    <div v-if="loading" class="state-box"><div class="spinner"></div><p>加载中...</p></div>
+
+    <!-- Error -->
+    <div v-else-if="errorMsg" class="state-box state-error">
+      <p>{{ errorMsg }}</p>
+      <button @click="loadRecords()">重试</button>
+    </div>
+
+    <!-- Checkin Records -->
+    <template v-else-if="activeTab === 'checkin'">
+      <div v-if="records.length === 0" class="state-box">
+        <p>暂无记录</p>
+        <span class="state-hint">去打卡页面记录你的健康数据吧</span>
+      </div>
+      <div v-else class="list">
+        <div v-for="r in records" :key="r.id" class="record-card" @click="selectedRecord = r">
+          <div class="rec-top">
+            <span class="rec-type" :style="{ color: typeColor(r.type) }">{{ typeLabel(r.type) }}</span>
+            <span class="rec-date">{{ formatDate(r.created_at) }}</span>
+          </div>
+          <div class="rec-body">
+            <slot name="meal" v-if="r.type === 'meal'">
+              <span>{{ r.food_name || '-' }}</span>
+              <span class="rec-sub">{{ r.calories }} kcal</span>
+            </slot>
+            <slot name="exercise" v-else-if="r.type === 'exercise'">
+              <span>{{ r.activity_type || '-' }}</span>
+              <span class="rec-sub">{{ r.duration_min }}分钟</span>
+            </slot>
+            <slot name="sleep" v-else-if="r.type === 'sleep'">
+              <span>睡眠 {{ r.sleep_duration_hours }}h</span>
+              <span class="rec-sub">质量 {{ r.sleep_quality_score }}/10</span>
+            </slot>
+          </div>
+        </div>
+      </div>
+      <!-- Pagination -->
+      <div v-if="totalPages > 1" class="pager">
+        <button :disabled="currentPage <= 1" @click="currentPage--; loadRecords()">‹</button>
+        <span>{{ currentPage }} / {{ totalPages }}</span>
+        <button :disabled="currentPage >= totalPages" @click="currentPage++; loadRecords()">›</button>
+      </div>
+    </template>
+
+    <!-- Task records placeholder -->
+    <div v-else class="state-box">
+      <p>任务完成记录</p>
+      <span class="state-hint">功能开发中</span>
+    </div>
+
+    <!-- Detail modal -->
+    <Teleport to="body">
+      <div v-if="selectedRecord" class="modal-overlay" @click.self="selectedRecord = null">
+        <div class="modal-sheet">
+          <button class="modal-close" @click="selectedRecord = null">✕</button>
+          <h3>{{ typeLabel(selectedRecord.type) }} 详情</h3>
+          <div class="detail-grid">
+            <div v-for="(v,k) in selectedRecord" :key="k" class="detail-row">
+              <span class="detail-key">{{ k }}</span>
+              <span class="detail-val">{{ v }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </Teleport>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, watch } from 'vue'
-import Sidebar from '../components/homeView/Sidebar.vue'
-import TopHeader from '../components/homeView/TopHeader.vue'
-// import HistoryHeader from '../components/historyView/HistoryHeader.vue'
-import HistoryFilter from '../components/historyView/HistoryFilter.vue'
-import HistoryStats from '../components/historyView/HistoryStats.vue'
-import HistoryRecordsList from '../components/historyView/HistoryRecordsList.vue'
-import HistoryRecordDetail from '../components/historyView/HistoryRecordDetail.vue'
-import HistoryRecordContent from '../components/historyView/HistoryRecordContent.vue'
-import HistoryPagination from '../components/historyView/HistoryPagination.vue'
-import TaskCompletionFilter from '../components/historyView/TaskCompletionFilter.vue'
-import TaskCompletionStats from '../components/historyView/TaskCompletionStats.vue'
-import TaskCompletionRecordsList from '../components/historyView/TaskCompletionRecordsList.vue'
-import TaskCompletionDetail from '../components/historyView/TaskCompletionDetail.vue'
-import TaskCompletionContent from '../components/historyView/TaskCompletionContent.vue'
-import TaskCompletionPagination from '../components/historyView/TaskCompletionPagination.vue'
+import { ref, onMounted } from 'vue'
 import { useHistory } from '../composables/useHistory'
-import { useTaskCompletionHistory } from '../composables/useTaskCompletionHistory'
-import { getCurrentDate } from '../utils/dateTime'
-import type { HistoryRecord } from '../composables/useHistory'
-import type { TaskCompletionRecord } from '../composables/useTaskCompletionHistory'
 
-const sidebarRef = ref()
-const activeTab = ref<'checkin' | 'tasks'>('checkin')
-const isFilterPanelOpen = ref(false)
-const isMobileView = ref(window.innerWidth < 1025)  // 是否为移动端视图
-const selectedRecord = ref<HistoryRecord | null>(null)
-
-// 打卡记录 composable
 const {
-  records,
-  loading,
-  errorMsg,
-  currentPage,
-  filters,
-  loadRecords,
-  resetFilters,
-  applyFilters,
-  deleteRecord,
-  totalPages
+  records, loading, errorMsg, currentPage, totalPages,
+  filters, sortOptions, currentSort, typeOptions,
+  loadRecords, applyFilters, changeSort,
 } = useHistory()
 
-// 任务完成记录 composable
-const isTaskFilterPanelOpen = ref(false)
-const selectedTaskRecord = ref<TaskCompletionRecord | null>(null)
+const activeTab = ref<'checkin' | 'tasks'>('checkin')
+const selectedRecord = ref<any>(null)
 
-const {
-  records: taskRecords,
-  stats: taskStats,
-  loading: taskLoading,
-  errorMsg: taskErrorMsg,
-  currentPage: taskCurrentPage,
-  totalPages: taskTotalPages,
-  loadRecords: loadTaskRecords,
-  loadStats: loadTaskStats,
-  resetFilters: resetTaskFilters,
-  applyFilters: applyTaskFilters,
-  changeSort: changeTaskSort,
-  changeType: changeTaskType,
-  changeCategory: changeTaskCategory,
-  changePriority: changeTaskPriority,
-  changeStatus: changeTaskStatus,
-  setDateRange: setTaskDateRange,
-  searchTasks: searchTaskTasks,
-} = useTaskCompletionHistory()
+function typeLabel(t: string) { return { meal: '饮食', exercise: '运动', sleep: '睡眠' }[t] || t }
+function typeColor(t: string) { return { meal: '#78C850', exercise: '#F58529', sleep: '#833AB4' }[t] || 'var(--color-text)' }
 
-// 标签页切换
-// const switchTab = (tab: 'checkin' | 'tasks') => {
-//   console.log(`🔄 [HistoryView] 切换标签页至: ${tab}`)
-//   activeTab.value = tab
-//   
-//   // 如果切换到任务完成标签页，加载任务数据和统计
-//   if (tab === 'tasks' && taskRecords.value.length === 0) {
-//     console.log('📝 [HistoryView] 首次加载任务数据和统计')
-//     loadTaskRecords()
-//     loadTaskStats()
-//   }
-// }
-
-// 打卡记录监听
-watch(currentPage, () => {
-  loadRecords()
-})
-
-// 任务完成记录监听
-watch(taskCurrentPage, () => {
-  loadTaskRecords()
-})
-
-// 初始化
-onMounted(() => {
-  console.log('🚀 [HistoryView] 页面挂载')
-  
-  // 初始化打卡记录筛选
-  if (!filters.value.startDate) {
-    filters.value.startDate = getCurrentDate()
-  }
-  if (!filters.value.endDate) {
-    filters.value.endDate = getCurrentDate()
-  }
-  loadRecords()
-  
-  // 初始化任务完成记录
-  loadTaskRecords()
-  loadTaskStats()
-
-  // 监听窗口大小变化
-  const handleResize = () => {
-    isMobileView.value = window.innerWidth < 1025
-  }
-  window.addEventListener('resize', handleResize)
-
-  // 清理
-  return () => {
-    window.removeEventListener('resize', handleResize)
-  }
-})
-
-// 打卡记录处理方法
-const handleApplyFilters = () => {
-  console.log('✨ [HistoryView] 应用打卡记录筛选条件')
-  applyFilters()
-  isFilterPanelOpen.value = false
+function formatDate(d: string) {
+  if (!d) return '-'
+  const dt = new Date(d)
+  return `${dt.getMonth()+1}/${dt.getDate()} ${dt.getHours().toString().padStart(2,'0')}:${dt.getMinutes().toString().padStart(2,'0')}`
 }
 
-const handleResetFilters = () => {
-  console.log('🔄 [HistoryView] 重置打卡记录筛选条件')
-  resetFilters()
-  isFilterPanelOpen.value = false
-}
-
-const handleDeleteRecord = async (id: string | number) => {
-  console.log(`🗑️ [HistoryView] 删除打卡记录: ${id}`)
-  await deleteRecord(id as string)
-  selectedRecord.value = null
-}
-
-// 任务完成记录处理方法
-const handleApplyTaskFilters = () => {
-  console.log('✨ [HistoryView] 应用任务完成记录筛选条件')
-  applyTaskFilters()
-  isTaskFilterPanelOpen.value = false
-}
-
-const handleResetTaskFilters = () => {
-  console.log('🔄 [HistoryView] 重置任务完成记录筛选条件')
-  resetTaskFilters()
-  isTaskFilterPanelOpen.value = false
-}
-
-// TaskCompletionFilter emit 处理函数 - 直接触发数据加载
-const handleTaskSort = (sort: string) => {
-  console.log('📊 [HistoryView] 改变任务排序:', sort)
-  changeTaskSort(sort)
-  loadTaskRecords()
-}
-
-const handleTaskType = (type: string) => {
-  console.log('🏷️ [HistoryView] 改变任务类型:', type)
-  changeTaskType(type)
-  loadTaskRecords()
-}
-
-const handleTaskCategory = (category: string) => {
-  console.log('📂 [HistoryView] 改变任务分类:', category)
-  changeTaskCategory(category)
-  loadTaskRecords()
-}
-
-const handleTaskPriority = (priority: string) => {
-  console.log('⚡ [HistoryView] 改变任务优先级:', priority)
-  changeTaskPriority(priority)
-  loadTaskRecords()
-}
-
-const handleTaskStatus = (status: string) => {
-  console.log('✓ [HistoryView] 改变任务完成状态:', status)
-  changeTaskStatus(status)
-  loadTaskRecords()
-}
-
-const handleTaskDateRange = (dateRange: { startDate: string; endDate: string }) => {
-  console.log('📅 [HistoryView] 改变任务日期范围:', dateRange)
-  setTaskDateRange(dateRange.startDate, dateRange.endDate)
-  loadTaskRecords()
-}
-
-const handleSearchTasks = (searchText: string) => {
-  console.log('🔍 [HistoryView] 搜索任务:', searchText)
-  searchTaskTasks(searchText)
-  loadTaskRecords()
-}
-
-const toggleSidebar = () => {
-  sidebarRef.value?.toggleSidebarFromHeader()
-}
+onMounted(() => loadRecords())
 </script>
 
-<style lang="scss" scoped src="@/scss/views/HistoryView.scss"></style>
+<style lang="scss" scoped>
+.history { padding: var(--space-4); display: flex; flex-direction: column; gap: var(--space-4); }
+
+// Tabs
+.tabs { display: flex; background: var(--color-bg); border: 1px solid var(--color-border); border-radius: var(--radius-lg); overflow: hidden; }
+.tab { flex: 1; padding: var(--space-2) var(--space-4); font-size: var(--font-size-sm); font-weight: var(--font-weight-medium); border: none; background: transparent; color: var(--color-text-secondary); cursor: pointer; transition: all var(--transition-fast);
+  &.active { background: var(--color-accent-light); color: var(--color-accent); font-weight: var(--font-weight-semibold); }
+}
+
+// Filters
+.filter-bar { display: flex; gap: var(--space-2); }
+.filter-row { display: flex; gap: var(--space-2); width: 100%; }
+.filter-select {
+  flex: 1; padding: var(--space-2) var(--space-3); font-size: var(--font-size-sm);
+  border: 1px solid var(--color-border); border-radius: var(--radius-md);
+  background: var(--color-bg); color: var(--color-text);
+  &:focus { border-color: var(--color-accent); outline: none; }
+}
+
+// States
+.state-box { display: flex; flex-direction: column; align-items: center; padding: var(--space-12); gap: var(--space-3);
+  p { color: var(--color-text-secondary); font-size: var(--font-size-sm); }
+  button { padding: var(--space-2) var(--space-4); background: var(--color-accent); color: #fff; border: none; border-radius: var(--radius-md); cursor: pointer; }
+}
+.state-hint { font-size: var(--font-size-xs); color: var(--color-text-tertiary); }
+.state-error p { color: var(--color-danger); }
+.spinner { width: 32px; height: 32px; border: 3px solid var(--color-border); border-top-color: var(--color-accent); border-radius: 50%; animation: spin .8s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+// List
+.list { display: flex; flex-direction: column; gap: var(--space-2); }
+.record-card {
+  background: var(--color-bg); border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg); padding: var(--space-4); cursor: pointer;
+  transition: background var(--transition-fast);
+  &:hover { background: var(--color-bg-secondary); }
+  &:active { transform: scale(.99); }
+}
+.rec-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-2); }
+.rec-type { font-size: var(--font-size-xs); font-weight: var(--font-weight-semibold); text-transform: uppercase; letter-spacing: .5px; }
+.rec-date { font-size: var(--font-size-xs); color: var(--color-text-secondary); }
+.rec-body { display: flex; justify-content: space-between; align-items: center; font-size: var(--font-size-base); color: var(--color-text); }
+.rec-sub { font-size: var(--font-size-sm); color: var(--color-text-secondary); }
+
+// Pagination
+.pager { display: flex; justify-content: center; align-items: center; gap: var(--space-4);
+  button { width: 36px; height: 36px; border: 1px solid var(--color-border); border-radius: var(--radius-full); background: var(--color-bg); color: var(--color-text); font-size: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center;
+    &:hover:not(:disabled) { border-color: var(--color-accent); }
+    &:disabled { opacity: .3; cursor: default; }
+  }
+  span { font-size: var(--font-size-sm); color: var(--color-text-secondary); }
+}
+
+// Modal
+.modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.5); z-index: 2000; display: flex; align-items: flex-end; justify-content: center;
+  @media (min-width: 768px) { align-items: center; }
+}
+.modal-sheet {
+  background: var(--color-bg); border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+  padding: var(--space-5); width: 100%; max-width: 480px; max-height: 70dvh; overflow-y: auto;
+  position: relative;
+  @media (min-width: 768px) { border-radius: var(--radius-xl); }
+  h3 { font-size: var(--font-size-lg); font-weight: var(--font-weight-semibold); margin-bottom: var(--space-4); color: var(--color-text); }
+}
+.modal-close { position: absolute; top: var(--space-4); right: var(--space-4); width: 32px; height: 32px; border: none; background: var(--color-bg-tertiary); border-radius: var(--radius-full); font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--color-text); }
+.detail-row { display: flex; justify-content: space-between; padding: var(--space-2) 0; border-bottom: 1px solid var(--color-separator); font-size: var(--font-size-sm);
+  &:last-child { border-bottom: none; }
+}
+.detail-key { color: var(--color-text-secondary); }
+.detail-val { color: var(--color-text); max-width: 60%; text-align: right; word-break: break-all; }
+</style>

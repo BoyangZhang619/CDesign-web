@@ -1,5 +1,5 @@
 .portrait-metrics {
-  background: linear-gradient(135deg, #FEFCFA 0%, #F8F6F3 100%);
+  background: linear-gradient(135deg, var(--color-bg) 0%, var(--color-bg-secondary) 100%);
   border: 1px solid #E8E1D6;
   border-radius: 12px;
   padding: 20px;
@@ -17,7 +17,7 @@
 .metrics-title {
   font-size: 16px;
   font-weight: 700;
-  color: #5A7A87;
+  color: var(--color-text);
 }
 
 .metrics-grid {
@@ -27,7 +27,7 @@
 }
 
 .metric-card {
-  background: linear-gradient(135deg, #FFFFFF 0%, #F8F6F3 100%);
+  background: linear-gradient(135deg, #FFFFFF 0%, var(--color-bg-secondary) 100%);
   border: 1px solid #E1D9D0;
   border-radius: 10px;
   padding: 15px;
@@ -48,7 +48,7 @@
 .metric-value {
   font-size: 24px;
   font-weight: 700;
-  color: #5A7A87;
+  color: var(--color-text);
   line-height: 1;
 }
 
@@ -71,17 +71,17 @@
 
 .metric-status.excellent {
   background: #9DB4A0;
-  color: #FEFCFA;
+  color: var(--color-bg);
 }
 
 .metric-status.warning {
   background: #D4A5A8;
-  color: #FEFCFA;
+  color: var(--color-bg);
 }
 
 .metric-status.neutral {
-  background: #C9B89C;
-  color: #FEFCFA;
+  background: var(--color-accent);
+  color: var(--color-bg);
 }
 
 /* 不同卡片的边框色 */
@@ -94,7 +94,7 @@
 }
 
 .metric-card.metabolism {
-  border-left: 4px solid #C9B89C;
+  border-left: 4px solid var(--color-accent);
 }
 
 .metric-card.sleep {

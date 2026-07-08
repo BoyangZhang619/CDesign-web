@@ -23,7 +23,7 @@
 }
 
 .detail-modal {
-  background: linear-gradient(135deg, #FEFCFA 0%, #F8F6F3 100%);
+  background: linear-gradient(135deg, var(--color-bg) 0%, var(--color-bg-secondary) 100%);
   border: 1px solid #E8E1D6;
   border-radius: 12px;
   max-width: 600px;
@@ -55,7 +55,7 @@
   background: rgba(255, 255, 255, 0.8);
   border-radius: 50%;
   font-size: 24px;
-  color: #999;
+  color: var(--color-text-tertiary);
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -66,7 +66,7 @@
 
 .close-btn:hover {
   background: #FFF;
-  color: #666;
+  color: var(--color-text-secondary);
   transform: scale(1.1);
 }
 
@@ -137,7 +137,7 @@
   gap: 16px;
   margin-bottom: 24px;
   padding: 16px;
-  background: linear-gradient(135deg, #FFFFFF 0%, #FEFCFA 100%);
+  background: linear-gradient(135deg, #FFFFFF 0%, var(--color-bg) 100%);
   border: 1px solid #E1D9D0;
   border-radius: 8px;
 }
@@ -150,7 +150,7 @@
 
 .detail-label {
   font-size: 12px;
-  color: #999;
+  color: var(--color-text-tertiary);
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.5px;
@@ -175,13 +175,13 @@
   margin: 0 0 8px 0;
   font-size: 13px;
   font-weight: 600;
-  color: #666;
+  color: var(--color-text-secondary);
 }
 
 .notes-content {
   margin: 0;
   font-size: 13px;
-  color: #666;
+  color: var(--color-text-secondary);
   line-height: 1.6;
 }
 

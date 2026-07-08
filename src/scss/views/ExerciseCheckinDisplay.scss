@@ -5,7 +5,7 @@
   display: flex;
   height: calc(100dvh - 10px);
   background: none;
-  border: 5px solid #5A7A87;
+  border: 5px solid var(--color-text);
   border-radius: 20px;
   overflow: hidden;
   box-sizing: content-box;
@@ -161,7 +161,7 @@
   background: transparent;
   border: 1px solid rgba(90, 122, 135, 0.3);
   border-radius: 6px;
-  color: #5A7A87;
+  color: var(--color-text);
   cursor: pointer;
   transition: all 0.3s ease;
 }
@@ -194,7 +194,7 @@
   margin: 0;
   font-size: 14px;
   font-weight: 700;
-  color: #5A7A87;
+  color: var(--color-text);
   display: flex;
   align-items: center;
   gap: 6px;
@@ -258,7 +258,7 @@
 .stat-value {
   font-size: 20px;
   font-weight: 700;
-  color: #5A7A87;
+  color: var(--color-text);
   line-height: 1;
 }
 
@@ -293,7 +293,7 @@
   margin: 0;
   font-size: 16px;
   font-weight: 600;
-  color: #5A7A87;
+  color: var(--color-text);
 }
 
 .record-count {
@@ -406,7 +406,7 @@
 }
 
 .value {
-  color: #5A7A87;
+  color: var(--color-text);
   font-weight: 600;
 }
 
@@ -416,7 +416,7 @@
 }
 
 .value.calculating {
-  color: #999;
+  color: var(--color-text-tertiary);
   font-style: italic;
 }
 
@@ -461,7 +461,7 @@
   justify-content: center;
   height: 100%;
   gap: 12px;
-  color: #999;
+  color: var(--color-text-tertiary);
 }
 
 .empty-icon {
@@ -479,7 +479,7 @@
 .empty-text {
   margin: 0;
   font-size: 14px;
-  color: #999;
+  color: var(--color-text-tertiary);
 }
 
 /* 查看全部按钮 */
@@ -556,7 +556,7 @@
   margin: 0;
   font-size: 16px;
   font-weight: 600;
-  color: #5A7A87;
+  color: var(--color-text);
 }
 
 .modal-close {
@@ -576,7 +576,7 @@
 
 .modal-close:hover {
   background: rgba(157, 180, 160, 0.1);
-  color: #5A7A87;
+  color: var(--color-text);
 }
 
 /* 表单 */
@@ -596,7 +596,7 @@
 .form-label {
   font-size: 13px;
   font-weight: 600;
-  color: #5A7A87;
+  color: var(--color-text);
 }
 
 .button-group {
@@ -845,7 +845,7 @@
 }
 
 .task-item:hover {
-  border-color: #d0d0d0;
+  border-color: var(--color-border);
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
 }
 
@@ -867,7 +867,7 @@
   width: 20px;
   height: 20px;
   cursor: pointer;
-  accent-color: #5A7A87;
+  accent-color: var(--color-text);
 }
 
 .task-content {
@@ -885,7 +885,7 @@
 
 .task-item.completed .task-title {
   text-decoration: line-through;
-  color: #999;
+  color: var(--color-text-tertiary);
 }
 
 .task-description {
@@ -959,7 +959,7 @@
   background: transparent;
   border: none;
   border-radius: 4px;
-  color: #999;
+  color: var(--color-text-tertiary);
   cursor: pointer;
   transition: all 0.2s ease;
 }
@@ -1016,7 +1016,7 @@
   margin: 0;
   font-size: 16px;
   font-weight: 700;
-  color: #5A7A87;
+  color: var(--color-text);
 }
 
 .menu-close {
@@ -1038,7 +1038,7 @@
 
 .menu-close:hover {
   background: rgba(157, 180, 160, 0.1);
-  color: #5A7A87;
+  color: var(--color-text);
 }
 
 .menu-items {
@@ -1080,7 +1080,7 @@
   display: block;
   font-size: 14px;
   font-weight: 600;
-  color: #5A7A87;
+  color: var(--color-text);
 }
 
 .menu-desc {

@@ -1,5 +1,5 @@
 .portrait-timeline {
-  background: linear-gradient(135deg, #FEFCFA 0%, #F8F6F3 100%);
+  background: linear-gradient(135deg, var(--color-bg) 0%, var(--color-bg-secondary) 100%);
   border: 1px solid #E8E1D6;
   border-radius: 12px;
   padding: 20px;
@@ -17,7 +17,7 @@
 .timeline-title {
   font-size: 16px;
   font-weight: 700;
-  color: #5A7A87;
+  color: var(--color-text);
 }
 
 .empty-state {
@@ -70,11 +70,11 @@
 .timeline-dot.completed {
   background: #9DB4A0;
   border-color: #9DB4A0;
-  box-shadow: 0 0 8px rgba(157, 180, 160, 0.3);
+  box-shadow: 0 0 8px rgba(0, 149, 246, 0.3);
 }
 
 .timeline-dot.pending {
-  background: #F8F6F3;
+  background: var(--color-bg-secondary);
   border-color: #E8E1D6;
 }
 
@@ -102,7 +102,7 @@
 .timeline-event-title {
   font-size: 14px;
   font-weight: 700;
-  color: #5A7A87;
+  color: var(--color-text);
   margin-bottom: 6px;
 }
 
@@ -122,13 +122,13 @@
 }
 
 .timeline-badge.completed {
-  background: linear-gradient(135deg, #9DB4A0 0%, #8FA591 100%);
-  color: #FEFCFA;
+  background: var(--gradient-accent);
+  color: var(--color-bg);
 }
 
 .timeline-badge.pending {
   background: #E8E1D6;
-  color: #5A7A87;
+  color: var(--color-text);
 }
 
 @media (max-width: 480px) {

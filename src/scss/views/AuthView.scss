@@ -61,7 +61,7 @@
 .auth-brand-title {
   font-size: 32px;
   font-weight: 700;
-  color: #5A7A87;
+  color: var(--color-text);
   margin: 0 0 8px 0;
   letter-spacing: 0.5px;
 }
@@ -184,7 +184,7 @@
 .form-toggle-btn {
   padding: 12px 24px;
   background: linear-gradient(135deg, #F5F2ED 0%, #EBE5DF 100%);
-  color: #5A7A87;
+  color: var(--color-text);
   border: 2px solid #D4C4B0;
   border-radius: 10px;
   font-size: 14px;
@@ -216,7 +216,7 @@
 }
 
 .form-divider>span:hover {
-  color: #5A7A87;
+  color: var(--color-text);
   text-decoration: underline;
 }
 

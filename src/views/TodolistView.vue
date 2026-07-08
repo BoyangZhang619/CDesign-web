@@ -1,121 +1,108 @@
 <template>
-  <div class="todolist-layout">
-    <!-- 侧栏 -->
-    <Sidebar ref="sidebarRef" />
+  <div class="todolist container-md">
+    <div class="todolist-container">
+      <!-- 加载状态 -->
+      <div v-if="loading" class="todolist-loading">
+        <div class="loading-spinner"></div>
+        <p>加载中...</p>
+      </div>
+      <!-- 错误状态 -->
+      <div v-else-if="error" class="todolist-error">
+        <span class="error-icon">⚠</span>
+        <p>{{ error }}</p>
+        <button @click="viewMode === 'all' ? fetchAllTasks() : fetchTasks()">重试</button>
+      </div>
+      <template v-else>
+        <!-- 左栏：任务管理面板 -->
+        <div class="todolist-left-panel">
+          <!-- 按钮容器 -->
+          <div class="left-panel-top">
+            <!-- 添加任务按钮 -->
+            <button class="todolist-add-btn" @click="handleCreateTask" title="创建新任务">
+              <span class="add-btn-icon">+</span>
+              <span class="add-btn-text">新建任务</span>
+            </button>
 
-    <div class="main-content">
-      <!-- 头部 -->
-      <TopHeader @toggle-sidebar="toggleSidebar" :title="'待办事项'" :subtitle="'管理您的任务清单'" />
-
-      <!-- 内容区 -->
-      <div class="content-area">
-        <div class="todolist-container">
-          <!-- 加载状态 -->
-          <div v-if="loading" class="todolist-loading">
-            <div class="loading-spinner"></div>
-            <p>加载中...</p>
-          </div>
-          <!-- 错误状态 -->
-          <div v-else-if="error" class="todolist-error">
-            <span class="error-icon">⚠</span>
-            <p>{{ error }}</p>
-            <button @click="viewMode === 'all' ? fetchAllTasks() : fetchTasks()">重试</button>
-          </div>
-          <template v-else>
-          <!-- 左栏：任务管理面板 -->
-          <div class="todolist-left-panel">
-            <!-- 按钮容器 -->
-            <div class="left-panel-top">
-              <!-- 添加任务按钮 -->
-              <button class="todolist-add-btn" @click="handleCreateTask" title="创建新任务">
-                <span class="add-btn-icon">+</span>
-                <span class="add-btn-text">新建任务</span>
-              </button>
-              
-              <!-- 详情按钮（仅在小屏幕显示） -->
-              <button class="todolist-detail-btn" @click="showLeftPanel = !showLeftPanel" title="显示/隐藏详情">
-                <span class="detail-btn-icon">≡</span>
-              </button>
-            </div>
-
-            <!-- 可隐藏的详情面板 -->
-            <div class="left-panel-detail" :class="{ hidden: !showLeftPanel }">
-              <!-- 搜索和筛选 -->
-              <div class="todolist-search-section">
-                <TodolistToolbar :search-keyword="searchKeyword" :current-filter="currentFilter" @search="handleSearch"
-                  @filter="handleSetFilter" />
-              </div>
-
-              <!-- 数据统计展示 -->
-              <div class="todolist-stats-section">
-                <TodolistStats :stats="stats" :completion-rate="completionRate" />
-              </div>
-            </div>
+            <!-- 详情按钮（仅在小屏幕显示） -->
+            <button class="todolist-detail-btn" @click="showLeftPanel = !showLeftPanel" title="显示/隐藏详情">
+              <span class="detail-btn-icon">≡</span>
+            </button>
           </div>
 
-          <!-- 右栏：任务列表 -->
-          <div class="todolist-right-panel">
-            <!-- 宽度 < 1024px 时显示切换按钮 -->
-            <div class="todolist-choice">
-              <div class="choice-toggle">
-                <button :class="['choice-btn', { active: viewMode === 'pending' }]" @click="viewMode = 'pending'">
-                  今日任务
-                </button>
-                <button :class="['choice-btn', { active: viewMode === 'all' }]" @click="viewMode = 'all'">
-                  所有任务
-                </button>
-              </div>
+          <!-- 可隐藏的详情面板 -->
+          <div class="left-panel-detail" :class="{ hidden: !showLeftPanel }">
+            <!-- 搜索和筛选 -->
+            <div class="todolist-search-section">
+              <TodolistToolbar :search-keyword="searchKeyword" :current-filter="currentFilter" @search="handleSearch"
+                @filter="handleSetFilter" />
             </div>
-            
-            <!-- 宽度 > 1024px 时同时显示两列 -->
-            <div class="todolist-dual-view">
-              <!-- 今日任务列 -->
-              <div class="todolist-column pending-column">
-                <h3 class="column-title">今日任务</h3>
-                <TodolistEmpty v-if="filteredTasks.length === 0" />
-                <TodolistGroups v-if="filteredTasks.length > 0" :filtered-tasks="filteredTasks"
-                  :show-checkbox="true" @toggle="toggleTask" @delete="handleDeleteTask" @accept="handleAcceptTask"
-                  @reject="handleRejectTask" />
-              </div>
-              
-              <!-- 所有任务列 -->
-              <div class="todolist-column all-column">
-                <h3 class="column-title">所有任务</h3>
-                <TodolistEmpty v-if="tasks.length === 0" />
-                <TodolistGroups v-else :filtered-tasks="tasks" :show-checkbox="false" @toggle="toggleTask"
-                  @delete="handleDeleteTask" @accept="handleAcceptTask" @reject="handleRejectTask" />
-              </div>
-            </div>
-            
-            <!-- 宽度 < 1024px 时根据切换显示 -->
-            <div class="todolist-single-view">
-              <TodolistEmpty v-if="viewMode === 'pending' && filteredTasks.length === 0" />
-              <TodolistGroups v-if="viewMode === 'pending' && filteredTasks.length > 0" :filtered-tasks="filteredTasks"
-                :show-checkbox="true" @toggle="toggleTask" @delete="handleDeleteTask" @accept="handleAcceptTask"
-                @reject="handleRejectTask" />
 
-              <!-- 所有任务模式：不过滤，直接显示所有任务 -->
-              <div v-if="viewMode === 'all'" class="all-tasks-view">
-                <TodolistEmpty v-if="tasks.length === 0" />
-                <TodolistGroups v-else :filtered-tasks="tasks" :show-checkbox="false" @toggle="toggleTask"
-                  @delete="handleDeleteTask" @accept="handleAcceptTask" @reject="handleRejectTask" />
-              </div>
+            <!-- 数据统计展示 -->
+            <div class="todolist-stats-section">
+              <TodolistStats :stats="stats" :completion-rate="completionRate" />
             </div>
           </div>
         </div>
-        </template>
-      </div>
-    </div>
 
-    <!-- 创建任务浮窗 -->
-    <TodolistCreateModal :isOpen="showCreateModal" @close="closeCreateModal" @create="handleCreateTaskSubmit" />
+        <!-- 右栏：任务列表 -->
+        <div class="todolist-right-panel">
+          <!-- 宽度 < 1024px 时显示切换按钮 -->
+          <div class="todolist-choice">
+            <div class="choice-toggle">
+              <button :class="['choice-btn', { active: viewMode === 'pending' }]" @click="viewMode = 'pending'">
+                今日任务
+              </button>
+              <button :class="['choice-btn', { active: viewMode === 'all' }]" @click="viewMode = 'all'">
+                所有任务
+              </button>
+            </div>
+          </div>
+
+          <!-- 宽度 > 1024px 时同时显示两列 -->
+          <div class="todolist-dual-view">
+            <!-- 今日任务列 -->
+            <div class="todolist-column pending-column">
+              <h3 class="column-title">今日任务</h3>
+              <TodolistEmpty v-if="filteredTasks.length === 0" />
+              <TodolistGroups v-if="filteredTasks.length > 0" :filtered-tasks="filteredTasks" :show-checkbox="true"
+                @toggle="toggleTask" @delete="handleDeleteTask" @accept="handleAcceptTask" @reject="handleRejectTask" />
+            </div>
+
+            <!-- 所有任务列 -->
+            <div class="todolist-column all-column">
+              <h3 class="column-title">所有任务</h3>
+              <TodolistEmpty v-if="tasks.length === 0" />
+              <TodolistGroups v-else :filtered-tasks="tasks" :show-checkbox="false" @toggle="toggleTask"
+                @delete="handleDeleteTask" @accept="handleAcceptTask" @reject="handleRejectTask" />
+            </div>
+          </div>
+
+          <!-- 宽度 < 1024px 时根据切换显示 -->
+          <div class="todolist-single-view">
+            <TodolistEmpty v-if="viewMode === 'pending' && filteredTasks.length === 0" />
+            <TodolistGroups v-if="viewMode === 'pending' && filteredTasks.length > 0" :filtered-tasks="filteredTasks"
+              :show-checkbox="true" @toggle="toggleTask" @delete="handleDeleteTask" @accept="handleAcceptTask"
+              @reject="handleRejectTask" />
+
+            <!-- 所有任务模式：不过滤，直接显示所有任务 -->
+            <div v-if="viewMode === 'all'" class="all-tasks-view">
+              <TodolistEmpty v-if="tasks.length === 0" />
+              <TodolistGroups v-else :filtered-tasks="tasks" :show-checkbox="false" @toggle="toggleTask"
+                @delete="handleDeleteTask" @accept="handleAcceptTask" @reject="handleRejectTask" />
+            </div>
+          </div>
+        </div>
+      </template>
+    </div>
   </div>
+
+  <!-- 创建任务浮窗 -->
+  <TodolistCreateModal :isOpen="showCreateModal" @close="closeCreateModal" @create="handleCreateTaskSubmit" />
 </template>
 
 <script setup lang="ts">
 import { ref, computed, onMounted, watch } from 'vue'
-import Sidebar from '../components/homeView/Sidebar.vue'
-import TopHeader from '../components/homeView/TopHeader.vue'
+
 import TodolistStats from '../components/todolistView/TodolistStats.vue'
 import TodolistToolbar from '../components/todolistView/TodolistToolbar.vue'
 import TodolistEmpty from '../components/todolistView/TodolistEmpty.vue'
@@ -123,7 +110,6 @@ import TodolistGroups from '../components/todolistView/TodolistGroups.vue'
 import TodolistCreateModal from '../components/todolistView/TodolistCreateModal.vue'
 import { useTodolist } from '../composables/useTodolist'
 
-const sidebarRef = ref()
 const showCreateModal = ref(false)
 const searchKeyword = ref('')
 const currentFilter = ref('all')
@@ -188,10 +174,6 @@ const filteredTasks = computed(() => {
 })
 
 // 方法
-const toggleSidebar = () => {
-  sidebarRef.value?.toggleSidebarFromHeader()
-}
-
 const handleSetFilter = (status: string) => {
   viewMode.value = 'pending' // 切换筛选时默认切换到待办模式
   fetchTasks().then(() => {

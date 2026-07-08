@@ -18,7 +18,7 @@
   font-size: 16px;
   font-weight: 600;
   margin: 0;
-  color: #333;
+  color: var(--color-text);
 }
 
 .tasks-stats {
@@ -35,13 +35,13 @@
 
 .stat-label {
   font-size: 12px;
-  color: #999;
+  color: var(--color-text-tertiary);
 }
 
 .stat-value {
   font-size: 18px;
   font-weight: 700;
-  color: #333;
+  color: var(--color-text);
 }
 
 .stat-value.completed {
@@ -57,7 +57,7 @@
 .tasks-empty {
   text-align: center;
   padding: 30px 20px;
-  color: #999;
+  color: var(--color-text-tertiary);
 }
 
 .loading-spinner {
@@ -129,7 +129,7 @@
 }
 
 .task-item.priority-high {
-  border-left-color: #5A7A87;
+  border-left-color: var(--color-text);
 }
 
 .task-item.priority-medium {
@@ -146,7 +146,7 @@
 
 .task-item.completed .task-title {
   text-decoration: line-through;
-  color: #999;
+  color: var(--color-text-tertiary);
 }
 
 .task-left {
@@ -175,13 +175,13 @@
   font-size: 14px;
   font-weight: 600;
   margin: 0 0 4px 0;
-  color: #333;
+  color: var(--color-text);
   word-break: break-word;
 }
 
 .task-description {
   font-size: 12px;
-  color: #666;
+  color: var(--color-text-secondary);
   margin: 4px 0;
   word-break: break-word;
   display: -webkit-box;
@@ -200,7 +200,7 @@
 
 .meta-item {
   font-size: 11px;
-  color: #999;
+  color: var(--color-text-tertiary);
   background: white;
   padding: 2px 6px;
   border-radius: 3px;
@@ -249,7 +249,7 @@
 .status-badge {
   font-size: 14px;
   font-weight: 700;
-  color: #999;
+  color: var(--color-text-tertiary);
   min-width: 20px;
   text-align: center;
 }

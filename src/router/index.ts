@@ -8,14 +8,14 @@ const AuthView = () => import('../views/AuthView.vue')
 const ProfileView = () => import('../views/ProfileView.vue')
 const ProfileEditView = () => import('../views/ProfileEditView.vue')
 const AIChatView = () => import('../views/AIChatView.vue')
-const DailyCheckinDisplayView = () => import('../views/DailyCheckinDisplayView.vue')
 const HistoryView = () => import('../views/HistoryView.vue')
-const MealCheckinDisplayView = () => import('../views/MealCheckinDisplayView.vue')
-const SleepCheckinDisplayView = () => import('../views/SleepCheckinDisplayView.vue')
-const ExerciseCheckinDisplayView = () => import('../views/ExerciseCheckinDisplayView.vue')
 const PortraitView = () => import('../views/PortraitView.vue')
 const TrendsView = () => import('../views/TrendsView.vue')
 const TodolistView = () => import('../views/TodolistView.vue')
+const ExploreView = () => import('../views/ExploreView.vue')
+const SettingsView = () => import('../views/SettingsView.vue')
+const CheckinView = () => import('../views/CheckinView.vue')
+const AvatarEditorView = () => import('../views/AvatarEditorView.vue')
 
 // 『』
 const routes = [
@@ -71,48 +71,25 @@ const routes = [
     }
   },
   {
-    path: '/health/daily-checkin',
-    name: 'daily-checkin',
-    component: DailyCheckinDisplayView,
+    path: '/checkin',
+    name: 'checkin',
+    component: CheckinView,
     meta: {
       requiresAuth: true,
-      title: 'StuHeal-青愈「健康打卡」'
+      title: '打卡'
     }
   },
   {
-    path: '/health/history',
+    path: '/health/daily-checkin',
+    redirect: '/checkin',
+  },
+  {
+    path: '/history',
     name: 'history',
     component: HistoryView,
     meta: {
       requiresAuth: true,
       title: 'StuHeal-青愈「历史记录」'
-    }
-  },
-  {
-    path: '/meal/checkin',
-    name: 'meal-checkin',
-    component: MealCheckinDisplayView,
-    meta: {
-      requiresAuth: true,
-      title: 'StuHeal-青愈「饮食打卡」'
-    }
-  },
-  {
-    path: '/sleep/checkin',
-    name: 'sleep-checkin',
-    component: SleepCheckinDisplayView,
-    meta: {
-      requiresAuth: true,
-      title: 'StuHeal-青愈「睡眠打卡」'
-    }
-  },
-  {
-    path: '/exercise/checkin',
-    name: 'exercise-checkin',
-    component: ExerciseCheckinDisplayView,
-    meta: {
-      requiresAuth: true,
-      title: 'StuHeal-青愈「运动打卡」'
     }
   },
   {
@@ -140,6 +117,30 @@ const routes = [
     meta: {
       requiresAuth: true,
       title: 'StuHeal-青愈「TodoList」'
+    }
+  },
+  {
+    path: '/explore',
+    name: 'explore',
+    component: ExploreView,
+    meta: {
+      requiresAuth: true,
+      title: '探索'
+    }
+  },
+  {
+    path: '/avatar-editor',
+    name: 'avatar-editor',
+    component: AvatarEditorView,
+    meta: { requiresAuth: true, title: '编辑头像' }
+  },
+  {
+    path: '/settings',
+    name: 'settings',
+    component: SettingsView,
+    meta: {
+      requiresAuth: true,
+      title: '设置'
     }
   }
 ]

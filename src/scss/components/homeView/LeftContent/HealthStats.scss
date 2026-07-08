@@ -1,5 +1,5 @@
 .health-stats {
-  background: linear-gradient(135deg, #FEFCFA 0%, #F8F6F3 100%);
+  background: linear-gradient(135deg, var(--color-bg) 0%, var(--color-bg-secondary) 100%);
   border-radius: 12px;
   padding: 20px;
   flex-direction: column;
@@ -67,7 +67,7 @@
 .stat-value {
   font-size: 16px;
   font-weight: 600;
-  color: #2c3e50;
+  color: var(--color-text);
   margin: 2px 0 0 0;
 }
 
@@ -80,7 +80,7 @@
 .stat-divider {
   width: 1px;
   height: 70px;
-  background: #D4C4B0;
+  background: var(--color-border);
   flex-shrink: 0;
 }
 
@@ -96,7 +96,7 @@
 .divider {
   width: 100%;
   height: 1px;
-  background: #D4C4B0;
+  background: var(--color-border);
   margin-bottom: 0 auto 15px;
 }
 
@@ -131,7 +131,7 @@
 .info-value {
   font-size: 14px;
   font-weight: 600;
-  color: #2c3e50;
+  color: var(--color-text);
 }
 
 .bmi-category {

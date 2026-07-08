@@ -113,7 +113,7 @@
                 </label>
               </div>
               <input v-if="healthInfo.dietOther" v-model="healthInfo.dietOtherText" type="text" class="form-input"
-                placeholder="请说明其他饮食偏好" style="margin-top: 12px" />
+                placeholder="请说明其他饮食偏好" style="margin-top: var(--space-3)" />
             </div>
           </section>
 
@@ -136,7 +136,7 @@
                 </label>
               </div>
               <input v-if="healthInfo.goalOther" v-model="healthInfo.goalOtherText" type="text" class="form-input"
-                placeholder="请说明其他健康目标" style="margin-top: 12px" />
+                placeholder="请说明其他健康目标" style="margin-top: var(--space-3)" />
             </div>
           </section>
 

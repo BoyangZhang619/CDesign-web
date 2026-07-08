@@ -43,7 +43,7 @@
 .card-title {
   font-size: 16px;
   font-weight: 600;
-  color: #2c3e50;
+  color: var(--color-text);
   margin: 0;
   line-height: 1.3;
 }
@@ -66,12 +66,12 @@
   transition: all 0.3s ease;
   font-size: 13px;
   width: fit-content;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
 }
 
 .check-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.06);
 }
 
 .check-btn:active {
@@ -81,7 +81,7 @@
 .card-right {
   flex: 0 1 140px;
   min-width: 80px;
-  background: linear-gradient(135deg, #5A7A87 0%, #7A8F95 100%);
+  background: var(--gradient-cool);
   position: relative;
   display: none;
 }

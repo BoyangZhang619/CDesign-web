@@ -1,5 +1,5 @@
 .portrait-score-card {
-  background: linear-gradient(135deg, #FEFCFA 0%, #F8F6F3 100%);
+  background: linear-gradient(135deg, var(--color-bg) 0%, var(--color-bg-secondary) 100%);
   border: 1px solid #E8E1D6;
   border-radius: 12px;
   padding: 20px;
@@ -17,7 +17,7 @@
 .card-title {
   font-size: 16px;
   font-weight: 700;
-  color: #5A7A87;
+  color: var(--color-text);
 }
 
 .card-actions {
@@ -51,8 +51,8 @@
 
 .btn-refresh {
   padding: 8px 14px;
-  background: linear-gradient(135deg, #9DB4A0 0%, #8FA591 100%);
-  color: #FEFCFA;
+  background: var(--gradient-accent);
+  color: var(--color-bg);
   border: 1px solid #9DB4A0;
   border-radius: 8px;
   font-size: 12px;
@@ -63,7 +63,7 @@
 
 .btn-refresh:hover:not(:disabled) {
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(157, 180, 160, 0.3);
+  box-shadow: 0 4px 12px rgba(0, 149, 246, 0.3);
 }
 
 .btn-refresh:disabled {
@@ -117,7 +117,7 @@
 .score-value {
   font-size: 32px;
   font-weight: 700;
-  color: #5A7A87;
+  color: var(--color-text);
 }
 
 .score-label {
@@ -151,7 +151,7 @@
 .score-name {
   font-size: 13px;
   font-weight: 600;
-  color: #5A7A87;
+  color: var(--color-text);
   min-width: 40px;
 }
 
@@ -174,11 +174,11 @@
 }
 
 .score-fill.meal {
-  background: linear-gradient(90deg, #C9B89C 0%, #B8A78B 100%);
+  background: linear-gradient(90deg, var(--color-accent) 0%, #B8A78B 100%);
 }
 
 .score-fill.sleep {
-  background: linear-gradient(90deg, #A9787B 0%, #987067 100%);
+  background: linear-gradient(90deg, var(--color-danger) 0%, #987067 100%);
 }
 
 .score-num {

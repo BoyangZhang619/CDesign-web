@@ -25,7 +25,7 @@
 
 .detail-type-badge.exercise {
   background: #D4E8D8;
-  color: #5A7A87;
+  color: var(--color-text);
 }
 
 .detail-type-badge.sleep {
@@ -43,7 +43,7 @@
 .detail-title {
   font-size: 16px;
   font-weight: 700;
-  color: #5A7A87;
+  color: var(--color-text);
   margin: 0;
 }
 
@@ -67,7 +67,7 @@
 
 .time-label {
   font-weight: 600;
-  color: #5A7A87;
+  color: var(--color-text);
 }
 
 .time-value {
@@ -78,7 +78,7 @@
   font-size: 13px;
   color: #8B9FA0;
   line-height: 1.5;
-  background: #F8F6F3;
+  background: var(--color-bg-secondary);
   padding: 12px;
   border-radius: 8px;
   margin: 0;
@@ -90,7 +90,7 @@
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 12px;
-  background: #F8F6F3;
+  background: var(--color-bg-secondary);
   padding: 12px;
   border-radius: 8px;
 }
@@ -113,14 +113,14 @@
 .stat-value {
   font-size: 14px;
   font-weight: 700;
-  color: #5A7A87;
+  color: var(--color-text);
 }
 
 .ai-section {
   display: flex;
   flex-direction: column;
   gap: 8px;
-  background: linear-gradient(135deg, #F8F6F3 0%, #F0EBE3 100%);
+  background: linear-gradient(135deg, var(--color-bg-secondary) 0%, #F0EBE3 100%);
   padding: 12px;
   border-radius: 8px;
   border-left: 4px solid #9DB4A0;
@@ -129,7 +129,7 @@
 .section-title {
   font-size: 12px;
   font-weight: 700;
-  color: #5A7A87;
+  color: var(--color-text);
   margin: 0;
 }
 
@@ -143,7 +143,7 @@
 .btn-delete {
   padding: 10px;
   background: linear-gradient(135deg, #D4A5A8 0%, #C89397 100%);
-  color: #FEFCFA;
+  color: var(--color-bg);
   border: none;
   border-radius: 8px;
   font-size: 12px;

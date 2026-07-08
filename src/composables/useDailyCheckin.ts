@@ -88,25 +88,28 @@ export function useDailyCheckin() {
 
       const aiSummary = await loadCheckin('/exercise-checkin/checkin/exercise/ai-summary');
       console.log('AI Summary response:', aiSummary);
-      form.value.exercise_duration_time = (exerciseData as DailyCheckin).exercise_duration_time || 0
-      form.value.exercise_calories_burned = (exerciseData as DailyCheckin).exercise_calories_burned || 0
-      form.value.exercise_ai_summary = (aiSummary as AiSummaryResponse).records[0].exercise_ai_summary || ''
-      form.value.meal_breakfast_type = (mealData as DailyCheckin).meal_breakfast_type || ''
-      form.value.meal_lunch_type = (mealData as DailyCheckin).meal_lunch_type || ''
-      form.value.meal_dinner_type = (mealData as DailyCheckin).meal_dinner_type || ''
-      form.value.meal_calories = (mealData as DailyCheckin).meal_calories || 0
-      form.value.meal_protein = (mealData as DailyCheckin).meal_protein || 0
-      form.value.meal_fat = (mealData as DailyCheckin).meal_fat || 0
-      form.value.meal_carb = (mealData as DailyCheckin).meal_carb || 0
-      form.value.meal_fiber = (mealData as DailyCheckin).meal_fiber || 0
-      form.value.meal_sugar = (mealData as DailyCheckin).meal_sugar || 0
-      form.value.meal_water = (mealData as DailyCheckin).meal_water || 0
-      form.value.meal_ai_summary = (aiSummary as AiSummaryResponse).records[0].meal_ai_summary || ''
-      form.value.sleep_duration_time = (sleepData as DailyCheckin).sleep_duration_time || 0
-      form.value.sleep_start_time = (sleepData as DailyCheckin).sleep_start_time || '22:00'
-      form.value.sleep_wakeup_times = (sleepData as DailyCheckin).sleep_wakeup_times || 0
-      form.value.sleep_ai_summary = (aiSummary as AiSummaryResponse).records[0].sleep_ai_summary || ''
-      form.value.total_ai_summary = (aiSummary as AiSummaryResponse).records[0].total_ai_summary || ''
+      const ed = (exerciseData || {}) as any
+      form.value.exercise_duration_time = ed.exercise_duration_time || 0
+      form.value.exercise_calories_burned = ed.exercise_calories_burned || 0
+      form.value.exercise_ai_summary = (aiSummary as any)?.records?.[0]?.exercise_ai_summary || ''
+      const md = (mealData || {}) as any
+      form.value.meal_breakfast_type = md.meal_breakfast_type || ''
+      form.value.meal_lunch_type = md.meal_lunch_type || ''
+      form.value.meal_dinner_type = md.meal_dinner_type || ''
+      form.value.meal_calories = md.meal_calories || 0
+      form.value.meal_protein = md.meal_protein || 0
+      form.value.meal_fat = md.meal_fat || 0
+      form.value.meal_carb = md.meal_carb || 0
+      form.value.meal_fiber = md.meal_fiber || 0
+      form.value.meal_sugar = md.meal_sugar || 0
+      form.value.meal_water = md.meal_water || 0
+      form.value.meal_ai_summary = (aiSummary as any)?.records?.[0]?.meal_ai_summary || ''
+      const sd = (sleepData || {}) as any
+      form.value.sleep_duration_time = sd.sleep_duration_time || 0
+      form.value.sleep_start_time = sd.sleep_start_time || '22:00'
+      form.value.sleep_wakeup_times = sd.sleep_wakeup_times || 0
+      form.value.sleep_ai_summary = (aiSummary as any)?.records?.[0]?.sleep_ai_summary || ''
+      form.value.total_ai_summary = (aiSummary as any)?.records?.[0]?.total_ai_summary || ''
 
       console.log('Loaded daily check-in data:', form.value);
       console.log('ai summary:', aiSummary);
