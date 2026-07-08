@@ -143,6 +143,4 @@ const {
 } = useAuthForm()
 </script>
 
-<style scoped>
-@import '@/css/AuthView.css';
-</style>
+<style lang="scss" scoped src="@/scss/views/AuthView.scss"></style>

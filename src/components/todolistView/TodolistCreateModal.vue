@@ -344,6 +344,4 @@ watch(
 )
 </script>
 
-<style scoped>
-@import '../../css/components/TodolistCreateModal.css';
-</style>
+<style lang="scss" scoped src="@/scss/components/TodolistCreateModal.scss"></style>

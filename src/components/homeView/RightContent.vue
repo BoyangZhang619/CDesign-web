@@ -65,11 +65,4 @@ const isMobile = computed(() => {
 
 </script>
 
-<style scoped>
-.right-content {
-  flex: 0 0 350px;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-</style>
+<style lang="scss" scoped src="@/scss/components/homeView/RightContent.scss"></style>

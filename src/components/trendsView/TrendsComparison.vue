@@ -89,6 +89,4 @@ onMounted(() => {
 })
 </script>
 
-<style scoped>
-@import '@/css/components/TrendsComparison.css';
-</style>
+<style lang="scss" scoped src="@/scss/components/TrendsComparison.scss"></style>

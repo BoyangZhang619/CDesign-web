@@ -442,6 +442,4 @@ const toggleSidebar = () => {
 }
 </script>
 
-<style scoped>
-@import '@/css/HistoryView.css';
-</style>
+<style lang="scss" scoped src="@/scss/views/HistoryView.scss"></style>

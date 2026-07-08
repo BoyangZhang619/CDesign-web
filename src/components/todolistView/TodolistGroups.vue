@@ -239,13 +239,4 @@ defineEmits<{
 }>()
 </script>
 
-<style scoped>
-@import '../../css/components/TodolistGroups.css';
-
-.empty-state {
-  text-align: center;
-  padding: 40px 20px;
-  color: #999;
-  font-size: 14px;
-}
-</style>
+<style lang="scss" scoped src="@/scss/components/TodolistGroups.scss"></style>

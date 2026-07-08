@@ -8,6 +8,4 @@
 
 <script setup lang="ts"></script>
 
-<style scoped>
-@import '../../css/components/TodolistEmpty.css';
-</style>
+<style lang="scss" scoped src="@/scss/components/TodolistEmpty.scss"></style>

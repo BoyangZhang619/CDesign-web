@@ -420,6 +420,4 @@ onMounted(() => {
 })
 </script>
 
-<style scoped>
-@import '../css/AIChatView.css';
-</style>
+<style lang="scss" scoped src="@/scss/views/AIChatView.scss"></style>

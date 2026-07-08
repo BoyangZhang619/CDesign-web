@@ -1,0 +1,140 @@
+.portrait-metrics {
+  background: linear-gradient(135deg, #FEFCFA 0%, #F8F6F3 100%);
+  border: 1px solid #E8E1D6;
+  border-radius: 12px;
+  padding: 20px;
+}
+
+.metrics-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #E1D9D0;
+}
+
+.metrics-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: #5A7A87;
+}
+
+.metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 15px;
+}
+
+.metric-card {
+  background: linear-gradient(135deg, #FFFFFF 0%, #F8F6F3 100%);
+  border: 1px solid #E1D9D0;
+  border-radius: 10px;
+  padding: 15px;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.metric-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.metric-icon {
+  font-size: 28px;
+  margin-bottom: 10px;
+}
+
+.metric-value {
+  font-size: 24px;
+  font-weight: 700;
+  color: #5A7A87;
+  line-height: 1;
+}
+
+.metric-unit {
+  font-size: 11px;
+  color: #8B9FA0;
+  margin-top: 4px;
+  margin-bottom: 8px;
+  font-weight: 600;
+}
+
+.metric-status {
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 8px;
+  border-radius: 6px;
+  display: inline-block;
+  margin-top: 8px;
+}
+
+.metric-status.excellent {
+  background: #9DB4A0;
+  color: #FEFCFA;
+}
+
+.metric-status.warning {
+  background: #D4A5A8;
+  color: #FEFCFA;
+}
+
+.metric-status.neutral {
+  background: #C9B89C;
+  color: #FEFCFA;
+}
+
+/* 不同卡片的边框色 */
+.metric-card.bmi {
+  border-left: 4px solid #9DB4A0;
+}
+
+.metric-card.activity {
+  border-left: 4px solid #FF9A76;
+}
+
+.metric-card.metabolism {
+  border-left: 4px solid #C9B89C;
+}
+
+.metric-card.sleep {
+  border-left: 4px solid #8FA591;
+}
+
+@media (max-width: 768px) {
+  .metrics-grid {
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 12px;
+  }
+
+  .metric-value {
+    font-size: 20px;
+  }
+
+  .metric-icon {
+    font-size: 24px;
+  }
+}
+
+@media (max-width: 480px) {
+  .portrait-metrics {
+    padding: 15px;
+  }
+
+  .metrics-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+
+  .metric-value {
+    font-size: 18px;
+  }
+
+  .metric-icon {
+    font-size: 20px;
+  }
+
+  .metric-status {
+    font-size: 11px;
+  }
+}

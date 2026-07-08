@@ -199,7 +199,5 @@ onMounted(() => {
 })
 </script>
 
-<style scoped>
-  @import "@/css/components/AppHeader.css";
-</style>
+<style lang="scss" scoped src="@/scss/components/AppHeader.scss"></style>
 

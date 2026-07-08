@@ -65,11 +65,4 @@ const isMobile = computed(() => {
 })
 </script>
 
-<style scoped>
-.left-content {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-</style>
+<style lang="scss" scoped src="@/scss/components/homeView/LeftContent.scss"></style>

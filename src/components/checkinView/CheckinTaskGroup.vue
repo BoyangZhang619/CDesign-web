@@ -149,6 +149,4 @@ const onDeleteTask = (taskId: number) => {
 }
 </script>
 
-<style scoped>
-@import '@/css/CheckinTaskGroup.css';
-</style>
+<style lang="scss" scoped src="@/scss/components/CheckinTaskGroup.scss"></style>

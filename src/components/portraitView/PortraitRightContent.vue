@@ -48,10 +48,4 @@ defineProps({
 })
 </script>
 
-<style scoped>
-.portrait-right-content {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-</style>
+<style lang="scss" scoped src="@/scss/components/portraitView/PortraitRightContent.scss"></style>

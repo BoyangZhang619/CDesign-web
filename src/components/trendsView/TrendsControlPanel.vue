@@ -24,6 +24,4 @@ defineEmits<{
 }>()
 </script>
 
-<style scoped>
-@import '@/css/components/TrendsControlPanel.css';
-</style>
+<style lang="scss" scoped src="@/scss/components/TrendsControlPanel.scss"></style>

@@ -169,6 +169,4 @@ defineExpose({
 
 </script>
 
-<style scoped>
-@import '../../css/homeView/sideBar.css';
-</style>
+<style lang="scss" scoped src="@/scss/components/homeView/sideBar.scss"></style>

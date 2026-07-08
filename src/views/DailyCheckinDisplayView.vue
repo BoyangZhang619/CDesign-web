@@ -240,6 +240,4 @@ onBeforeUnmount(() => {
 })
 </script>
 
-<style scoped>
-@import '@/css/DailyCheckinDisplay.css';
-</style>
+<style lang="scss" scoped src="@/scss/views/DailyCheckinDisplay.scss"></style>

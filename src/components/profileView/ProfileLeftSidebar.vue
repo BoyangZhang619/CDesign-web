@@ -43,6 +43,4 @@ defineProps<{
 }>()
 </script>
 
-<style scoped>
-@import '@/css/components/ProfileLeftSidebar.css';
-</style>
+<style lang="scss" scoped src="@/scss/components/ProfileLeftSidebar.scss"></style>

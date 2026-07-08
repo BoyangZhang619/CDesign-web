@@ -368,6 +368,4 @@ function handleSkipClick() {
 }
 </script>
 
-<style scoped>
-@import '@/css/HealthSetupModal.css';
-</style>
+<style lang="scss" scoped src="@/scss/components/HealthSetupModal.scss"></style>

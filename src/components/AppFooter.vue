@@ -80,6 +80,4 @@ function closeSidebar() {
 }
 </script>
 
-<style scoped>
-@import '@/css/AppFooter.css';
-</style>
+<style lang="scss" scoped src="@/scss/components/AppFooter.scss"></style>

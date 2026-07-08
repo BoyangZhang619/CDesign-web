@@ -71,6 +71,4 @@ const toggleSidebar = () => {
 }
 </script>
 
-<style scoped>
-@import '@/css/PortraitView.css';
-</style>
+<style lang="scss" scoped src="@/scss/views/PortraitView.scss"></style>

@@ -452,6 +452,4 @@ onUnmounted(() => {
 })
 </script>
 
-<style scoped>
-@import '@/css/SleepCheckinDisplay.css';
-</style>
+<style lang="scss" scoped src="@/scss/views/SleepCheckinDisplay.scss"></style>

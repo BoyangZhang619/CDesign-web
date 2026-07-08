@@ -306,6 +306,4 @@ onMounted(() => {
 })
 </script>
 
-<style scoped>
-@import '../css/TodolistView.css';
-</style>
+<style lang="scss" scoped src="@/scss/views/TodolistView.scss"></style>

@@ -38,12 +38,4 @@ defineProps({
 defineEmits(['refresh'])
 </script>
 
-<style scoped>
-.portrait-left-content {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  min-width: 0;
-}
-</style>
+<style lang="scss" scoped src="@/scss/components/portraitView/PortraitLeftContent.scss"></style>

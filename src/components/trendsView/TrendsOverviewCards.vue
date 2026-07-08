@@ -73,6 +73,4 @@ defineProps<{
 }>()
 </script>
 
-<style scoped>
-@import '@/css/components/TrendsOverviewCards.css';
-</style>
+<style lang="scss" scoped src="@/scss/components/TrendsOverviewCards.scss"></style>

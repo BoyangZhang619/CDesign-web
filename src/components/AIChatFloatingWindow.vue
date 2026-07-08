@@ -405,7 +405,4 @@ onUnmounted(() => {
 })
 </script>
 
-<style scoped>
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600&family=Montserrat:wght@400;500;600&display=swap');
-@import '../css/components/AIChatFloatingWindow.css';
-</style>
+<style lang="scss" scoped src="@/scss/components/AIChatFloatingWindow.scss"></style>

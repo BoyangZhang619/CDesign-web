@@ -140,6 +140,4 @@ const loadFullHealthProfile = async () => {
 }
 </script>
 
-<style scoped>
-@import '@/css/ProfileView.css';
-</style>
+<style lang="scss" scoped src="@/scss/views/ProfileView.scss"></style>

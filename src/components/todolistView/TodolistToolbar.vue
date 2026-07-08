@@ -39,6 +39,4 @@ defineEmits<{
 }>()
 </script>
 
-<style scoped>
-@import '../../css/components/TodolistToolbar.css';
-</style>
+<style lang="scss" scoped src="@/scss/components/TodolistToolbar.scss"></style>

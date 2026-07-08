@@ -22,6 +22,4 @@ defineEmits<{
 }>()
 </script>
 
-<style scoped>
-@import '../../css/components/TodolistHeader.css';
-</style>
+<style lang="scss" scoped src="@/scss/components/TodolistHeader.scss"></style>

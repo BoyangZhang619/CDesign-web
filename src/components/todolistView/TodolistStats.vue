@@ -55,6 +55,4 @@ const props = defineProps<{
 }>()
 </script>
 
-<style scoped>
-@import '../../css/components/TodolistStats.css';
-</style>
+<style lang="scss" scoped src="@/scss/components/TodolistStats.scss"></style>

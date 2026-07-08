@@ -177,6 +177,4 @@ watch(() => props.chartData, async () => {
 }, { deep: true, immediate: true })
 </script>
 
-<style scoped>
-@import '@/css/components/TrendsCharts.css';
-</style>
+<style lang="scss" scoped src="@/scss/components/TrendsCharts.scss"></style>

@@ -33,6 +33,4 @@ defineProps<{
 }>()
 </script>
 
-<style scoped>
-@import '@/css/components/TrendsHabits.css';
-</style>
+<style lang="scss" scoped src="@/scss/components/TrendsHabits.scss"></style>

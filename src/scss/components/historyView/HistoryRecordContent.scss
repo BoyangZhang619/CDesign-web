@@ -1,0 +1,159 @@
+.record-detail-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  width: 100%;
+}
+
+.detail-header {
+  padding-bottom: 12px;
+  border-bottom: 1px solid #E8E1D6;
+}
+
+.detail-type-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.detail-type-badge.meal {
+  background: #FFE8D6;
+  color: #C8704C;
+}
+
+.detail-type-badge.exercise {
+  background: #D4E8D8;
+  color: #5A7A87;
+}
+
+.detail-type-badge.sleep {
+  background: #E8D4F0;
+  color: #8B5A8A;
+}
+
+.detail-body {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding-top: 12px;
+}
+
+.detail-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: #5A7A87;
+  margin: 0;
+}
+
+.detail-meta {
+  font-size: 12px;
+  color: #8B9FA0;
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.detail-time {
+  font-size: 11px;
+  color: #8B9FA0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 8px;
+  padding: 6px 0;
+}
+
+.time-label {
+  font-weight: 600;
+  color: #5A7A87;
+}
+
+.time-value {
+  color: #8B9FA0;
+}
+
+.detail-note {
+  font-size: 13px;
+  color: #8B9FA0;
+  line-height: 1.5;
+  background: #F8F6F3;
+  padding: 12px;
+  border-radius: 8px;
+  margin: 0;
+}
+
+.nutrition-grid,
+.exercise-stats,
+.sleep-stats {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  background: #F8F6F3;
+  padding: 12px;
+  border-radius: 8px;
+}
+
+.nutrition-item,
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.nutrition-label,
+.stat-label {
+  font-size: 11px;
+  color: #8B9FA0;
+  font-weight: 600;
+}
+
+.nutrition-value,
+.stat-value {
+  font-size: 14px;
+  font-weight: 700;
+  color: #5A7A87;
+}
+
+.ai-section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  background: linear-gradient(135deg, #F8F6F3 0%, #F0EBE3 100%);
+  padding: 12px;
+  border-radius: 8px;
+  border-left: 4px solid #9DB4A0;
+}
+
+.section-title {
+  font-size: 12px;
+  font-weight: 700;
+  color: #5A7A87;
+  margin: 0;
+}
+
+.section-content {
+  font-size: 12px;
+  color: #8B9FA0;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.btn-delete {
+  padding: 10px;
+  background: linear-gradient(135deg, #D4A5A8 0%, #C89397 100%);
+  color: #FEFCFA;
+  border: none;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-top: 8px;
+}
+
+.btn-delete:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(212, 165, 168, 0.3);
+}

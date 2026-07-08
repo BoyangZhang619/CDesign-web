@@ -98,6 +98,4 @@ onMounted(async () => {
 })
 </script>
 
-<style scoped>
-@import '@/css/TrendsView.css';
-</style>
+<style lang="scss" scoped src="@/scss/views/TrendsView.scss"></style>

@@ -439,6 +439,4 @@ onUnmounted(() => {
 })
 </script>
 
-<style scoped>
-@import '@/css/ExerciseCheckinDisplay.css';
-</style>
+<style lang="scss" scoped src="@/scss/views/ExerciseCheckinDisplay.scss"></style>
