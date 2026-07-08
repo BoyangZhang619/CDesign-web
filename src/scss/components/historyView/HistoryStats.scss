@@ -1,5 +1,5 @@
 .stats-container {
-  background: linear-gradient(135deg, #FEFCFA 0%, #F8F6F3 100%);
+  background: linear-gradient(135deg, var(--color-bg) 0%, var(--color-bg-secondary) 100%);
   border: 1px solid #E8E1D6;
   border-radius: 12px;
   padding: 16px;
@@ -15,7 +15,7 @@
 .stats-title {
   font-size: 14px;
   font-weight: 700;
-  color: #5A7A87;
+  color: var(--color-text);
   margin: 0;
 }
 
@@ -26,7 +26,7 @@
 }
 
 .type-stat {
-  background: linear-gradient(135deg, #FFFFFF 0%, #FEFCFA 100%);
+  background: linear-gradient(135deg, #FFFFFF 0%, var(--color-bg) 100%);
   border: 1px solid #E8E1D6;
   border-radius: 8px;
   padding: 10px 14px;
@@ -40,9 +40,9 @@
 }
 
 .type-stat:hover {
-  background: linear-gradient(135deg, #F8F6F3 0%, #FEFCFA 100%);
+  background: linear-gradient(135deg, var(--color-bg-secondary) 0%, var(--color-bg) 100%);
   border-color: #9DB4A0;
-  box-shadow: 0 2px 8px rgba(157, 180, 160, 0.15);
+  box-shadow: 0 2px 8px rgba(0, 149, 246, 0.15);
 }
 
 .type-label {
@@ -54,7 +54,7 @@
 .type-count {
   font-size: 18px;
   font-weight: 700;
-  color: #5A7A87;
+  color: var(--color-text);
 }
 
 @media (max-width: 768px) {

@@ -1,5 +1,5 @@
 .filter-panel {
-  background: linear-gradient(135deg, #FEFCFA 0%, #F8F6F3 100%);
+  background: linear-gradient(135deg, var(--color-bg) 0%, var(--color-bg-secondary) 100%);
   border: 1px solid #E8E1D6;
   border-radius: 12px;
   overflow: hidden;
@@ -12,19 +12,19 @@
   align-items: center;
   padding: 15px 20px;
   cursor: pointer;
-  background: linear-gradient(135deg, #F8F6F3 0%, #FEFCFA 100%);
+  background: linear-gradient(135deg, var(--color-bg-secondary) 0%, var(--color-bg) 100%);
   border-bottom: 1px solid #E1D9D0;
   transition: all 0.2s ease;
 }
 
 .filter-panel-header:hover {
-  background: linear-gradient(135deg, #FEFCFA 0%, #F8F6F3 100%);
+  background: linear-gradient(135deg, var(--color-bg) 0%, var(--color-bg-secondary) 100%);
 }
 
 .filter-panel-title {
   font-size: 16px;
   font-weight: 700;
-  color: #5A7A87;
+  color: var(--color-text);
 }
 
 .filter-panel-toggle {
@@ -67,7 +67,7 @@
 .filter-label {
   font-size: 14px;
   font-weight: 700;
-  color: #5A7A87;
+  color: var(--color-text);
 }
 
 .type-buttons {
@@ -78,8 +78,8 @@
 
 .type-btn {
   padding: 8px 16px;
-  background: #F8F6F3;
-  color: #5A7A87;
+  background: var(--color-bg-secondary);
+  color: var(--color-text);
   border: 1px solid #E1D9D0;
   border-radius: 8px;
   font-size: 12px;
@@ -94,8 +94,8 @@
 }
 
 .type-btn.active {
-  background: linear-gradient(135deg, #9DB4A0 0%, #8FA591 100%);
-  color: #FEFCFA;
+  background: var(--gradient-accent);
+  color: var(--color-bg);
   border-color: #9DB4A0;
 }
 
@@ -123,14 +123,14 @@
   border: 1px solid #E1D9D0;
   border-radius: 8px;
   font-size: 12px;
-  color: #5A7A87;
+  color: var(--color-text);
   transition: border-color 0.2s ease;
 }
 
 .date-input:focus {
   outline: none;
   border-color: #9DB4A0;
-  box-shadow: 0 0 0 3px rgba(157, 180, 160, 0.1);
+  box-shadow: 0 0 0 3px rgba(0, 149, 246, 0.1);
 }
 
 .filter-actions {
@@ -152,18 +152,18 @@
 }
 
 .btn-primary {
-  background: linear-gradient(135deg, #9DB4A0 0%, #8FA591 100%);
-  color: #FEFCFA;
+  background: var(--gradient-accent);
+  color: var(--color-bg);
 }
 
 .btn-primary:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(157, 180, 160, 0.3);
+  box-shadow: 0 4px 12px rgba(0, 149, 246, 0.3);
 }
 
 .btn-secondary {
-  background: #F8F6F3;
-  color: #5A7A87;
+  background: var(--color-bg-secondary);
+  color: var(--color-text);
   border: 1px solid #E1D9D0;
 }
 

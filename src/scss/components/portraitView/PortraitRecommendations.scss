@@ -1,5 +1,5 @@
 .portrait-recommendations {
-  background: linear-gradient(135deg, #FEFCFA 0%, #F8F6F3 100%);
+  background: linear-gradient(135deg, var(--color-bg) 0%, var(--color-bg-secondary) 100%);
   border: 1px solid #E8E1D6;
   border-radius: 12px;
   padding: 20px;
@@ -17,12 +17,12 @@
 .recommendations-title {
   font-size: 16px;
   font-weight: 700;
-  color: #5A7A87;
+  color: var(--color-text);
 }
 
 .recommendations-count {
   background: #9DB4A0;
-  color: #FEFCFA;
+  color: var(--color-bg);
   font-size: 12px;
   font-weight: 700;
   width: 24px;
@@ -74,18 +74,18 @@
 }
 
 .recommendation-item.high {
-  border-left-color: #A9787B;
+  border-left-color: var(--color-danger);
   background: linear-gradient(90deg, rgba(169, 120, 123, 0.05) 0%, transparent 100%);
 }
 
 .recommendation-item.medium {
-  border-left-color: #C9B89C;
+  border-left-color: var(--color-accent);
   background: linear-gradient(90deg, rgba(201, 184, 156, 0.05) 0%, transparent 100%);
 }
 
 .recommendation-item.low {
   border-left-color: #9DB4A0;
-  background: linear-gradient(90deg, rgba(157, 180, 160, 0.05) 0%, transparent 100%);
+  background: linear-gradient(90deg, rgba(0, 149, 246, 0.05) 0%, transparent 100%);
 }
 
 .recommendation-left {
@@ -105,15 +105,15 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #FEFCFA;
+  color: var(--color-bg);
 }
 
 .recommendation-priority.high {
-  background: #A9787B;
+  background: var(--color-danger);
 }
 
 .recommendation-priority.medium {
-  background: #C9B89C;
+  background: var(--color-accent);
 }
 
 .recommendation-priority.low {
@@ -132,7 +132,7 @@
 .recommendation-title {
   font-size: 14px;
   font-weight: 700;
-  color: #5A7A87;
+  color: var(--color-text);
   margin-bottom: 4px;
 }
 
@@ -153,8 +153,8 @@
 
 .btn-detail {
   padding: 6px 12px;
-  background: linear-gradient(135deg, #9DB4A0 0%, #8FA591 100%);
-  color: #FEFCFA;
+  background: var(--gradient-accent);
+  color: var(--color-bg);
   border: 1px solid #9DB4A0;
   border-radius: 6px;
   font-size: 11px;
@@ -166,7 +166,7 @@
 
 .btn-detail:hover {
   transform: translateY(-1px);
-  box-shadow: 0 2px 8px rgba(157, 180, 160, 0.3);
+  box-shadow: 0 2px 8px rgba(0, 149, 246, 0.3);
 }
 
 @media (max-width: 768px) {

@@ -1,5 +1,5 @@
 .filter-panel {
-  background: linear-gradient(135deg, #FEFCFA 0%, #F8F6F3 100%);
+  background: linear-gradient(135deg, var(--color-bg) 0%, var(--color-bg-secondary) 100%);
   border: 1px solid #E8E1D6;
   border-radius: 12px;
   overflow: hidden;
@@ -12,13 +12,13 @@
   align-items: center;
   padding: 15px 20px;
   cursor: pointer;
-  background: linear-gradient(135deg, #F8F6F3 0%, #FEFCFA 100%);
+  background: linear-gradient(135deg, var(--color-bg-secondary) 0%, var(--color-bg) 100%);
   border-bottom: 1px solid #E1D9D0;
   transition: all 0.2s ease;
 }
 
 .filter-panel-header:hover {
-  background: linear-gradient(135deg, #FEFCFA 0%, #F8F6F3 100%);
+  background: linear-gradient(135deg, var(--color-bg) 0%, var(--color-bg-secondary) 100%);
 }
 
 .filter-panel-title {
@@ -177,6 +177,6 @@
 }
 
 .btn-secondary:hover {
-  background: #FEFCFA;
+  background: var(--color-bg);
   border-color: #C8B4A0;
 }

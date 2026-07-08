@@ -5,7 +5,7 @@
   display: flex;
   height: calc(100dvh - 10px);
   background: none;
-  border: 5px solid #5A7A87;
+  border: 5px solid var(--color-text);
   border-radius: 20px;
   overflow: hidden;
   box-sizing: content-box;
@@ -95,13 +95,13 @@
 
 .date-input:focus {
   outline: none;
-  border-color: #5A7A87;
+  border-color: var(--color-text);
   box-shadow: 0 0 0 3px rgba(90, 122, 135, 0.1);
 }
 
 .today-btn {
   padding: 8px 12px;
-  background: linear-gradient(135deg, #5A7A87 0%, #7A8F95 100%);
+  background: linear-gradient(135deg, var(--color-text) 0%, #7A8F95 100%);
   color: white;
   border: none;
   border-radius: 6px;
@@ -229,8 +229,8 @@
 
 .nav-btn:hover {
   background: #f9f9f9;
-  border-color: #d0d0d0;
-  color: #5A7A87;
+  border-color: var(--color-border);
+  color: var(--color-text);
 }
 
 .nav-icon {
@@ -273,12 +273,12 @@
 
 .checkin-card:hover {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  border-color: #5A7A87;
+  border-color: var(--color-text);
 }
 
 /* .checkin-card.completed {
   background: linear-gradient(135deg, rgba(90, 122, 135, 0.05) 0%, rgba(122, 143, 149, 0.05) 100%);
-  border-color: #5A7A87;
+  border-color: var(--color-text);
 } */
 
 /* 卡片头部 */
@@ -375,13 +375,13 @@
 
 .metric-unit {
   font-size: 11px;
-  color: #999;
+  color: var(--color-text-tertiary);
 }
 
 .empty-message {
   padding: 20px;
   text-align: center;
-  color: #999;
+  color: var(--color-text-tertiary);
   font-size: 13px;
   background: #f9f9f9;
   border-radius: 6px;
@@ -400,7 +400,7 @@
   align-items: center;
   gap: 6px;
   padding: 8px 12px;
-  background: linear-gradient(135deg, #5A7A87 0%, #7A8F95 100%);
+  background: linear-gradient(135deg, var(--color-text) 0%, #7A8F95 100%);
   color: white;
   text-decoration: none;
   border-radius: 6px;
@@ -462,14 +462,14 @@
 
 .indicator-label {
   font-size: 11px;
-  color: #999;
+  color: var(--color-text-tertiary);
   font-weight: 500;
 }
 
 .indicator-value {
   font-size: 18px;
   font-weight: 600;
-  color: #5A7A87;
+  color: var(--color-text);
 }
 
 /* 历史预览 */
@@ -503,12 +503,12 @@
 .stat-number {
   font-size: 20px;
   font-weight: 600;
-  color: #5A7A87;
+  color: var(--color-text);
 }
 
 .stat-desc {
   font-size: 12px;
-  color: #999;
+  color: var(--color-text-tertiary);
 }
 
 /* AI预览 */
@@ -548,13 +548,13 @@
 
 .daily-checkin-left-panel::-webkit-scrollbar-thumb,
 .daily-checkin-right-panel::-webkit-scrollbar-thumb {
-  background: #d0d0d0;
+  background: var(--color-border);
   border-radius: 4px;
 }
 
 .daily-checkin-left-panel::-webkit-scrollbar-thumb:hover,
 .daily-checkin-right-panel::-webkit-scrollbar-thumb:hover {
-  background: #b0b0b0;
+  background: var(--color-text-tertiary);
 }
 
 .grid-svg {

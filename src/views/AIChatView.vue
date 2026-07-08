@@ -1,172 +1,160 @@
 <template>
-  <div class="ai-chat-layout">
-    <!-- 侧栏 - 左侧导航 -->
-    <Sidebar ref="sidebarRef" />
+  <div class="ai-chat container-md">
+    <div class="chat-wrapper">
+      <!-- 聊天头部 -->
+      <div class="chat-header">
+        <div class="header-actions">
+          <button @click="handleNewChat" class="btn-new-chat" title="新建对话">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="12" y1="5" x2="12" y2="19"></line>
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+            <span>新建</span>
+          </button>
+          <button @click="toggleHistoryPanel" class="btn-history" title="聊天历史">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+              <path
+                d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z" />
+            </svg>
+            <span>历史记录</span>
+          </button>
+        </div>
+      </div>
 
-    <div class="main-content">
-      <!-- 头部 -->
-      <TopHeader @toggle-sidebar="toggleSidebar" :title="'AI助手-愈伴'" :subtitle="'个性化健康咨询 · 有什么就来问问吧'" />
+      <!-- 消息容器 -->
+      <div class="messages-container">
+        <!-- 空状态 -->
+        <div v-if="messages.length === 0" class="empty-state">
+          <div class="empty-icon">✨</div>
+          <h2 class="empty-title">开始健康对话</h2>
+          <p class="empty-description">
+            向 AI 助手提出关于健康、饮食、<br>运动和睡眠的任何问题
+          </p>
+        </div>
 
-      <!-- 聊天内容区 -->
-      <div class="content-area">
-        <div class="chat-wrapper">
-          <!-- 聊天头部 -->
-          <div class="chat-header">
-            <div class="header-actions">
-              <button @click="handleNewChat" class="btn-new-chat" title="新建对话">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <line x1="12" y1="5" x2="12" y2="19"></line>
-                  <line x1="5" y1="12" x2="19" y2="12"></line>
-                </svg>
-                <span>新建</span>
-              </button>
-              <button @click="toggleHistoryPanel" class="btn-history" title="聊天历史">
+        <!-- 消息列表 -->
+        <div v-else class="messages-list">
+          <div v-for="(msg, index) in messages" :key="index" :class="['message-bubble', `msg-${msg.role}`]">
+            <div class="message-header">
+              <span class="message-role">{{ msg.role === 'user' ? '您' : 'AI' }}</span>
+            </div>
+
+            <!-- 思考过程 -->
+            <div v-if="msg.reasoning" class="reasoning-section">
+              <details :class="['reasoning-details', `state-${msg.reasoningState}`]"
+                :open="msg.reasoningState !== 'collapsed'">
+                <summary class="reasoning-summary">
+                  <span class="reasoning-icon">&nbsp;|&nbsp;</span>
+                  <span class="reasoning-label">思考过程</span>
+                  <span v-if="msg.reasoningState === 'collapsed' && msg.requestTime" class="reasoning-meta">
+                    {{ (msg.requestTime / 1000).toFixed(1) }}s · {{ msg.tokensUsed }} tokens
+                  </span>
+                </summary>
+                <div class="reasoning-content">{{ msg.reasoning }}</div>
+              </details>
+            </div>
+
+            <!-- 回复内容 或 加载动画 -->
+            <div v-if="msg.content === '' && msg.role === 'assistant'" class="message-loading">
+              <span class="loading-dot"></span>
+              <span class="loading-dot"></span>
+              <span class="loading-dot"></span>
+            </div>
+            <div v-else class="message-content">{{ msg.content }}</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 输入区域 -->
+      <div class="input-area">
+        <!-- 错误提示 -->
+        <transition name="fade">
+          <div v-if="errorMsg" class="error-box">
+            <span class="error-icon">⚠️</span>
+            <span>{{ errorMsg }}</span>
+          </div>
+        </transition>
+
+        <!-- 输入框 -->
+        <div class="input-box">
+          <textarea v-model="inputMessage" @keydown="handleKeyDown" :disabled="loading || showHistoryPanel"
+            class="chat-textarea" placeholder="输入您的问题... (Enter 发送 / Shift+Enter 换行)"></textarea>
+          <button @click="handleSendChat" :disabled="loading || !inputMessage.trim() || showHistoryPanel"
+            class="btn-submit" title="发送消息">
+            <svg v-if="!loading" viewBox="0 0 24 24" fill="currentColor">
+              <path
+                d="M16.6915026,12.4744748 L3.50612381,13.2599618 C3.19218622,13.2599618 3.03521743,13.4170592 3.03521743,13.5741566 L1.15159189,20.0151496 C0.8376543,20.8006365 0.99,21.89 1.77946707,22.52 C2.41,22.99 3.50612381,23.1 4.13399899,22.8429026 L21.714504,14.0454487 C22.6563168,13.5741566 23.1272231,12.6315722 22.9702544,11.6889879 L4.13399899,1.16350093 C3.34915502,0.9 2.40734225,1.00636533 1.77946707,1.4776575 C0.994623095,2.10604706 0.837654326,3.0486314 1.15159189,3.99701575 L3.03521743,10.4379852 C3.03521743,10.5950826 3.19218622,10.75 3.50612381,10.75 L16.6915026,11.5354869 C16.6915026,11.5354869 17.1624089,11.5354869 17.1624089,12.0068791 C17.1624089,12.4744748 16.6915026,12.4744748 16.6915026,12.4744748 Z" />
+            </svg>
+            <span v-else>⏳</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 右侧栏 - 聊天历史 -->
+  <transition name="slide-right">
+    <div v-if="showHistoryPanel" class="history-panel">
+      <div class="history-header">
+        <h3 class="history-title">聊天历史</h3>
+        <button @click="toggleHistoryPanel" class="btn-close-history" title="关闭">
+          <svg viewBox="0 0 24 24" fill="currentColor">
+            <path
+              d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z" />
+          </svg>
+        </button>
+      </div>
+
+      <div class="history-list">
+        <div v-if="chatHistories.length === 0" class="empty-history">
+          <div class="empty-history-icon">📭</div>
+          <p class="empty-history-text">暂无对话历史</p>
+        </div>
+
+        <div v-else>
+          <div v-for="chat in chatHistories" :key="chat.id"
+            :class="['history-item', { active: currentChatId === chat.id }]" @click="loadChatHistory(chat.id)">
+            <div class="history-item-title">{{ chat.title }}</div>
+            <div class="history-item-time">{{ formatTime(chat.createdAt) }}</div>
+            <div class="history-item-actions">
+              <button @click.stop="openEditNameDialog(chat.id)" class="btn-edit-chat" title="编辑名称">
                 <svg viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25z" />
                   <path
-                    d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z" />
+                    d="M20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z" />
                 </svg>
-                <span>历史记录</span>
               </button>
-            </div>
-          </div>
-
-          <!-- 消息容器 -->
-          <div class="messages-container">
-            <!-- 空状态 -->
-            <div v-if="messages.length === 0" class="empty-state">
-              <div class="empty-icon">✨</div>
-              <h2 class="empty-title">开始健康对话</h2>
-              <p class="empty-description">
-                向 AI 助手提出关于健康、饮食、<br>运动和睡眠的任何问题
-              </p>
-            </div>
-
-            <!-- 消息列表 -->
-            <div v-else class="messages-list">
-              <div v-for="(msg, index) in messages" :key="index" :class="['message-bubble', `msg-${msg.role}`]">
-                <div class="message-header">
-                  <span class="message-role">{{ msg.role === 'user' ? '您' : 'AI' }}</span>
-                </div>
-
-                <!-- 思考过程 -->
-                <div v-if="msg.reasoning" class="reasoning-section">
-                  <details :class="['reasoning-details', `state-${msg.reasoningState}`]"
-                    :open="msg.reasoningState !== 'collapsed'">
-                    <summary class="reasoning-summary">
-                      <span class="reasoning-icon">&nbsp;|&nbsp;</span>
-                      <span class="reasoning-label">思考过程</span>
-                      <span v-if="msg.reasoningState === 'collapsed' && msg.requestTime" class="reasoning-meta">
-                        {{ (msg.requestTime / 1000).toFixed(1) }}s · {{ msg.tokensUsed }} tokens
-                      </span>
-                    </summary>
-                    <div class="reasoning-content">{{ msg.reasoning }}</div>
-                  </details>
-                </div>
-
-                <!-- 回复内容 或 加载动画 -->
-                <div v-if="msg.content === '' && msg.role === 'assistant'" class="message-loading">
-                  <span class="loading-dot"></span>
-                  <span class="loading-dot"></span>
-                  <span class="loading-dot"></span>
-                </div>
-                <div v-else class="message-content">{{ msg.content }}</div>
-              </div>
-            </div>
-          </div>
-
-          <!-- 输入区域 -->
-          <div class="input-area">
-            <!-- 错误提示 -->
-            <transition name="fade">
-              <div v-if="errorMsg" class="error-box">
-                <span class="error-icon">⚠️</span>
-                <span>{{ errorMsg }}</span>
-              </div>
-            </transition>
-
-            <!-- 输入框 -->
-            <div class="input-box">
-              <textarea v-model="inputMessage" @keydown="handleKeyDown" :disabled="loading || showHistoryPanel"
-                class="chat-textarea" placeholder="输入您的问题... (Enter 发送 / Shift+Enter 换行)"></textarea>
-              <button @click="handleSendChat" :disabled="loading || !inputMessage.trim() || showHistoryPanel"
-                class="btn-submit" title="发送消息">
-                <svg v-if="!loading" viewBox="0 0 24 24" fill="currentColor">
-                  <path
-                    d="M16.6915026,12.4744748 L3.50612381,13.2599618 C3.19218622,13.2599618 3.03521743,13.4170592 3.03521743,13.5741566 L1.15159189,20.0151496 C0.8376543,20.8006365 0.99,21.89 1.77946707,22.52 C2.41,22.99 3.50612381,23.1 4.13399899,22.8429026 L21.714504,14.0454487 C22.6563168,13.5741566 23.1272231,12.6315722 22.9702544,11.6889879 L4.13399899,1.16350093 C3.34915502,0.9 2.40734225,1.00636533 1.77946707,1.4776575 C0.994623095,2.10604706 0.837654326,3.0486314 1.15159189,3.99701575 L3.03521743,10.4379852 C3.03521743,10.5950826 3.19218622,10.75 3.50612381,10.75 L16.6915026,11.5354869 C16.6915026,11.5354869 17.1624089,11.5354869 17.1624089,12.0068791 C17.1624089,12.4744748 16.6915026,12.4744748 16.6915026,12.4744748 Z" />
+              <button @click.stop="deleteChat(chat.id)" class="btn-delete-chat" title="删除">
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-9l-1 1H5v2h14V4z" />
                 </svg>
-                <span v-else>⏳</span>
               </button>
             </div>
           </div>
         </div>
       </div>
     </div>
+  </transition>
 
-    <!-- 右侧栏 - 聊天历史 -->
-    <transition name="slide-right">
-      <div v-if="showHistoryPanel" class="history-panel">
-        <div class="history-header">
-          <h3 class="history-title">聊天历史</h3>
-          <button @click="toggleHistoryPanel" class="btn-close-history" title="关闭">
-            <svg viewBox="0 0 24 24" fill="currentColor">
-              <path
-                d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z" />
-            </svg>
-          </button>
-        </div>
-
-        <div class="history-list">
-          <div v-if="chatHistories.length === 0" class="empty-history">
-            <div class="empty-history-icon">📭</div>
-            <p class="empty-history-text">暂无对话历史</p>
-          </div>
-
-          <div v-else>
-            <div v-for="chat in chatHistories" :key="chat.id"
-              :class="['history-item', { active: currentChatId === chat.id }]" @click="loadChatHistory(chat.id)">
-              <div class="history-item-title">{{ chat.title }}</div>
-              <div class="history-item-time">{{ formatTime(chat.createdAt) }}</div>
-              <div class="history-item-actions">
-                <button @click.stop="openEditNameDialog(chat.id)" class="btn-edit-chat" title="编辑名称">
-                  <svg viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25z" />
-                    <path
-                      d="M20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z" />
-                  </svg>
-                </button>
-                <button @click.stop="deleteChat(chat.id)" class="btn-delete-chat" title="删除">
-                  <svg viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-9l-1 1H5v2h14V4z" />
-                  </svg>
-                </button>
-              </div>
-            </div>
-          </div>
+  <!-- 编辑聊天名字对话框 -->
+  <transition name="fade">
+    <div v-if="showEditNameDialog" class="dialog-overlay">
+      <div class="dialog-box">
+        <h3 class="dialog-title">编辑对话名称</h3>
+        <input v-model="editingTitle" type="text" class="dialog-input" placeholder="输入新的对话名称"
+          @keydown.enter="saveEditedName" @keydown.escape="cancelEditName" autofocus />
+        <div class="dialog-actions">
+          <button @click="cancelEditName" class="btn-cancel">取消</button>
+          <button @click="saveEditedName" class="btn-save">保存</button>
         </div>
       </div>
-    </transition>
-
-    <!-- 编辑聊天名字对话框 -->
-    <transition name="fade">
-      <div v-if="showEditNameDialog" class="dialog-overlay">
-        <div class="dialog-box">
-          <h3 class="dialog-title">编辑对话名称</h3>
-          <input v-model="editingTitle" type="text" class="dialog-input" placeholder="输入新的对话名称"
-            @keydown.enter="saveEditedName" @keydown.escape="cancelEditName" autofocus />
-          <div class="dialog-actions">
-            <button @click="cancelEditName" class="btn-cancel">取消</button>
-            <button @click="saveEditedName" class="btn-save">保存</button>
-          </div>
-        </div>
-      </div>
-    </transition>
-  </div>
+    </div>
+  </transition>
 </template>
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import Sidebar from '../components/homeView/Sidebar.vue'
-import TopHeader from '../components/homeView/TopHeader.vue'
+
 import { useAuthStore } from '../stores/auth'
 import { useAIChat } from '../composables/useAIChat'
 import { sessionAPI, messageAPI } from '../api/modules/aiChat'
@@ -180,8 +168,6 @@ interface ChatHistory {
 }
 
 const authStore = useAuthStore()
-const sidebarRef = ref<InstanceType<typeof Sidebar>>()
-
 const {
   loading,
   errorMsg,
@@ -202,10 +188,6 @@ const showEditNameDialog = ref(false)
 const editingChatId = ref<string | null>(null)
 const editingTitle = ref('')
 
-// 切换侧栏
-const toggleSidebar = () => {
-  sidebarRef.value?.toggleSidebarFromHeader()
-}
 
 // 切换历史记录面板
 const toggleHistoryPanel = () => {

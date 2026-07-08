@@ -6,7 +6,7 @@
 }
 
 .record-item {
-  background: linear-gradient(135deg, #FEFCFA 0%, #F8F6F3 100%);
+  background: linear-gradient(135deg, var(--color-bg) 0%, var(--color-bg-secondary) 100%);
   border: 1px solid #E8E1D6;
   border-left: 4px solid #9DB4A0;
   border-radius: 10px;
@@ -18,7 +18,7 @@
 .record-item:hover {
   transform: translateX(4px);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-  border-left-color: #5A7A87;
+  border-left-color: var(--color-text);
 }
 
 .record-item-content {
@@ -54,7 +54,7 @@
 .record-title {
   font-size: 14px;
   font-weight: 700;
-  color: #5A7A87;
+  color: var(--color-text);
   margin: 0;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -78,7 +78,7 @@
 .record-value {
   font-size: 13px;
   font-weight: 700;
-  color: #5A7A87;
+  color: var(--color-text);
 }
 
 @media (max-width: 768px) {

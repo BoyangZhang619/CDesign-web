@@ -3,7 +3,7 @@
   justify-content: space-between;
   align-items: center;
   padding: 20px;
-  background: linear-gradient(135deg, #FEFCFA 0%, #F8F6F3 100%);
+  background: linear-gradient(135deg, var(--color-bg) 0%, var(--color-bg-secondary) 100%);
   border: 1px solid #E8E1D6;
   border-radius: 12px;
   margin-top: 20px;
@@ -18,7 +18,7 @@
 
 .info-text {
   font-size: 13px;
-  color: #666;
+  color: var(--color-text-secondary);
   font-weight: 500;
 }
 
@@ -42,19 +42,19 @@
 .pagination-btn {
   padding: 8px 12px;
   border: 1px solid #D8CFC4;
-  background: linear-gradient(135deg, #FFFFFF 0%, #FEFCFA 100%);
+  background: linear-gradient(135deg, #FFFFFF 0%, var(--color-bg) 100%);
   border-radius: 6px;
   cursor: pointer;
   font-size: 12px;
   font-weight: 600;
-  color: #666;
+  color: var(--color-text-secondary);
   transition: all 0.2s ease;
   white-space: nowrap;
 }
 
 .pagination-btn:hover:not(:disabled) {
   border-color: #C8B4A0;
-  background: linear-gradient(135deg, #FFFBF7 0%, #FEFCFA 100%);
+  background: linear-gradient(135deg, #FFFBF7 0%, var(--color-bg) 100%);
   color: #8B6F47;
   box-shadow: 0 2px 6px rgba(200, 180, 160, 0.1);
 }
@@ -79,7 +79,7 @@
   gap: 6px;
   padding: 8px 12px;
   border: 1px solid #D8CFC4;
-  background: linear-gradient(135deg, #FFFFFF 0%, #FEFCFA 100%);
+  background: linear-gradient(135deg, #FFFFFF 0%, var(--color-bg) 100%);
   border-radius: 6px;
 }
 
@@ -113,7 +113,7 @@
 .separator,
 .total {
   font-size: 12px;
-  color: #999;
+  color: var(--color-text-tertiary);
   font-weight: 500;
 }
 

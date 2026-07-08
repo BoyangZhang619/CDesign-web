@@ -10,16 +10,16 @@
   background: white;
   border-radius: 8px;
   padding: 16px;
-  box-shadow: 0 2px 8px rgba(90, 122, 135, 0.1);
+  box-shadow: 0 2px 8px rgba(38, 38, 38, 0.1);
 }
 
 .group-title {
   font-size: 14px;
   font-weight: 600;
-  color: #5A7A87;
+  color: var(--color-text);
   margin: 0 0 12px 0;
   padding-bottom: 12px;
-  border-bottom: 2px solid #e8e1d6;
+  border-bottom: 2px solid var(--color-border);
 }
 
 .group-tasks {
@@ -42,8 +42,8 @@
 
 .task-item:hover {
   background: white;
-  border-color: #e8e1d6;
-  box-shadow: 0 2px 6px rgba(90, 122, 135, 0.08);
+  border-color: var(--color-border);
+  box-shadow: 0 2px 6px rgba(38, 38, 38, 0.08);
 }
 
 .task-item.completed {
@@ -82,7 +82,7 @@
 .task-title {
   font-size: 14px;
   font-weight: 500;
-  color: #5A7A87;
+  color: var(--color-text);
   margin-bottom: 6px;
   word-break: break-word;
 }
@@ -133,7 +133,7 @@
 }
 
 .task-priority.low {
-  background: rgba(157, 180, 160, 0.2);
+  background: rgba(0, 149, 246, 0.2);
   color: #7f9581;
 }
 
@@ -151,7 +151,7 @@
 .btn-reject {
   padding: 6px 10px;
   background: white;
-  border: 1px solid #e8e1d6;
+  border: 1px solid var(--color-border);
   border-radius: 4px;
   cursor: pointer;
   font-size: 12px;
@@ -178,7 +178,7 @@
 }
 
 .btn-accept:hover {
-  background: rgba(157, 180, 160, 0.1);
+  background: rgba(0, 149, 246, 0.1);
   border-color: #9DB4A0;
   color: #7f9581;
 }
@@ -275,6 +275,6 @@
 .empty-state {
   text-align: center;
   padding: 40px 20px;
-  color: #999;
+  color: var(--color-text-tertiary);
   font-size: 14px;
 }

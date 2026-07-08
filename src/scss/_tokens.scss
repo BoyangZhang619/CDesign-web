@@ -1,0 +1,131 @@
+// ============================================================
+// StuHeal Design Tokens — Instagram-inspired design system
+// Light & Dark mode via CSS custom properties
+// ============================================================
+
+// ── Light Mode (default) ────────────────────────────────────
+:root {
+  // --- Color: Surface ---
+  --color-bg:              #FFFFFF;
+  --color-bg-secondary:    #FAFAFA;
+  --color-bg-tertiary:     #F0F0F0;
+  --color-surface:         #FFFFFF;
+  --color-surface-hover:   #F5F5F5;
+
+  // --- Color: Text ---
+  --color-text:            #262626;
+  --color-text-secondary:  #8E8E8E;
+  --color-text-tertiary:   #C7C7C7;
+  --color-text-inverse:    #FFFFFF;
+
+  // --- Color: Accent ---
+  --color-accent:          #0095F6;
+  --color-accent-hover:    #1877F2;
+  --color-accent-light:    #E8F4FD;
+
+  // --- Color: Semantic ---
+  --color-danger:          #ED4956;
+  --color-danger-light:    #FDEDEE;
+  --color-success:         #78C850;
+  --color-success-light:   #EDF8E8;
+  --color-warning:         #F7B955;
+  --color-warning-light:   #FEF7EB;
+
+  // --- Color: Border & Divider ---
+  --color-border:          #DBDBDB;
+  --color-separator:       #EFEFEF;
+
+  // --- Gradient ---
+  --gradient-accent:       linear-gradient(135deg, #F58529, #DD2A7B, #8134AF);
+  --gradient-warm:         linear-gradient(135deg, #F58529, #F77737);
+  --gradient-cool:         linear-gradient(135deg, #405DE6, #5851DB, #833AB4);
+
+  // --- Typography ---
+  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+               "Helvetica Neue", Arial, "PingFang SC", "Microsoft YaHei",
+               sans-serif;
+  --font-size-xs:   11px;
+  --font-size-sm:   13px;
+  --font-size-base: 15px;
+  --font-size-lg:   17px;
+  --font-size-xl:   22px;
+  --font-size-2xl:  28px;
+  --font-weight-normal:   400;
+  --font-weight-medium:   500;
+  --font-weight-semibold: 600;
+  --font-weight-bold:     700;
+  --line-height-tight:  1.25;
+  --line-height-normal:  1.5;
+  --line-height-relaxed: 1.75;
+
+  // --- Spacing ---
+  --space-1:  4px;
+  --space-2:  8px;
+  --space-3:  12px;
+  --space-4:  16px;
+  --space-5:  20px;
+  --space-6:  24px;
+  --space-8:  32px;
+  --space-10: 40px;
+  --space-12: 48px;
+
+  // --- Radius ---
+  --radius-sm:   4px;
+  --radius-md:   8px;
+  --radius-lg:   12px;
+  --radius-xl:   16px;
+  --radius-full: 9999px;
+
+  // --- Shadow ---
+  --shadow-none:      0 0 0 transparent;
+  --shadow-card:      0 1px 3px rgba(0,0,0,0.06);
+  --shadow-elevated:  0 4px 12px rgba(0,0,0,0.08);
+  --shadow-modal:     0 8px 30px rgba(0,0,0,0.12);
+
+  // --- Layout ---
+  --content-width-sm:  480px;
+  --content-width-md:  640px;
+  --content-width-lg:  935px;
+  --sidebar-width:     72px;
+  --sidebar-expanded:  240px;
+  --topbar-height:     56px;
+  --bottombar-height:  56px;
+
+  // --- Animation ---
+  --transition-fast:   150ms ease;
+  --transition-normal: 250ms ease;
+  --transition-slow:   350ms ease;
+  --ease-out-expo:     cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+// ── Dark Mode ───────────────────────────────────────────────
+[data-theme="dark"] {
+  --color-bg:              #000000;
+  --color-bg-secondary:    #121212;
+  --color-bg-tertiary:     #1A1A1A;
+  --color-surface:         #1C1C1C;
+  --color-surface-hover:   #262626;
+
+  --color-text:            #F5F5F5;
+  --color-text-secondary:  #A8A8A8;
+  --color-text-tertiary:   #6E6E6E;
+  --color-text-inverse:    #000000;
+
+  --color-accent:          #0095F6;
+  --color-accent-hover:    #3897F0;
+  --color-accent-light:    #0A2238;
+
+  --color-danger:          #ED4956;
+  --color-danger-light:    #2D0F12;
+  --color-success:         #78C850;
+  --color-success-light:   #1A2E10;
+  --color-warning:         #F7B955;
+  --color-warning-light:   #2E2108;
+
+  --color-border:          #262626;
+  --color-separator:       #1A1A1A;
+
+  --shadow-card:      0 1px 3px rgba(0,0,0,0.3);
+  --shadow-elevated:  0 4px 12px rgba(0,0,0,0.4);
+  --shadow-modal:     0 8px 30px rgba(0,0,0,0.5);
+}

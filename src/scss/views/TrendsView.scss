@@ -5,7 +5,7 @@
   display: flex;
   height: calc(100dvh - 10px);
   background: none;
-  border: 5px solid #5A7A87;
+  border: 5px solid var(--color-text);
   border-radius: 20px;
   overflow: hidden;
   box-sizing: content-box;

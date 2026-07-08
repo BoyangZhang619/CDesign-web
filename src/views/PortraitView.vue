@@ -1,39 +1,21 @@
 <template>
-  <div class="portrait-layout">
-    <!-- 侧栏 -->
-    <Sidebar ref="sidebarRef" />
-
+  <div class="portrait container-md">
     <!-- 健康档案设置浮窗 -->
-    <HealthSetupModal
-      :show="showHealthSetupModal"
-      :force-complete="true"
-      @close="handleHealthSetupClose"
-      @success="handleHealthSetupSuccess"
-    />
+    <HealthSetupModal :show="showHealthSetupModal" :force-complete="true" @close="handleHealthSetupClose"
+      @success="handleHealthSetupSuccess" />
 
-    <div class="main-content">
-      <!-- 头部 -->
-      <TopHeader @toggle-sidebar="toggleSidebar" :title="'健康画像'" :subtitle="'基于您的健康数据构建的个性化健康模型'" />
+    <div class="content-area" v-if="!showHealthSetupModal">
+      <!-- 左右布局 -->
+      <div class="portrait-main">
+        <!-- 左块：评分和维度分析 -->
+        <div class="portrait-left-block">
+          <PortraitLeftContent :portrait-data="portraitData" :is-refreshing="isRefreshing"
+            @refresh="handleRefreshClick" />
+        </div>
 
-      <!-- 内容区 -->
-      <div class="content-area" v-if="!showHealthSetupModal">
-        <!-- 左右布局 -->
-        <div class="portrait-main">
-          <!-- 左块：评分和维度分析 -->
-          <div class="portrait-left-block">
-            <PortraitLeftContent 
-              :portrait-data="portraitData" 
-              :is-refreshing="isRefreshing"
-              @refresh="handleRefreshClick"
-            />
-          </div>
-
-          <!-- 右块：指标、建议、历程 -->
-          <div class="portrait-right-block">
-            <PortraitRightContent 
-              :portrait-data="portraitData"
-            />
-          </div>
+        <!-- 右块：指标、建议、历程 -->
+        <div class="portrait-right-block">
+          <PortraitRightContent :portrait-data="portraitData" />
         </div>
       </div>
     </div>
@@ -41,9 +23,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
-import Sidebar from '../components/homeView/Sidebar.vue'
-import TopHeader from '../components/homeView/TopHeader.vue'
+// import { ref } from 'vue'
 import HealthSetupModal from '../components/HealthSetupModal.vue'
 import PortraitLeftContent from '../components/portraitView/PortraitLeftContent.vue'
 import PortraitRightContent from '../components/portraitView/PortraitRightContent.vue'
@@ -60,15 +40,10 @@ const {
   initPortrait
 } = usePortraitView()
 
-const sidebarRef = ref()
 
 onMounted(() => {
   initPortrait()
 })
-
-const toggleSidebar = () => {
-  sidebarRef.value?.toggleSidebarFromHeader()
-}
 </script>
 
 <style lang="scss" scoped src="@/scss/views/PortraitView.scss"></style>

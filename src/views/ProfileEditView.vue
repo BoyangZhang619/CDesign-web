@@ -1,23 +1,10 @@
 <template>
-  <div class="profile-layout">
-    <!-- 侧边栏 -->
-    <Sidebar ref="sidebarRef" />
+  <div class="profile-edit container-md">
+    <!-- 左侧: 用户基本信息卡片 -->
+    <ProfileLeftSidebar :userInfo="userInfo" />
 
-    <!-- 主内容区 -->
-    <div class="main-content">
-      <TopHeader
-        @toggle-sidebar="toggleSidebar"
-        @toggle-ai-chat="toggleAIChat"
-        :title="'编辑资料'"
-        :subtitle="'修改您的个人信息'"
-      />
-
-      <div class="content-area">
-        <!-- 左侧: 用户基本信息卡片 -->
-        <ProfileLeftSidebar :userInfo="userInfo" />
-
-        <!-- 右侧: 编辑表单 -->
-        <div class="profile-edit-content">
+    <!-- 右侧: 编辑表单 -->
+    <div class="profile-edit-content">
           <!-- 加载状态 -->
           <div v-if="loading" class="loading-state">
             <div class="loading-spinner"></div>
@@ -241,8 +228,6 @@
             </div>
           </form>
         </div>
-      </div>
-    </div>
 
     <!-- Health Setup Modal -->
     <HealthSetupModal :show="showHealthSetupModal" @close="handleHealthSetupClose"
@@ -253,8 +238,6 @@
 <script setup lang="ts">
 import { ref, onMounted, computed } from 'vue'
 import { useRouter } from 'vue-router'
-import Sidebar from '../components/homeView/Sidebar.vue'
-import TopHeader from '../components/homeView/TopHeader.vue'
 import ProfileLeftSidebar from '../components/profileView/ProfileLeftSidebar.vue'
 import { useUserProfile } from '../composables/useUserProfile'
 import HealthSetupModal from '../components/HealthSetupModal.vue'
@@ -263,7 +246,6 @@ import { fetchWithRefresh } from '../api/http'
 
 const router = useRouter()
 const { userInfo, loading, loadUserInfo } = useUserProfile()
-const sidebarRef = ref<InstanceType<typeof Sidebar>>()
 const { showHealthSetupModal, handleHealthSetupClose, handleHealthSetupSuccess } = useTrendsView()
 
 const editInfo = ref({
@@ -297,10 +279,6 @@ const hasChanges = computed(() => {
     editInfo.value.location !== userInfo.value.location
   )
 })
-
-const toggleSidebar = () => {
-  sidebarRef.value?.toggleSidebarFromHeader()
-}
 
 const formatDate = (dateStr: string | undefined) => {
   if (!dateStr) return '-'

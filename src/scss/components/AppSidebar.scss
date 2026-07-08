@@ -7,7 +7,7 @@
 :root {
   --color-text-primary: #3a3a3a;
   --color-text-secondary: #8a8a8a;
-  --color-border: #e8e8e8;
+  --color-border: var(--color-bg-tertiary);
   --color-bg-primary: #fafaf9;
   --color-bg-white: #ffffff;
   --color-success: #4a7a6a;

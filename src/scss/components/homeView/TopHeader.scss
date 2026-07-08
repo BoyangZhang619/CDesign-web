@@ -19,7 +19,7 @@
 .greeting {
     font-size: 24px;
     font-weight: 600;
-    color: #2c3e50;
+    color: var(--color-text);
     margin: 0 0 5px 0;
 }
 
@@ -65,7 +65,7 @@
     position: absolute;
     top: 0;
     right: 0;
-    background: #A9787B;
+    background: var(--color-danger);
     color: white;
     font-size: 10px;
     font-weight: 600;

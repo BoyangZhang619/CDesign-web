@@ -1,23 +1,10 @@
 <template>
-  <div class="history-layout">
-    <!-- 侧栏 -->
-    <Sidebar ref="sidebarRef" />
-
-    <div class="main-content">
-      <!-- 头部 -->
-      <TopHeader 
-        @toggle-sidebar="toggleSidebar" 
-        :title="'历史记录'" 
-        :subtitle="activeTab === 'checkin' ? '查看您的历史打卡记录' : '查看您的任务完成记录'"
-      />
-
-      <!-- 内容区 -->
-      <div class="content-area">
-        <div class="history-container">
-          <!-- 左栏：筛选 + 记录列表 -->
-          <div class="history-left-panel">
-            <!-- 顶部按钮（详情按钮仅中小屏幕显示） -->
-            <!-- <div class="left-panel-top">
+  <div class="history container-md">
+    <div class="history-container">
+      <!-- 左栏：筛选 + 记录列表 -->
+      <div class="history-left-panel">
+        <!-- 顶部按钮（详情按钮仅中小屏幕显示） -->
+        <!-- <div class="left-panel-top">
               <button 
                 class="history-detail-btn" 
                 @click="showFiltersOnMobile = !showFiltersOnMobile"
@@ -27,226 +14,163 @@
               </button>
             </div> -->
 
-            <!-- 筛选面板（打卡记录） -->
-            <div v-if="activeTab === 'checkin'" class="filter-panel">
-              <HistoryFilter 
-                :is-open="isFilterPanelOpen"
-                @toggle="isFilterPanelOpen = !isFilterPanelOpen"
-                @apply="handleApplyFilters"
-                @reset="handleResetFilters"
-              />
+        <!-- 筛选面板（打卡记录） -->
+        <div v-if="activeTab === 'checkin'" class="filter-panel">
+          <HistoryFilter :is-open="isFilterPanelOpen" @toggle="isFilterPanelOpen = !isFilterPanelOpen"
+            @apply="handleApplyFilters" @reset="handleResetFilters" />
+        </div>
+
+        <!-- 筛选面板（任务完成） -->
+        <div v-if="activeTab === 'tasks'" class="filter-panel">
+          <TaskCompletionFilter :is-open="isTaskFilterPanelOpen"
+            @toggle="isTaskFilterPanelOpen = !isTaskFilterPanelOpen" @apply="handleApplyTaskFilters"
+            @reset="handleResetTaskFilters" @sort="handleTaskSort" @type="handleTaskType" @category="handleTaskCategory"
+            @priority="handleTaskPriority" @status="handleTaskStatus" @date-range="handleTaskDateRange"
+            @search="handleSearchTasks" />
+        </div>
+
+        <!-- 记录列表容器 -->
+        <div class="records-section">
+          <!-- 打卡记录列表 -->
+          <div v-show="activeTab === 'checkin'" class="records-container">
+            <!-- 错误提示 -->
+            <div v-if="errorMsg" class="error-box">
+              {{ errorMsg }}
             </div>
 
-            <!-- 筛选面板（任务完成） -->
-            <div v-if="activeTab === 'tasks'" class="filter-panel">
-              <TaskCompletionFilter 
-                :is-open="isTaskFilterPanelOpen"
-                @toggle="isTaskFilterPanelOpen = !isTaskFilterPanelOpen"
-                @apply="handleApplyTaskFilters"
-                @reset="handleResetTaskFilters"
-                @sort="handleTaskSort"
-                @type="handleTaskType"
-                @category="handleTaskCategory"
-                @priority="handleTaskPriority"
-                @status="handleTaskStatus"
-                @date-range="handleTaskDateRange"
-                @search="handleSearchTasks"
-              />
+            <!-- 加载状态 -->
+            <div v-if="loading" class="loading-state">
+              <div class="spinner"></div>
+              <p>加载中...</p>
             </div>
 
-            <!-- 记录列表容器 -->
-            <div class="records-section">
-              <!-- 打卡记录列表 -->
-              <div v-show="activeTab === 'checkin'" class="records-container">
-                <!-- 错误提示 -->
-                <div v-if="errorMsg" class="error-box">
-                  {{ errorMsg }}
-                </div>
-
-                <!-- 加载状态 -->
-                <div v-if="loading" class="loading-state">
-                  <div class="spinner"></div>
-                  <p>加载中...</p>
-                </div>
-
-                <!-- 空状态 -->
-                <div v-else-if="records.length === 0" class="empty-state">
-                  <div class="empty-icon">—</div>
-                  <h3 class="empty-title">暂无记录</h3>
-                  <p class="empty-text">尝试调整筛选条件或创建新的打卡记录</p>
-                </div>
-
-                <!-- 记录列表 -->
-                <HistoryRecordsList 
-                  v-else
-                  :records="records"
-                  @select="selectedRecord = $event"
-                />
-              </div>
-
-              <!-- 任务完成列表 -->
-              <div v-show="activeTab === 'tasks'" class="records-container">
-                <!-- 错误提示 -->
-                <div v-if="taskErrorMsg" class="error-box">
-                  {{ taskErrorMsg }}
-                </div>
-
-                <!-- 加载状态 -->
-                <div v-if="taskLoading" class="loading-state">
-                  <div class="spinner"></div>
-                  <p>加载中...</p>
-                </div>
-
-                <!-- 空状态 -->
-                <div v-else-if="taskRecords.length === 0" class="empty-state">
-                  <div class="empty-icon">✓</div>
-                  <h3 class="empty-title">暂无任务完成记录</h3>
-                  <p class="empty-text">尝试调整筛选条件或完成新的任务</p>
-                </div>
-
-                <!-- 任务记录列表 -->
-                <TaskCompletionRecordsList 
-                  v-else
-                  :records="taskRecords"
-                  @select="selectedTaskRecord = $event"
-                />
-              </div>
+            <!-- 空状态 -->
+            <div v-else-if="records.length === 0" class="empty-state">
+              <div class="empty-icon">—</div>
+              <h3 class="empty-title">暂无记录</h3>
+              <p class="empty-text">尝试调整筛选条件或创建新的打卡记录</p>
             </div>
 
-            <!-- 分页 -->
-            <div v-show="activeTab === 'checkin'" class="pagination-section">
-              <HistoryPagination 
-                v-if="!loading && records.length > 0"
-                :current-page="currentPage"
-                :total-pages="totalPages"
-                @prev="currentPage--"
-                @next="currentPage++"
-                @goto="currentPage = $event"
-              />
-            </div>
-
-            <div v-show="activeTab === 'tasks'" class="pagination-section">
-              <TaskCompletionPagination 
-                v-if="!taskLoading && taskRecords.length > 0"
-                :current-page="taskCurrentPage"
-                :total-pages="taskTotalPages"
-                @prev="taskCurrentPage--"
-                @next="taskCurrentPage++"
-              />
-            </div>
+            <!-- 记录列表 -->
+            <HistoryRecordsList v-else :records="records" @select="selectedRecord = $event" />
           </div>
 
-          <!-- 右栏：详情展示 -->
-          <div class="history-right-panel">
-            <!-- 打卡记录详情 -->
-            <div v-show="activeTab === 'checkin'" class="details-wrapper">
-              <!-- 打卡类型统计 -->
-              <HistoryStats />
-
-              <!-- 详情标题 -->
-              <div class="detail-section-title" v-if="selectedRecord">选中的打卡记录</div>
-
-              <!-- 记录详情或提示 -->
-              <div v-if="selectedRecord" class="detail-content">
-                <HistoryRecordContent 
-                  :record="selectedRecord"
-                  @delete="handleDeleteRecord"
-                />
-              </div>
-              <div v-else class="no-selection-hint">
-                <p>👈 选择左侧记录查看详情</p>
-              </div>
+          <!-- 任务完成列表 -->
+          <div v-show="activeTab === 'tasks'" class="records-container">
+            <!-- 错误提示 -->
+            <div v-if="taskErrorMsg" class="error-box">
+              {{ taskErrorMsg }}
             </div>
 
-            <!-- 任务完成详情 -->
-            <div v-show="activeTab === 'tasks'" class="details-wrapper">
-              <!-- 任务统计信息 -->
-              <TaskCompletionStats v-if="taskStats" :stats="taskStats" />
-
-              <!-- 详情标题 -->
-              <div class="detail-section-title" v-if="selectedTaskRecord">选中的任务记录</div>
-
-              <!-- 任务详情或提示 -->
-              <div v-if="selectedTaskRecord" class="detail-content">
-                <TaskCompletionContent 
-                  :record="selectedTaskRecord"
-                />
-              </div>
-              <div v-else class="no-selection-hint">
-                <p>👈 选择左侧任务查看详情</p>
-              </div>
+            <!-- 加载状态 -->
+            <div v-if="taskLoading" class="loading-state">
+              <div class="spinner"></div>
+              <p>加载中...</p>
             </div>
+
+            <!-- 空状态 -->
+            <div v-else-if="taskRecords.length === 0" class="empty-state">
+              <div class="empty-icon">✓</div>
+              <h3 class="empty-title">暂无任务完成记录</h3>
+              <p class="empty-text">尝试调整筛选条件或完成新的任务</p>
+            </div>
+
+            <!-- 任务记录列表 -->
+            <TaskCompletionRecordsList v-else :records="taskRecords" @select="selectedTaskRecord = $event" />
           </div>
         </div>
 
-        <!-- 底部标签页切换（仅平板和手机） -->
-        <div class="tabs-footer">
-          <button 
-            class="tab-btn" 
-            :class="{ active: activeTab === 'checkin' }"
-            @click="activeTab = 'checkin'"
-          >
-            📋 打卡记录
-          </button>
-          <button 
-            class="tab-btn" 
-            :class="{ active: activeTab === 'tasks' }"
-            @click="activeTab = 'tasks'"
-          >
-            ✓ 任务完成
-          </button>
+        <!-- 分页 -->
+        <div v-show="activeTab === 'checkin'" class="pagination-section">
+          <HistoryPagination v-if="!loading && records.length > 0" :current-page="currentPage" :total-pages="totalPages"
+            @prev="currentPage--" @next="currentPage++" @goto="currentPage = $event" />
         </div>
 
-        <!-- 顶部切换按钮（仅桌面显示） -->
-        <div class="desktop-tabs-header">
-          <button 
-            class="desktop-tab-btn" 
-            :class="{ active: activeTab === 'checkin' }"
-            @click="activeTab = 'checkin'"
-          >
-            📋 打卡记录
-          </button>
-          <button 
-            class="desktop-tab-btn" 
-            :class="{ active: activeTab === 'tasks' }"
-            @click="activeTab = 'tasks'"
-          >
-            ✓ 任务完成
-          </button>
+        <div v-show="activeTab === 'tasks'" class="pagination-section">
+          <TaskCompletionPagination v-if="!taskLoading && taskRecords.length > 0" :current-page="taskCurrentPage"
+            :total-pages="taskTotalPages" @prev="taskCurrentPage--" @next="taskCurrentPage++" />
         </div>
       </div>
 
-      <!-- 详情模态窗口（手机端） -->
-      <!-- 打卡记录详情 -->
-      <div v-if="selectedRecord && isMobileView" class="detail-modal-overlay" @click="selectedRecord = null">
-        <div class="detail-modal" @click.stop>
-          <button class="modal-close-btn" @click="selectedRecord = null">✕</button>
-          <HistoryRecordDetail 
-            :record="selectedRecord"
-            @close="selectedRecord = null"
-            @delete="handleDeleteRecord"
-          />
-        </div>
-      </div>
+      <!-- 右栏：详情展示 -->
+      <div class="history-right-panel">
+        <!-- 打卡记录详情 -->
+        <div v-show="activeTab === 'checkin'" class="details-wrapper">
+          <!-- 打卡类型统计 -->
+          <HistoryStats />
 
-      <!-- 任务完成详情 -->
-      <div v-if="selectedTaskRecord && isMobileView" class="detail-modal-overlay" @click="selectedTaskRecord = null">
-        <div class="detail-modal" @click.stop>
-          <button class="modal-close-btn" @click="selectedTaskRecord = null">✕</button>
-          <TaskCompletionDetail 
-            :record="selectedTaskRecord"
-            @close="selectedTaskRecord = null"
-          />
+          <!-- 详情标题 -->
+          <div class="detail-section-title" v-if="selectedRecord">选中的打卡记录</div>
+
+          <!-- 记录详情或提示 -->
+          <div v-if="selectedRecord" class="detail-content">
+            <HistoryRecordContent :record="selectedRecord" @delete="handleDeleteRecord" />
+          </div>
+          <div v-else class="no-selection-hint">
+            <p>👈 选择左侧记录查看详情</p>
+          </div>
+        </div>
+
+        <!-- 任务完成详情 -->
+        <div v-show="activeTab === 'tasks'" class="details-wrapper">
+          <!-- 任务统计信息 -->
+          <TaskCompletionStats v-if="taskStats" :stats="taskStats" />
+
+          <!-- 详情标题 -->
+          <div class="detail-section-title" v-if="selectedTaskRecord">选中的任务记录</div>
+
+          <!-- 任务详情或提示 -->
+          <div v-if="selectedTaskRecord" class="detail-content">
+            <TaskCompletionContent :record="selectedTaskRecord" />
+          </div>
+          <div v-else class="no-selection-hint">
+            <p>👈 选择左侧任务查看详情</p>
+          </div>
         </div>
       </div>
+    </div>
+
+    <!-- 底部标签页切换（仅平板和手机） -->
+    <div class="tabs-footer">
+      <button class="tab-btn" :class="{ active: activeTab === 'checkin' }" @click="activeTab = 'checkin'">
+        📋 打卡记录
+      </button>
+      <button class="tab-btn" :class="{ active: activeTab === 'tasks' }" @click="activeTab = 'tasks'">
+        ✓ 任务完成
+      </button>
+    </div>
+
+    <!-- 顶部切换按钮（仅桌面显示） -->
+    <div class="desktop-tabs-header">
+      <button class="desktop-tab-btn" :class="{ active: activeTab === 'checkin' }" @click="activeTab = 'checkin'">
+        📋 打卡记录
+      </button>
+      <button class="desktop-tab-btn" :class="{ active: activeTab === 'tasks' }" @click="activeTab = 'tasks'">
+        ✓ 任务完成
+      </button>
+    </div>
+  </div>
+
+  <!-- 详情模态窗口（手机端） -->
+  <!-- 打卡记录详情 -->
+  <div v-if="selectedRecord && isMobileView" class="detail-modal-overlay" @click="selectedRecord = null">
+    <div class="detail-modal" @click.stop>
+      <button class="modal-close-btn" @click="selectedRecord = null">✕</button>
+      <HistoryRecordDetail :record="selectedRecord" @close="selectedRecord = null" @delete="handleDeleteRecord" />
+    </div>
+  </div>
+
+  <!-- 任务完成详情 -->
+  <div v-if="selectedTaskRecord && isMobileView" class="detail-modal-overlay" @click="selectedTaskRecord = null">
+    <div class="detail-modal" @click.stop>
+      <button class="modal-close-btn" @click="selectedTaskRecord = null">✕</button>
+      <TaskCompletionDetail :record="selectedTaskRecord" @close="selectedTaskRecord = null" />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, onMounted, watch } from 'vue'
-import Sidebar from '../components/homeView/Sidebar.vue'
-import TopHeader from '../components/homeView/TopHeader.vue'
 // import HistoryHeader from '../components/historyView/HistoryHeader.vue'
 import HistoryFilter from '../components/historyView/HistoryFilter.vue'
 import HistoryStats from '../components/historyView/HistoryStats.vue'
@@ -266,7 +190,6 @@ import { getCurrentDate } from '../utils/dateTime'
 import type { HistoryRecord } from '../composables/useHistory'
 import type { TaskCompletionRecord } from '../composables/useTaskCompletionHistory'
 
-const sidebarRef = ref()
 const activeTab = ref<'checkin' | 'tasks'>('checkin')
 const isFilterPanelOpen = ref(false)
 const isMobileView = ref(window.innerWidth < 1025)  // 是否为移动端视图
@@ -336,7 +259,7 @@ watch(taskCurrentPage, () => {
 // 初始化
 onMounted(() => {
   console.log('🚀 [HistoryView] 页面挂载')
-  
+
   // 初始化打卡记录筛选
   if (!filters.value.startDate) {
     filters.value.startDate = getCurrentDate()
@@ -345,7 +268,7 @@ onMounted(() => {
     filters.value.endDate = getCurrentDate()
   }
   loadRecords()
-  
+
   // 初始化任务完成记录
   loadTaskRecords()
   loadTaskStats()
@@ -437,9 +360,6 @@ const handleSearchTasks = (searchText: string) => {
   loadTaskRecords()
 }
 
-const toggleSidebar = () => {
-  sidebarRef.value?.toggleSidebarFromHeader()
-}
 </script>
 
 <style lang="scss" scoped src="@/scss/views/HistoryView.scss"></style>

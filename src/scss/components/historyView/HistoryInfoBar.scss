@@ -18,8 +18,8 @@
 
 .sort-btn {
   padding: 6px 12px;
-  background: #F8F6F3;
-  color: #5A7A87;
+  background: var(--color-bg-secondary);
+  color: var(--color-text);
   border: 1px solid #E1D9D0;
   border-radius: 6px;
   font-size: 11px;
@@ -34,8 +34,8 @@
 }
 
 .sort-btn.active {
-  background: linear-gradient(135deg, #9DB4A0 0%, #8FA591 100%);
-  color: #FEFCFA;
+  background: var(--gradient-accent);
+  color: var(--color-bg);
   border-color: #9DB4A0;
 }
 

@@ -23,7 +23,7 @@
   display: flex;
   flex-direction: column;
   /* background: white; */
-  /* border: 1px solid #e8e1d6; */
+  /* border: 1px solid var(--color-border); */
   border-radius: 12px;
   padding: 0 24px;
   /* box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04); */
@@ -51,7 +51,7 @@
   width: 40px;
   height: 40px;
   border: 3px solid #f0f0f0;
-  border-top-color: #9db4a0;
+  border-top-color: var(--color-accent);
   border-radius: 50%;
   animation: spin 0.8s linear infinite;
 }
@@ -66,7 +66,7 @@
 .info-section {
   color: #5a7a87;
   background: #ffffffca;
-  border: 1px solid #e8e1d6;
+  border: 1px solid var(--color-border);
   border-radius: 12px;
   padding: 20px;
   display: flex;
@@ -101,7 +101,7 @@
 .form-group label {
   font-size: 12px;
   font-weight: 600;
-  color: #8b9fa0;
+  color: var(--color-text-secondary);
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
@@ -119,16 +119,16 @@
 
 .form-input:focus {
   outline: none;
-  border-color: #9db4a0;
+  border-color: var(--color-accent);
   background: white;
   box-shadow: 0 0 0 3px rgba(157, 180, 160, 0.1);
 }
 
 .form-input:disabled {
   background-color: #f5f3f0;
-  color: #8b9fa0;
+  color: var(--color-text-secondary);
   cursor: not-allowed;
-  border-color: #e8e1d6;
+  border-color: var(--color-border);
 }
 
 .form-input.textarea {
@@ -139,7 +139,7 @@
 
 .form-hint {
   font-size: 12px;
-  color: #8b9fa0;
+  color: var(--color-text-secondary);
 }
 
 /* 头像编辑组 */
@@ -155,8 +155,8 @@
   height: 100px;
   border-radius: 50%;
   overflow: hidden;
-  background: linear-gradient(135deg, #f0ebe6, #e8dfd8);
-  border: 2px solid #e8e1d6;
+  background: linear-gradient(135deg, var(--color-bg-secondary), var(--color-bg-tertiary));
+  border: 2px solid var(--color-border);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -236,7 +236,7 @@
   justify-content: flex-end;
   margin-top: 12px;
   padding-top: 20px;
-  border-top: 1px solid #e8e1d6;
+  border-top: 1px solid var(--color-border);
 }
 
 .btn {
@@ -252,16 +252,16 @@
 .btn-cancel {
   background-color: #f8f6f3;
   color: #5a7a87;
-  border: 1px solid #e8e1d6;
+  border: 1px solid var(--color-border);
 }
 
 .btn-cancel:hover {
-  background-color: #f0ebe6;
+  background-color: var(--color-bg-secondary);
   border-color: #d9cfc8;
 }
 
 .btn-submit {
-  background: linear-gradient(135deg, #9db4a0, #8fa591);
+  background: linear-gradient(135deg, var(--color-accent), var(--color-accent-hover));
   color: white;
 }
 

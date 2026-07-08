@@ -1,6 +1,6 @@
 .trends-habits-section {
   background-color: white;
-  border: 1px solid #e8e1d6;
+  border: 1px solid var(--color-border);
   border-radius: 12px;
   padding: 24px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
@@ -13,7 +13,7 @@
   color: #5a7a87;
   margin: 0 0 24px 0;
   padding-bottom: 12px;
-  border-bottom: 2px solid #9db4a0;
+  border-bottom: 2px solid var(--color-accent);
 }
 
 .trends-habits-grid {
@@ -24,20 +24,20 @@
 
 .trends-habit-item {
   background-color: #fefcfa;
-  border: 1px solid #e8e1d6;
+  border: 1px solid var(--color-border);
   border-radius: 8px;
   padding: 16px;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .trends-habit-item:hover {
-  border-color: #9db4a0;
-  box-shadow: 0 2px 8px rgba(157, 180, 160, 0.1);
+  border-color: var(--color-accent);
+  box-shadow: 0 2px 8px rgba(0, 149, 246, 0.1);
 }
 
 .trends-habit-item.completed {
-  border-color: #9db4a0;
-  background-color: rgba(157, 180, 160, 0.05);
+  border-color: var(--color-accent);
+  background-color: rgba(0, 149, 246, 0.05);
 }
 
 .trends-habit-header {
@@ -60,7 +60,7 @@
   font-size: 12px;
   font-weight: 600;
   color: #fefcfa;
-  background-color: #9db4a0;
+  background-color: var(--color-accent);
   padding: 4px 10px;
   border-radius: 4px;
   white-space: nowrap;
@@ -69,7 +69,7 @@
 
 .trends-habit-description {
   font-size: 12px;
-  color: #8b9fa0;
+  color: var(--color-text-secondary);
   margin: 0 0 12px 0;
   line-height: 1.5;
 }
@@ -79,14 +79,14 @@
 }
 
 .trends-habit-progress-bar {
-  background-color: #e8e1d6;
+  background-color: var(--color-border);
   height: 6px;
   border-radius: 3px;
   overflow: hidden;
 }
 
 .trends-habit-progress-fill {
-  background: linear-gradient(90deg, #9db4a0 0%, #8fa591 100%);
+  background: linear-gradient(90deg, var(--color-accent) 0%, var(--color-accent-hover) 100%);
   height: 100%;
   border-radius: 3px;
   transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
@@ -97,7 +97,7 @@
   justify-content: space-between;
   gap: 8px;
   font-size: 12px;
-  color: #8b9fa0;
+  color: var(--color-text-secondary);
 }
 
 .trends-habit-target,

@@ -16,6 +16,9 @@ const ExerciseCheckinDisplayView = () => import('../views/ExerciseCheckinDisplay
 const PortraitView = () => import('../views/PortraitView.vue')
 const TrendsView = () => import('../views/TrendsView.vue')
 const TodolistView = () => import('../views/TodolistView.vue')
+const ExploreView = () => import('../views/ExploreView.vue')
+const SettingsView = () => import('../views/SettingsView.vue')
+const CheckinView = () => import('../views/CheckinView.vue')
 
 // 『』
 const routes = [
@@ -71,8 +74,21 @@ const routes = [
     }
   },
   {
+    path: '/checkin',
+    name: 'checkin',
+    component: CheckinView,
+    meta: {
+      requiresAuth: true,
+      title: '打卡'
+    }
+  },
+  {
     path: '/health/daily-checkin',
-    name: 'daily-checkin',
+    redirect: '/checkin',
+  },
+  {
+    path: '/health/daily-checkin-legacy',
+    name: 'daily-checkin-legacy',
     component: DailyCheckinDisplayView,
     meta: {
       requiresAuth: true,
@@ -80,7 +96,7 @@ const routes = [
     }
   },
   {
-    path: '/health/history',
+    path: '/history',
     name: 'history',
     component: HistoryView,
     meta: {
@@ -140,6 +156,24 @@ const routes = [
     meta: {
       requiresAuth: true,
       title: 'StuHeal-青愈「TodoList」'
+    }
+  },
+  {
+    path: '/explore',
+    name: 'explore',
+    component: ExploreView,
+    meta: {
+      requiresAuth: true,
+      title: '探索'
+    }
+  },
+  {
+    path: '/settings',
+    name: 'settings',
+    component: SettingsView,
+    meta: {
+      requiresAuth: true,
+      title: '设置'
     }
   }
 ]

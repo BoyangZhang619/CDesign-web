@@ -1,13 +1,6 @@
 <template>
-    <div class="trends-layout">
-        <!-- Sidebar -->
-        <Sidebar ref="sidebarRef" :active="'trends'" />
-
-        <!-- Main Content -->
-        <div class="trends-main">
-            <!-- Top Header -->
-            <TopHeader title="趋势分析" :showToggle="true" @toggle-sidebar="toggleSidebar" />
-            <div class="content-area">
+    <div class="trends container-md">
+        <div class="content-area">
 
                 <!-- Control Panel -->
                 <TrendsControlPanel v-show="isControlPanelOpen" :selectedRange="selectedRange" :dateRanges="dateRanges"
@@ -42,7 +35,6 @@
                     </template>
                 </div>
             </div>
-        </div>
 
         <!-- Health Setup Modal -->
         <HealthSetupModal :show="showHealthSetupModal" @close="handleHealthSetupClose" @success="handleHealthSetupSuccess" />
@@ -51,8 +43,6 @@
 
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
-import Sidebar from '../components/homeView/Sidebar.vue'
-import TopHeader from '../components/homeView/TopHeader.vue'
 import HealthSetupModal from '../components/HealthSetupModal.vue'
 import TrendsControlPanel from '../components/trendsView/TrendsControlPanel.vue'
 import TrendsOverviewCards from '../components/trendsView/TrendsOverviewCards.vue'
@@ -62,7 +52,6 @@ import TrendsComparison from '../components/trendsView/TrendsComparison.vue'
 import { useAuthForm } from '../composables/useAuthForm'
 import { useTrendsView } from '../composables/useTrendsView'
 
-const sidebarRef = ref()
 
 const { checkHealthInfoNeeded } = useAuthForm()
 const {
@@ -83,13 +72,6 @@ const {
     initTrends,
     setupRangeWatch
 } = useTrendsView()
-
-// 切换侧栏
-function toggleSidebar() {
-    if (sidebarRef.value) {
-        sidebarRef.value.toggleSidebarFromHeader()
-    }
-}
 
 onMounted(async () => {
     try {

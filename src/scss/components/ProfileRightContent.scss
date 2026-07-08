@@ -15,7 +15,7 @@
 
 .info-section {
   background: white;
-  border: 1px solid #e8e1d6;
+  border: 1px solid var(--color-border);
   border-radius: 12px;
   padding: 24px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
@@ -27,7 +27,7 @@
   justify-content: space-between;
   margin-bottom: 16px;
   padding-bottom: 12px;
-  border-bottom: 1px solid #e8e1d6;
+  border-bottom: 1px solid var(--color-border);
 }
 
 .section-title {
@@ -40,7 +40,7 @@
 .edit-btn {
   padding: 6px 12px;
   background: #f8f6f3;
-  border: 1px solid #e8e1d6;
+  border: 1px solid var(--color-border);
   border-radius: 6px;
   font-size: 13px;
   color: #5a7a87;
@@ -49,9 +49,9 @@
 }
 
 .edit-btn:hover {
-  background: #9db4a0;
+  background: var(--color-accent);
   color: white;
-  border-color: #9db4a0;
+  border-color: var(--color-accent);
 }
 
 .info-grid {
@@ -68,7 +68,7 @@
 
 .info-label {
   font-size: 12px;
-  color: #8b9fa0;
+  color: var(--color-text-secondary);
   font-weight: 500;
   text-transform: uppercase;
   letter-spacing: 0.5px;
@@ -82,12 +82,12 @@
 }
 
 .info-value.status-complete {
-  color: #5cb85c;
+  color: var(--color-success);
   font-weight: 600;
 }
 
 .info-value.status-incomplete {
-  color: #d9534f;
+  color: var(--color-danger);
   font-weight: 600;
 }
 
@@ -109,24 +109,24 @@
 }
 
 .btn-primary {
-  background: linear-gradient(135deg, #9db4a0, #8fa591);
+  background: linear-gradient(135deg, var(--color-accent), var(--color-accent-hover));
   color: white;
 }
 
 .btn-primary:hover {
-  box-shadow: 0 4px 12px rgba(157, 180, 160, 0.3);
+  box-shadow: 0 4px 12px rgba(0, 149, 246, 0.3);
   transform: translateY(-2px);
 }
 
 .btn-secondary {
   background: white;
-  border: 1px solid #e8e1d6;
+  border: 1px solid var(--color-border);
   color: #5a7a87;
 }
 
 .btn-secondary:hover {
-  border-color: #9db4a0;
-  color: #9db4a0;
+  border-color: var(--color-accent);
+  color: var(--color-accent);
 }
 
 @media (max-width: 768px) {
@@ -163,43 +163,43 @@
 }
 
 .info-link {
-  color: #9db4a0;
+  color: var(--color-accent);
   text-decoration: none;
   transition: color 0.2s;
   word-break: break-all;
 }
 
 .info-link:hover {
-  color: #7a9478;
+  color: var(--color-success);
   text-decoration: underline;
 }
 
 .setup-btn {
-  background: #9db4a0;
+  background: var(--color-accent);
   color: white;
-  border-color: #9db4a0;
+  border-color: var(--color-accent);
 }
 
 .setup-btn:hover {
-  background: #8fa591;
-  border-color: #8fa591;
+  background: var(--color-accent-hover);
+  border-color: var(--color-accent-hover);
 }
 
 /* 状态颜色 */
 .status-complete {
-  color: #5cb85c;
+  color: var(--color-success);
   font-weight: 600;
 }
 
 .status-incomplete {
-  color: #d9534f;
+  color: var(--color-danger);
   font-weight: 600;
 }
 
 /* 可折叠块样式 */
 .health-details-collapsible {
   margin-top: 16px;
-  border-top: 1px solid #e8e1d6;
+  border-top: 1px solid var(--color-border);
   padding-top: 16px;
 }
 
@@ -219,7 +219,7 @@
 }
 
 .collapsible-btn:hover {
-  color: #9db4a0;
+  color: var(--color-accent);
 }
 
 .collapsible-icon {
@@ -267,7 +267,7 @@
 
 .detail-label {
   font-size: 12px;
-  color: #8b9fa0;
+  color: var(--color-text-secondary);
   font-weight: 500;
   text-transform: uppercase;
   letter-spacing: 0.5px;
@@ -289,8 +289,8 @@
 .tag {
   display: inline-block;
   padding: 4px 10px;
-  background: linear-gradient(135deg, #f0ebe6, #e8dfd8);
-  border: 1px solid #e8e1d6;
+  background: linear-gradient(135deg, var(--color-bg-secondary), var(--color-bg-tertiary));
+  border: 1px solid var(--color-border);
   border-radius: 12px;
   font-size: 12px;
   color: #5a7a87;

@@ -13,12 +13,12 @@
   padding: 16px;
   background: white;
   border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(90, 122, 135, 0.1);
+  box-shadow: 0 2px 8px rgba(38, 38, 38, 0.1);
   transition: all 0.3s ease;
 }
 
 .stat-card:hover {
-  box-shadow: 0 4px 12px rgba(90, 122, 135, 0.15);
+  box-shadow: 0 4px 12px rgba(38, 38, 38, 0.15);
   transform: translateY(-2px);
 }
 
@@ -49,7 +49,7 @@ img.stat-icon {
 .stat-value {
   font-size: 24px;
   font-weight: 600;
-  color: #5A7A87;
+  color: var(--color-text);
 }
 
 /* 进度条 */
@@ -57,7 +57,7 @@ img.stat-icon {
   background: white;
   padding: 16px;
   border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(90, 122, 135, 0.1);
+  box-shadow: 0 2px 8px rgba(38, 38, 38, 0.1);
 }
 
 .progress-header {
@@ -70,7 +70,7 @@ img.stat-icon {
 .progress-label {
   font-size: 13px;
   font-weight: 600;
-  color: #5A7A87;
+  color: var(--color-text);
 }
 
 .progress-percentage {
@@ -82,7 +82,7 @@ img.stat-icon {
 .progress-bar-container {
   width: 100%;
   height: 8px;
-  background: #e8e1d6;
+  background: var(--color-border);
   border-radius: 4px;
   overflow: hidden;
 }
