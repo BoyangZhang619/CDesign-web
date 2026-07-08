@@ -2,11 +2,11 @@
   <div class="profile container-md">
     <!-- Header: Avatar + Info -->
     <div class="profile-header">
-      <img
-        :src="userInfo?.avatar_url || '/logo-stuheal.svg'"
-        alt="头像"
-        class="profile-avatar"
-      />
+      <router-link to="/avatar-editor" class="avatar-link">
+        <PixelAvatar v-if="hasPixelAvatar" :pixelData="pixelData" :level="pixelLevel" :size="80" />
+        <img v-else :src="userInfo?.avatar_url || '/logo-stuheal.svg'" alt="头像" class="profile-avatar" />
+        <span class="avatar-edit-badge">✎</span>
+      </router-link>
       <div class="profile-meta">
         <h2 class="profile-name">{{ userInfo?.nickname || userInfo?.email?.split('@')[0] || '用户' }}</h2>
         <p class="profile-email">{{ userInfo?.email }}</p>
@@ -62,11 +62,33 @@ import { useAuthStore } from '../stores/auth'
 import { useUserProfile } from '../composables/useUserProfile'
 import { useTrendsView } from '../composables/useTrendsView'
 import HealthSetupModal from '../components/HealthSetupModal.vue'
+import PixelAvatar from '../components/PixelAvatar.vue'
+import { fetchWithRefresh } from '../api/http'
 
 const router = useRouter()
 const authStore = useAuthStore()
 const { userInfo, loadUserInfo } = useUserProfile()
 const { showHealthSetupModal, handleHealthSetupClose, handleHealthSetupSuccess } = useTrendsView()
+
+// 像素头像数据
+const pixelData = ref('')
+const pixelLevel = ref(16)
+const hasPixelAvatar = ref(false)
+
+async function loadPixelAvatar() {
+  try {
+    const res = await fetchWithRefresh('/avatars', { method: 'GET' })
+    if (res.ok) {
+      const data = await res.json()
+      if (data?.success && data.data?.avatar) {
+        pixelData.value = data.data.avatar.pixelData
+        pixelLevel.value = data.data.avatar.level
+        hasPixelAvatar.value = true
+        return
+      }
+    }
+  } catch { /* fallback */ }
+}
 
 const quickLinks = [
   {
@@ -103,7 +125,7 @@ async function handleLogout() {
 }
 
 onMounted(async () => {
-  await loadUserInfo()
+  await Promise.all([loadUserInfo(), loadPixelAvatar()])
 })
 </script>
 
@@ -125,12 +147,30 @@ onMounted(async () => {
   text-align: center;
 }
 
+.avatar-link {
+  position: relative;
+  display: block;
+}
+
 .profile-avatar {
   width: 80px;
   height: 80px;
-  border-radius: var(--radius-full);
+  border-radius: var(--radius-xl);
   object-fit: cover;
   border: 2px solid var(--color-border);
+}
+
+.avatar-edit-badge {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 24px; height: 24px;
+  background: var(--color-accent);
+  color: #fff;
+  border-radius: var(--radius-full);
+  font-size: 12px;
+  display: flex; align-items: center; justify-content: center;
+  border: 2px solid var(--color-bg);
 }
 
 .profile-meta {

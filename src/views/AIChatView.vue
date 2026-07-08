@@ -1,405 +1,247 @@
 <template>
-  <div class="ai-chat container-md">
-    <div class="chat-wrapper">
-      <!-- 聊天头部 -->
-      <div class="chat-header">
-        <div class="header-actions">
-          <button @click="handleNewChat" class="btn-new-chat" title="新建对话">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <line x1="12" y1="5" x2="12" y2="19"></line>
-              <line x1="5" y1="12" x2="19" y2="12"></line>
-            </svg>
-            <span>新建</span>
-          </button>
-          <button @click="toggleHistoryPanel" class="btn-history" title="聊天历史">
-            <svg viewBox="0 0 24 24" fill="currentColor">
-              <path
-                d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z" />
-            </svg>
-            <span>历史记录</span>
-          </button>
+  <div class="chat container-md">
+    <!-- Top bar -->
+    <div class="chat-top">
+      <button class="top-btn" @click="newChat">＋ 新对话</button>
+      <button class="top-btn" @click="showHistory = !showHistory">
+        {{ showHistory ? '✕ 关闭' : '☰ 历史' }}
+      </button>
+    </div>
+
+    <!-- History Drawer -->
+    <div v-if="showHistory" class="history-drawer">
+      <div v-if="sessions.length === 0" class="history-empty">暂无历史对话</div>
+      <div v-else class="history-list">
+        <div
+          v-for="s in sessions"
+          :key="s.id"
+          :class="['history-item', { active: activeSessionId === s.id }]"
+          @click="loadSession(s)"
+        >
+          <div class="hi-info">
+            <span class="hi-title">{{ s.title }}</span>
+            <span class="hi-time">{{ fmtTime(s.createdAt) }}</span>
+          </div>
+          <button class="hi-del" @click.stop="deleteSession(s)">🗑</button>
         </div>
       </div>
+    </div>
 
-      <!-- 消息容器 -->
-      <div class="messages-container">
-        <!-- 空状态 -->
-        <div v-if="messages.length === 0" class="empty-state">
-          <div class="empty-icon">✨</div>
-          <h2 class="empty-title">开始健康对话</h2>
-          <p class="empty-description">
-            向 AI 助手提出关于健康、饮食、<br>运动和睡眠的任何问题
-          </p>
-        </div>
+    <!-- Messages Area -->
+    <div ref="msgContainer" class="chat-msgs">
+      <div v-if="messages.length === 0" class="chat-empty">
+        <span class="chat-empty-icon">✨</span>
+        <h3>AI 健康助手</h3>
+        <p>向我提问关于健康、饮食、运动或睡眠的任何问题</p>
+      </div>
 
-        <!-- 消息列表 -->
-        <div v-else class="messages-list">
-          <div v-for="(msg, index) in messages" :key="index" :class="['message-bubble', `msg-${msg.role}`]">
-            <div class="message-header">
-              <span class="message-role">{{ msg.role === 'user' ? '您' : 'AI' }}</span>
-            </div>
-
-            <!-- 思考过程 -->
-            <div v-if="msg.reasoning" class="reasoning-section">
-              <details :class="['reasoning-details', `state-${msg.reasoningState}`]"
-                :open="msg.reasoningState !== 'collapsed'">
-                <summary class="reasoning-summary">
-                  <span class="reasoning-icon">&nbsp;|&nbsp;</span>
-                  <span class="reasoning-label">思考过程</span>
-                  <span v-if="msg.reasoningState === 'collapsed' && msg.requestTime" class="reasoning-meta">
-                    {{ (msg.requestTime / 1000).toFixed(1) }}s · {{ msg.tokensUsed }} tokens
-                  </span>
-                </summary>
-                <div class="reasoning-content">{{ msg.reasoning }}</div>
+      <div v-else class="msg-list">
+        <div v-for="(m, i) in messages" :key="i" :class="['msg', 'msg--' + m.role]">
+          <div class="msg-bubble">
+            <div v-if="m.reasoning" class="msg-think">
+              <details>
+                <summary>思考过程</summary>
+                <p>{{ m.reasoning }}</p>
               </details>
             </div>
-
-            <!-- 回复内容 或 加载动画 -->
-            <div v-if="msg.content === '' && msg.role === 'assistant'" class="message-loading">
-              <span class="loading-dot"></span>
-              <span class="loading-dot"></span>
-              <span class="loading-dot"></span>
-            </div>
-            <div v-else class="message-content">{{ msg.content }}</div>
+            <div v-if="m.content" class="msg-text">{{ m.content }}</div>
+            <div v-else-if="m.role === 'assistant'" class="msg-dots"><span></span><span></span><span></span></div>
           </div>
         </div>
       </div>
+      <div v-if="errorMsg" class="chat-error">{{ errorMsg }}</div>
+    </div>
 
-      <!-- 输入区域 -->
-      <div class="input-area">
-        <!-- 错误提示 -->
-        <transition name="fade">
-          <div v-if="errorMsg" class="error-box">
-            <span class="error-icon">⚠️</span>
-            <span>{{ errorMsg }}</span>
-          </div>
-        </transition>
-
-        <!-- 输入框 -->
-        <div class="input-box">
-          <textarea v-model="inputMessage" @keydown="handleKeyDown" :disabled="loading || showHistoryPanel"
-            class="chat-textarea" placeholder="输入您的问题... (Enter 发送 / Shift+Enter 换行)"></textarea>
-          <button @click="handleSendChat" :disabled="loading || !inputMessage.trim() || showHistoryPanel"
-            class="btn-submit" title="发送消息">
-            <svg v-if="!loading" viewBox="0 0 24 24" fill="currentColor">
-              <path
-                d="M16.6915026,12.4744748 L3.50612381,13.2599618 C3.19218622,13.2599618 3.03521743,13.4170592 3.03521743,13.5741566 L1.15159189,20.0151496 C0.8376543,20.8006365 0.99,21.89 1.77946707,22.52 C2.41,22.99 3.50612381,23.1 4.13399899,22.8429026 L21.714504,14.0454487 C22.6563168,13.5741566 23.1272231,12.6315722 22.9702544,11.6889879 L4.13399899,1.16350093 C3.34915502,0.9 2.40734225,1.00636533 1.77946707,1.4776575 C0.994623095,2.10604706 0.837654326,3.0486314 1.15159189,3.99701575 L3.03521743,10.4379852 C3.03521743,10.5950826 3.19218622,10.75 3.50612381,10.75 L16.6915026,11.5354869 C16.6915026,11.5354869 17.1624089,11.5354869 17.1624089,12.0068791 C17.1624089,12.4744748 16.6915026,12.4744748 16.6915026,12.4744748 Z" />
-            </svg>
-            <span v-else>⏳</span>
-          </button>
-        </div>
-      </div>
+    <!-- Input -->
+    <div class="chat-input-bar">
+      <textarea
+        v-model="inputMessage" ref="inputEl"
+        class="chat-input" placeholder="输入消息... (Enter 发送)" rows="1"
+        :disabled="loading"
+        @keydown.enter.exact.prevent="handleSendMessage()"
+        @input="autoGrow"
+      ></textarea>
+      <button class="chat-send" :disabled="loading || !inputMessage.trim()" @click="handleSendMessage()">
+        <svg v-if="!loading" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+        <span v-else class="spinner-small"></span>
+      </button>
     </div>
   </div>
-
-  <!-- 右侧栏 - 聊天历史 -->
-  <transition name="slide-right">
-    <div v-if="showHistoryPanel" class="history-panel">
-      <div class="history-header">
-        <h3 class="history-title">聊天历史</h3>
-        <button @click="toggleHistoryPanel" class="btn-close-history" title="关闭">
-          <svg viewBox="0 0 24 24" fill="currentColor">
-            <path
-              d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z" />
-          </svg>
-        </button>
-      </div>
-
-      <div class="history-list">
-        <div v-if="chatHistories.length === 0" class="empty-history">
-          <div class="empty-history-icon">📭</div>
-          <p class="empty-history-text">暂无对话历史</p>
-        </div>
-
-        <div v-else>
-          <div v-for="chat in chatHistories" :key="chat.id"
-            :class="['history-item', { active: currentChatId === chat.id }]" @click="loadChatHistory(chat.id)">
-            <div class="history-item-title">{{ chat.title }}</div>
-            <div class="history-item-time">{{ formatTime(chat.createdAt) }}</div>
-            <div class="history-item-actions">
-              <button @click.stop="openEditNameDialog(chat.id)" class="btn-edit-chat" title="编辑名称">
-                <svg viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25z" />
-                  <path
-                    d="M20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z" />
-                </svg>
-              </button>
-              <button @click.stop="deleteChat(chat.id)" class="btn-delete-chat" title="删除">
-                <svg viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-9l-1 1H5v2h14V4z" />
-                </svg>
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </transition>
-
-  <!-- 编辑聊天名字对话框 -->
-  <transition name="fade">
-    <div v-if="showEditNameDialog" class="dialog-overlay">
-      <div class="dialog-box">
-        <h3 class="dialog-title">编辑对话名称</h3>
-        <input v-model="editingTitle" type="text" class="dialog-input" placeholder="输入新的对话名称"
-          @keydown.enter="saveEditedName" @keydown.escape="cancelEditName" autofocus />
-        <div class="dialog-actions">
-          <button @click="cancelEditName" class="btn-cancel">取消</button>
-          <button @click="saveEditedName" class="btn-save">保存</button>
-        </div>
-      </div>
-    </div>
-  </transition>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
-
-import { useAuthStore } from '../stores/auth'
+import { ref, nextTick, watch, onMounted } from 'vue'
 import { useAIChat } from '../composables/useAIChat'
-import { sessionAPI, messageAPI } from '../api/modules/aiChat'
+import { sessionAPI } from '../api/modules/aiChat'
 
-interface ChatHistory {
-  id: string
-  title: string
-  createdAt: string
-  sessionId?: number
-  session_name?: string
-}
-
-const authStore = useAuthStore()
 const {
-  loading,
-  errorMsg,
-  inputMessage,
-  messages,
-  chatConfig,
-  handleSendMessage,
-  clearMessages
+  loading, errorMsg, inputMessage, messages,
+  handleSendMessage, clearMessages,
 } = useAIChat()
 
-// 聊天历史 - 侧栏内容
-const showHistoryPanel = ref(false)
-const chatHistories = ref<ChatHistory[]>([])
-const currentChatId = ref<string | null>(null)
+const msgContainer = ref<HTMLElement>()
+const inputEl = ref<HTMLTextAreaElement>()
+const showHistory = ref(false)
+const sessions = ref<any[]>([])
+const activeSessionId = ref<string | null>(null)
 
-// 编辑名字弹窗
-const showEditNameDialog = ref(false)
-const editingChatId = ref<string | null>(null)
-const editingTitle = ref('')
-
-
-// 切换历史记录面板
-const toggleHistoryPanel = () => {
-  showHistoryPanel.value = !showHistoryPanel.value
+function autoGrow() {
+  const el = inputEl.value; if (!el) return
+  el.style.height = 'auto'; el.style.height = Math.min(el.scrollHeight, 120) + 'px'
 }
 
-// 新建聊天
-const handleNewChat = () => {
-  clearMessages()
-  currentChatId.value = null
-  chatConfig.sessionId = undefined
-  showHistoryPanel.value = false
-}
-
-// 加载聊天历史
-const loadChatHistory = async (chatId: string) => {
-  currentChatId.value = chatId
-  showHistoryPanel.value = false
-  const chat = chatHistories.value.find(c => c.id === chatId)
-
-  if (chat?.sessionId) {
-    try {
-      clearMessages()
-      chatConfig.sessionId = chat.sessionId
-
-      // 加载该会话的历史消息
-      const response = await messageAPI.getMessages(chat.sessionId, { limit: 100 })
-
-      if (response.data?.success && response.data?.data?.data) {
-        const sessionMessages = response.data.data.data
-
-        // 将消息加载到 messages 中
-        messages.value = sessionMessages.map((msg: any) => ({
-          role: msg.role,
-          content: msg.content,
-          reasoning: msg.reasoning,
-          reasoningState: msg.reasoning ? 'completed' : 'collapsed',
-          requestTime: msg.response_time_ms,
-          tokensUsed: msg.total_tokens
-        }))
-      }
-    } catch (error) {
-      console.error('加载消息失败:', error)
-    }
-  }
-}
-
-// 删除聊天记录
-const deleteChat = (chatId: string) => {
-  if (confirm('确定要删除这条对话吗？')) {
-    const chat = chatHistories.value.find(c => c.id === chatId)
-    if (chat?.sessionId) {
-      sessionAPI.deleteSession(chat.sessionId)
-        .catch(error => console.error('删除会话失败:', error))
-    }
-    chatHistories.value = chatHistories.value.filter(c => c.id !== chatId)
-    if (currentChatId.value === chatId) {
-      handleNewChat()
-    }
-  }
-}
-
-// 编辑聊天名字
-const openEditNameDialog = (chatId: string) => {
-  editingChatId.value = chatId
-  const chat = chatHistories.value.find(c => c.id === chatId)
-  if (chat) {
-    editingTitle.value = chat.title
-    showEditNameDialog.value = true
-  }
-}
-
-// 保存编辑的名字
-const saveEditedName = async () => {
-  if (!editingChatId.value || !editingTitle.value.trim()) return
-
-  const chat = chatHistories.value.find(c => c.id === editingChatId.value)
-  if (!chat?.sessionId) return
-
-  try {
-    await sessionAPI.updateSession(chat.sessionId, {
-      session_name: editingTitle.value.trim()
-    })
-
-    // 更新本地数据
-    const idx = chatHistories.value.findIndex(c => c.id === editingChatId.value)
-    if (idx >= 0) {
-      chatHistories.value[idx].title = editingTitle.value.trim()
-    }
-
-    showEditNameDialog.value = false
-    editingChatId.value = null
-    editingTitle.value = ''
-  } catch (error) {
-    console.error('更新会话名称失败:', error)
-  }
-}
-
-// 取消编辑
-const cancelEditName = () => {
-  showEditNameDialog.value = false
-  editingChatId.value = null
-  editingTitle.value = ''
-}
-
-// 格式化时间
-const formatTime = (timeStr: string): string => {
-  try {
-    const date = new Date(timeStr)
-    const now = new Date()
-    const diff = now.getTime() - date.getTime()
-    const minutes = Math.floor(diff / 60000)
-    const hours = Math.floor(diff / 3600000)
-    const days = Math.floor(diff / 86400000)
-
-    if (minutes < 1) return '刚刚'
-    if (minutes < 60) return `${minutes}分钟前`
-    if (hours < 24) return `${hours}小时前`
-    if (days < 7) return `${days}天前`
-    return date.toLocaleDateString('zh-CN')
-  } catch {
-    return '未知'
-  }
-}
-
-// 加载聊天历史记录
-const loadChatHistories = async () => {
-  try {
-    const response = await sessionAPI.getSessions({
-      page: 1,
-      limit: 50
-    })
-
-    if (response.data?.success && response.data?.data?.data) {
-      const sessions = response.data.data.data
-      chatHistories.value = sessions
-        .filter((chat: ChatHistory) => { console.log(chat); return chat.session_name !== '新聊天' })
-        .map((session: any) => ({
-          id: String(session.id || session.uuid),
-          title: session.session_name || '新对话',
-          createdAt: session.created_at,
-          sessionId: session.id
-        }))
-    }
-  } catch (error) {
-    console.error('加载历史记录失败:', error)
-  }
-}
-
-// 处理回车发送
-const handleKeyDown = (event: KeyboardEvent) => {
-  if (event.key === 'Enter' && !event.shiftKey) {
-    event.preventDefault()
-    handleSendChat()
-  }
-}
-
-// 发送消息
-async function handleSendChat() {
-  if (!authStore.userInfo) {
-    errorMsg.value = '请先登录'
-    return
-  }
-
-  if (!inputMessage.value.trim() || loading.value) {
-    return
-  }
-
-  // 创建会话
-  if (!chatConfig.sessionId) {
-    try {
-      const response = await sessionAPI.createSession({
-        session_name: 'AI对话',
-        ai_model: 'dashscope' as const,
-        temperature: 0.7,
-        max_tokens: 2048
-      })
-
-      if (response.data?.success && response.data?.data?.data?.id) {
-        chatConfig.sessionId = response.data.data.data.id
-      } else {
-        errorMsg.value = '创建会话失败'
-        return
-      }
-    } catch (error) {
-      errorMsg.value = '创建会话失败'
-      return
-    }
-  }
-
-  const result = await handleSendMessage(authStore.userInfo.credits || 0)
-
-  if (result.success && authStore.userInfo) {
-    authStore.userInfo.credits -= result.tokensUsed
-  }
-
-  // 滚动到底部
-  setTimeout(() => {
-    const container = document.querySelector('.messages-container')
-    if (container) {
-      container.scrollTop = container.scrollHeight
-    }
-  }, 100)
-
-  // 重新加载历史记录
-  await loadChatHistories()
-}
-
-onMounted(() => {
-  // 加载聊天历史
-  loadChatHistories()
+watch(() => messages.value.length, async () => {
+  await nextTick()
+  const c = msgContainer.value; if (c) c.scrollTop = c.scrollHeight
 })
+
+async function loadSessions() {
+  try {
+    const res = await sessionAPI.getSessions({ limit: 50 })
+    if (res.data?.success) {
+      sessions.value = (res.data.data?.sessions || []).map((s: any) => ({
+        id: s.id, title: s.session_name || '未命名', createdAt: s.created_at,
+      }))
+    }
+  } catch { /* silent */ }
+}
+
+async function loadSession(s: any) {
+  activeSessionId.value = s.id
+  showHistory.value = false
+  // The session loading logic is handled by the composable - this would need backend support
+  // For now, we record the active session ID for future implementation
+}
+
+async function newChat() {
+  clearMessages()
+  activeSessionId.value = null
+  showHistory.value = false
+}
+
+async function deleteSession(s: any) {
+  try {
+    await sessionAPI.deleteSession(s.id)
+    sessions.value = sessions.value.filter(x => x.id !== s.id)
+    if (activeSessionId.value === s.id) { newChat() }
+  } catch { /* silent */ }
+}
+
+function fmtTime(d: string) {
+  if (!d) return ''
+  const dt = new Date(d)
+  const now = new Date()
+  const diff = now.getTime() - dt.getTime()
+  if (diff < 86400000) return dt.toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit' })
+  if (diff < 604800000) return `${Math.floor(diff/86400000)}天前`
+  return dt.toLocaleDateString('zh-CN', { month: 'short', day: 'numeric' })
+}
+
+onMounted(() => loadSessions())
 </script>
 
-<style lang="scss" scoped src="@/scss/views/AIChatView.scss"></style>
+<style lang="scss" scoped>
+.chat { display: flex; flex-direction: column; height: calc(100dvh - var(--topbar-height) - var(--bottombar-height)); }
+
+// Top bar
+.chat-top {
+  display: flex; gap: var(--space-2); padding: var(--space-2) var(--space-4);
+}
+.top-btn {
+  font-size: var(--font-size-xs); font-weight: var(--font-weight-semibold);
+  padding: var(--space-1) var(--space-3); border: 1px solid var(--color-border);
+  border-radius: var(--radius-full); background: var(--color-bg);
+  color: var(--color-text-secondary); cursor: pointer;
+  transition: all var(--transition-fast);
+  &:hover { border-color: var(--color-accent); color: var(--color-accent); }
+}
+
+// History drawer
+.history-drawer {
+  max-height: 200px; overflow-y: auto; border-bottom: 1px solid var(--color-separator);
+  background: var(--color-bg-secondary); padding: var(--space-2) var(--space-4);
+}
+.history-empty {
+  text-align: center; padding: var(--space-6); color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
+}
+.history-item {
+  display: flex; align-items: center; padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-md); cursor: pointer; gap: var(--space-3);
+  transition: background var(--transition-fast);
+  &:hover, &.active { background: var(--color-bg); }
+}
+.hi-info { flex: 1; min-width: 0; }
+.hi-title { display: block; font-size: var(--font-size-sm); font-weight: var(--font-weight-medium); color: var(--color-text); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.hi-time { font-size: var(--font-size-xs); color: var(--color-text-tertiary); }
+.hi-del {
+  font-size: 14px; background: none; border: none; cursor: pointer; opacity: .5;
+  &:hover { opacity: 1; }
+}
+
+// Messages
+.chat-msgs { flex: 1; overflow-y: auto; padding: var(--space-4); }
+.chat-empty {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  height: 100%; text-align: center; gap: var(--space-3);
+  h3 { font-size: var(--font-size-lg); font-weight: var(--font-weight-semibold); color: var(--color-text); }
+  p { font-size: var(--font-size-sm); color: var(--color-text-secondary); max-width: 280px; }
+}
+.chat-empty-icon { font-size: 48px; }
+
+.msg-list { display: flex; flex-direction: column; gap: var(--space-3); }
+.msg { display: flex; }
+.msg--user { justify-content: flex-end; }
+.msg--assistant { justify-content: flex-start; }
+.msg-bubble {
+  max-width: 80%; padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-lg); font-size: var(--font-size-base);
+  line-height: var(--line-height-relaxed); word-break: break-word;
+}
+.msg--user .msg-bubble { background: var(--color-accent); color: #fff; border-bottom-right-radius: var(--radius-sm); }
+.msg--assistant .msg-bubble { background: var(--color-bg); border: 1px solid var(--color-border); border-bottom-left-radius: var(--radius-sm); }
+.msg-think {
+  margin-bottom: var(--space-2); font-size: var(--font-size-xs);
+  details { opacity: .7; } summary { cursor: pointer; color: var(--color-text-secondary); }
+  p { margin-top: var(--space-1); color: var(--color-text-secondary); white-space: pre-wrap; }
+}
+.msg-text { white-space: pre-wrap; }
+.msg-dots {
+  display: flex; gap: 4px; padding: var(--space-1) 0;
+  span { width: 6px; height: 6px; border-radius: 50%; background: var(--color-text-tertiary); animation: bounce 1.4s infinite ease-in-out both;
+    &:nth-child(1) { animation-delay: -.32s; } &:nth-child(2) { animation-delay: -.16s; } }
+}
+@keyframes bounce { 0%,80%,100% { transform: scale(0); } 40% { transform: scale(1); } }
+.chat-error {
+  padding: var(--space-3); margin-top: var(--space-3);
+  background: var(--color-danger-light); color: var(--color-danger);
+  border-radius: var(--radius-md); font-size: var(--font-size-sm);
+}
+
+// Input
+.chat-input-bar {
+  display: flex; align-items: flex-end; gap: var(--space-2);
+  padding: var(--space-3) var(--space-4);
+}
+.chat-input {
+  flex: 1; resize: none; border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg); padding: var(--space-2) var(--space-3);
+  font-size: var(--font-size-base); background: var(--color-bg-secondary);
+  color: var(--color-text); max-height: 120px; line-height: 1.5;
+  &:focus { border-color: var(--color-accent); outline: none; }
+  &::placeholder { color: var(--color-text-tertiary); }
+}
+.chat-send {
+  width: 40px; height: 40px; border-radius: 50%; border: none;
+  background: var(--color-accent); color: #fff;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; flex-shrink: 0; transition: background var(--transition-fast);
+  &:hover:not(:disabled) { background: var(--color-accent-hover); }
+  &:disabled { opacity: .4; cursor: not-allowed; }
+}
+.spinner-small {
+  width: 16px; height: 16px; border: 2px solid rgba(255,255,255,.3);
+  border-top-color: #fff; border-radius: 50%; animation: spin .6s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+</style>

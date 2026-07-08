@@ -19,6 +19,7 @@ const TodolistView = () => import('../views/TodolistView.vue')
 const ExploreView = () => import('../views/ExploreView.vue')
 const SettingsView = () => import('../views/SettingsView.vue')
 const CheckinView = () => import('../views/CheckinView.vue')
+const AvatarEditorView = () => import('../views/AvatarEditorView.vue')
 
 // 『』
 const routes = [
@@ -166,6 +167,12 @@ const routes = [
       requiresAuth: true,
       title: '探索'
     }
+  },
+  {
+    path: '/avatar-editor',
+    name: 'avatar-editor',
+    component: AvatarEditorView,
+    meta: { requiresAuth: true, title: '编辑头像' }
   },
   {
     path: '/settings',

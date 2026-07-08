@@ -126,20 +126,16 @@ function isActive(item: { path: string }) {
   width: var(--sidebar-width);
   display: flex;
   flex-direction: column;
-  align-items: center;
-  padding: var(--space-4) var(--space-2);
+  padding: var(--space-4) 0;
   background: var(--color-bg);
   border-right: 1px solid var(--color-border);
   z-index: 200;
-  transition: width var(--transition-normal) var(--ease-out-expo),
-              background-color var(--transition-slow);
+  transition: width var(--transition-slow) var(--ease-out-expo);
   overflow: hidden;
 }
 
 .sidebar--expanded {
   width: var(--sidebar-expanded);
-  align-items: flex-start;
-  padding: var(--space-4) var(--space-3);
 }
 
 // Logo
@@ -147,11 +143,12 @@ function isActive(item: { path: string }) {
   display: flex;
   align-items: center;
   gap: var(--space-3);
-  padding: var(--space-2) var(--space-2);
+  padding: var(--space-2) var(--space-6);
   margin-bottom: var(--space-6);
   cursor: pointer;
   width: 100%;
   min-height: 40px;
+  padding-left: 24px; // fixed icon x position
 }
 
 .sidebar__logo-img {
@@ -185,13 +182,15 @@ function isActive(item: { path: string }) {
   display: flex;
   align-items: center;
   gap: var(--space-3);
-  padding: var(--space-3) var(--space-3);
+  padding: var(--space-3) 0;
+  padding-left: 24px; // fixed: icon stays at same x when expanding
+  margin: 0 var(--space-2);
   border-radius: var(--radius-lg);
   color: var(--color-text);
   text-decoration: none;
   transition: background-color var(--transition-fast),
               color var(--transition-fast);
-  width: 100%;
+  width: calc(100% - var(--space-4));
   min-height: 44px;
   white-space: nowrap;
 
@@ -234,10 +233,9 @@ function isActive(item: { path: string }) {
   flex: 1;
 }
 
-// Theme toggle
 .sidebar__theme-btn {
   cursor: pointer;
-  width: 100%;
+  width: calc(100% - var(--space-4));
 }
 
 // Transitions

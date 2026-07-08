@@ -4,329 +4,153 @@ import { fetchWithRefresh } from '../api/http'
 export function useTrendsView() {
   const loading = ref(false)
   const error = ref('')
-  const selectedRange = ref('week')
-  const isControlPanelOpen = ref(true)
   const showHealthSetupModal = ref(false)
+
+  // 自定义日期区间（默认近7天）
+  const startDate = ref(formatDate(daysAgo(7)))
+  const endDate = ref(formatDate(new Date()))
 
   const exerciseChart = ref<HTMLCanvasElement | null>(null)
   const mealChart = ref<HTMLCanvasElement | null>(null)
   const sleepChart = ref<HTMLCanvasElement | null>(null)
 
-  // 每日数据用于图表
   const chartData = ref<Array<{date: string; exercise: number; meal: number; sleep: number}>>([])
 
-  // 时间范围选项
-  const dateRanges = [
-    { label: '近7天', value: 'week' },
-    { label: '近30天', value: 'month' },
-    { label: '近90天', value: 'quarter' },
-    { label: '近一年', value: 'year' }
+  // 预设区间（快捷按钮）
+  const presets = [
+    { label: '7天', days: 7 },
+    { label: '30天', days: 30 },
+    { label: '90天', days: 90 },
+    { label: '一年', days: 365 },
   ]
 
-  // 统计数据
   const stats = ref({
-    avgExercise: 0,
-    maxExercise: 0,
-    avgMealCalories: 0,
-    maxMealCalories: 0,
-    avgSleep: 0,
-    maxSleep: 0,
-    totalCalories: 0,
-    totalExerciseTime: 0,
-    totalSleepTime: 0,
-    healthScore: 0,
-    caloriesTrend: 0,
-    exerciseTrend: 0,
-    sleepTrend: 0,
-    scoreTrend: 0
+    avgExercise: 0, maxExercise: 0,
+    avgMealCalories: 0, maxMealCalories: 0,
+    avgSleep: 0, maxSleep: 0,
+    totalCalories: 0, totalExerciseTime: 0, totalSleepTime: 0,
+    healthScore: 0, caloriesTrend: 0, exerciseTrend: 0,
+    sleepTrend: 0, scoreTrend: 0,
   })
 
-  // 习惯养成数据
   const habits = ref<Array<{id: number; title: string; description: string; days: number; progress: number; target: number}>>([])
 
-  // 对比数据
   const comparison = ref({
-    exerciseFrequencyCurrent: 0,
-    exerciseFrequencyPrev: 0,
-    exerciseTrend: 0,
-    sleepCurrent: 0,
-    sleepPrev: 0,
-    sleepTrend: 0,
-    mealBalanceCurrent: 0,
-    mealBalancePrev: 0,
-    mealTrend: 0
+    exerciseFrequencyCurrent: 0, exerciseFrequencyPrev: 0, exerciseTrend: 0,
+    sleepCurrent: 0, sleepPrev: 0, sleepTrend: 0,
+    mealBalanceCurrent: 0, mealBalancePrev: 0, mealTrend: 0,
   })
 
-  /**
-   * 处理健康档案关闭
-   */
-  function handleHealthSetupClose() {
-    showHealthSetupModal.value = false;
-    console.log('用户选择稍后设置健康档案')
+  // ── helpers ─────────────────────────────────────────────────
+  function daysAgo(n: number) { const d = new Date(); d.setDate(d.getDate() - n); return d }
+  function formatDate(d: Date) { return d.toISOString().split('T')[0] }
+
+  function applyPreset(days: number) {
+    startDate.value = formatDate(daysAgo(days))
+    endDate.value = formatDate(new Date())
   }
 
-  /**
-   * 处理健康档案成功
-   */
-  function handleHealthSetupSuccess() {
-    showHealthSetupModal.value = false
-    console.log('用户完成了健康档案设置！')
-    loadTrendsData()
-  }
+  // ── handlers ───────────────────────────────────────────────
+  function handleHealthSetupClose() { showHealthSetupModal.value = false }
+  function handleHealthSetupSuccess() { showHealthSetupModal.value = false; loadTrendsData(); }
 
-  function triggerHealthSetup() {
-    showHealthSetupModal.value = !showHealthSetupModal.value
-  }
-
-  /**
-   * 选择时间范围
-   */
-  function selectRange(range: string) {
-    selectedRange.value = range
-  }
-
-  /**
-   * 加载趋势数据
-   */
   async function loadTrendsData() {
     loading.value = true
     error.value = ''
     try {
-      const response = await fetchWithRefresh(
-        `/analysis/trends?range=${selectedRange.value}`,
-        {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json'
-          }
-        }
-      )
-
+      const params = new URLSearchParams({ startDate: startDate.value, endDate: endDate.value })
+      const response = await fetchWithRefresh(`/analysis/trends?${params}`, {
+        method: 'GET', headers: { 'Content-Type': 'application/json' },
+      })
       if (response.ok) {
         const data = await response.json()
         if (data?.success && data.data) {
-          console.log('趋势数据加载成功:', data.data)
-          const trendsData = data.data
+          const t = data.data
           Object.assign(stats.value, {
-            avgExercise: trendsData.avgExercise || 0,
-            maxExercise: trendsData.maxExercise || 0,
-            avgMealCalories: trendsData.avgMealCalories || 0,
-            maxMealCalories: trendsData.maxMealCalories || 0,
-            avgSleep: trendsData.avgSleep || 0,
-            maxSleep: trendsData.maxSleep || 0,
-            totalCalories: trendsData.totalCalories || 0,
-            totalExerciseTime: trendsData.totalExerciseTime || 0,
-            totalSleepTime: trendsData.totalSleepTime || 0,
-            healthScore: trendsData.healthScore || 0,
-            caloriesTrend: trendsData.caloriesTrend || 0,
-            exerciseTrend: trendsData.exerciseTrend || 0,
-            sleepTrend: trendsData.sleepTrend || 0,
-            scoreTrend: trendsData.scoreTrend || 0
+            avgExercise: t.avgExercise || 0, maxExercise: t.maxExercise || 0,
+            avgMealCalories: t.avgMealCalories || 0, maxMealCalories: t.maxMealCalories || 0,
+            avgSleep: t.avgSleep || 0, maxSleep: t.maxSleep || 0,
+            totalCalories: t.totalCalories || 0, totalExerciseTime: t.totalExerciseTime || 0,
+            totalSleepTime: t.totalSleepTime || 0, healthScore: t.healthScore || 0,
+            caloriesTrend: t.caloriesTrend || 0, exerciseTrend: t.exerciseTrend || 0,
+            sleepTrend: t.sleepTrend || 0, scoreTrend: t.scoreTrend || 0,
           })
-
-          // 更新对比数据
-          if (trendsData.weekComparison) {
-            const wc = trendsData.weekComparison
+          if (t.weekComparison) {
+            const w = t.weekComparison
             Object.assign(comparison.value, {
-              exerciseFrequencyCurrent: wc.exerciseFrequencyCurrent || 0,
-              exerciseFrequencyPrev: wc.exerciseFrequencyPrev || 0,
-              exerciseTrend: wc.exerciseFrequencyTrend || 0,
-              sleepCurrent: wc.sleepCurrent || 0,
-              sleepPrev: wc.sleepPrev || 0,
-              sleepTrend: wc.sleepTrend || 0,
-              mealBalanceCurrent: wc.mealBalanceCurrent || 0,
-              mealBalancePrev: wc.mealBalancePrev || 0,
-              mealTrend: wc.mealTrend || 0
+              exerciseFrequencyCurrent: w.exerciseFrequencyCurrent || 0,
+              exerciseFrequencyPrev: w.exerciseFrequencyPrev || 0,
+              exerciseTrend: w.exerciseFrequencyTrend || 0,
+              sleepCurrent: w.sleepCurrent || 0, sleepPrev: w.sleepPrev || 0,
+              sleepTrend: w.sleepTrend || 0,
+              mealBalanceCurrent: w.mealBalanceCurrent || 0,
+              mealBalancePrev: w.mealBalancePrev || 0, mealTrend: w.mealTrend || 0,
             })
           }
-
-          // 更新每日数据用于图表
-          if (trendsData.dailyData && trendsData.dailyData.length > 0) {
-            chartData.value = trendsData.dailyData
-            await nextTick()
-            initCharts()
+          if (t.dailyData?.length) {
+            chartData.value = t.dailyData
+            await nextTick(); initCharts()
           }
-
-          // 更新习惯养成数据
-          if (trendsData.habits && trendsData.habits.length > 0) {
-            habits.value = trendsData.habits
-          } else {
-            habits.value = []
-          }
+          habits.value = t.habits?.length ? t.habits : []
         }
       }
-    } catch (err) {
-      error.value = (err as any).message || '加载趋势数据失败'
-      console.error('加载趋势数据失败:', err)
-    } finally {
-      loading.value = false
-    }
+    } catch (err: any) {
+      error.value = err.message || '加载趋势数据失败'
+    } finally { loading.value = false }
   }
 
-  /**
-   * 初始化所有图表
-   */
+  // ── charts ─────────────────────────────────────────────────
   function initCharts() {
     const dates = chartData.value.map(d => d.date)
-    const exerciseData = chartData.value.map(d => d.exercise)
-    const mealData = chartData.value.map(d => d.meal)
-    const sleepData = chartData.value.map(d => d.sleep)
-
-    if (exerciseChart.value && exerciseData.length > 0) {
-      drawChart(exerciseChart.value, dates, exerciseData, '#e8b4b8')
-    }
-
-    if (mealChart.value && mealData.length > 0) {
-      drawChart(mealChart.value, dates, mealData, '#daa76f')
-    }
-
-    if (sleepChart.value && sleepData.length > 0) {
-      drawChart(sleepChart.value, dates, sleepData, '#a79368')
-    }
+    if (exerciseChart.value && dates.length) drawChart(exerciseChart.value, dates, chartData.value.map(d => d.exercise), '#F58529')
+    if (mealChart.value && dates.length) drawChart(mealChart.value, dates, chartData.value.map(d => d.meal), '#78C850')
+    if (sleepChart.value && dates.length) drawChart(sleepChart.value, dates, chartData.value.map(d => d.sleep), '#833AB4')
   }
 
-  /**
-   * 绘制图表 - Canvas绘制线图
-   * @param canvas 画布元素
-   * @param dates 日期数组
-   * @param data 数据数组
-   * @param color 数据线颜色
-   */
-  function drawChart(
-    canvas: HTMLCanvasElement,
-    dates: string[],
-    data: number[],
-    color: string
-  ) {
-    if (data.length === 0) return
+  function drawChart(canvas: HTMLCanvasElement, dates: string[], data: number[], color: string) {
+    if (!data.length) return
+    const ctx = canvas.getContext('2d'); if (!ctx) return
+    canvas.width = 600; canvas.height = 280
+    const pad = 40, gw = canvas.width - 2*pad, gh = canvas.height - 2*pad - 20
+    const maxV = Math.max(...data) * 1.2 || 1, xStep = gw / (dates.length - 1 || 1), scale = gh / maxV
 
-    const ctx = canvas.getContext('2d')
-    if (!ctx) return
-
-    canvas.width = 600
-    canvas.height = 300
-
-    const padding = 40
-    const graphWidth = canvas.width - 2 * padding
-    const graphHeight = canvas.height - 2 * padding - 20
-    const maxValue = Math.max(...data) * 1.2
-    const xStep = graphWidth / (dates.length - 1)
-    const scale = graphHeight / maxValue
-
-    // 绘制网格线
-    ctx.strokeStyle = '#e0d9d1'
-    ctx.lineWidth = 1
-
+    // Grid
+    ctx.strokeStyle = '#E0E0E0'; ctx.lineWidth = 1
     for (let i = 0; i <= 5; i++) {
-      const y = padding + (graphHeight / 5) * i
-      ctx.beginPath()
-      ctx.moveTo(padding, y)
-      ctx.lineTo(canvas.width - padding, y)
-      ctx.stroke()
+      const y = pad + (gh/5)*i
+      ctx.beginPath(); ctx.moveTo(pad, y); ctx.lineTo(canvas.width-pad, y); ctx.stroke()
     }
-
-    // 绘制数据线和区域
-    ctx.fillStyle = color + '33'
-    ctx.beginPath()
-    ctx.moveTo(padding, canvas.height - padding)
-
-    data.forEach((value, index) => {
-      const x = padding + index * xStep
-      const y = canvas.height - padding - value * scale
-      ctx.lineTo(x, y)
-    })
-
-    ctx.lineTo(canvas.width - padding, canvas.height - padding)
-    ctx.closePath()
-    ctx.fill()
-
-    // 绘制数据线
-    ctx.strokeStyle = color
-    ctx.lineWidth = 2
-    ctx.beginPath()
-
-    data.forEach((value, index) => {
-      const x = padding + index * xStep
-      const y = canvas.height - padding - value * scale
-      if (index === 0) {
-        ctx.moveTo(x, y)
-      } else {
-        ctx.lineTo(x, y)
-      }
-    })
-
+    // Area
+    ctx.fillStyle = color + '22'
+    ctx.beginPath(); ctx.moveTo(pad, canvas.height-pad)
+    data.forEach((v, i) => { const x = pad + i*xStep; ctx.lineTo(x, canvas.height-pad - v*scale) })
+    ctx.lineTo(canvas.width-pad, canvas.height-pad); ctx.closePath(); ctx.fill()
+    // Line
+    ctx.strokeStyle = color; ctx.lineWidth = 2; ctx.beginPath()
+    data.forEach((v, i) => { const x = pad + i*xStep; if (i===0) ctx.moveTo(x, canvas.height-pad - v*scale); else ctx.lineTo(x, canvas.height-pad - v*scale) })
     ctx.stroke()
-
-    // 绘制数据点
+    // Dots
     ctx.fillStyle = color
-    data.forEach((value, index) => {
-      const x = padding + index * xStep
-      const y = canvas.height - padding - value * scale
-      ctx.beginPath()
-      ctx.arc(x, y, 4, 0, Math.PI * 2)
-      ctx.fill()
-    })
-
-    // 绘制 X 轴标签
-    ctx.fillStyle = '#6d6d6d'
-    ctx.font = '12px Montserrat, sans-serif'
-    ctx.textAlign = 'center'
-    ctx.textBaseline = 'top'
-
-    dates.forEach((date, index) => {
-      const x = padding + index * xStep
-      ctx.fillText(date, x, canvas.height - padding + 10)
-    })
+    data.forEach((v, i) => { const x = pad + i*xStep; ctx.beginPath(); ctx.arc(x, canvas.height-pad - v*scale, 3, 0, Math.PI*2); ctx.fill() })
+    // Labels
+    ctx.fillStyle = '#8E8E8E'; ctx.font = '10px sans-serif'; ctx.textAlign = 'center'
+    dates.forEach((d, i) => ctx.fillText(d.slice(5), pad + i*xStep, canvas.height-pad+10))
   }
 
-  /**
-   * 初始化页面数据
-   */
   async function initTrends() {
-    try {
-      await loadTrendsData()
-      await nextTick()
-      if (chartData.value.length > 0) {
-        initCharts()
-      }
-    } catch (err) {
-      console.error('页面初始化错误:', err)
-    }
+    await loadTrendsData()
+    if (chartData.value.length) { await nextTick(); initCharts() }
   }
 
-  /**
-   * 设置时间范围变化监听
-   */
-  function setupRangeWatch() {
-    watch(selectedRange, async () => {
-      await loadTrendsData()
-    })
-  }
+  // Watch date changes
+  watch([startDate, endDate], async () => { await loadTrendsData() })
 
   return {
-    // State
-    loading,
-    error,
-    selectedRange,
-    isControlPanelOpen,
-    showHealthSetupModal,
-    exerciseChart,
-    mealChart,
-    sleepChart,
-    chartData,
-    dateRanges,
-    stats,
-    habits,
-    comparison,
-    // Methods
-    handleHealthSetupClose,
-    handleHealthSetupSuccess,
-    triggerHealthSetup,
-    selectRange,
-    loadTrendsData,
-    initCharts,
-    drawChart,
-    initTrends,
-    setupRangeWatch
+    loading, error, showHealthSetupModal,
+    startDate, endDate, presets, applyPreset,
+    exerciseChart, mealChart, sleepChart,
+    chartData, stats, habits, comparison,
+    handleHealthSetupClose, handleHealthSetupSuccess,
+    loadTrendsData, initTrends,
   }
 }
