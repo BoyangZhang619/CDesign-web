@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { getToken, setToken, removeToken } from '../utils/token.js'
+import { getToken, setToken, removeToken } from '../utils/token'
 import { useAuthStore } from '../stores/auth'
 
 const http = axios.create({

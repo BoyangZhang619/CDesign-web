@@ -1,20 +1,21 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
-import HomeView from '../views/HomeView.vue'
-import AuthView from '../views/AuthView.vue'
-import ProfileView from '../views/ProfileView.vue'
-import ProfileEditView from '../views/ProfileEditView.vue'
-import AIChatView from '../views/AIChatView.vue'
-import DailyCheckinDisplayView from '../views/DailyCheckinDisplayView.vue'
-import HistoryView from '../views/HistoryView.vue'
-import MealCheckinDisplayView from '../views/MealCheckinDisplayView.vue'
-import SleepCheckinDisplayView from '../views/SleepCheckinDisplayView.vue'
-import ExerciseCheckinDisplayView from '../views/ExerciseCheckinDisplayView.vue'
-import PortraitView from '../views/PortraitView.vue'
-import TrendsView from '../views/TrendsView.vue'
-import TodolistView from '../views/TodolistView.vue'
-
 import { useAuthStore } from '../stores/auth'
+
+// 路由懒加载 — 按需加载各页面，减小初始 bundle 体积
+const HomeView = () => import('../views/HomeView.vue')
+const AuthView = () => import('../views/AuthView.vue')
+const ProfileView = () => import('../views/ProfileView.vue')
+const ProfileEditView = () => import('../views/ProfileEditView.vue')
+const AIChatView = () => import('../views/AIChatView.vue')
+const DailyCheckinDisplayView = () => import('../views/DailyCheckinDisplayView.vue')
+const HistoryView = () => import('../views/HistoryView.vue')
+const MealCheckinDisplayView = () => import('../views/MealCheckinDisplayView.vue')
+const SleepCheckinDisplayView = () => import('../views/SleepCheckinDisplayView.vue')
+const ExerciseCheckinDisplayView = () => import('../views/ExerciseCheckinDisplayView.vue')
+const PortraitView = () => import('../views/PortraitView.vue')
+const TrendsView = () => import('../views/TrendsView.vue')
+const TodolistView = () => import('../views/TodolistView.vue')
 
 // 『』
 const routes = [
