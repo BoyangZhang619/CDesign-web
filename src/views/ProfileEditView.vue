@@ -88,7 +88,7 @@ import { fetchWithRefresh } from '../api/http'
 import PixelAvatar from '../components/PixelAvatar.vue'
 
 const router = useRouter()
-const { userInfo, updateUserInfo } = useUserProfile()
+const { userInfo, loadUserInfo } = useUserProfile()
 
 const loading = ref(true)
 const saving = ref(false)
@@ -130,7 +130,7 @@ async function loadPixelAvatar() {
 
 onMounted(async () => {
   try {
-    await useUserProfile().loadUserInfo()
+    await loadUserInfo()
     const u = userInfo.value
     if (u) {
       editInfo.nickname = u.nickname || ''

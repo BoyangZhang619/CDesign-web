@@ -109,10 +109,11 @@ const {
   loading, error, showHealthSetupModal,
   startDate, endDate, presets, applyPreset,
   exerciseChart, mealChart, sleepChart,
-  stats, habits, comparison, chartData,
+  stats, habits, comparison,
   handleHealthSetupClose, handleHealthSetupSuccess,
   loadTrendsData, initTrends,
 } = useTrendsView()
+void exerciseChart; void mealChart; void sleepChart
 
 onMounted(() => initTrends())
 </script>

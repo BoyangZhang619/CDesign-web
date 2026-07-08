@@ -46,15 +46,15 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, onMounted } from 'vue'
+import { computed, onMounted } from 'vue'
 import { useTrendsView } from '../composables/useTrendsView'
 import { useHealthInfoCheck } from '../composables/useHealthInfoCheck'
 import { usePortraitView } from '../composables/usePortraitView'
 import HealthSetupModal from '../components/HealthSetupModal.vue'
 
-const { isRefreshing, portraitData, handleRefreshClick, initPortrait } = usePortraitView()
+const { portraitData, initPortrait } = usePortraitView()
 const { showHealthSetupModal, handleHealthSetupClose, handleHealthSetupSuccess } = useTrendsView()
-const { healthData, checkAndFetchHealthInfo } = useHealthInfoCheck()
+const { checkAndFetchHealthInfo } = useHealthInfoCheck()
 
 const now = new Date()
 

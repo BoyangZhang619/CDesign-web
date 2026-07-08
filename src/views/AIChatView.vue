@@ -58,10 +58,10 @@
         v-model="inputMessage" ref="inputEl"
         class="chat-input" placeholder="输入消息... (Enter 发送)" rows="1"
         :disabled="loading"
-        @keydown.enter.exact.prevent="handleSendMessage()"
+        @keydown.enter.exact.prevent="send()"
         @input="autoGrow"
       ></textarea>
-      <button class="chat-send" :disabled="loading || !inputMessage.trim()" @click="handleSendMessage()">
+      <button class="chat-send" :disabled="loading || !inputMessage.trim()" @click="send()">
         <svg v-if="!loading" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
         <span v-else class="spinner-small"></span>
       </button>
@@ -72,12 +72,19 @@
 <script setup lang="ts">
 import { ref, nextTick, watch, onMounted } from 'vue'
 import { useAIChat } from '../composables/useAIChat'
+import { useAuthStore } from '../stores/auth'
 import { sessionAPI } from '../api/modules/aiChat'
 
+const authStore = useAuthStore()
 const {
   loading, errorMsg, inputMessage, messages,
   handleSendMessage, clearMessages,
 } = useAIChat()
+
+function send() {
+  const credits = authStore.userInfo?.credits ?? 0
+  handleSendMessage(credits)
+}
 
 const msgContainer = ref<HTMLElement>()
 const inputEl = ref<HTMLTextAreaElement>()

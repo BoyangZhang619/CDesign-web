@@ -19,7 +19,7 @@ app.use(createPinia())
 app.use(router)
 
 // 全局错误处理 — 防止未捕获异常导致整个应用白屏
-app.config.errorHandler = (err, instance, info) => {
+app.config.errorHandler = (err, _instance, info) => {
   console.error('[全局错误]', err)
   console.error('[错误来源]', info)
   if (import.meta.env.PROD) {
@@ -28,7 +28,7 @@ app.config.errorHandler = (err, instance, info) => {
 }
 
 // 全局警告处理
-app.config.warnHandler = (msg, instance, trace) => {
+app.config.warnHandler = (msg, _instance, trace) => {
   if (import.meta.env.DEV) {
     console.warn(`[Vue 警告] ${msg}`, trace)
   }

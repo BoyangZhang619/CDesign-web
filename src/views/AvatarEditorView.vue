@@ -85,7 +85,6 @@ const palette: Record<string, string> = {
   '8': '#F58529', '9': '#DD2A7B', 'A': '#405DE6', 'B': '#5851DB',
   'C': '#FD1D1D', 'D': '#F77737', 'E': '#F5F5F5', 'F': '#8E8E8E',
 }
-const paletteKeys = Object.keys(palette)
 
 // ── State ────────────────────────────────────────────────────
 const level = ref(16)
