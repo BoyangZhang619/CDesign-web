@@ -40,9 +40,10 @@ const avatarUrl = computed(() =>
 }
 
 .topbar__title {
-  font-size: var(--font-size-xl);
+  font-family: var(--font-display);
+  font-size: var(--font-size-2xl);
   font-weight: var(--font-weight-bold);
-  color: var(--color-text);
+  color: var(--text-primary);
 }
 
 .topbar__avatar {

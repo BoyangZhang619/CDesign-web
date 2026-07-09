@@ -127,11 +127,12 @@ function isActive(item: { path: string }) {
   display: flex;
   flex-direction: column;
   padding: var(--space-4) 0;
-  background: var(--color-bg);
-  border-right: 1px solid var(--color-border);
+  background: var(--bg-card-white);
+  border-right: none;
   z-index: 200;
   transition: width var(--transition-slow) var(--ease-out-expo);
   overflow: hidden;
+  box-shadow: var(--shadow-card);
 }
 
 .sidebar--expanded {

@@ -1,47 +1,51 @@
 <template>
   <div class="home container-md">
-    <!-- Greeting Card -->
-    <div class="card card-greeting">
-      <div class="greeting-text">
-        <h2 class="greeting-title">{{ greeting }}</h2>
-        <p class="greeting-sub">{{ dateStr }}</p>
-      </div>
-      <div class="greeting-icon">
-        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-          <circle cx="12" cy="12" r="10"/>
-          <path d="M8 14s1.5 2 4 2 4-2 4-2"/>
-          <line x1="9" y1="9" x2="9.01" y2="9"/>
-          <line x1="15" y1="9" x2="15.01" y2="9"/>
-        </svg>
-      </div>
+    <!-- Hero greeting -->
+    <div class="hero">
+      <h1 class="hero-title display-text">Have a nice day</h1>
+      <p class="hero-sub">{{ dateStr }}</p>
     </div>
 
-    <!-- Quick Actions Grid -->
-    <div class="quick-actions">
-      <router-link v-for="action in quickActions" :key="action.label" :to="action.to"
-        class="action-card" :style="{ '--accent': action.color }">
-        <span class="action-icon" v-html="action.icon"></span>
-        <span class="action-label">{{ action.label }}</span>
+    <!-- Dashboard grid -->
+    <div class="dashboard">
+      <!-- Health score -->
+      <div class="dash-card card-blue">
+        <span class="dash-label">健康评分</span>
+        <span class="dash-num display-text">{{ portraitData?.healthScore || '--' }}</span>
+        <span class="dash-hint">/ 100</span>
+      </div>
+
+      <!-- Sleep -->
+      <div class="dash-card card-pink">
+        <span class="dash-label">睡眠质量</span>
+        <span class="dash-num display-text">{{ portraitData?.sleepScore || '--' }}</span>
+      </div>
+
+      <!-- Exercise -->
+      <div class="dash-card card-yellow">
+        <span class="dash-label">运动表现</span>
+        <span class="dash-num display-text">{{ portraitData?.exerciseScore || '--' }}</span>
+      </div>
+
+      <!-- Meal -->
+      <div class="dash-card card-green">
+        <span class="dash-label">饮食均衡</span>
+        <span class="dash-num display-text">{{ portraitData?.mealScore || '--' }}</span>
+      </div>
+
+      <!-- Quick actions -->
+      <router-link to="/checkin" class="dash-card card-blue" style="grid-column: span 2;">
+        <span class="dash-label">今日打卡</span>
+        <span class="dash-action">开始记录 →</span>
       </router-link>
     </div>
 
-    <!-- Portrait Summary Card -->
-    <div v-if="portraitData" class="card">
-      <div class="card-header">
-        <h3 class="card-title">健康概览</h3>
-        <router-link to="/analysis/portrait" class="card-link">查看画像 →</router-link>
-      </div>
-      <div class="stat-row">
-        <div class="stat" v-for="s in healthStats" :key="s.label">
-          <span class="stat-value" :style="{ color: s.color }">{{ s.value }}</span>
-          <span class="stat-label">{{ s.label }}</span>
-        </div>
-      </div>
+    <!-- Quick pills -->
+    <div class="pills">
+      <router-link v-for="a in actions" :key="a.to" :to="a.to" class="pill">{{ a.label }}</router-link>
     </div>
 
-    <!-- Health Setup Modal trigger if needed -->
-    <HealthSetupModal :show="showHealthSetupModal" @close="handleHealthSetupClose"
-      @success="handleHealthSetupSuccess" />
+    <HealthSetupModal :show="showHealthSetupModal" @close="handleHealthSetupClose" @success="handleHealthSetupSuccess" />
   </div>
 </template>
 
@@ -57,187 +61,59 @@ const { showHealthSetupModal, handleHealthSetupClose, handleHealthSetupSuccess }
 const { checkAndFetchHealthInfo } = useHealthInfoCheck()
 
 const now = new Date()
-
-// Greeting based on time
-const greeting = computed(() => {
-  const h = now.getHours()
-  if (h < 12) return '早上好 ☀️'
-  if (h < 18) return '下午好 🌤'
-  return '晚上好 🌙'
-})
-
 const dateStr = computed(() =>
   now.toLocaleDateString('zh-CN', { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' })
 )
 
-// Quick actions grid
-const quickActions = [
-  {
-    label: '打卡',
-    to: '/checkin',
-    icon: `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>`,
-    color: '#0095F6',
-  },
-  {
-    label: 'AI 对话',
-    to: '/ai-chat',
-    icon: `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a10 10 0 1 0 10 10H12V2z"/><path d="M12 2a10 10 0 0 1 10 10h-10V2z"/></svg>`,
-    color: '#833AB4',
-  },
-  {
-    label: '健康画像',
-    to: '/analysis/portrait',
-    icon: `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20V10"/><path d="M18 20V4"/><path d="M6 20v-4"/></svg>`,
-    color: '#F58529',
-  },
-  {
-    label: '趋势',
-    to: '/analysis/trends',
-    icon: `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>`,
-    color: '#78C850',
-  },
+const actions = [
+  { label: 'AI 对话', to: '/ai-chat' },
+  { label: '健康画像', to: '/analysis/portrait' },
+  { label: '趋势分析', to: '/analysis/trends' },
+  { label: 'TodoList', to: '/todolist' },
+  { label: '历史记录', to: '/history' },
 ]
 
-// Health stats from portrait data
-const healthStats = computed(() => [
-  { label: '运动', value: portraitData.value?.exerciseScore ?? '--', color: '#F58529' },
-  { label: '饮食', value: portraitData.value?.mealScore ?? '--', color: '#78C850' },
-  { label: '睡眠', value: portraitData.value?.sleepScore ?? '--', color: '#833AB4' },
-])
-
-onMounted(async () => {
-  await checkAndFetchHealthInfo()
-  initPortrait()
-})
+onMounted(async () => { await checkAndFetchHealthInfo(); initPortrait() })
 </script>
 
 <style lang="scss" scoped>
-.home {
-  padding: var(--space-5) var(--space-4);
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-4);
-}
+.home { padding: var(--space-6); display: flex; flex-direction: column; gap: var(--space-6); }
 
-// ── Greeting Card ───────────────────────────────────────────
-.card-greeting {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
+// Hero
+.hero { padding: var(--space-4) 0; }
+.hero-title { font-size: var(--font-size-3xl); font-weight: var(--font-weight-bold); color: var(--text-primary); margin-bottom: var(--space-1); }
+.hero-sub { font-size: var(--font-size-sm); color: var(--text-secondary); }
 
-.greeting-title {
-  font-size: var(--font-size-xl);
-  font-weight: var(--font-weight-bold);
-  color: var(--color-text);
-}
+// Dashboard grid
+.dashboard { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-4); }
 
-.greeting-sub {
-  font-size: var(--font-size-sm);
-  color: var(--color-text-secondary);
-  margin-top: var(--space-1);
-}
-
-.greeting-icon {
-  color: var(--color-accent);
-  opacity: 0.6;
-}
-
-// ── Quick Actions ───────────────────────────────────────────
-.quick-actions {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: var(--space-3);
-}
-
-.action-card {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: var(--space-2);
-  padding: var(--space-4) var(--space-2);
-  background: var(--color-bg);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-lg);
-  text-decoration: none;
-  color: var(--color-text);
-  transition: all var(--transition-fast);
-
-  &:hover { background: var(--color-bg-secondary); }
-  &:active { transform: scale(0.97); }
-}
-
-.action-icon {
-  color: var(--accent, var(--color-accent));
-}
-
-.action-label {
-  font-size: var(--font-size-xs);
-  font-weight: var(--font-weight-medium);
-  color: var(--color-text-secondary);
-}
-
-@media (max-width: 480px) {
-  .quick-actions {
-    grid-template-columns: repeat(4, 1fr);
-    gap: var(--space-2);
-  }
-  .action-card { padding: var(--space-3) var(--space-1); }
-}
-
-// ── Card ────────────────────────────────────────────────────
-.card {
-  background: var(--color-bg);
-  border: 1px solid var(--color-border);
+.dash-card {
   border-radius: var(--radius-lg);
   padding: var(--space-5);
+  display: flex; flex-direction: column; gap: var(--space-2);
+  text-decoration: none; transition: transform var(--transition-fast);
+  &:active { transform: scale(.98); }
 }
+.dash-label { font-size: var(--font-size-xs); font-weight: var(--font-weight-medium); color: var(--text-secondary); text-transform: uppercase; letter-spacing: .5px; }
+.dash-num { font-size: var(--font-size-3xl); font-weight: var(--font-weight-semibold); color: var(--text-primary); }
+.dash-hint { font-size: var(--font-size-xs); color: var(--text-secondary); }
+.dash-action { font-size: var(--font-size-base); font-weight: var(--font-weight-semibold); color: var(--brand-blue); margin-top: auto; }
 
-.card-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: var(--space-4);
-}
+// Color cards
+.card-blue   { background: var(--bg-blue-light); }
+.card-yellow { background: var(--bg-yellow-light); }
+.card-pink   { background: var(--bg-pink-light); }
+.card-green  { background: var(--bg-green-light); }
 
-.card-title {
-  font-size: var(--font-size-base);
-  font-weight: var(--font-weight-semibold);
-  color: var(--color-text);
-}
-
-.card-link {
-  font-size: var(--font-size-sm);
-  color: var(--color-accent);
-  text-decoration: none;
-  font-weight: var(--font-weight-medium);
-
-  &:hover { color: var(--color-accent-hover); }
-}
-
-// ── Stat Row ────────────────────────────────────────────────
-.stat-row {
-  display: flex;
-  justify-content: space-around;
-  gap: var(--space-4);
-}
-
-.stat {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: var(--space-1);
-}
-
-.stat-value {
-  font-size: var(--font-size-2xl);
-  font-weight: var(--font-weight-bold);
-}
-
-.stat-label {
-  font-size: var(--font-size-xs);
-  color: var(--color-text-secondary);
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
+// Pills
+.pills { display: flex; flex-wrap: wrap; gap: var(--space-2); }
+.pill {
+  padding: var(--space-2) var(--space-5);
+  font-size: var(--font-size-sm); font-weight: var(--font-weight-medium);
+  border-radius: var(--radius-full); background: var(--bg-card-white);
+  color: var(--text-primary); text-decoration: none;
+  border: 1px solid var(--color-border); transition: all var(--transition-fast);
+  &:hover { border-color: var(--brand-blue); color: var(--brand-blue); }
+  &.active { background: var(--brand-blue); color: #fff; border-color: var(--brand-blue); }
 }
 </style>
