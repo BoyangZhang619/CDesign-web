@@ -2,10 +2,10 @@
 import vue from '@vitejs/plugin-vue'
 import path from 'path'
 
+import { cloudflare } from "@cloudflare/vite-plugin";
+
 export default defineConfig({
-  plugins: [
-    vue(),
-  ],
+  plugins: [vue(), cloudflare()],
   server: {
     host: '0.0.0.0',
     proxy: {
