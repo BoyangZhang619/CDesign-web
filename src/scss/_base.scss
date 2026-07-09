@@ -24,6 +24,7 @@ body {
   background: var(--bg-main);
   min-height: 100dvh;
   overflow-x: hidden;
+  transition: none;
 }
 
 h1, h2, h3, h4 { font-weight: var(--font-weight-semibold); line-height: var(--line-height-tight); }
@@ -53,7 +54,7 @@ button { cursor: pointer; -webkit-tap-highlight-color: transparent;
 }
 ul, ol { list-style: none; }
 img, svg { display: block; max-width: 100%; }
-:focus-visible { outline: 2px solid var(--brand-blue); outline-offset: 2px; }
+:focus-visible { outline: transparent; outline-offset: 2px; }
 ::selection { background: var(--bg-blue-light); color: var(--brand-blue); }
 
 // Scrollbar
@@ -66,9 +67,9 @@ img, svg { display: block; max-width: 100%; }
 .container-md { max-width: var(--content-width-md); margin-inline: auto; }
 
 // ── 柔和交互动画 ──────────────────────────────────────────
+// 注：背景/文字颜色不做过渡，主题切换瞬间完成避免各块速度不一致
 a, button, .card, .dash-card, .nav-card, .quick-card, .list-row, .record-card, .rec-card {
   transition: transform .15s var(--ease-out-expo),
-              background-color .2s ease,
               border-color .2s ease,
               box-shadow .2s ease;
   &:active { transform: scale(.98); }

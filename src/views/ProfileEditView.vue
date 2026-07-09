@@ -30,8 +30,10 @@
             <svg width="32" height="32" viewBox="0 0 24 24" fill="var(--color-text-tertiary)"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
           </div>
           <router-link to="/avatar-editor" class="avatar-edit-link">
-            {{ hasPixelAvatar ? '编辑像素头像' : '创建像素头像' }}
+            {{ hasPixelAvatar ? '编辑头像' : '创建头像' }}
           </router-link>
+          <span class="avatar-edit-sep">·</span>
+          <router-link to="/avatar-picker" class="avatar-edit-link">选择默认</router-link>
         </div>
       </section>
 
@@ -228,6 +230,7 @@ async function handleSubmit() {
   color: var(--color-accent);
   &:hover { color: var(--color-accent-hover); }
 }
+.avatar-edit-sep { color: var(--text-tertiary); font-size: var(--font-size-sm); }
 
 // ── Fields ──────────────────────────────────────────────────
 .field { margin-bottom: var(--space-4);

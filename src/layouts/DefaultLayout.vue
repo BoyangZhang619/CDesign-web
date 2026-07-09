@@ -56,7 +56,8 @@ function onMenu() { /* per-page menu handling can be added later */ }
 <style lang="scss" scoped>
 .app-shell {
   display: flex; min-height: 100dvh;
-  background: var(--bg-main); transition: background-color var(--transition-slow);
+  background: var(--bg-main);
+  padding-top: env(safe-area-inset-top, 0px);
 }
 .app-main {
   flex: 1; min-width: 0; display: flex; flex-direction: column;

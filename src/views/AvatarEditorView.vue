@@ -1,68 +1,50 @@
 <template>
   <div class="editor container-md">
-    <h2 class="editor-title">像素头像编辑器</h2>
-
-    <!-- Level Selector -->
-    <div class="level-bar">
-      <button v-for="lvl in availableLevels" :key="lvl"
-        class="level-btn" :class="{ active: level === lvl }"
-        @click="changeLevel(lvl)">
-        {{ lvl }}×{{ lvl }}
-      </button>
+    <!-- Level Selector + 选择默认 -->
+    <div class="level-row">
+      <div class="segmented">
+        <button v-for="lvl in availableLevels" :key="lvl" class="seg-btn" :class="{ active: level === lvl }"
+          @click="changeLevel(lvl)">
+          {{ lvl }}×{{ lvl }}
+        </button>
+      </div>
+      <router-link to="/avatar-picker" class="capsule-btn">📁 选择默认</router-link>
     </div>
 
     <!-- Canvas Grid -->
     <div class="canvas-wrap">
-      <div
-        class="canvas-grid"
-        ref="gridRef"
-        :style="{
-          gridTemplateColumns: `repeat(${level}, 1fr)`,
-          gridTemplateRows: `repeat(${level}, 1fr)`,
-          width: gridSize + 'px',
-          height: gridSize + 'px',
-        }"
-        @mousedown="startDraw" @mousemove="continueDraw" @mouseup="stopDraw"
-        @mouseleave="stopDraw"
-        @touchstart.prevent="startDrawTouch"
-        @touchmove.prevent="continueDrawTouch"
-        @touchend="stopDraw"
-      >
-        <span
-          v-for="(cell, i) in cells"
-          :key="i"
-          class="cell"
-          :class="{ 'cell--grid': level <= 32 }"
-          :style="{ background: palette[cell] || 'transparent' }"
-          :data-index="i"
-        />
+      <div class="canvas-grid" ref="gridRef" :style="{
+        gridTemplateColumns: `repeat(${level}, 1fr)`,
+        gridTemplateRows: `repeat(${level}, 1fr)`,
+        width: gridSize + 'px',
+        height: gridSize + 'px',
+      }" @mousedown="startDraw" @mousemove="continueDraw" @mouseup="stopDraw" @mouseleave="stopDraw"
+        @touchstart.prevent="startDrawTouch" @touchmove.prevent="continueDrawTouch" @touchend="stopDraw">
+        <span v-for="(cell, i) in cells" :key="i" class="cell" :class="{ 'cell--grid': level <= 32 }"
+          :style="{ background: palette[cell] || 'transparent' }" :data-index="i" />
       </div>
     </div>
 
     <!-- Actions Row -->
-    <div class="actions-row">
-      <button class="act-btn" @click="undo">↩ 撤销</button>
-      <button class="act-btn" @click="clearAll">🗑 清空</button>
-      <button class="act-btn" @click="fillAll(currentColor)">🪣 填充</button>
-      <button class="act-btn act-save" @click="saveAvatar" :disabled="saving">
+    <div class="level-row">
+      <div class="segmented">
+        <button class="seg-btn" @click="undo">↩</button>
+        <button class="seg-btn" @click="clearAll">🗑</button>
+        <button class="seg-btn" @click="fillAll(currentColor)">🪣</button>
+      </div>
+      <button class="capsule-btn capsule-save" @click="saveAvatar" :disabled="saving">
         {{ saving ? '保存中...' : '💾 保存' }}
       </button>
     </div>
 
     <!-- Color Palette -->
     <div class="palette-bar">
-      <button
-        v-for="(hex, key) in palette"
-        :key="key"
-        class="palette-swatch"
-        :class="{ active: currentColor === key }"
+      <button v-for="(hex, key) in palette" :key="key" class="palette-swatch" :class="{ active: currentColor === key }"
         :style="{
           background: hex === 'transparent'
             ? 'repeating-linear-gradient(45deg, #ccc 0px, #ccc 2px, #fff 2px, #fff 4px)'
             : hex
-        }"
-        @click="currentColor = key"
-      />
+        }" @click="currentColor = key" />
     </div>
 
     <!-- Save Confirmation -->
@@ -96,7 +78,7 @@ const saving = ref(false)
 const saveMsg = ref('')
 const saveOk = ref(false)
 
-const availableLevels = [16, 32]
+const availableLevels = [16, 32, 64]
 const maxGridPx = computed(() =>
   Math.min(window.innerWidth - 32, 480)
 )
@@ -232,84 +214,162 @@ onMounted(async () => {
   gap: var(--space-4);
 }
 
-.editor-title {
-  font-size: var(--font-size-lg);
-  font-weight: var(--font-weight-bold);
-  color: var(--color-text);
+// ── Level row ──────────────────────────────────────────────
+.level-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
 }
 
-// ── Level bar ────────────────────────────────────────────────
-.level-bar {
-  display: flex; gap: var(--space-2);
+// ── Segmented control (like checkin tabs) ───────────────────
+.segmented {
+  display: flex;
+  background: var(--bg-card-white);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
 }
-.level-btn {
-  padding: var(--space-1) var(--space-4);
-  font-size: var(--font-size-sm); font-weight: var(--font-weight-medium);
-  border: 1px solid var(--color-border); border-radius: var(--radius-full);
-  background: var(--color-bg); color: var(--color-text-secondary);
-  cursor: pointer; transition: all var(--transition-fast);
+
+.seg-btn {
+  flex: 1;
+  padding: var(--space-2) var(--space-4);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  background: transparent;
+  border: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  white-space: nowrap;
+
+  &:not(:last-child) {
+    border-right: 1px solid var(--color-border);
+  }
+
+  &:hover {
+    color: var(--text-primary);
+  }
+
   &.active {
-    background: var(--color-accent); color: #fff; border-color: var(--color-accent);
+    background: var(--brand-blue);
+    color: #fff;
+    font-weight: var(--font-weight-semibold);
+  }
+}
+
+// ── Capsule button ──────────────────────────────────────────
+.capsule-btn {
+  display: inline-flex;
+  align-items: center;
+  padding: var(--space-2) var(--space-4);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  border-radius: var(--radius-full);
+  background: var(--bg-card-white);
+  color: var(--text-secondary);
+  border: 1px solid var(--color-border);
+  text-decoration: none;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  white-space: nowrap;
+
+  &:hover {
+    border-color: var(--brand-blue);
+    color: var(--brand-blue);
   }
 }
 
 // ── Canvas ───────────────────────────────────────────────────
 .canvas-wrap {
-  max-width: 100%; overflow: hidden;
-  border: 1px solid var(--color-border); border-radius: var(--radius-md);
+  max-width: 100%;
+  overflow: hidden;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
 }
+
 .canvas-grid {
-  display: grid; gap: 0;
-  cursor: crosshair; touch-action: none;
-  user-select: none; -webkit-user-select: none;
+  display: grid;
+  gap: 0;
+  cursor: crosshair;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
   background: var(--color-bg);
 }
 
 .cell {
   transition: background var(--transition-fast);
+
   &--grid {
-    border-right: 1px solid rgba(0,0,0,0.05);
-    border-bottom: 1px solid rgba(0,0,0,0.05);
+    border-right: 1px solid rgba(0, 0, 0, 0.05);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
   }
 }
 
-// ── Actions ──────────────────────────────────────────────────
-.actions-row { display: flex; gap: var(--space-2); flex-wrap: wrap; justify-content: center; }
-.act-btn {
-  padding: var(--space-2) var(--space-4);
-  font-size: var(--font-size-sm); font-weight: var(--font-weight-medium);
-  border: 1px solid var(--color-border); border-radius: var(--radius-md);
-  background: var(--color-bg); color: var(--color-text);
-  cursor: pointer; transition: all var(--transition-fast);
-  &:hover { background: var(--color-bg-secondary); }
-}
-.act-save {
-  background: var(--color-accent); color: #fff; border-color: var(--color-accent);
-  &:hover { background: var(--color-accent-hover); }
-  &:disabled { opacity: 0.5; }
+// ── Save capsule ─────────────────────────────────────────────
+.capsule-save {
+  background: var(--text-primary);
+  color: var(--text-inverse);
+  border-color: var(--text-primary);
+  font-weight: var(--font-weight-semibold);
+
+  &:hover:not(:disabled) {
+    opacity: .9;
+    border-color: var(--text-primary);
+  }
+
+  &:disabled {
+    opacity: .4;
+    cursor: not-allowed;
+  }
 }
 
 // ── Palette ──────────────────────────────────────────────────
 .palette-bar {
-  display: flex; gap: var(--space-1);
-  padding: var(--space-2); background: var(--color-bg);
-  border: 1px solid var(--color-border); border-radius: var(--radius-lg);
-  flex-wrap: wrap; justify-content: center;
+  display: flex;
+  gap: var(--space-1);
+  padding: var(--space-2);
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  flex-wrap: wrap;
+  justify-content: center;
   max-width: 100%;
 }
+
 .palette-swatch {
-  width: 32px; height: 32px;
-  border-radius: var(--radius-sm); border: 2px solid transparent;
-  cursor: pointer; transition: transform var(--transition-fast);
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-sm);
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: transform var(--transition-fast);
   flex-shrink: 0;
-  &:hover { transform: scale(1.15); }
-  &.active { border-color: var(--color-text); transform: scale(1.15); }
+
+  &:hover {
+    transform: scale(1.15);
+  }
+
+  &.active {
+    border-color: var(--color-text);
+    transform: scale(1.15);
+  }
 }
+
 @media (max-width: 480px) {
-  .palette-swatch { width: 28px; height: 28px; }
+  .palette-swatch {
+    width: 28px;
+    height: 28px;
+  }
 }
 
 // ── Save msg ─────────────────────────────────────────────────
-.save-msg { font-size: var(--font-size-sm); color: var(--color-danger); }
-.save-msg--ok { color: var(--color-success); }
+.save-msg {
+  font-size: var(--font-size-sm);
+  color: var(--color-danger);
+}
+
+.save-msg--ok {
+  color: var(--color-success);
+}
 </style>

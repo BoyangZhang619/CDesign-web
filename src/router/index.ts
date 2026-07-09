@@ -16,6 +16,7 @@ const ExploreView = () => import('../views/ExploreView.vue')
 const SettingsView = () => import('../views/SettingsView.vue')
 const CheckinView = () => import('../views/CheckinView.vue')
 const AvatarEditorView = () => import('../views/AvatarEditorView.vue')
+const AvatarPickerView = () => import('../views/AvatarPickerView.vue')
 
 // 『』
 const routes = [
@@ -133,6 +134,12 @@ const routes = [
     name: 'avatar-editor',
     component: AvatarEditorView,
     meta: { requiresAuth: true, title: '编辑头像' }
+  },
+  {
+    path: '/avatar-picker',
+    name: 'avatar-picker',
+    component: AvatarPickerView,
+    meta: { requiresAuth: true, title: '选择头像' }
   },
   {
     path: '/settings',

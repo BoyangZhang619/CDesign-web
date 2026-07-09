@@ -2,6 +2,9 @@ import { createApp } from 'vue'
 import { createPinia } from 'pinia'
 import App from './App.vue'
 import router from './router'
+import { Capacitor } from '@capacitor/core'
+import { StatusBar } from '@capacitor/status-bar'
+import { App as CapApp } from '@capacitor/app'
 
 // Design tokens & global base styles
 import './scss/_tokens.scss'
@@ -11,6 +14,13 @@ import './scss/_base.scss'
 const saved = localStorage.getItem('stuheal-theme') as 'light' | 'dark' | null
 if (saved) {
   document.documentElement.setAttribute('data-theme', saved)
+}
+
+// 原生平台：立即全屏 + 设置初始状态栏颜色
+if (Capacitor.isNativePlatform()) {
+  const isDark = saved === 'dark'
+  StatusBar.setBackgroundColor({ color: isDark ? '#1A1D22' : '#F0F4F8' })
+  StatusBar.hide()
 }
 
 const app = createApp(App)
@@ -35,3 +45,12 @@ app.config.warnHandler = (msg, _instance, trace) => {
 }
 
 app.mount('#app')
+
+// Capacitor Android 返回按钮/侧滑 — 先回退路由历史，到底了再退出
+CapApp.addListener('backButton', ({ canGoBack }: { canGoBack: boolean }) => {
+  if (canGoBack) {
+    router.back()
+  } else {
+    CapApp.exitApp()
+  }
+})

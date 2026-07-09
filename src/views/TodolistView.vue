@@ -169,9 +169,9 @@ onMounted(() => fetchTasks())
 .task-card { display: flex; align-items: flex-start; gap: var(--space-3); padding: var(--space-4); background: var(--bg-card-white); border-radius: var(--radius-lg); transition: all var(--transition-fast);
   &:hover { background: var(--bg-blue-light); }
 }
-.pri-high { border-left: 3px solid var(--color-danger); }
-.pri-medium { border-left: 3px solid var(--color-warning); }
-.pri-low { border-left: 3px solid var(--color-accent); }
+// .pri-high { border-left: 3px solid var(--color-danger); }
+// .pri-medium { border-left: 3px solid var(--color-warning); }
+// .pri-low { border-left: 3px solid var(--color-accent); }
 .task-check { width: 24px; height: 24px; border-radius: var(--radius-full); border: 2px solid var(--color-border); background: transparent; flex-shrink: 0; display: flex; align-items: center; justify-content: center; cursor: pointer; margin-top: 2px; transition: all var(--transition-fast);
   &.done { background: var(--brand-blue); border-color: var(--brand-blue); color: #fff; }
 }

@@ -170,7 +170,7 @@ const dailyTip = tips[new Date().getDate() % tips.length]
   background: none;
   font-size: var(--font-size-base);
   color: var(--color-text);
-
+  border-radius: 0px;
   &::placeholder { color: var(--color-text-tertiary); }
 }
 
