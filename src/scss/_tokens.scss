@@ -97,3 +97,44 @@
   --transition-slow:   350ms cubic-bezier(0.4, 0, 0.2, 1);
   --ease-out-expo:     cubic-bezier(0.19, 1, 0.22, 1);
 }
+
+// ── 暗色模式 (Night Mode) ──────────────────────────────────
+[data-theme="dark"] {
+  --bg-main:              #1A1D22;
+  --bg-card-white:        #242830;
+  --brand-blue:           #7AAEC8;
+  --bg-blue-light:        #1E2832;
+  --bg-yellow-light:      #28241C;
+  --bg-pink-light:        #2A1F1E;
+  --bg-green-light:       #1E2822;
+  --bg-lavender-light:    #24202A;
+  --text-primary:         #E8ECF0;
+  --text-secondary:       #8A94A0;
+  --text-tertiary:        #5A6470;
+  --text-inverse:         #1A1D22;
+
+  --color-bg:             var(--bg-card-white);
+  --color-bg-secondary:   var(--bg-main);
+  --color-bg-tertiary:    #2A2E36;
+  --color-surface:        var(--bg-card-white);
+  --color-surface-hover:  #2E323A;
+  --color-text:           var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+  --color-text-tertiary:  var(--text-tertiary);
+  --color-text-inverse:   var(--text-inverse);
+  --color-accent:         var(--brand-blue);
+  --color-accent-hover:   #8AB8D8;
+  --color-accent-light:   var(--bg-blue-light);
+  --color-danger:         #D48880;
+  --color-danger-light:   #2A1F1E;
+  --color-success:        #7AAB9E;
+  --color-success-light:  #1E2822;
+  --color-warning:        #D4A87A;
+  --color-warning-light:  #28241C;
+  --color-border:         #30343C;
+  --color-separator:      #282C34;
+
+  --shadow-card:     0px 4px 16px rgba(0,0,0,0.2);
+  --shadow-elevated: 0px 8px 24px rgba(0,0,0,0.3);
+  --shadow-modal:    0px 12px 40px rgba(0,0,0,0.4);
+}

@@ -1,18 +1,17 @@
 <template>
   <router-view v-slot="{ Component, route }">
     <template v-if="route.path === '/auth'">
-      <!-- Auth page: no layout chrome -->
       <component :is="Component" />
     </template>
     <template v-else>
-      <!-- All other pages: app shell -->
       <DefaultLayout :title="(route.meta?.title as string) || 'StuHeal'">
-        <component :is="Component" />
+        <Transition name="page-fade" mode="out-in" appear>
+          <component :is="Component" :key="route.path" />
+        </Transition>
       </DefaultLayout>
     </template>
   </router-view>
 
-  <!-- 全局 AI 聊天浮窗 -->
   <AIChatFloatingWindow :isOpen="aiChatStore.isOpen" @close="aiChatStore.closeChat()" />
 </template>
 
@@ -23,3 +22,20 @@ import DefaultLayout from './layouts/DefaultLayout.vue'
 
 const aiChatStore = useAIChatStore()
 </script>
+
+<style>
+/* 页面切换过渡 */
+.page-fade-enter-active,
+.page-fade-leave-active {
+  transition: opacity .2s cubic-bezier(0.4, 0, 0.2, 1),
+              transform .2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.page-fade-enter-from {
+  opacity: 0;
+  transform: translateY(6px);
+}
+.page-fade-leave-to {
+  opacity: 0;
+  transform: translateY(-4px);
+}
+</style>

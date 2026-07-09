@@ -4,9 +4,7 @@
     <!-- Logo -->
     <div class="sidebar__logo" @click="$router.push('/home')">
       <img src="/logo-stuheal.svg" alt="StuHeal" class="sidebar__logo-img" />
-      <Transition name="fade">
-        <span v-if="expanded" class="sidebar__logo-text">StuHeal</span>
-      </Transition>
+      <span class="sidebar__logo-text">StuHeal</span>
     </div>
 
     <!-- Primary Nav -->
@@ -19,9 +17,7 @@
         :class="{ 'sidebar__item--active': isActive(item) }"
       >
         <span class="sidebar__icon" v-html="item.icon"></span>
-        <Transition name="fade">
-          <span v-if="expanded" class="sidebar__label">{{ item.label }}</span>
-        </Transition>
+        <span class="sidebar__label">{{ item.label }}</span>
       </router-link>
     </nav>
 
@@ -38,9 +34,7 @@
         :class="{ 'sidebar__item--active': isActive(item) }"
       >
         <span class="sidebar__icon" v-html="item.icon"></span>
-        <Transition name="fade">
-          <span v-if="expanded" class="sidebar__label">{{ item.label }}</span>
-        </Transition>
+        <span class="sidebar__label">{{ item.label }}</span>
       </router-link>
     </nav>
 
@@ -50,9 +44,7 @@
     <!-- Theme Toggle (bottom) -->
     <button class="sidebar__item sidebar__theme-btn" @click="toggleTheme()">
       <span class="sidebar__icon" v-html="themeIcon"></span>
-      <Transition name="fade">
-        <span v-if="expanded" class="sidebar__label">切换主题</span>
-      </Transition>
+      <span class="sidebar__label">切换主题</span>
     </button>
   </aside>
 </template>
@@ -76,17 +68,17 @@ const primaryItems = [
   {
     path: '/home',
     label: '首页',
-    icon: `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>`,
+    icon: `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>`,
   },
   {
     path: '/explore',
     label: '探索',
-    icon: `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>`,
+    icon: `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>`,
   },
   {
     path: '/profile',
     label: '个人中心',
-    icon: `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>`,
+    icon: `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>`,
   },
 ]
 
@@ -94,22 +86,22 @@ const secondaryItems = [
   {
     path: '/checkin',
     label: '打卡',
-    icon: `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>`,
+    icon: `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>`,
   },
   {
     path: '/ai-chat',
     label: 'AI 对话',
-    icon: `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a10 10 0 1 0 10 10H12V2z"/><path d="M12 2a10 10 0 0 1 10 10h-10V2z"/></svg>`,
+    icon: `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a10 10 0 1 0 10 10H12V2z"/><path d="M12 2a10 10 0 0 1 10 10h-10V2z"/></svg>`,
   },
   {
     path: '/analysis/portrait',
     label: '健康画像',
-    icon: `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20V10"/><path d="M18 20V4"/><path d="M6 20v-4"/></svg>`,
+    icon: `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20V10"/><path d="M18 20V4"/><path d="M6 20v-4"/></svg>`,
   },
   {
     path: '/analysis/trends',
     label: '趋势分析',
-    icon: `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>`,
+    icon: `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>`,
   },
 ]
 
@@ -130,7 +122,7 @@ function isActive(item: { path: string }) {
   background: var(--bg-card-white);
   border-right: none;
   z-index: 200;
-  transition: width var(--transition-slow) var(--ease-out-expo);
+  transition: width .35s var(--ease-out-expo);
   overflow: hidden;
   box-shadow: var(--shadow-card);
 }
@@ -139,71 +131,64 @@ function isActive(item: { path: string }) {
   width: var(--sidebar-expanded);
 }
 
-// Logo
+// Logo — icon centered when collapsed, left aligned when expanded
 .sidebar__logo {
   display: flex;
   align-items: center;
   gap: var(--space-3);
-  padding: var(--space-2) var(--space-6);
+  padding: var(--space-2) 0;
+  padding-left: calc((var(--sidebar-width) - 32px) / 2);
   margin-bottom: var(--space-6);
   cursor: pointer;
   width: 100%;
   min-height: 40px;
-  padding-left: 24px; // fixed icon x position
+  transition: padding-left .35s var(--ease-out-expo);
+  .sidebar--expanded & { padding-left: var(--space-6); }
 }
 
 .sidebar__logo-img {
-  width: 32px;
-  height: 32px;
-  flex-shrink: 0;
+  width: 32px; height: 32px; flex-shrink: 0;
 }
 
 .sidebar__logo-text {
-  font-size: var(--font-size-lg);
-  font-weight: var(--font-weight-bold);
-  color: var(--color-text);
-  white-space: nowrap;
-  transition: color var(--transition-slow);
+  font-size: var(--font-size-lg); font-weight: var(--font-weight-bold);
+  color: var(--color-text); white-space: nowrap;
+  opacity: 0; transition: opacity .2s ease .1s;
+  .sidebar--expanded & { opacity: 1; }
 }
 
 // Nav
 .sidebar__nav {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-1);
-  width: 100%;
+  display: flex; flex-direction: column; gap: var(--space-1); width: 100%;
 }
 
-.sidebar__nav--secondary {
-  margin-top: 0;
-}
-
-// Item
+// Item — icon centered when collapsed, left aligned when expanded
 .sidebar__item {
-  display: flex;
-  align-items: center;
-  gap: var(--space-3);
+  display: flex; align-items: center; gap: var(--space-3);
   padding: var(--space-3) 0;
-  padding-left: 24px; // fixed: icon stays at same x when expanding
-  margin: 0 var(--space-2);
+  padding-left: calc((var(--sidebar-width) - 24px) / 2);
   border-radius: var(--radius-lg);
-  color: var(--color-text);
-  text-decoration: none;
-  transition: background-color var(--transition-fast),
+  color: var(--color-text); text-decoration: none;
+  width: calc(100% - var(--space-2));
+  min-height: 44px; white-space: nowrap;
+  transition: padding-left .35s var(--ease-out-expo),
+              background-color var(--transition-fast),
               color var(--transition-fast);
-  width: calc(100% - var(--space-4));
-  min-height: 44px;
-  white-space: nowrap;
+  .sidebar--expanded & { padding-left: var(--space-6); }
 
-  &:hover {
-    background: var(--color-bg-tertiary);
-  }
+  &:hover { background: var(--color-bg-tertiary); }
 
   &--active {
-    color: var(--color-accent);
-    font-weight: var(--font-weight-semibold);
+    color: var(--color-accent); font-weight: var(--font-weight-semibold);
     background: var(--color-accent-light);
   }
+}
+
+// Label — hidden by default, fades in on expand with delay
+.sidebar__label {
+  opacity: 0;
+  transition: opacity .2s ease .12s;
+  .sidebar--expanded & { opacity: 1; }
 }
 
 .sidebar__icon {
@@ -237,16 +222,6 @@ function isActive(item: { path: string }) {
 .sidebar__theme-btn {
   cursor: pointer;
   width: calc(100% - var(--space-4));
-}
-
-// Transitions
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity var(--transition-fast);
-}
-.fade-enter-from,
-.fade-leave-to {
-  opacity: 0;
 }
 
 // Hide on mobile

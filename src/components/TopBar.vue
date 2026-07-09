@@ -1,62 +1,54 @@
 <template>
   <header class="topbar">
-    <h1 class="topbar__title">{{ title }}</h1>
-    <router-link to="/profile" class="topbar__avatar">
-      <img
-        :src="avatarUrl"
-        alt="个人中心"
-        class="topbar__avatar-img"
-      />
-    </router-link>
+    <!-- Left: back button (only on sub-pages) -->
+    <button v-if="showBack" class="topbar-btn" @click="$router.back()">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg>
+    </button>
+    <span v-else class="topbar-spacer"></span>
+
+    <!-- Center: title -->
+    <span v-if="title" class="topbar__title display-text">{{ title }}</span>
+
+    <!-- Right: kebab menu -->
+    <button v-if="hasMenu" class="topbar-btn" @click="$emit('menu')">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="12" cy="19" r="2"/></svg>
+    </button>
+    <span v-else class="topbar-spacer"></span>
   </header>
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
-import { useAuthStore } from '@/stores/auth'
+withDefaults(defineProps<{
+  title?: string
+  showBack?: boolean
+  hasMenu?: boolean
+}>(), {
+  title: '',
+  showBack: false,
+  hasMenu: false,
+})
 
-defineProps<{ title: string }>()
-
-const authStore = useAuthStore()
-
-const avatarUrl = computed(() =>
-  authStore.userInfo?.avatar_url || '/logo-stuheal.svg'
-)
+defineEmits<{ menu: [] }>()
 </script>
 
 <style lang="scss" scoped>
 .topbar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  height: var(--topbar-height);
-  padding: 0 var(--space-4);
-  background: var(--color-bg);
-  border-bottom: 1px solid var(--color-border);
-  position: sticky;
-  top: 0;
-  z-index: 50;
-  transition: background-color var(--transition-slow);
+  display: flex; align-items: center; justify-content: space-between;
+  height: var(--topbar-height); padding: 0 var(--space-4);
+  background: var(--bg-card-white); position: sticky; top: 0; z-index: 50;
+  border-bottom: 1px solid var(--color-separator);
 }
-
 .topbar__title {
-  font-family: var(--font-display);
-  font-size: var(--font-size-2xl);
-  font-weight: var(--font-weight-bold);
-  color: var(--text-primary);
+  font-size: var(--font-size-lg); font-weight: var(--font-weight-semibold);
+  color: var(--text-primary); text-align: center;
+  flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
 }
-
-.topbar__avatar {
-  width: 32px;
-  height: 32px;
-  border-radius: var(--radius-full);
-  overflow: hidden;
-  flex-shrink: 0;
+.topbar-btn {
+  width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;
+  border-radius: var(--radius-full); color: var(--text-primary);
+  transition: background var(--transition-fast); flex-shrink: 0;
+  &:hover { background: var(--bg-blue-light); }
+  &:active { transform: scale(.95); }
 }
-
-.topbar__avatar-img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
+.topbar-spacer { width: 40px; flex-shrink: 0; }
 </style>

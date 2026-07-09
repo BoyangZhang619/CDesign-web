@@ -11,6 +11,10 @@ html {
   -moz-osx-font-smoothing: grayscale;
 }
 
+// 禁用触屏蓝色高亮 + 长按菜单
+* { -webkit-tap-highlight-color: transparent; -webkit-user-select: none; -webkit-touch-callout: none; }
+input, textarea { -webkit-user-select: text; }
+
 body {
   font-family: var(--font-sans);
   font-size: var(--font-size-base);
@@ -61,7 +65,16 @@ img, svg { display: block; max-width: 100%; }
 .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border-width: 0; }
 .container-md { max-width: var(--content-width-md); margin-inline: auto; }
 
-// Reduced motion
+// ── 柔和交互动画 ──────────────────────────────────────────
+a, button, .card, .dash-card, .nav-card, .quick-card, .list-row, .record-card, .rec-card {
+  transition: transform .15s var(--ease-out-expo),
+              background-color .2s ease,
+              border-color .2s ease,
+              box-shadow .2s ease;
+  &:active { transform: scale(.98); }
+}
+
+// ── Reduced motion ──────────────────────────────────────────
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
 }
