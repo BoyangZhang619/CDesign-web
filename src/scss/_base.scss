@@ -9,6 +9,8 @@ html {
   -webkit-text-size-adjust: 100%;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  overscroll-behavior: none;            // 禁止 overscroll 缩放/弹性效果
+  -webkit-overflow-scrolling: touch;   // iOS 平滑滚动
 }
 
 // 禁用触屏蓝色高亮 + 长按菜单
