@@ -114,7 +114,7 @@ const {
   errorMsg,
   inputMessage,
   chatConfig,
-  handleSendMessage: composableHandleSendMessage,
+  // handleSendMessage: composableHandleSendMessage,
   clearMessages
 } = useAIChat()
 
@@ -351,7 +351,7 @@ async function handleSendMessage() {
 
   console.log('[AIChatFloatingWindow] 开始发送消息，sessionId:', chatConfig.sessionId)
 
-  const result = await composableHandleSendMessage(0)
+  // const result = await composableHandleSendMessage(0)
 
   await nextTick()
   scrollToBottom()

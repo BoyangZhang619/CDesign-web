@@ -369,6 +369,9 @@ export function useAIChat() {
    */
   async function handleSendMessage(userCredits: number): Promise<{ success: boolean; tokensUsed: number }> {
     errorMsg.value = ''
+    if (userCredits === 0) {
+      console.warn('[handleSendMessage] 用户第一次用AI')
+    }
 
     if (!inputMessage.value.trim()) {
       errorMsg.value = '请输入消息'
