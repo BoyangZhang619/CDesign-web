@@ -107,7 +107,8 @@ async function loadSessions() {
   try {
     const res = await sessionAPI.getSessions({ limit: 50 })
     if (res.data?.success) {
-      sessions.value = (res.data.data?.sessions || []).map((s: any) => ({
+      // sendResult(res, { data: sessions }) → data.data.data
+      sessions.value = (res.data.data?.data || []).map((s: any) => ({
         id: s.id, title: s.session_name || '未命名', createdAt: s.created_at,
       }))
     }
@@ -121,8 +122,10 @@ async function loadSession(s: any) {
   try {
     // 加载历史消息
     const res = await messageAPI.getMessages(s.id, { limit: 100 })
-    if (res.data?.code === 0 && res.data?.data?.messages) {
-      const historyMsgs = res.data.data.messages.map((m: any) => ({
+    // sendResult(res, { data: messages }) → { success, data: { data: [...] } }
+    const rawMessages = res.data?.data?.data
+    if (res.data?.success && Array.isArray(rawMessages)) {
+      const historyMsgs = rawMessages.map((m: any) => ({
         role: m.role as 'user' | 'assistant',
         content: m.content || '',
         tokensUsed: m.total_tokens || 0,

@@ -1,6 +1,6 @@
 import { ref, reactive } from 'vue'
 import { nextTick } from 'vue'
-import { messageAPI, type StreamMessage } from '../api/modules/aiChat'
+import { messageAPI, sessionAPI, type StreamMessage } from '../api/modules/aiChat'
 
 export interface Message {
   role: 'user' | 'assistant'
@@ -375,9 +375,25 @@ export function useAIChat() {
       return { success: false, tokensUsed: 0 }
     }
 
+    // 如果还没有会话，自动创建一个（首次发消息时静默创建）
     if (!chatConfig.sessionId) {
-      errorMsg.value = '请先创建会话'
-      return { success: false, tokensUsed: 0 }
+      try {
+        const res = await sessionAPI.createSession({
+          session_name: inputMessage.value.trim().slice(0, 20) || '新对话',
+          ai_model: 'dashscope',
+        })
+        // sendResult(res, { data: session }) → { success, data: { data: session } }
+        const session = res.data?.data?.data
+        if (res.data?.success && session?.id) {
+          chatConfig.sessionId = session.id
+        } else {
+          errorMsg.value = '创建会话失败，请重试'
+          return { success: false, tokensUsed: 0 }
+        }
+      } catch {
+        errorMsg.value = '创建会话失败，请重试'
+        return { success: false, tokensUsed: 0 }
+      }
     }
 
     if (userCredits < 10) {
