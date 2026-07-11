@@ -330,7 +330,8 @@ async function handleSendMessage() {
         session_name: '浮窗聊天',
         ai_model: 'dashscope',
         temperature: 0.7,
-        max_tokens: 2048
+        max_tokens: 2048,
+        tags: 'chat',
       })
 
       if (response.data?.success && response.data?.data?.data?.id) {

@@ -381,6 +381,7 @@ export function useAIChat() {
         const res = await sessionAPI.createSession({
           session_name: inputMessage.value.trim().slice(0, 20) || '新对话',
           ai_model: 'dashscope',
+          tags: 'chat',
         })
         // sendResult(res, { data: session }) → { success, data: { data: session } }
         const session = res.data?.data?.data
