@@ -73,12 +73,13 @@
 import { ref, nextTick, watch, onMounted } from 'vue'
 import { useAIChat } from '../composables/useAIChat'
 import { useAuthStore } from '../stores/auth'
-import { sessionAPI } from '../api/modules/aiChat'
+import { sessionAPI, messageAPI } from '../api/modules/aiChat'
 
 const authStore = useAuthStore()
 const {
   loading, errorMsg, inputMessage, messages,
   handleSendMessage, clearMessages,
+  setSessionId, loadMessages,
 } = useAIChat()
 
 function send() {
@@ -116,8 +117,28 @@ async function loadSessions() {
 async function loadSession(s: any) {
   activeSessionId.value = s.id
   showHistory.value = false
-  // The session loading logic is handled by the composable - this would need backend support
-  // For now, we record the active session ID for future implementation
+
+  try {
+    // 加载历史消息
+    const res = await messageAPI.getMessages(s.id, { limit: 100 })
+    if (res.data?.code === 0 && res.data?.data?.messages) {
+      const historyMsgs = res.data.data.messages.map((m: any) => ({
+        role: m.role as 'user' | 'assistant',
+        content: m.content || '',
+        tokensUsed: m.total_tokens || 0,
+        messageId: m.id,
+      }))
+      loadMessages(historyMsgs)
+    } else {
+      loadMessages([])
+    }
+    // 设置当前会话 ID，后续发送消息会归入此会话
+    setSessionId(s.id)
+  } catch {
+    // 加载失败时静默处理，仍设置 sessionId
+    loadMessages([])
+    setSessionId(s.id)
+  }
 }
 
 async function newChat() {

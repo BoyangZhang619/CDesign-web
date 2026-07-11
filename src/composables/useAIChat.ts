@@ -439,6 +439,22 @@ export function useAIChat() {
     messages.value = []
     inputMessage.value = ''
     errorMsg.value = ''
+    chatConfig.sessionId = undefined
+  }
+
+  /**
+   * 设置当前会话 ID（切换/恢复会话时调用）
+   */
+  function setSessionId(id: number) {
+    chatConfig.sessionId = id
+  }
+
+  /**
+   * 从后端加载历史消息到当前状态
+   * 用于点击历史会话后回填消息列表
+   */
+  function loadMessages(historyMessages: Message[]) {
+    messages.value = historyMessages
   }
 
   return {
@@ -450,6 +466,8 @@ export function useAIChat() {
     chatConfig,
     // 方法
     handleSendMessage,
-    clearMessages
+    clearMessages,
+    setSessionId,
+    loadMessages,
   }
 }

@@ -668,9 +668,9 @@ export function useTodolist() {
    */
   function jumpToCheckinPage(type: 'exercise' | 'meal' | 'sleep') {
     const pathMap: Record<string, string> = {
-      'exercise': '/health/daily-checkin#exercise',
-      'meal': '/health/daily-checkin#meal',
-      'sleep': '/health/daily-checkin#sleep'
+      'exercise': '/checkin?tab=exercise',
+      'meal': '/checkin?tab=meal',
+      'sleep': '/checkin?tab=sleep'
     }
     
     if (pathMap[type]) {

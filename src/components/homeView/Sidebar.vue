@@ -102,7 +102,7 @@ const isLoggingOut = ref(false)
 const navItems = [
     { path: '/home', icon: '🏠', label: '主页', svg: 'noun-sidebar-dashboard.svg', scale: 1 },
     { path: '/todolist', icon: '✓', label: 'TodoList', svg: 'noun-sidebar-todolist.svg', scale: 1.05 },
-    { path: '/health/daily-checkin', icon: '✓', label: '健康打卡', svg: 'noun-sidebar-checkin.svg', scale: 1.25 },
+    { path: '/checkin', icon: '✓', label: '健康打卡', svg: 'noun-sidebar-checkin.svg', scale: 1.25 },
     { path: '/health/history', icon: '📋', label: '历史记录', svg: 'noun-sidebar-history.svg', scale: 1.25 },
     { path: '/analysis/portrait', icon: '🎨', label: '健康画像', svg: 'noun-sidebar-portrait.svg', scale: 1.25 },
     { path: '/analysis/trends', icon: '📈', label: '趋势分析', svg: 'noun-sidebar-trend.svg', scale: 1.1 },

@@ -1,5 +1,6 @@
 import { ref, nextTick, watch } from 'vue'
 import { fetchWithRefresh } from '../api/http'
+import { chartTheme } from '../utils/canvasColors'
 
 export function useTrendsView() {
   const loading = ref(false)
@@ -114,8 +115,8 @@ export function useTrendsView() {
     const pad = 40, gw = canvas.width - 2*pad, gh = canvas.height - 2*pad - 20
     const maxV = Math.max(...data) * 1.2 || 1, xStep = gw / (dates.length - 1 || 1), scale = gh / maxV
 
-    // Grid
-    ctx.strokeStyle = '#E0E0E0'; ctx.lineWidth = 1
+    // Grid（使用 CSS 变量，自动适配暗色模式）
+    ctx.strokeStyle = chartTheme.grid; ctx.lineWidth = 1
     for (let i = 0; i <= 5; i++) {
       const y = pad + (gh/5)*i
       ctx.beginPath(); ctx.moveTo(pad, y); ctx.lineTo(canvas.width-pad, y); ctx.stroke()
@@ -132,8 +133,8 @@ export function useTrendsView() {
     // Dots
     ctx.fillStyle = color
     data.forEach((v, i) => { const x = pad + i*xStep; ctx.beginPath(); ctx.arc(x, canvas.height-pad - v*scale, 3, 0, Math.PI*2); ctx.fill() })
-    // Labels
-    ctx.fillStyle = '#8E8E8E'; ctx.font = '10px sans-serif'; ctx.textAlign = 'center'
+    // Labels（使用 CSS 变量，自动适配暗色模式）
+    ctx.fillStyle = chartTheme.label; ctx.font = '10px sans-serif'; ctx.textAlign = 'center'
     dates.forEach((d, i) => ctx.fillText(d.slice(5), pad + i*xStep, canvas.height-pad+10))
   }
 

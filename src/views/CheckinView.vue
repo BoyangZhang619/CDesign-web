@@ -38,12 +38,12 @@
         <div class="recent">
           <h4 class="section-label">最近记录</h4>
           <div v-if="recentRecords.length === 0" class="empty-msg">还没有{{ currentGuide.label }}记录</div>
-          <div v-for="r in recentRecords" :key="r.id" class="rec-row" @click="openDetail(r)">
+          <div v-for="r in recentRecords" :key="r.id || r.exercise_record_id || r.created_at" class="rec-row" @click="openDetail(r)">
             <div class="rec-info">
-              <span class="rec-subtype">{{ r.subtype || r.checkin_type }}</span>
-              <span class="rec-date">{{ formatDate(r.checkin_date) }}</span>
+              <span class="rec-subtype">{{ r.activity_type || r.meal_type || r.food_name || r.sleep_start_time || typeLabel(activeTab) }}</span>
+              <span class="rec-date">{{ formatDate(r.created_at || r.meal_time || r.start_time || r.checkin_date) }}</span>
             </div>
-            <span class="rec-notes">{{ r.notes || '-' }}</span>
+            <span class="rec-notes">{{ r.note || r.sleep_feeling || r.food_detail || r.notes || '-' }}</span>
           </div>
         </div>
       </div>
@@ -268,15 +268,51 @@ function moodEmoji(i:number) { return ['😢','😕','😐','😊','😄'][i-1] 
 async function submitCheckin() {
   saving.value = true; msg.value = ''
   const type = activeTab.value
-  const details: Record<string,any> = {}
-  if (type === 'meal') { details.meal_period=form.meal_period; details.food_name=form.food_name; details.food_source=form.food_source; details.calories=Number(form.calories)||0; details.protein_g=0; details.fat_g=0; details.carb_g=0; details.fiber_g=0; details.sugar_g=0; details.water_ml=Number(form.water_ml)||0 }
-  else if (type === 'exercise') { details.activity_type=form.activity_type; details.duration_min=Number(form.duration_min)||0; details.intensity=form.intensity; details.calories_burned=Number(form.calories_burned)||0; details.distance_km=form.distance_km?Number(form.distance_km):null }
-  else if (type === 'sleep') { details.sleep_type=form.sleep_type; details.start_time=form.start_time; details.end_time=form.end_time; details.duration_hours=0; details.quality=Number(form.quality)||3; details.wake_count=Number(form.wake_count)||0; details.dream_notes=form.dream_notes||null }
-  else { details.activity_category=form.activity_category; details.mood=Number(form.mood)||null; details.energy=Number(form.energy)||null; details.description=form.description||null; details.water_ml=Number(form.water_ml)||0 }
+  let url = ''; let body: any = {}
   try {
-    const res = await fetchWithRefresh('/checkin', {
+    if (type === 'meal') {
+      url = '/meal-checkin/checkin/meal'
+      body = {
+        meal_type: form.meal_period,
+        food_source: form.food_source,
+        food_name: form.food_name || '未命名',
+        meal_time: new Date().toISOString(),
+        calories: Number(form.calories) || 0,
+        protein_g: 0, fat_g: 0, carbohydrate_g: 0, fiber_g: 0, sugar_g: 0,
+      }
+    } else if (type === 'exercise') {
+      url = '/exercise-checkin/checkin/exercise'
+      const now = new Date()
+      const end = new Date(now.getTime() + (Number(form.duration_min) || 0) * 60000)
+      body = {
+        activity_type: form.activity_type,
+        intensity: form.intensity,
+        start_time: now.toISOString(),
+        end_time: end.toISOString(),
+        note: form.notes || '',
+      }
+    } else if (type === 'sleep') {
+      url = '/sleep-checkin/checkin/sleep'
+      body = {
+        sleep_start_time: form.start_time || new Date().toISOString(),
+        wake_up_time: form.end_time || new Date(Date.now()+8*3600000).toISOString(),
+        is_nap: form.sleep_type === 'nap' ? 1 : 0,
+        wake_up_times: Number(form.wake_count) || 0,
+        sleep_feeling: form.dream_notes || '',
+      }
+    } else {
+      url = '/daily-checkin/update'
+      body = {
+        checkin_date: todayStr,
+        mood_level: form.mood || null,
+        energy_level: form.energy || null,
+        water_intake_ml: Number(form.water_ml) || 0,
+        notes: form.description || '',
+      }
+    }
+    const res = await fetchWithRefresh(url, {
       method:'POST', headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({ checkin_type:type, subtype: subtypeFromForm(), checkin_date:todayStr, notes:form.notes||null, details })
+      body: JSON.stringify(body)
     })
     const data = await res.json()
     if (data?.success) { msgOk.value = true; msg.value = '打卡成功!'; showForm.value = false; loadRecent(); loadSummary() }
@@ -286,35 +322,51 @@ async function submitCheckin() {
 }
 
 async function loadSummary() {
-  try { const r = await fetchWithRefresh('/checkin/summary', { method:'GET' }); if (r.ok) { const d = await r.json(); if (d?.success) { summary.total = d.data.total; summary.byType = d.data.byType } } } catch {}
+  try {
+    // 聚合各类型 summary（V2 没有统一 summary，分别查询后合并）
+    const fetchCount = async (url: string) => {
+      const r = await fetchWithRefresh(url, { method:'GET' })
+      if (r.ok) { const d = await r.json(); return d?.success ? (d.data?.total || d.data?.record_count || 0) : 0 }
+      return 0
+    }
+    const [daily, meal, exercise, sleep] = await Promise.all([
+      fetchCount('/daily-checkin/get'),
+      fetchCount('/meal-checkin/checkin/meal/summary'),
+      fetchCount('/exercise-checkin/checkin/exercise/summary'),
+      fetchCount('/sleep-checkin/checkin/sleep/summary'),
+    ])
+    summary.byType = { daily: daily ? 1 : 0, meal, exercise, sleep }
+    summary.total = (daily ? 1 : 0) + meal + exercise + sleep
+  } catch {}
 }
 async function loadRecent() {
-  try { const r = await fetchWithRefresh(`/checkin?type=${activeTab.value}&limit=5`, { method:'GET' }); if (r.ok) { const d = await r.json(); if (d?.success) recentRecords.value = d.data.records||[] } } catch {}
-}
-
-function subtypeFromForm() {
-  const t = activeTab.value
-  if (t === 'meal') return form.meal_period
-  if (t === 'exercise') return form.activity_type
-  if (t === 'sleep') return form.sleep_type
-  if (t === 'daily') return form.activity_category
-  return null
+  const typeUrls: Record<string,string> = {
+    daily: '/daily-checkin/get',
+    meal: '/meal-checkin/checkin/meal',
+    exercise: '/exercise-checkin/checkin/exercise',
+    sleep: '/sleep-checkin/checkin/sleep',
+  }
+  const url = typeUrls[activeTab.value]
+  if (!url) return
+  try {
+    const r = await fetchWithRefresh(url, { method:'GET' })
+    if (r.ok) {
+      const d = await r.json()
+      if (d?.success) {
+        const raw = d.data?.records || d.data || []
+        recentRecords.value = (Array.isArray(raw) ? raw : [raw]).slice(0, 5)
+      }
+    }
+  } catch {}
 }
 
 async function openDetail(r: any) {
   detailRecord.value = r
-  if (!r._details) {
-    try {
-      const res = await fetchWithRefresh(`/checkin/${r.id}`, { method:'GET' })
-      if (res.ok) { const d = await res.json(); if (d?.success && d.data.details) { r._details = d.data.details } }
-    } catch {}
-  }
 }
 const flatDetail = computed(() => {
   if (!detailRecord.value) return {}
   const out: Record<string,any> = {}
-  for (const [k,v] of Object.entries(detailRecord.value)) { if (!k.startsWith('_') && k !== 'id' && k !== 'user_id' && v !== null && v !== '') out[k] = v }
-  if (detailRecord.value._details) for (const [k,v] of Object.entries(detailRecord.value._details)) { if (k !== 'id' && k !== 'record_id' && v !== null && v !== '') out[k] = v }
+  for (const [k,v] of Object.entries(detailRecord.value)) { if (!k.startsWith('_') && k !== 'user_id' && v !== null && v !== '') out[k] = v }
   return out
 })
 

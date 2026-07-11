@@ -57,6 +57,7 @@
 import { computed, ref, onMounted, nextTick, watch } from 'vue'
 import HealthSetupModal from '../components/HealthSetupModal.vue'
 import { usePortraitView } from '../composables/usePortraitView'
+import { chartTheme } from '../utils/canvasColors'
 
 const {
   showHealthSetupModal, isRefreshing, portraitData,
@@ -82,7 +83,8 @@ function drawRadar() {
   const ctx = c.getContext('2d'); if (!ctx) return
   const cx = 150, cy = 150, r = 100, n = rd.dimensions.length
 
-  ctx.strokeStyle = '#E0E0E0'; ctx.lineWidth = 1
+  // 网格和轴线（使用 CSS 变量，自动适配暗色模式）
+  ctx.strokeStyle = chartTheme.grid; ctx.lineWidth = 1
   for (let lvl = 1; lvl <= 5; lvl++) {
     ctx.beginPath()
     for (let i = 0; i < n; i++) {
@@ -96,8 +98,9 @@ function drawRadar() {
     const a = (Math.PI * 2 * i) / n - Math.PI / 2
     ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(cx + r * Math.cos(a), cy + r * Math.sin(a)); ctx.stroke()
   }
+  // 数据区域（使用主题色，自动适配暗色模式）
   const maxV = Math.max(...rd.ideal, ...rd.current, 1)
-  ctx.fillStyle = 'rgba(0,149,246,0.12)'; ctx.strokeStyle = '#0095F6'; ctx.lineWidth = 2
+  ctx.fillStyle = chartTheme.accentAlpha(0.12); ctx.strokeStyle = chartTheme.accent; ctx.lineWidth = 2
   ctx.beginPath()
   for (let i = 0; i < n; i++) {
     const a = (Math.PI * 2 * i) / n - Math.PI / 2
@@ -106,7 +109,8 @@ function drawRadar() {
     i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y)
   }
   ctx.closePath(); ctx.fill(); ctx.stroke()
-  ctx.fillStyle = '#8E8E8E'; ctx.font = '11px sans-serif'; ctx.textAlign = 'center'
+  // 维度标签（使用 CSS 变量，自动适配暗色模式）
+  ctx.fillStyle = chartTheme.label; ctx.font = '11px sans-serif'; ctx.textAlign = 'center'
   for (let i = 0; i < n; i++) {
     const a = (Math.PI * 2 * i) / n - Math.PI / 2
     ctx.fillText(rd.dimensions[i], cx + (r + 18) * Math.cos(a), cy + (r + 18) * Math.sin(a) + 4)

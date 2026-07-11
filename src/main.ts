@@ -10,6 +10,9 @@ import { App as CapApp } from '@capacitor/app'
 import './scss/_tokens.scss'
 import './scss/_base.scss'
 
+// 路由懒加载后台静默预加载
+import { installPreload } from './utils/preloadRoutes'
+
 // Apply saved theme before app mounts (avoid flash of wrong theme)
 const saved = localStorage.getItem('stuheal-theme') as 'light' | 'dark' | null
 if (saved) {
@@ -45,6 +48,9 @@ app.config.warnHandler = (msg, _instance, trace) => {
 }
 
 app.mount('#app')
+
+// 后台静默预加载未访问的懒加载路由 chunk（首次导航完成后触发）
+installPreload(router)
 
 // Capacitor Android 返回按钮/侧滑 — 先回退路由历史，到底了再退出
 CapApp.addListener('backButton', ({ canGoBack }: { canGoBack: boolean }) => {
