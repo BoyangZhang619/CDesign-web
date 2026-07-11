@@ -72,10 +72,8 @@
 <script setup lang="ts">
 import { ref, nextTick, watch, onMounted } from 'vue'
 import { useAIChat } from '../composables/useAIChat'
-import { useAuthStore } from '../stores/auth'
 import { sessionAPI, messageAPI } from '../api/modules/aiChat'
 
-const authStore = useAuthStore()
 const {
   loading, errorMsg, inputMessage, messages,
   handleSendMessage, clearMessages,
@@ -83,8 +81,7 @@ const {
 } = useAIChat()
 
 function send() {
-  const credits = authStore.userInfo?.credits ?? 0
-  handleSendMessage(credits)
+  handleSendMessage(0)
 }
 
 const msgContainer = ref<HTMLElement>()
@@ -172,7 +169,7 @@ onMounted(() => loadSessions())
 </script>
 
 <style lang="scss" scoped>
-.chat { display: flex; flex-direction: column; height: calc(100dvh - var(--topbar-height) - var(--bottombar-height)); }
+.chat { display: flex; flex-direction: column; height: calc(100dvh - var(--topbar-height) - 40px); }
 
 // Top bar
 .chat-top {

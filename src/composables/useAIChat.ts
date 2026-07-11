@@ -396,12 +396,7 @@ export function useAIChat() {
       }
     }
 
-    if (userCredits < 10) {
-      errorMsg.value = '额度不足，请充值'
-      return { success: false, tokensUsed: 0 }
-    }
-
-    // ✅ 防止重复提交：如果已经在加载，直接返回
+    // 防止重复提交：如果已经在加载，直接返回
     if (loading.value) {
       console.warn('[handleSendMessage] 上一个请求仍在处理中，忽略本次提交')
       return { success: false, tokensUsed: 0 }

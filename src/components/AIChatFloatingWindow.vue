@@ -350,16 +350,7 @@ async function handleSendMessage() {
 
   console.log('[AIChatFloatingWindow] 开始发送消息，sessionId:', chatConfig.sessionId)
 
-  // 使用真实的用户额度
-  const result = await composableHandleSendMessage(authStore.userInfo.credits || 0)
-
-  // 更新用户额度
-  if (result.success && authStore.userInfo) {
-    authStore.userInfo.credits -= result.tokensUsed
-    console.log('[AIChatFloatingWindow] 消息发送成功，消耗token:', result.tokensUsed)
-  } else {
-    console.warn('[AIChatFloatingWindow] 消息发送失败或无token消耗')
-  }
+  const result = await composableHandleSendMessage(0)
 
   await nextTick()
   scrollToBottom()
