@@ -30,6 +30,7 @@ import TopBar from '@/components/TopBar.vue'
 const route = useRoute()
 
 // Pages that don't need title/back (well-known landing pages)
+// [SNOW] /tree 雪藏
 const CLEAN_PAGES = ['/home', '/profile', '/checkin', '/explore']
 
 const topTitle = computed(() => {

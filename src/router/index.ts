@@ -17,6 +17,9 @@ const SettingsView = () => import('../views/SettingsView.vue')
 const CheckinView = () => import('../views/CheckinView.vue')
 const AvatarEditorView = () => import('../views/AvatarEditorView.vue')
 const AvatarPickerView = () => import('../views/AvatarPickerView.vue')
+const NotFoundView = () => import('../views/NotFoundView.vue')
+// [SNOW] 树象征物页面 — 雪藏，暂不启用
+// const TreeView = () => import('../views/TreeView.vue')
 
 // 『』
 const routes = [
@@ -71,6 +74,8 @@ const routes = [
       title: 'StuHeal-青愈「AI健康助手」'
     }
   },
+  // [SNOW] 树页面入口 — 重定向至主页
+  { path: '/tree', redirect: '/home' },
   {
     path: '/checkin',
     name: 'checkin',
@@ -149,6 +154,13 @@ const routes = [
       requiresAuth: true,
       title: '设置'
     }
+  },
+  // 404 — 必须放最后
+  {
+    path: '/:pathMatch(.*)*',
+    name: 'not-found',
+    component: NotFoundView,
+    meta: { title: 'StuHeal-青愈「迷路了」' }
   }
 ]
 
