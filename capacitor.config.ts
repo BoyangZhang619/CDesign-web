@@ -10,9 +10,8 @@ const config: CapacitorConfig = {
   },
   plugins: {
     StatusBar: {
-      overlaysWebView: false, // WebView 在状态栏下方，内容从状态栏底边基线开始
-      style: 'DARK',
-      backgroundColor: '#F0F4F8',
+      overlaysWebView: false, // WebView 在状态栏下方
+      // style + backgroundColor 由 useTheme.ts 根据亮/暗动态设置
     },
     SplashScreen: {
       launchShowDuration: 0,    // 应用启动后立即隐藏原生闪屏

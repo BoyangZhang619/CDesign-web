@@ -23,7 +23,7 @@ if (saved) {
 if (Capacitor.isNativePlatform()) {
   const isDark = saved === 'dark'
   StatusBar.setBackgroundColor({ color: isDark ? '#1A1D22' : '#F0F4F8' })
-  StatusBar.hide()
+  StatusBar.show()
 }
 
 const app = createApp(App)

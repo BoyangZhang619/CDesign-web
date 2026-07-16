@@ -58,7 +58,6 @@ function onMenu() { /* per-page menu handling can be added later */ }
 .app-shell {
   display: flex; min-height: 100dvh;
   background: var(--bg-main);
-  padding-top: env(safe-area-inset-top, 0px);
 }
 .app-main {
   flex: 1; min-width: 0; display: flex; flex-direction: column;
@@ -73,7 +72,7 @@ function onMenu() { /* per-page menu handling can be added later */ }
   }
 }
 .no-topbar {
-  padding-top: 0;
+  padding-top: env(safe-area-inset-top, 0px);
 }
 
 // TopBar transition

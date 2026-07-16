@@ -34,7 +34,8 @@ defineEmits<{ menu: [] }>()
 <style lang="scss" scoped>
 .topbar {
   display: flex; align-items: center; justify-content: space-between;
-  height: var(--topbar-height); padding: 0 var(--space-4);
+  height: calc(var(--topbar-height) + env(safe-area-inset-top, 0px)); padding: 0 var(--space-4);
+  padding-top: env(safe-area-inset-top, 0px);
   background: var(--bg-card-white); position: sticky; top: 0; z-index: 50;
   border-bottom: 1px solid var(--color-separator);
 }

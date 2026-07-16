@@ -24,7 +24,7 @@ export function useTheme() {
         StatusBar.setBackgroundColor({ color: '#F0F4F8' })
         StatusBar.setStyle({ style: Style.Light })  // 亮色背景 → 深色图标
       }
-      StatusBar.hide() // 全屏沉浸
+      StatusBar.show() // 显示状态栏（时间、电量、信号等）
     }
   })
 
