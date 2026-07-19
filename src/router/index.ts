@@ -66,7 +66,7 @@ const routes = [
     }
   },
   {
-    path: '/ai-chat',
+    path: '/ai-chat/:sessionId?',
     name: 'ai-chat',
     component: AIChatView,
     meta: {

@@ -75,6 +75,16 @@
       <div v-if="errorMsg" class="chat-error">{{ errorMsg }}</div>
     </div>
 
+    <!-- 无效会话弹窗 -->
+    <Teleport to="body">
+      <div v-if="invalidSessionModal" class="invalid-overlay" @click.self="invalidSessionModal = false; router.push('/ai-chat')">
+        <div class="invalid-dialog">
+          <p class="invalid-msg">该会话无效或无法访问</p>
+          <button class="invalid-btn" @click="invalidSessionModal = false; router.push('/ai-chat')">确认</button>
+        </div>
+      </div>
+    </Teleport>
+
     <!-- Input -->
     <div class="chat-input-bar">
       <textarea
@@ -94,15 +104,19 @@
 
 <script setup lang="ts">
 import { ref, nextTick, watch, onMounted, onUnmounted } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 import { useAIChat } from '../composables/useAIChat'
 import { useMarkdown } from '../composables/useMarkdown'
 import { sessionAPI, messageAPI } from '../api/modules/aiChat'
 import AIChatHistoryPanel from '../components/AIChatHistoryPanel.vue'
 
+const route = useRoute()
+const router = useRouter()
+
 const {
   loading, errorMsg, inputMessage, messages,
   handleSendMessage, clearMessages,
-  setSessionId, loadMessages,
+  setSessionId, loadMessages, chatConfig,
 } = useAIChat()
 
 const { render: renderMd } = useMarkdown()
@@ -148,11 +162,21 @@ function sendQuick(prompt: string) {
   handleSendMessage(0)
 }
 
+// 流式结束后 URL 跟进到当前会话（时机安全：messages 已有数据，validateAndLoad 会跳过）
+watch(() => loading.value, (cur, prev) => {
+  if (prev && !cur && chatConfig.sessionId) {
+    if (!route.params.sessionId || String(route.params.sessionId) !== String(chatConfig.sessionId)) {
+      router.replace(`/ai-chat/${chatConfig.sessionId}`)
+    }
+  }
+})
+
 const msgContainer = ref<HTMLElement>()
 const inputEl = ref<HTMLTextAreaElement>()
 const showHistory = ref(false)
 const sessions = ref<any[]>([])
 const activeSessionId = ref<string | null>(null)
+const invalidSessionModal = ref(false)
 
 function autoGrow() {
   const el = inputEl.value; if (!el) return
@@ -240,13 +264,16 @@ async function loadSessions() {
 }
 
 async function loadSession(s: any) {
-  activeSessionId.value = s.id
   showHistory.value = false
+  router.push(`/ai-chat/${s.id}`)
+}
+
+async function openSession(id: number) {
+  activeSessionId.value = id
+  setSessionId(id)
 
   try {
-    // 加载历史消息
-    const res = await messageAPI.getMessages(s.id, { limit: 100 })
-    // sendResult(res, { data: messages }) → { success, data: { data: [...] } }
+    const res = await messageAPI.getMessages(id, { limit: 100 })
     const rawMessages = res.data?.data?.data
     if (res.data?.success && Array.isArray(rawMessages)) {
       const historyMsgs = rawMessages.map((m: any) => ({
@@ -259,19 +286,37 @@ async function loadSession(s: any) {
     } else {
       loadMessages([])
     }
-    // 设置当前会话 ID，后续发送消息会归入此会话
-    setSessionId(s.id)
   } catch {
-    // 加载失败时静默处理，仍设置 sessionId
     loadMessages([])
-    setSessionId(s.id)
   }
 }
 
-async function newChat() {
+async function validateAndLoad(sessionId: number) {
+  // 如果已经是当前活跃会话且有消息，不重新加载（避免清空正在流式输入的数据）
+  if (chatConfig.sessionId === sessionId && messages.value.length > 0) return
+
+  try {
+    const res = await sessionAPI.getSessionDetail(sessionId)
+    // sendResult(res, { data: session }) → data.data.data
+    const session = res.data?.data?.data
+    if (res.data?.success && session) {
+      // 过滤：必须是聊天会话（排除系统内部 AI 调用）
+      if (session.tags && session.tags.includes('system')) {
+        invalidSessionModal.value = true
+        return
+      }
+      await openSession(sessionId)
+      return
+    }
+  } catch { /* fall through */ }
+  invalidSessionModal.value = true
+}
+
+function newChat() {
   clearMessages()
   activeSessionId.value = null
   showHistory.value = false
+  router.push('/ai-chat')
 }
 
 async function deleteSession(s: any) {
@@ -289,6 +334,19 @@ async function renameSession(s: any, newTitle: string) {
     if (target) target.title = newTitle
   } catch { /* silent */ }
 }
+
+// ── 路由驱动：进入 /ai-chat/26 时加载对应会话 ──
+watch(() => route.params.sessionId, (id) => {
+  userScrolledUp = false
+  const num = Number(id)
+  if (num && num > 0) {
+    validateAndLoad(num)
+  } else {
+    // /ai-chat 无参数 → 新对话
+    clearMessages()
+    activeSessionId.value = null
+  }
+}, { immediate: true })
 
 onMounted(() => loadSessions())
 
@@ -482,4 +540,28 @@ watch(showHistory, (val) => { if (val) loadSessions() })
   border-top-color: #fff; border-radius: 50%; animation: spin .6s linear infinite;
 }
 @keyframes spin { to { transform: rotate(360deg); } }
+
+// ── 无效会话弹窗 ──
+.invalid-overlay {
+  position: fixed; inset: 0; z-index: 3000;
+  background: rgba(0,0,0,.35);
+  display: flex; align-items: center; justify-content: center;
+}
+.invalid-dialog {
+  background: var(--bg-card-white); border-radius: var(--radius-xl);
+  padding: var(--space-6) var(--space-8); text-align: center;
+  max-width: 300px; width: 85vw;
+  box-shadow: var(--shadow-modal);
+}
+.invalid-msg {
+  font-size: var(--font-size-base); color: var(--text-primary);
+  margin-bottom: var(--space-5); line-height: var(--line-height-relaxed);
+}
+.invalid-btn {
+  padding: var(--space-2) var(--space-8); font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold); color: var(--text-inverse);
+  background: var(--text-primary); border: none; border-radius: var(--radius-full);
+  cursor: pointer;
+  &:active { transform: scale(.96); }
+}
 </style>
